@@ -1,10 +1,14 @@
 # ASU ETX Ring Leader
 
-# Usage
+This is a monorepo that houses several packages that can be published and consumed independently to support the Ring Leader vision. That vision is to simplify the LTI 1.3 integration from LMSs into tools developed by the ETX team.
 
-## Install Tools
+The `rl-server-lib` and `rl-client-lib` packages are published as private NPM packages that can be included within tools. These libraries will be used to expedite the integration with LTI 1.3 capable LMSs.
 
-### Install `Node.js`
+The `rl-tool-example-client` and `rl-tool-example-server` packages are used to stand up an example usage of the `rl-server-lib` and `rl-client-lib` libraries.
+
+# Install Tools
+
+## Install `Node.js`
 
 This project requires `Node.js`. All code is written in `TypeScript` which compiles into executable `Node.js` scripts that are run as a CLI. This means we will need to install a compatible version of `Node.js` if you don't already have one.
 
@@ -62,7 +66,7 @@ After doing a `yarn install`, run the following:
 yarn run develop
 ```
 
-This will build each of the three packages and start watchers.
+This will install all dependencies, build each of the packages and being watching each package for changes.
 
 # Running Tests
 
