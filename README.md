@@ -72,7 +72,7 @@ This will install all dependencies, build each of the packages and being watchin
 
 // todo
 
-# Running the Test Server
+# Building and Deploying the Test Server
 
 // todo
 
