@@ -1,0 +1,50 @@
+{
+    "folders": [
+      {
+        "path": "."
+      }
+    ],
+    "settings": {
+      "eslint.workingDirectories": [
+        "./packages/rl-shared/src",
+        "./packages/rl-client-lib/src",
+        "./packages/rl-server-lib/src",
+        "./packages/rl-tool-example-server/src"
+      ],
+      "editor.tabSize": 2,
+      "editor.insertSpaces": true,
+      "editor.detectIndentation": false,
+
+      "[typescript]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "[jsx]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "[javascript]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+
+      "files.associations": {},
+
+      "search.exclude": {
+        "**/.git": true,
+        "**/build": true,
+        "**/tmp": true
+      },
+
+      "extensions": {
+        "recommendations": [
+          "esbenp.prettier-vscode",
+          "jack89ita.copy-filename",
+          "dbaeumer.vscode-eslint",
+          "eg2.vscode-npm-script",
+          "robinbentley.sass-indented",
+          "bierner.markdown-preview-github-styles"
+        ]
+      }
+    }
+  }
