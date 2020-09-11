@@ -24,10 +24,10 @@
     "node": ">=8.3.0"
   },
   "scripts": {
-    "start": "yarn install && cd packages/rl-shared && yarn run build && cd ../rl-client-lib && yarn run build && cd ../rl-server-lib && yarn run build && cd ../rl-tool-example-client && yarn run build",
+    "build": "yarn install && cd packages/rl-shared && yarn run build && cd ../rl-client-lib && yarn run build && cd ../rl-server-lib && yarn run build",
     "watch-client-lib": "cd packages/rl-client-lib && yarn run watch",
-    "watch-server-lib": "cd packages/rl-browser-server-lib && yarn run watch",
+    "watch-server-lib": "cd packages/rl-server-lib && yarn run watch",
     "watch-shared": "cd packages/rl-shared && yarn run watch",
-    "develop": "concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\""
+    "develop": "yarn run build && concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\""
   }
 }
