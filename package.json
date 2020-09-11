@@ -12,7 +12,7 @@
       "packages/rl-shared",
       "packages/rl-server-lib",
       "packages/rl-client-lib",
-      "packages/rl-tool-example"
+      "packages/rl-tool-example-server"
     ]
   },
   "dependencies": {},
