@@ -12,7 +12,8 @@
       "packages/rl-shared",
       "packages/rl-server-lib",
       "packages/rl-client-lib",
-      "packages/rl-tool-example-server"
+      "packages/rl-tool-example-server",
+      "packages/rl-tool-example-client"
     ]
   },
   "dependencies": {},
@@ -24,10 +25,11 @@
     "node": ">=8.3.0"
   },
   "scripts": {
-    "build": "yarn install && cd packages/rl-shared && yarn run build && cd ../rl-client-lib && yarn run build && cd ../rl-server-lib && yarn run build",
+    "build": "yarn install && cd packages/rl-shared && yarn run build && cd ../rl-client-lib && yarn run build && cd ../rl-server-lib && yarn run build && cd ../rl-tool-example-client && yarn run build",
     "watch-client-lib": "cd packages/rl-client-lib && yarn run watch",
     "watch-server-lib": "cd packages/rl-server-lib && yarn run watch",
+    "watch-tool-example-client": "cd packages/rl-tool-example-client && yarn run watch",
     "watch-shared": "cd packages/rl-shared && yarn run watch",
-    "develop": "yarn run build && concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\""
+    "develop": "yarn run build && concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\" \"yarn run watch-tool-example-client\""
   }
 }
