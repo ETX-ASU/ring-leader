@@ -4,6 +4,7 @@
 
 ### CUSTOM : MONOREPO ###
 
+node_modules
 build/
 
 ### CUSTOM : EXAMPLE SERVER ENV CONFIGS ###
