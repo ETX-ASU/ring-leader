@@ -2,9 +2,14 @@
 # Created by https://www.toptal.com/developers/gitignore/api/code,macos,linux,windows,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=code,macos,linux,windows,node
 
-### CUSTOM : MONOREPO ##
+### CUSTOM : MONOREPO ###
 
 build/
+
+### CUSTOM : EXAMPLE SERVER ENV CONFIGS ###
+
+.env.local
+
 
 ### Code ###
 .vscode/*

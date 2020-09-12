@@ -20,7 +20,7 @@
     "exec": "yarn run build"
   },
   "dependencies": {
-    "typescript": "~3.7.2"
+    "typescript": "~4.0.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
