@@ -2,6 +2,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/code,macos,linux,windows,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=code,macos,linux,windows,node
 
+### CUSTOM : MONOREPO ##
+
+
+
 ### Code ###
 .vscode/*
 !.vscode/settings.json
@@ -9,6 +13,7 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
 
 ### Linux ###
 *~
