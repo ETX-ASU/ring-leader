@@ -1,4 +1,3 @@
-import path from "path";
 import { ToolConsumer } from "./entities/ToolConsumer";
 import {
   createConnection,
@@ -12,7 +11,7 @@ const getConnection = (): Promise<Connection> => {
   if (connectionCreationPromise === false) {
     connectionCreationPromise = createConnection({
       type: "sqlite",
-      database: path.join(__dirname, "../../db.sqlite"),
+      database: ":memory:",
       entities: [ToolConsumer],
       logging: true
     });
