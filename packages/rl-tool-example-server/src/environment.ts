@@ -1,19 +1,22 @@
 import path from "path";
 import dotenv from "dotenv";
 
-const configsFromEnvFile = dotenv.config().parsed as any;
+// local dev
+// const ENV_VARS = dotenv.config().parsed as any;
+// heroku
+const ENV_VARS = process.env;
 
-export const PORT_NUMBER: number =
-  parseInt(configsFromEnvFile.PORT_NUMBER) || 443;
+export const PORT_NUMBER: number = parseInt(
+  ENV_VARS.PORT_NUMBER ? ENV_VARS.PORT_NUMBER : "443"
+);
 
 export const USER_INTERFACE_ROOT: string = path.join(
   __dirname,
   "/../../rl-tool-example-client/build"
 );
 
-export const TOOL_CONSUMER_NAME: string =
-  configsFromEnvFile.TOOL_CONSUMER_NAME || "";
+export const TOOL_CONSUMER_NAME: string = ENV_VARS.TOOL_CONSUMER_NAME || "";
 export const TOOL_CONSUMER_PRIVATE_KEY: string =
-  configsFromEnvFile.TOOL_CONSUMER_PRIVATE_KEY || "";
+  ENV_VARS.TOOL_CONSUMER_PRIVATE_KEY || "";
 export const TOOL_CONSUMER_PUBLIC_KEY: string =
-  configsFromEnvFile.TOOL_CONSUMER_PUBLIC_KEY || "";
+  ENV_VARS.TOOL_CONSUMER_PUBLIC_KEY || "";
