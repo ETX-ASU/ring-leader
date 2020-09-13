@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 const configsFromEnvFile = dotenv.config().parsed as any;
 
 export const PORT_NUMBER: number =
-  parseInt(configsFromEnvFile.PORT_NUMBER) || 3000;
+  parseInt(configsFromEnvFile.PORT_NUMBER) || 443;
 
 export const USER_INTERFACE_ROOT: string = path.join(
   __dirname,
