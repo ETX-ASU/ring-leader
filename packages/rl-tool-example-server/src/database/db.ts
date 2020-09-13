@@ -12,8 +12,10 @@ const getConnection = (): Promise<Connection> => {
     connectionCreationPromise = createConnection({
       type: "sqlite",
       database: ":memory:",
+      dropSchema: true,
+      synchronize: true,
       entities: [ToolConsumer],
-      logging: true
+      logging: false
     });
   }
 
