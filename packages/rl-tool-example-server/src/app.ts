@@ -9,7 +9,7 @@ import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
 import getConnection from "./database/db";
 import dbInit from "./database/init";
 
-import { PORT_NUMBER, USER_INTERFACE_ROOT } from "./environment";
+import { PORT, USER_INTERFACE_ROOT } from "./environment";
 
 const USER_INTERFACE_PLAYER_PAGE = path.join(USER_INTERFACE_ROOT, "index.html");
 
@@ -92,8 +92,8 @@ async function start(): Promise<any> {
   await dbInit();
 
   // Start the app
-  app.listen(PORT_NUMBER, "0.0.0.0", () => {
-    console.log("App is running at", `0.0.0.0:${PORT_NUMBER}`);
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log("App is running at", `0.0.0.0:${PORT}`);
   });
 }
 

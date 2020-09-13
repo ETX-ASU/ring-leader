@@ -6,9 +6,7 @@ import dotenv from "dotenv";
 // heroku
 const ENV_VARS = process.env;
 
-export const PORT_NUMBER: number = parseInt(
-  ENV_VARS.PORT_NUMBER ? ENV_VARS.PORT_NUMBER : "8080"
-);
+export const PORT: number = parseInt(ENV_VARS.PORT ? ENV_VARS.PORT : "8080");
 
 export const USER_INTERFACE_ROOT: string = path.join(
   __dirname,
