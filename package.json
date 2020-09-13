@@ -35,6 +35,7 @@
     "watch-tool-example-client": "cd packages/rl-tool-example-client && yarn run watch",
     "watch-shared": "cd packages/rl-shared && yarn run watch",
     "develop": "yarn run install && yarn run build && concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\" \"yarn run watch-tool-example-client\"",
-    "heroku-create": "npx ts-node scripts/init_heroku.ts"
+    "heroku-create": "npx ts-node scripts/heroku-init.ts && yarn run heroku-update-configs",
+    "heroku-update-configs": "npx ts-node scripts/heroku-update-configs.ts"
   }
 }
