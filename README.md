@@ -138,13 +138,20 @@ git remote -v
 When you want to push a change, run the following command from the root of the project:
 
 ```bash
-git push heroku master
+git push heroku <your current branch>:master
 ```
 
-## Tailing the Heroku App Logs
+## Debugging the Heroku App
+
+Tailing the Heroku App Logs
 
 ```bash
 heroku logs --tail
+```
+
+SH into the Heroku server:
+```bash
+heroku run bash
 ```
 
 # Running Tests
