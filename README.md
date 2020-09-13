@@ -58,9 +58,32 @@ VS Code will then prompt you to install recommended extensions. Be sure to add t
 - ESLint: dbaeumer.vscode-eslint
 - Package.json syntax highlighting: eg2.vscode-npm-script
 
+# Creating and Configuring a `.env.local` File for Heroku
+
+In order to fully test the Ring Leader libraries using the test server, you will need to setup a Heroku app as well as public and private keys for the LTI 1.3 launch.
+
+All of the configurations for the LTI 1.3 launch and Heroku app will be stored in a `.env.local` file. Follow these steps:
+
+1. Find the `packages/rl-tool-example-server/.env` file.
+2. Make a copy of that file and name it `packages/rl-tool-example-server/.env.local`
+3. Substitute `<replace me>` in the value of the `HEROKU_APP_NAME` field with your name. Example:
+
+```bash
+# before
+HEROKU_APP_NAME=ring-leader-<replace me>
+# after
+HEROKU_APP_NAME=ring-leader-john-martin
+```
+
+4. Save your updated `.env.local` file.
+
+# Configuring your `.env.local` File for LTI 1.3
+
+// todo
+
 # Local Development
 
-After doing a `yarn install`, run the following:
+From the root of the project run the following:
 
 ```bash
 yarn run develop
@@ -68,15 +91,82 @@ yarn run develop
 
 This will install all dependencies, build each of the packages and being watching each package for changes.
 
+Note that the utilization of `Yarn Workspaces` allows packages do list other packages within this monorepo as dependencies. The watches that run should allow a change in a dependent package to be picked up automatically.
+
+# Building and Deploying the Test Server
+
+The test server is best used as an https service publicly available on the web. Standing up a simple NodeJS Heroku app is a fast way to achieve this.
+
+## Creating a Free Heroku Account
+
+You will need to [setup a free Heroku account](https://signup.heroku.com/signup/dc) first.
+
+## Installing the Heroku CLI
+
+You will need to install the Heroku cli and create an account.
+
+https://devcenter.heroku.com/articles/heroku-cli
+
+## Login to Heroku
+
+```bash
+heroku login
+```
+
+## Initializing your App
+
+The app will need a unique name within Heroku and within your Heroku account. Be sure you have already completed the step above to set your `.env.local` key for the Heroku app name.
+
+Once you have configured your Heroku app name, then run the following:
+
+```bash
+yarn run heroku-create
+```
+
+Run the following command to verify that Heroku is now listed as a `git` remote:
+
+```bash
+git remote -v
+# heroku	https://git.heroku.com/ring-leader-john-martin.git (fetch)
+# heroku	https://git.heroku.com/ring-leader-john-martin.git (push)
+# origin	https://github.com/ETX-ASU/ring-leader.git (fetch)
+# origin	https://github.com/ETX-ASU/ring-leader.git (push)
+```
+
+## Updating your App
+
+When you want to push a change, run the following command from the root of the project:
+
+```bash
+git push heroku master
+```
+
+## Tailing the Heroku App Logs
+
+```bash
+heroku logs --tail
+```
+
 # Running Tests
 
 // todo
 
-# Building and Deploying the Test Server
+# SemVer
 
-// todo
+Because there could be many tools relying on the Ring Leader libraries, it is critical to follow [`SemVer`](https://semver.org/) as a convention.
 
-# Publishing Packages
+// TODO outline Git Commit and testing conventions
+
+# Publishing Ring Leader Packages
+
+The `rl-client-lib` and `rl-server-lib` packages can be pulled down by anyone who has access to the "@asu-etx" scoped private NPM repositories. They are pulled by many tools.
+
+Publishing should only take place after extensive review of the all `Git` commits, successful completion of all tests, and manual testing using the test server.
+
+Making an update means first determining the next [`SemVer`](https://semver.org/) version number to use to ensure there is no disruption for tools that already have dependencies on these libraries.
+
+// todo utilize git conventions
+// make note of tests
 
 ```
 // TODO
