@@ -18,6 +18,13 @@ const allConfigPromises = Object.keys(configsFromEnvFile).map((configKey) => {
   );
 });
 
+// also pass in the Heroku hostname and URL so the app has access
+allConfigPromises.push(
+  shellPromise(
+    "heroku config:set APPLICATION_URL=$(heroku info -s | grep web_url | cut -d= -f2)"
+  )
+);
+
 Promise.all(allConfigPromises)
   .then(() => {
     console.log("Heroku App Configs ( ENV Variables ) updated");
