@@ -5,6 +5,7 @@ import expressSession from "express-session";
 import bodyParser from "body-parser";
 import log from "./services/LogService";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
+import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
 import getConnection from "./database/db";
 import dbInit from "./database/init";
 
@@ -38,7 +39,7 @@ app.enable("trust proxy");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// TODO: stop using in memory sessions
+// In Memory Sessions ( not recommended for production servers )
 app.use(
   expressSession({
     secret: "demo-secret",
@@ -53,12 +54,17 @@ app.use(
 );
 
 // UI static asset server ( CSS, JS, etc...)
+// This points the root to the built create react app in rl-tool-example-client
 app.use("/", express.static(USER_INTERFACE_ROOT));
 
 /*========================== REGISTER REST ENDPOINTS ==========================*/
 
 // lti 1.3 launch with context and establish session
 ltiLaunchEndpoints(app);
+
+// lti 1.3 advantage service endpoints. NOTE: If we decide to only make calls client side with the idToken
+// then these endpoints will not be needed. They could be completed to show what a server side flow might look like
+ltiServiceEndpoints(app);
 
 /*========================== UI ENDPOINTS ==========================*/
 

@@ -4,7 +4,7 @@ import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
 
 const ltiLaunchEndpoints = (app: Express): void => {
-  app.route("/launch").get((req, res) => {
+  app.get("/launch", requestLogger, (req, res) => {
     res.send("");
   });
 
