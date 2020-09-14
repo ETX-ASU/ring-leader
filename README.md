@@ -77,10 +77,6 @@ HEROKU_APP_NAME=ring-leader-john-martin
 
 4. Save your updated `.env.local` file.
 
-# Configuring your `.env.local` File for LTI 1.3
-
-// todo
-
 # Local Development
 
 From the root of the project run the following:
@@ -133,6 +129,24 @@ git remote -v
 # origin	https://github.com/ETX-ASU/ring-leader.git (push)
 ```
 
+### Generating Public/Private Keys and a JWK
+
+Canvas will require a Public Key embedded in a JWK to create a `developer key` to be used to add the LTI Tool ( example server ) as an application.
+
+#### Setup Public & Private Keys
+
+A public and private key pair need to be generated. The public key will be provided through a JWK to Canvas. The private key will be configured to load within the Heroku app for verification of requests coming from Canvas.
+
+```bash
+yarn run setup-tool-keys
+```
+
+This script does the following:
+
+1. Generates the required `.pem` files that represent the public and private RAS keys
+2. Converts the public key into the `JWK` format
+3. Configures your Heroku app with the private Key
+
 ## Updating your App
 
 When you want to push a change, run the following command from the root of the project:
@@ -179,3 +193,6 @@ Making an update means first determining the next [`SemVer`](https://semver.org/
 // TODO
 ```
 
+# LTI Advantage Documentation
+
+[Read more about integrating LTI Advantage tools with Canvas](./documentation/CanvasRegistration.md)

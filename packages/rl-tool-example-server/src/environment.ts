@@ -1,8 +1,10 @@
 import path from "path";
-import dotenv from "dotenv";
+import ToolConsumer from "./database/entities/ToolConsumer";
 
 // local dev
+// import dotenv from "dotenv";
 // const ENV_VARS = dotenv.config().parsed as any;
+
 // heroku
 const ENV_VARS = process.env;
 
@@ -16,8 +18,6 @@ export const USER_INTERFACE_ROOT: string = path.join(
   "/../../rl-tool-example-client/build"
 );
 
-export const TOOL_CONSUMER_NAME: string = ENV_VARS.TOOL_CONSUMER_NAME || "";
-export const TOOL_CONSUMER_PRIVATE_KEY: string =
-  ENV_VARS.TOOL_CONSUMER_PRIVATE_KEY || "";
-export const TOOL_CONSUMER_PUBLIC_KEY: string =
-  ENV_VARS.TOOL_CONSUMER_PUBLIC_KEY || "";
+export const TOOL_CONSUMERS: ToolConsumer[] =
+  ((JSON.stringify(ENV_VARS.TOOL_CONSUMERS) as unknown) as ToolConsumer[]) ||
+  [];

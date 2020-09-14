@@ -1,7 +1,6 @@
 import shellPromise from "./shell-promise";
 import * as path from "path";
 import * as dotenv from "dotenv";
-import { exec } from "child_process";
 
 const SERVER_ROOT = path.resolve(
   __dirname,

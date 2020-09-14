@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "pem-jwk": "^2.0.0",
     "ts-node": "^9.0.0",
     "typescript": "~4.0.2"
   },
@@ -35,7 +36,8 @@
     "watch-tool-example-client": "cd packages/rl-tool-example-client && yarn run watch",
     "watch-shared": "cd packages/rl-shared && yarn run watch",
     "develop": "yarn run install && yarn run build && concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\" \"yarn run watch-tool-example-client\"",
-    "heroku-create": "npx ts-node scripts/heroku-init.ts && yarn run heroku-update-configs",
-    "heroku-update-configs": "npx ts-node scripts/heroku-update-configs.ts"
+    "heroku-update-configs": "npx ts-node scripts/heroku-update-configs.ts",
+    "setup-tool-keys": "npx ts-node scripts/setup-tool-keys.ts",
+    "heroku-create": "npx ts-node scripts/heroku-init.ts && yarn run heroku-update-configs && yarn run setup-tool-keys"
   }
 }
