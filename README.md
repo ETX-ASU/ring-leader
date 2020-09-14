@@ -147,9 +147,9 @@ This script does the following:
 2. Converts the public key into the `JWK` format
 3. Configures your Heroku app with the private Key
 
-## Updating your App
+## Staring or Updating your App
 
-When you want to push a change, run the following command from the root of the project:
+When you want to start your app or push a change, run the following command from the root of the project:
 
 ```bash
 git push heroku <your current branch>:master
