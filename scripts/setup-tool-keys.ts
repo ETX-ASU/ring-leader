@@ -25,10 +25,6 @@ shellPromise(
   .then(() => {
     console.log("JWK created...");
     const rsaPrivateKey = "awesome";
-    // load the private key as a heroku config
-    return shellPromise(`heroku config:set RSA_PRIVATE_KEY=${rsaPrivateKey}`);
-  })
-  .then(() => {
     const public_key_str = fs.readFileSync(PUBLIC_KEY_FILE, "ascii");
     const jwk = pem2jwk(public_key_str);
 
@@ -39,6 +35,8 @@ shellPromise(
 
     console.log("Private Key Configured with Heroku");
     console.log("The JWK needed to create a developer key in Canvas...", jwk);
+
+    return true;
   })
   .catch((err) => {
     console.error(
