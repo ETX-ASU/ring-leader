@@ -16,8 +16,10 @@ const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
 const initToolConsumers = async (): Promise<any> => {
   TOOL_CONSUMERS.forEach(async (toolConsumerData: ToolConsumer) => {
     const toolConsumer = new ToolConsumer();
-    toolConsumer.client_id = toolConsumerData.client_id;
-    toolConsumer.private_key = toolConsumerData.private_key;
+    toolConsumer.name = toolConsumerData.name;
+    toolConsumer.client_id = toolConsumerData.client_id || "";
+    toolConsumer.private_key = toolConsumerData.private_key || "";
+    toolConsumer.public_key = toolConsumerData.public_key || "";
     await ensureToolConsumer(toolConsumer);
   });
 };
