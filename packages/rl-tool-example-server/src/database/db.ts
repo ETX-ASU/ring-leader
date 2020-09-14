@@ -1,4 +1,4 @@
-import { ToolConsumer } from "./entities/ToolConsumer";
+import ToolConsumer from "./entities/ToolConsumer";
 import {
   createConnection,
   getConnection as getTypeOrmConnection,
