@@ -18,8 +18,6 @@ export const USER_INTERFACE_ROOT: string = path.join(
   "/../../rl-tool-example-client/build"
 );
 
-console.log("TOOL_CONSUMERS=================>", JSON.stringify(ENV_VARS));
-
 export const TOOL_CONSUMERS: ToolConsumer[] = (JSON.parse(
   ENV_VARS.TOOL_CONSUMERS || "[]"
 ) as unknown) as ToolConsumer[];

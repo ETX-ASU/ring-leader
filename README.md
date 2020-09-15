@@ -168,6 +168,10 @@ SH into the Heroku server:
 heroku run bash
 ```
 
+# Sample Tool Registration with Canvas
+
+[Follow these steps to integrate the example tool with Canvas](./documentation/SampleToolCanvasRegistration.md)
+
 # Running Tests
 
 // todo

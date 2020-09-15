@@ -13,6 +13,8 @@ const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
   }
 };
 
+// because this is an in-memory database we don't have to clear the table
+// assume it is empty and simply iterate through each tool consumer and add it
 const initToolConsumers = async (): Promise<any> => {
   TOOL_CONSUMERS.forEach(async (toolConsumerData: ToolConsumer) => {
     const toolConsumer = new ToolConsumer();

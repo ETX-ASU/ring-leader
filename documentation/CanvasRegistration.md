@@ -20,11 +20,11 @@ The documentation links above address different aspects of using LTI 1.3 Advanta
 
 ### LTI 1.3 Tool Development
 
-A tool must be developed. The tool must provide the following:
+An LTI 1.3 enabled tool must provide the following:
 
 1. Mechanism to register platforms
 2. Two endpoints for LTI 1.3 launch OIDC workflow
-3. Mechanism to manage the LTI 1.3 token provided by the platform
+3. Mechanism to manage the LTI 1.3 token provided by the platform either by attaching it to the user's session or sending it to the client
 4. Mechanism(s) to use the token to callback to the LTI Advantage endpoints
 
 #### Mechanism to register platforms
@@ -46,16 +46,17 @@ In order to get the `client_id`, you must first register a `public_key` with Can
 
 ### Creation of the Developer Key and Client Id in Canvas
 
-1. You must use the public key to create a new Developer Key in Canvas
-  - You need to configure the appropriate places the tool can launch from
-    - Navigation
-    - Assignments
-  - You need to ensure the LTI Advantage features are enabled
-    - Rosters
-    - Deep Linking
-    - Assignments
-    - Grades
-2. This process generates a `client_id` which will be used later
+#### You must use the public key to create a new Developer Key in Canvas
+- You need to configure the appropriate places the tool can launch from
+  - Navigation
+  - Assignments
+- You need to ensure the LTI Advantage features are enabled
+  - Rosters
+  - Deep Linking
+  - Assignments
+  - Grades
+
+#### This process generates a `client_id` which will be used later
 
 ### Registration of the Platform Client Within the Tool
 

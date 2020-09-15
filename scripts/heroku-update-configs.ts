@@ -1,20 +1,29 @@
-import shellPromise from "./shell-promise";
+import * as fs from "fs";
 import * as path from "path";
-import * as dotenv from "dotenv";
+
+import shellPromise from "./shell-promise";
 
 const SERVER_ROOT = path.resolve(
   __dirname,
   "../packages/rl-tool-example-server"
 );
-const ENV_VARIABLES_PATH = path.resolve(SERVER_ROOT, ".env.local");
+const ENV_VARIABLES_PATH = path.resolve(SERVER_ROOT, ".env.local.json");
 
-const configsFromEnvFile = dotenv.config({ path: ENV_VARIABLES_PATH })
-  .parsed as any;
+const configsFromEnvFile = JSON.parse(
+  fs.readFileSync(ENV_VARIABLES_PATH, "utf8")
+);
+
+const getConfigValue = (configValue) => {
+  if (typeof configValue === "object") {
+    return `'${JSON.stringify(configValue).replace(/"/g, '"')}'`;
+  }
+  return configValue;
+};
 
 const allConfigPromises = Object.keys(configsFromEnvFile).map((configKey) => {
-  return shellPromise(
-    `heroku config:set ${configKey}=${configsFromEnvFile[configKey]}`
-  );
+  const configValue = getConfigValue(configsFromEnvFile[configKey]);
+  console.log(configKey, configValue);
+  return shellPromise(`heroku config:set ${configKey}=${configValue}`);
 });
 
 // also pass in the Heroku hostname and URL so the app has access
