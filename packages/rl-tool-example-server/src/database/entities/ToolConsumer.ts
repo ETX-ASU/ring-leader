@@ -11,13 +11,13 @@ class ToolConsumer {
   @Column("varchar", { length: 128 })
   client_id = "";
 
-  @Column("varchar", { length: 128 })
+  @Column("varchar", { length: 4096 })
   private_key = "";
 
-  @Column("varchar", { length: 128 })
+  @Column("varchar", { length: 4096 })
   public_key = "";
 
-  @Column("varchar", { length: 256 })
+  @Column("varchar", { length: 8192 })
   public_key_jwk = "";
 }
 
