@@ -6,7 +6,7 @@ const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
   const connection = await getConnection();
   const toolConsumerRepository = connection.getRepository(ToolConsumer);
   const matchingConsumer = await toolConsumerRepository.findOne({
-    client_id: toolConsumer.client_id
+    name: toolConsumer.name
   });
   if (matchingConsumer === undefined) {
     await toolConsumerRepository.save(toolConsumer);
