@@ -3,6 +3,8 @@ import * as path from "path";
 
 import shellPromise from "./shell-promise";
 
+const isWindows = process.platform === "win32";
+
 const SERVER_ROOT = path.resolve(
   __dirname,
   "../packages/rl-tool-example-server"
@@ -26,12 +28,17 @@ const allConfigPromises = Object.keys(configsFromEnvFile).map((configKey) => {
   return shellPromise(`heroku config:set ${configKey}=${configValue}`);
 });
 
-// also pass in the Heroku hostname and URL so the app has access
-allConfigPromises.push(
-  shellPromise(
-    "heroku config:set APPLICATION_URL=$(heroku info -s | grep web_url | cut -d= -f2)"
-  )
+// get the heroku url
+const WEB_URL_REGEX = /web_url=(.*)/;
+const setApplicationUrlPromise = shellPromise("heroku info -s").then(
+  (herokuInfo: string) => {
+    const applicationUrl = herokuInfo.match(WEB_URL_REGEX)[1];
+    return shellPromise(`heroku config:set APPLICATION_URL=${applicationUrl}`);
+  }
 );
+
+// also pass in the Heroku hostname and URL so the app has access
+allConfigPromises.push(setApplicationUrlPromise);
 
 Promise.all(allConfigPromises)
   .then(() => {

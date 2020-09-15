@@ -18,6 +18,16 @@ const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 
 const ltiLaunchEndpoints = (app: Express): void => {
+  // OIDC initiation
+  app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
+    res.send("");
+  });
+
+  // post to accept the LMS launch with idToken
+  app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
+    res.redirect(`/instructor`);
+  });
+
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
   app.get("/tool-info", requestLogger, async (req, res) => {
     const integrationInfo = {
@@ -36,7 +46,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       ({ name, public_key_jwk, client_id }) => {
         return {
           name,
-          public_key_jwk: JSON.parse(public_key_jwk),
+          public_key_jwk: JSON.parse(public_key_jwk), // a string that needs to be parsed
           client_id
         };
       }
@@ -52,14 +62,6 @@ const ltiLaunchEndpoints = (app: Express): void => {
     );
 
     res.send(`<pre>${data}</pre>`);
-  });
-
-  app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
-    res.send("");
-  });
-
-  app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
-    res.redirect(`/instructor`);
   });
 };
 
