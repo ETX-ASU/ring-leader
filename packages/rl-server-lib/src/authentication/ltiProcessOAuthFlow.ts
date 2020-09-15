@@ -4,40 +4,32 @@ import jwtDecode from "jwt-decode";
 const validOAuth2Reponse = (oAuth2Data: any): string[] => {
   const errors = [];
 
-  // Check the data exists
-  if (
-    Object.entries(oAuth2Data).length === 0 &&
-    oAuth2Data.constructor === Object
-  ) {
-    errors.push("body data missing");
+  // Check the grant type
+  if (!oAuth2Data.grant_type) {
+    errors.push("grant type missing");
   } else {
-    // Check the grant type
-    if (!oAuth2Data.grant_type) {
-      errors.push("grant type missing");
-    } else {
-      if (oAuth2Data.grant_type !== "client_credentials") {
-        errors.push("grant type invalid");
-      }
+    if (oAuth2Data.grant_type !== "client_credentials") {
+      errors.push("grant type invalid");
     }
+  }
 
-    // Check the client_id
-    if (!oAuth2Data.client_id) {
-      errors.push("client id missing");
-    } else {
-      //TODO: Must retrieve Consumer information from DB
-      if (oAuth2Data.client_id === "") {
-        errors.push("client id invalid");
-      }
+  // Check the client_id
+  if (!oAuth2Data.client_id) {
+    errors.push("client id missing");
+  } else {
+    //TODO: Must retrieve Consumer information from DB
+    if (oAuth2Data.client_id === "") {
+      errors.push("client id invalid");
     }
+  }
 
-    // Check the client_secret
-    if (!oAuth2Data.client_secret) {
-      errors.push("client secret missing");
-    } else {
-      //TODO: Must retrieve Consumer information from DB
-      if (oAuth2Data.client_secret === "") {
-        errors.push("client secret invalid");
-      }
+  // Check the client_secret
+  if (!oAuth2Data.client_secret) {
+    errors.push("client secret missing");
+  } else {
+    //TODO: Must retrieve Consumer information from DB
+    if (oAuth2Data.client_secret === "") {
+      errors.push("client secret invalid");
     }
   }
 

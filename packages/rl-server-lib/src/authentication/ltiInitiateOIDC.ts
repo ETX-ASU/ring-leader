@@ -41,27 +41,32 @@ const ltiInitiateOIDC = (req: any, res: any): any => {
   const errors = ([] = isValidOIDCRequest(oidcData));
   if (errors.length === 0) {
     let responseWithLTIMessageHint = {};
-    let response = {
+    const response = {
       scope: "openid",
       response_type: "id_token",
-      client_id: oidcData.consumerToolClientID,
-      redirect_uri: oidcData.target_link_uri,
-      login_hint: oidcData.body.login_hint,
-      state: generateUniqueString(30, true),
       response_mode: "form_post",
+      client_id: oidcData.client_id,
+      redirect_uri: oidcData.target_link_uri,
+      login_hint: oidcData.login_hint,
+      state: generateUniqueString(30, true),
       nonce: generateUniqueString(25, false),
       prompt: "none"
     };
-    if (oidcData.hasOwnProperty("lti_message_hint")) {
+    if (oidcData.lti_message_hint) {
       responseWithLTIMessageHint = {
         ...response,
-        lti_message_hint: oidcData.body.lti_message_hint
+        lti_message_hint: oidcData.lti_message_hint
       };
     } else {
       responseWithLTIMessageHint = { ...response };
     }
-    //Save the OIDC Login Response to reference later during current session
-    req.session.loginResponse = responseWithLTIMessageHint;
+
+    if (oidcData.lti_deployment_id)
+      responseWithLTIMessageHint = {
+        ...responseWithLTIMessageHint,
+        lti_deployment_id: oidcData.lti_deployment_id
+      };
+
     res.redirect(
       url.format({
         pathname: "Need to eterd the Platform's OIDC Authorization endpoint",
