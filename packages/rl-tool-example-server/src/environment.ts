@@ -19,5 +19,5 @@ export const USER_INTERFACE_ROOT: string = path.join(
 );
 
 export const TOOL_CONSUMERS: ToolConsumer[] = (JSON.parse(
-  ENV_VARS.TOOL_CONSUMERS || "[]"
+  ENV_VARS.TOOL_CONSUMERS?.replace(/\\"/g, '"') || "[]"
 ) as unknown) as ToolConsumer[];

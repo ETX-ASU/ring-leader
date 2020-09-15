@@ -17,7 +17,7 @@ const configsFromEnvFile = JSON.parse(
 
 const getConfigValue = (configValue) => {
   if (typeof configValue === "object") {
-    return `'${JSON.stringify(configValue).replace(/"/g, '"')}'`;
+    return `'${JSON.stringify(configValue).replace(/"/g, '\\"')}'`;
   }
   return configValue;
 };
