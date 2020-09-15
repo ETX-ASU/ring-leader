@@ -10,12 +10,13 @@ const getToolConsumers = async (): Promise<ToolConsumer[]> => {
   const connection = await getConnection();
   const toolConsumerRepository = connection.getRepository(ToolConsumer);
   const toolConsumers = await toolConsumerRepository.find();
-  console.log("toolConsumers:", toolConsumers);
   return toolConsumers;
 };
 
 const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
+const LTI_INSTRUCTOR_REDIRECT = "/instructor";
+const LTI_STUDENT_REDIRECT = "/student";
 
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC initiation
@@ -25,7 +26,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
 
   // post to accept the LMS launch with idToken
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
-    res.redirect(`/instructor`);
+    res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
@@ -38,7 +39,11 @@ const ltiLaunchEndpoints = (app: Express): void => {
       "Target Link URI": `${path.join(
         APPLICATION_URL,
         LTI_ADVANTAGE_LAUNCH_ROUTE
-      )}`
+      )}`,
+      "Redirect URIS:": [
+        `${path.join(APPLICATION_URL, LTI_INSTRUCTOR_REDIRECT)}`,
+        `${path.join(APPLICATION_URL, LTI_STUDENT_REDIRECT)}`
+      ]
     };
 
     const toolConsumers = await getToolConsumers();
