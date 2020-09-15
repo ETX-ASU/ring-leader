@@ -15,7 +15,7 @@ const getConnection = (): Promise<Connection> => {
       dropSchema: true,
       synchronize: true,
       entities: [ToolConsumer],
-      logging: false
+      logging: true
     });
   }
 
