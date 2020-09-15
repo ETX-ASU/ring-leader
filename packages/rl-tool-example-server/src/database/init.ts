@@ -24,7 +24,8 @@ const initToolConsumers = async (): Promise<any> => {
     toolConsumer.client_id = toolConsumerData.client_id || "";
     toolConsumer.private_key = toolConsumerData.private_key || "";
     toolConsumer.public_key = toolConsumerData.public_key || "";
-    toolConsumer.public_key_jwk = toolConsumerData.public_key_jwk || "";
+    toolConsumer.public_key_jwk =
+      JSON.stringify(toolConsumerData.public_key_jwk) || "";
     await ensureToolConsumer(toolConsumer);
   });
 };
