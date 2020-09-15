@@ -17,7 +17,7 @@ class ToolConsumer {
   @Column("varchar", { length: 4096 })
   public_key = "";
 
-  @Column("varchar", { length: 8192 })
+  @Column("simple-json")
   public_key_jwk = "";
 }
 

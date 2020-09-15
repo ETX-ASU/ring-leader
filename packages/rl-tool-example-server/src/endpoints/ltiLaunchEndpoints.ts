@@ -36,7 +36,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       ({ name, public_key_jwk, client_id }) => {
         return {
           name,
-          public_key_jwk: JSON.parse(public_key_jwk),
+          public_key_jwk,
           client_id
         };
       }
