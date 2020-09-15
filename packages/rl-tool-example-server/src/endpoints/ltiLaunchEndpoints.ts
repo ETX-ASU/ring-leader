@@ -17,6 +17,7 @@ const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 
 const ltiLaunchEndpoints = (app: Express): void => {
+  // a convenience endpoint for sharing integration info ( not recommended to do this in production )
   app.get("/tool-info", requestLogger, async (req, res) => {
     const integrationInfo = {
       "OpenID Connect Initiation Url": `${APPLICATION_URL}${OIDC_LOGIN_INIT_ROUTE}`,
@@ -34,10 +35,16 @@ const ltiLaunchEndpoints = (app: Express): void => {
       }
     );
 
-    res.send({
-      integrationInfo,
-      sanitizedToolConsumers
-    });
+    res.send(
+      JSON.stringify(
+        {
+          integrationInfo,
+          sanitizedToolConsumers
+        },
+        null,
+        2
+      )
+    );
   });
 
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
