@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@asu-etx/rl-shared": "1.0.0",
+    "@types/jwt-decode": "^2.2.1",
+    "jwt-decode": "^3.0.0-beta.2",
     "typescript": "~4.0.2"
   },
   "devDependencies": {
