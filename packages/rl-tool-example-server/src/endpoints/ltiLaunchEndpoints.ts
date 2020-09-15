@@ -24,6 +24,10 @@ const ltiLaunchEndpoints = (app: Express): void => {
     res.send("");
   });
 
+  app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
+    res.send("");
+  });
+
   // post to accept the LMS launch with idToken
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
     res.redirect(LTI_INSTRUCTOR_REDIRECT);

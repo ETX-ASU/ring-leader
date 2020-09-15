@@ -53,6 +53,7 @@ const toolConsumerPromises = configsFromEnvFile.TOOL_CONSUMERS.map(
         const jwk = pem2jwk(public_key_str);
 
         Object.assign(jwk, {
+          alg: "RS256",
           use: "sig",
           kid: `ASU ETX - Ring Leader - ${toolConsumer.name} - Public Key`
         });
