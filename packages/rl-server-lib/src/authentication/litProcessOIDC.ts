@@ -1,14 +1,16 @@
-import url from "url";
+//import url from "url";
 import { generateUniqueString } from "../util/generateUniqueString";
 import { isValidOIDCRequest } from "../util/auth";
-import { setCookie } from "../util/cookie";
+//import { setCookie } from "../util/cookie";
 
 class ProcessOIDC {
   constructor() {
     console.log("This is ProcessOIDC() constructor");
   }
   ltiInitiateOIDC = (req: any, res: any): any => {
-    const oidcData = req.body;
+    const oidcData = req.query;
+    console.log("Get Request query");
+    console.log(req.query);
     const errors = ([] = isValidOIDCRequest(oidcData));
     if (errors.length === 0) {
       let responseWithLTIMessageHint = {};
@@ -37,9 +39,11 @@ class ProcessOIDC {
           ...responseWithLTIMessageHint,
           lti_deployment_id: oidcData.lti_deployment_id
         };
-      setCookie("nonce", response.nonce);
-      setCookie("state", response.state);
-      setCookie("client_id", response.client_id);
+      // setCookie("nonce", response.nonce);
+      // setCookie("state", response.state);
+      // setCookie("client_id", response.client_id);
+      console.log("responseWithLTIMessageHint");
+      console.log(responseWithLTIMessageHint);
       return responseWithLTIMessageHint;
       //res.redirect(
       // url.format({
