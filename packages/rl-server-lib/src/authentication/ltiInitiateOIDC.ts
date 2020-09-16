@@ -1,21 +1,6 @@
 import url from "url";
 import { generateUniqueString } from "../util/generateUniqueString";
-/*
-Validate if the OIDC request has all the required parameters i.e. iss, login_hint and target_link_url
-*/
-const isValidOIDCRequest = (oidcData: any): string[] => {
-  const errors = [];
-  if (!oidcData.iss) {
-    errors.push("Issuer missing");
-  }
-  if (!oidcData.login_hint) {
-    errors.push("Login hint missing");
-  }
-  if (!oidcData.target_link_uri) {
-    errors.push("Target Link URI missing");
-  }
-  return errors;
-};
+import { isValidOIDCRequest } from "../util/auth";
 
 const ltiInitiateOIDC = (req: any, res: any): any => {
   const oidcData = req.body;
