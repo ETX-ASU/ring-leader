@@ -40,13 +40,13 @@ class ProcessOIDC {
       setCookie("nonce", response.nonce);
       setCookie("state", response.state);
       setCookie("client_id", response.client_id);
-
-      res.redirect(
-        url.format({
-          pathname: "Need to eterd the Platform's OIDC Authorization endpoint",
-          query: responseWithLTIMessageHint
-        })
-      );
+      return responseWithLTIMessageHint;
+      //res.redirect(
+      // url.format({
+      //  pathname: "Need to eterd the Platform's OIDC Authorization endpoint",
+      // query: responseWithLTIMessageHint
+      // })
+      // );
     }
     if (errors.length > 0) {
       res.send("Error with OIDC process: " + errors);
