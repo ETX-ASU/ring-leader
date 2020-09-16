@@ -18,7 +18,7 @@ class Grade {
         throw new Error("PLATFORM_NOT_FOUND");
       }
 
-      let lineitemsEndpoint = idtoken.platformContext.endpoint.lineitems;
+      let lineitemsEndpoint = idtoken.endpoint.lineitems;
       let query: any = [];
 
       if (lineitemsEndpoint.indexOf("?") !== -1) {
@@ -252,7 +252,7 @@ class Grade {
           resultsUrl = url + "/results";
         }
 
-        let searchParams = [...queryParams, ...query];
+        let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
         const results = await axios
           .get(resultsUrl, {

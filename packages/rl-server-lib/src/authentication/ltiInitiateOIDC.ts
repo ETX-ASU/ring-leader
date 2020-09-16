@@ -1,4 +1,5 @@
 import url from "url";
+import { generateUniqueString } from "../util/generateUniqueString";
 /*
 Validate if the OIDC request has all the required parameters i.e. iss, login_hint and target_link_url
 */
@@ -14,26 +15,6 @@ const isValidOIDCRequest = (oidcData: any): string[] => {
     errors.push("Target Link URI missing");
   }
   return errors;
-};
-/*
- * Create a long, unique string consisting of upper and lower case letters and numbers.
- * @param length - desired length of string
- * @param signed - boolean whether string should be signed with Tool's private key
- * @returns unique string
- */
-const generateUniqueString = (length: number, signed: boolean): string => {
-  let uniqueString = "";
-  const possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (let i = 0; i < length; i++) {
-    uniqueString += possible.charAt(
-      Math.floor(Math.random() * possible.length)
-    );
-  }
-  if (signed) {
-    //TODO: if signed === true, sign the string with our private key
-  }
-  return uniqueString;
 };
 
 const ltiInitiateOIDC = (req: any, res: any): any => {
