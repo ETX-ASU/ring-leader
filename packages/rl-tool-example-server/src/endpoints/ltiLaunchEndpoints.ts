@@ -1,6 +1,6 @@
 import path from "path";
 import { Express } from "express";
-
+import { ProcessOIDC } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
@@ -21,6 +21,9 @@ const LTI_STUDENT_REDIRECT = "/student";
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
+    console.log(req);
+    // const rlLitOidc = new ProcessOIDC();
+    // rlLitOidc.ltiInitiateOIDC(req, res);
     res.send("");
   });
 
