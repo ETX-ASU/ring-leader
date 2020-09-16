@@ -178,7 +178,7 @@ class Grade {
         else score.userId = idtoken.user;
         score.timestamp = new Date(Date.now()).toISOString();
         score.scoreMaximum = lineitem.scoreMaximum;
-        axios.post(scoreUrl, {
+        await axios.post(scoreUrl, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
@@ -199,6 +199,90 @@ class Grade {
     }
 
     return result;
+  }
+  async result(idtoken: any, options: any): Promise<any> {
+    if (!idtoken) {
+      throw new Error("MISSING_ID_TOKEN");
+    }
+
+    const platform = {};
+
+    if (!platform) {
+      throw new Error("PLATFORM_NOT_FOUND");
+    }
+    //we will change this when go for actual implementation
+    const accessToken = {
+      token_type: "",
+      access_token: ""
+    };
+    let limit = false;
+
+    if (options) {
+      if (options.resourceLinkId === false) options.resourceLinkId = false;
+      else options.resourceLinkId = true;
+
+      if (options.limit) {
+        limit = options.limit;
+        options.limit = false;
+      }
+    } else
+      options = {
+        resourceLinkId: true
+      };
+
+    const lineItems = await this.getLineItems(idtoken, options, accessToken);
+    const queryParams = [];
+
+    if (options) {
+      if (options.userId) queryParams.push(["user_id", options.userId]);
+      if (limit) queryParams.push(["limit", limit]);
+    }
+
+    const resultsArray = [];
+
+    for (const lineitem of lineItems) {
+      try {
+        const lineitemUrl = lineitem.id;
+        let query: any = [];
+        let resultsUrl = lineitemUrl + "/results";
+
+        if (lineitemUrl.indexOf("?") !== -1) {
+          query = Array.from(new URLSearchParams(lineitemUrl.split("?")[1]));
+          const url = lineitemUrl.split("?")[0];
+          resultsUrl = url + "/results";
+        }
+
+        let searchParams = [...queryParams, ...query];
+        searchParams = new URLSearchParams(searchParams);
+        const results = await axios
+          .get(resultsUrl, {
+            params: searchParams,
+            headers: {
+              Authorization:
+                accessToken.token_type + " " + accessToken.access_token,
+              Accept: "application/vnd.ims.lis.v2.resultcontainer+json"
+            }
+          })
+          .then((res) => {
+            return res.data.json();
+          })
+          .catch(() => {
+            console.log("");
+          });
+        resultsArray.push({
+          lineitem: lineitem.id,
+          results: results
+        });
+      } catch (err) {
+        resultsArray.push({
+          lineitem: lineitem.id,
+          error: err.message
+        });
+        continue;
+      }
+    }
+
+    return resultsArray;
   }
 }
 export { Grade };
