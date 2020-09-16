@@ -1,6 +1,6 @@
-/*import { URLSearchParams, parseLink } from "url";
+import { URLSearchParams, parseLink } from "url";
 // eslint-disable-next-line node/no-extraneous-import
-import got from "got";
+import axios from "axios";
 
 const getMembers = (token: any, options: any): any => {
   if (!token) {
@@ -44,9 +44,9 @@ const getMembers = (token: any, options: any): any => {
     console.log("Member pages found: ", curPage);
     console.log("Current member page: ", next);
     if (isQuery && curPage === 1)
-      got
+      axios
         .get(next, {
-          
+          params: query,
           headers: {
             Authorization: token.token_type + " " + token.access_token,
             Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
@@ -54,7 +54,7 @@ const getMembers = (token: any, options: any): any => {
         })
         .then((response) => {
           const headers = response.headers;
-          const body = JSON.parse(response.body);
+          const body = JSON.parse(response.data);
           if (!result) result = JSON.parse(JSON.stringify(body));
           else {
             result.members = [...result.members, ...body.members];
@@ -71,7 +71,7 @@ const getMembers = (token: any, options: any): any => {
           console.log("error" + err);
         });
     else
-      got
+      axios
         .get(next, {
           headers: {
             Authorization: token.token_type + " " + token.access_token,
@@ -80,7 +80,7 @@ const getMembers = (token: any, options: any): any => {
         })
         .then((response) => {
           const headers = response.headers;
-          const body = JSON.parse(response.body);
+          const body = JSON.parse(response.data);
           if (!result) result = JSON.parse(JSON.stringify(body));
           else {
             result.members = [...result.members, ...body.members];
@@ -103,5 +103,5 @@ const getMembers = (token: any, options: any): any => {
   console.log("Memberships retrieved");
   return result;
 };
-*/
-export {};
+
+export { getMembers };

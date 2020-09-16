@@ -1,7 +1,10 @@
 import url from "url";
 import jwtDecode from "jwt-decode";
 
-const validOAuth2Reponse = (oAuth2Data: any): string[] => {
+const validOAuth2Reponse = (
+  oAuth2Data: any,
+  validationParameters: any
+): string[] => {
   const errors = [];
 
   // Check the grant type
@@ -32,7 +35,11 @@ const validOAuth2Reponse = (oAuth2Data: any): string[] => {
       errors.push("client secret invalid");
     }
   }
+  if (oAuth2Data.nonce === validationParameters.nonce)
+    errors.push("NOUNCE_DOES_NOT_MATCH");
 
+  if (oAuth2Data.state === validationParameters.state)
+    errors.push("STATE_DOES_NOT_MATCH");
   return errors;
 };
 
@@ -44,10 +51,14 @@ const getDecodedAccessToken = (token: string): any => {
   }
 };
 
-const LtiHandleOAuth2Response = (req: any, res: any): any => {
+const LtiHandleOAuth2Response = (
+  req: any,
+  res: any,
+  validationParameters: any
+): any => {
   const oAuth2Data = req.body;
 
-  const errors = ([] = validOAuth2Reponse(oAuth2Data));
+  const errors = ([] = validOAuth2Reponse(oAuth2Data, validationParameters));
 
   if (errors.length > 0) return errors;
 
