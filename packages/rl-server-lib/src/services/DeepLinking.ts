@@ -125,4 +125,4 @@ class DeepLinking {
   }
 }
 
-module.exports = DeepLinking;
+export { DeepLinking };
