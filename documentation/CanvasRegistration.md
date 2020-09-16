@@ -6,6 +6,7 @@ This document discuss the steps required to register an existing LTI 1.3 enabled
 
 1. [Canvas LTI Advantage documentation](https://community.canvaslms.com/t5/Canvas-Releases-Board/Canvas-Release-LTI-1-3-and-LTI-Advantage-2019-06-22/m-p/246652)
 2. [How do I configure an LTI Key for an account](https://community.canvaslms.com/t5/Admin-Guide/How-do-I-configure-an-LTI-key-for-an-account/ta-p/140)
+3. [VitalSource Tool Example](https://success.vitalsource.com/hc/en-gb/articles/360052315753-LTI-1-3-Tool-Setup-Instructions-for-Canvas)
 
 ## Tool Provider Code Examples
 
