@@ -23,16 +23,16 @@ const ltiLaunchEndpoints = (app: Express): void => {
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
     const rlLitOidc = new ProcessOIDC();
-    // rlLitOidc.ltiInitiateOIDC(req, res);
-    res.send(rlLitOidc.ltiInitiateOIDC(req, res));
+    rlLitOidc.ltiInitiateOIDC(req, res);
+    //res.send(rlLitOidc.ltiInitiateOIDC(req, res));
   });
 
   // OIDC initiation
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
     const rlLitOidc = new ProcessOIDC();
-    // rlLitOidc.ltiInitiateOIDC(req, res);
-    res.send(rlLitOidc.ltiInitiateOIDC(req, res));
+    rlLitOidc.ltiInitiateOIDC(req, res);
+    //res.send(rlLitOidc.ltiInitiateOIDC(req, res));
   });
 
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
