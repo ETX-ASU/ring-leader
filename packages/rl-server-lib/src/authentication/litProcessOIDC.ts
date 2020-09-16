@@ -1,4 +1,4 @@
-//import url from "url";
+import url from "url";
 import { generateUniqueString } from "../util/generateUniqueString";
 import { isValidOIDCRequest } from "../util/auth";
 //import { setCookie } from "../util/cookie";
@@ -44,13 +44,14 @@ class ProcessOIDC {
       // setCookie("client_id", response.client_id);
       console.log("responseWithLTIMessageHint");
       console.log(responseWithLTIMessageHint);
-      return responseWithLTIMessageHint;
-      //res.redirect(
-      // url.format({
-      //  pathname: "Need to eterd the Platform's OIDC Authorization endpoint",
-      // query: responseWithLTIMessageHint
-      // })
-      // );
+      //return responseWithLTIMessageHint;
+      res.redirect(
+        url.format({
+          pathname:
+            "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new",
+          query: responseWithLTIMessageHint
+        })
+      );
     }
     if (errors.length > 0) {
       res.send("Error with OIDC process: " + errors);
