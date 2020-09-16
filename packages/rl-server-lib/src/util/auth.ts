@@ -1,6 +1,7 @@
 /*
 Validate if the OIDC request has all the required parameters i.e. iss, login_hint and target_link_url
 */
+import { getCookie } from "./cookie";
 
 const isValidOIDCRequest = (oidcData: any): string[] => {
   const errors = [];
@@ -15,10 +16,7 @@ const isValidOIDCRequest = (oidcData: any): string[] => {
   }
   return errors;
 };
-const validOAuth2Reponse = (
-  oAuth2Data: any,
-  validationParameters: any
-): string[] => {
+const validOAuth2Reponse = (oAuth2Data: any): string[] => {
   const errors = [];
 
   // Check the grant type
@@ -49,11 +47,11 @@ const validOAuth2Reponse = (
       errors.push("client secret invalid");
     }
   }
-  if (oAuth2Data.nonce === validationParameters.nonce)
-    errors.push("NOUNCE_DOES_NOT_MATCH");
+  const nounce: any = getCookie("nounce");
+  const state: any = getCookie("state");
+  if (oAuth2Data.nonce === nounce) errors.push("NOUNCE_DOES_NOT_MATCH");
 
-  if (oAuth2Data.state === validationParameters.state)
-    errors.push("STATE_DOES_NOT_MATCH");
+  if (oAuth2Data.state === state) errors.push("STATE_DOES_NOT_MATCH");
   return errors;
 };
 export { isValidOIDCRequest, validOAuth2Reponse };

@@ -3,14 +3,10 @@ import { getDecodedAccessToken } from "../util/getDecodedAccessToken";
 import { validOAuth2Reponse } from "../util/auth";
 
 class ProcessOAuth2 {
-  LtiHandleOAuth2Response = (
-    req: any,
-    res: any,
-    validationParameters: any
-  ): any => {
+  LtiHandleOAuth2Response = (req: any, res: any): any => {
     const oAuth2Data = req.body;
 
-    const errors = ([] = validOAuth2Reponse(oAuth2Data, validationParameters));
+    const errors = ([] = validOAuth2Reponse(oAuth2Data));
 
     if (errors.length > 0) return errors;
 

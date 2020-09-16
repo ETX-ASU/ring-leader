@@ -1,6 +1,7 @@
 import url from "url";
 import { generateUniqueString } from "../util/generateUniqueString";
 import { isValidOIDCRequest } from "../util/auth";
+import { setCookie } from "../util/cookie";
 
 class ProcessOIDC {
   constructor() {
@@ -36,6 +37,9 @@ class ProcessOIDC {
           ...responseWithLTIMessageHint,
           lti_deployment_id: oidcData.lti_deployment_id
         };
+      setCookie("nonce", response.nonce);
+      setCookie("state", response.state);
+      setCookie("client_id", response.client_id);
 
       res.redirect(
         url.format({
