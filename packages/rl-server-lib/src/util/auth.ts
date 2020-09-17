@@ -1,11 +1,10 @@
 /*
 Validate if the OIDC request has all the required parameters i.e. iss, login_hint and target_link_url
 */
-import { getDecodedAccessToken } from "./getDecodedAccessToken";
 import url from "url";
 import { generateUniqueString } from "./generateUniqueString";
 import jwt from "jsonwebtoken";
-
+import { getCookie, setCookie } from "./cookie";
 const isValidOIDCRequest = (oidcData: any): string[] => {
   const errors = [];
   if (!oidcData.iss) {
@@ -90,9 +89,9 @@ const claimValidation = (token: any): any => {
     throw new Error("NO_LTI_VERSION_CLAIM");
   if (token["https://purl.imsglobal.org/spec/lti/claim/version"] !== "1.3.0")
     throw new Error("WRONG_LTI_VERSION_CLAIM");
-  console.log("Checking Deployment Id claim");
-  if (!token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"])
-    throw new Error("NO_DEPLOYMENT_ID_CLAIM");
+  //console.log("Checking Deployment Id claim");
+  // if (!token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"])
+  // throw new Error("NO_DEPLOYMENT_ID_CLAIM");
   console.log("Checking Sub claim");
   if (!token.sub) throw new Error("NO_SUB_CLAIM");
   console.log("Checking Roles claim");
@@ -118,6 +117,15 @@ const oidcValidation = (token: any, platform: any): any => {
 };
 
 const validateToken = (req: any, plateform: any): any => {
+  //this needs to come from Tool
+  plateform.nounce = getCookie("nounce");
+  plateform.state = getCookie("state");
+  plateform.client_id = getCookie("client_id");
+
+  console.log("plateform.nounce-" + plateform.nounce);
+  console.log("plateform.state-" + plateform.state);
+  console.log("plateform.client_id-" + plateform.client_id);
+
   const idToken = req.body.id_token;
   console.log("idToken:" + idToken);
   const decodedtoken = jwt.decode(idToken);
@@ -171,9 +179,9 @@ const rlInitiateOIDC = (req: any, res: any): any => {
         ...responseWithLTIMessageHint,
         lti_deployment_id: oidcData.lti_deployment_id
       };
-    // setCookie("nonce", response.nonce);
-    // setCookie("state", response.state);
-    // setCookie("client_id", response.client_id);
+    setCookie("nonce", response.nonce);
+    setCookie("state", response.state);
+    setCookie("client_id", response.client_id);
     console.log("responseWithLTIMessageHint");
     console.log(responseWithLTIMessageHint);
     //return responseWithLTIMessageHint;

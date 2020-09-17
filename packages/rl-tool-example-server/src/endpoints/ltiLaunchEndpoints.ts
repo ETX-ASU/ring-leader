@@ -35,7 +35,11 @@ const ltiLaunchEndpoints = (app: Express): void => {
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
     console.log("LTI Advantage Token");
     console.log(req);
-    const plateform: any = {};
+    const plateform: any = {
+      nounce: "",
+      state: "",
+      client_id: ""
+    };
     const verified = validateToken(req, plateform);
     console.log(verified);
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
