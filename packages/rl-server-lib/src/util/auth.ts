@@ -211,7 +211,7 @@ const getAccessToken = (plateform: any): any => {
   };
   axios
     .post(plateform.platformAccessTokenEndpoint, {
-      params: message
+      form: message
     })
     .then((access) => {
       console.log("Successfully generated new access_token");
