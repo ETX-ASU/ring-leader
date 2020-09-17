@@ -58,7 +58,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(req);
     const verified = validateToken(req, plateformLaunch);
     console.log(verified);
-    if (verified) getAccessToken([], plateformAccessToken);
+    if (verified) getAccessToken(plateformAccessToken);
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 

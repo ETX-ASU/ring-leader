@@ -182,7 +182,13 @@ const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
     res.send("Error with OIDC process: " + errors);
   }
 };
-const getAccessToken = (scopes: any, plateform: any): any => {
+const getAccessToken = (plateform: any): any => {
+  const scopes = [
+    "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+    "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+    "https://purl.imsglobal.org/spec/lti-ags/scope/score",
+    "https://purl.imsglobal.org/spec/lti-ces/v1p0/scope/send"
+  ];
   const clientId = plateform.clientId;
   const confjwt = {
     sub: clientId,
