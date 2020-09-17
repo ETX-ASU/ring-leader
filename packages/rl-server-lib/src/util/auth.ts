@@ -26,19 +26,18 @@ const isValidOIDCRequest = (oidcData: any): string[] => {
  * @param {Platform} platform - Platform object.
  */
 
-const validateAud = (token: any, platform: any): boolean => {
+const validateAud = (token: any, plateform: any): boolean => {
   console.log(
     "Validating if aud (Audience) claim matches the value of the tool's clientId given by the platform"
   );
   console.log("Aud claim: " + token.aud);
-  console.log("Tool's clientId: " + platform.client_Id);
+  console.log("Tool's clientId: " + plateform.clientId);
 
   if (Array.isArray(token.aud)) {
     console.log("More than one aud listed, searching for azp claim");
-    if (token.azp && token.azp !== platform.client_Id)
+    if (token.azp && token.azp !== plateform.clientId)
       throw new Error("AZP_DOES_NOT_MATCH_CLIENTID");
-  }
-
+  } else if (token.aud == plateform.clientId) return true;
   return true;
 };
 
@@ -108,11 +107,11 @@ const claimValidation = (token: any): any => {
  * @param {Object} validationParameters - Validation parameters.
  */
 
-const oidcValidation = (token: any, platform: any): any => {
+const oidcValidation = (token: any, plateform: any): any => {
   console.log("Token signature verified");
   console.log("Initiating OIDC aditional validation steps");
-  const aud: boolean = validateAud(token, platform);
-  const nonce: boolean = validateNonce(token, platform);
+  const aud: boolean = validateAud(token, plateform);
+  const nonce: boolean = validateNonce(token, plateform);
   const claims: boolean = claimValidation(token);
 
   return { aud: aud, nonce: nonce, claims: claims };
@@ -172,7 +171,6 @@ const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
       };
     console.log("responseWithLTIMessageHint");
     console.log(response);
-    //return responseWithLTIMessageHint;
     res.redirect(
       url.format({
         pathname: plateform.plateformOIDCAuthEndPoint,
@@ -184,19 +182,19 @@ const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
     res.send("Error with OIDC process: " + errors);
   }
 };
-const getAccessToken = (scopes: any, platform: any): any => {
-  const clientId = platform.clientId;
+const getAccessToken = (scopes: any, plateform: any): any => {
+  const clientId = plateform.clientId;
   const confjwt = {
     sub: clientId,
     iss: clientId,
-    aud: platform.platformAccessTokenEndpoint,
+    aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
     jti: encodeURIComponent(generateUniqueString(30, true))
   };
-  const token = jwt.sign(confjwt, platform.platformPrivateKey, {
-    algorithm: platform.alg,
-    keyid: platform.platformKid
+  const token = jwt.sign(confjwt, plateform.platformPrivateKey, {
+    algorithm: plateform.alg,
+    keyid: plateform.platformKid
   });
   const message = {
     grant_type: "client_credentials",
@@ -206,7 +204,7 @@ const getAccessToken = (scopes: any, platform: any): any => {
     scope: scopes
   };
   axios
-    .post(platform.platformAccessTokenEndpoint, {
+    .post(plateform.platformAccessTokenEndpoint, {
       form: message
     })
     .then((access) => {

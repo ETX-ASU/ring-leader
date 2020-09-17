@@ -17,35 +17,40 @@ const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 const LTI_STUDENT_REDIRECT = "/student";
-const plateform = {
-  plateformOIDCAuthEndPoint:
-    "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new", // we get this during plateform registration
+const plateformAccessToken = {
+  // we get this during plateform registration
   platformAccessTokenEndpoint:
     "https://lti-ri.imsglobal.org/platforms/1285/access_tokens", // we get this during plateform registration
-  nounce: "SDF7ASDLSFDS9", //This is the same value that passed during the OIDC request. Tool need to pass this.
-  state: "SDF7ASDLSFDS9", //This is the same value that passed during the OIDC request. Tool need to pass this.
   clientId: "SDF7ASDLSFDS9",
   platformKid: "",
   alg: ""
+};
+
+const plateformLaunch = {
+  plateformOIDCAuthEndPoint:
+    "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new", // we get this during plateform registration
+  nounce: "SDF7ASDLSFDS9", //This is the same value that passed during the OIDC request. Tool need to pass this.
+  state: "SDF7ASDLSFDS9", //This is the same value that passed during the OIDC request. Tool need to pass this.
+  clientId: "SDF7ASDLSFDS9"
 };
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
-    rlInitiateOIDC(req, res, plateform);
+    rlInitiateOIDC(req, res, plateformLaunch);
   });
 
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     // OIDC POST initiation
     console.log(req);
-    rlInitiateOIDC(req, res, plateform);
+    rlInitiateOIDC(req, res, plateformLaunch);
   });
 
   // post to accept the LMS launch with idToken
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
     console.log("LTI Advantage Token");
     console.log(req);
-    const verified = validateToken(req, plateform);
+    const verified = validateToken(req, plateformLaunch);
     console.log(verified);
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
