@@ -117,13 +117,11 @@ const oidcValidation = (token: any, platform: any): any => {
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
-const validateToken = (token: any, plateform: any): any => {
-  const decodedtoken = getDecodedAccessToken(token);
-  const decoded = jwt.decode(token, {
-    complete: true
-  });
+const validateToken = (req: any, plateform: any): any => {
+  const idToken = req.body.id_token;
+  console.log("idToken:" + idToken);
+  const decodedtoken = jwt.decode(idToken);
   console.log("decodedtoken:" + decodedtoken);
-  console.log("decoded:" + decoded);
 
   if (!decodedtoken) throw new Error("INVALID_JWT_RECEIVED");
   const verified = {
@@ -132,9 +130,6 @@ const validateToken = (token: any, plateform: any): any => {
     clientId: String,
     plateformId: String
   };
-  if (plateform.iss !== decodedtoken.payload.iss)
-    throw new Error("ISS_CLAIM_DOES_NOT_MATCH");
-
   verified.oidcVerified = oidcValidation(decodedtoken, plateform);
   verified.claimValidation = claimValidation(decodedtoken);
   verified.clientId = plateform.clientId;
