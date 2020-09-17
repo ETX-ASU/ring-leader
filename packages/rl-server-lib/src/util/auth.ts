@@ -154,8 +154,8 @@ const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
       client_id: oidcData.client_id,
       redirect_uri: oidcData.target_link_uri,
       login_hint: oidcData.login_hint,
-      state: "SDF7ASDLSFDS9", //generateUniqueString(30, true),
-      nonce: "SDF7ASDLSFDS9", //generateUniqueString(25, false),
+      state: generateUniqueString(30, true),
+      nonce: generateUniqueString(25, false),
       prompt: "none"
     };
     if (oidcData.lti_message_hint) {
@@ -174,12 +174,10 @@ const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
       };
     console.log("responseWithLTIMessageHint");
     console.log(response);
-    res.redirect(
-      url.format({
-        pathname: plateform.plateformOIDCAuthEndPoint,
-        query: response
-      })
-    );
+    return {
+      pathname: plateform.plateformOIDCAuthEndPoint,
+      query: response
+    };
   }
   if (errors.length > 0) {
     res.send("Error with OIDC process: " + errors);
