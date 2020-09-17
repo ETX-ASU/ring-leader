@@ -1,7 +1,9 @@
 /*
 Validate if the OIDC request has all the required parameters i.e. iss, login_hint and target_link_url
 */
-import { getCookie } from "./cookie";
+import { getDecodedAccessToken } from "./getDecodedAccessToken";
+import url from "url";
+import { generateUniqueString } from "./generateUniqueString";
 
 const isValidOIDCRequest = (oidcData: any): string[] => {
   const errors = [];
@@ -16,42 +18,173 @@ const isValidOIDCRequest = (oidcData: any): string[] => {
   }
   return errors;
 };
-const validOAuth2Reponse = (oAuth2Data: any): string[] => {
-  const errors = [];
 
-  // Check the grant type
-  if (!oAuth2Data.grant_type) {
-    errors.push("grant type missing");
-  } else {
-    if (oAuth2Data.grant_type !== "client_credentials") {
-      errors.push("grant type invalid");
-    }
+/**
+ * @description Validates Aud.
+ * @param {Object} token - Id token you wish to validate.
+ * @param {Platform} platform - Platform object.
+ */
+
+const validateAud = (token: any, platform: any): boolean => {
+  console.log(
+    "Validating if aud (Audience) claim matches the value of the tool's clientId given by the platform"
+  );
+  console.log("Aud claim: " + token.aud);
+  console.log("Tool's clientId: " + platform.client_Id);
+
+  if (Array.isArray(token.aud)) {
+    console.log("More than one aud listed, searching for azp claim");
+    if (token.azp && token.azp !== platform.client_Id)
+      throw new Error("AZP_DOES_NOT_MATCH_CLIENTID");
   }
 
-  // Check the client_id
-  if (!oAuth2Data.client_id) {
-    errors.push("client id missing");
-  } else {
-    //TODO: Must retrieve Consumer information from DB
-    if (oAuth2Data.client_id === "") {
-      errors.push("client id invalid");
-    }
-  }
-
-  // Check the client_secret
-  if (!oAuth2Data.client_secret) {
-    errors.push("client secret missing");
-  } else {
-    //TODO: Must retrieve Consumer information from DB
-    if (oAuth2Data.client_secret === "") {
-      errors.push("client secret invalid");
-    }
-  }
-  const nounce: any = getCookie("nounce");
-  const state: any = getCookie("state");
-  if (oAuth2Data.nonce === nounce) errors.push("NOUNCE_DOES_NOT_MATCH");
-
-  if (oAuth2Data.state === state) errors.push("STATE_DOES_NOT_MATCH");
-  return errors;
+  return true;
 };
-export { isValidOIDCRequest, validOAuth2Reponse };
+
+/**
+ * @description Validates Nonce.
+ * @param {Object} token - Id token you wish to validate.
+ */
+
+const validateNonce = (token: any, plateform: any): boolean => {
+  console.log("Validating nonce");
+  console.log("Token Nonce: " + token.nonce);
+  if (token.nonce == plateform.nounce) return true;
+  else return false;
+};
+
+/**
+ * @description Validates de token based on the LTI 1.3 core claims specifications.
+ * @param {Object} token - Id token you wish to validate.
+ */
+
+const claimValidation = (token: any): any => {
+  console.log("Initiating LTI 1.3 core claims validation");
+  console.log("Checking Message type claim");
+  if (
+    token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
+      "LtiResourceLinkRequest" &&
+    token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
+      "LtiDeepLinkingRequest"
+  )
+    throw new Error("NO_MESSAGE_TYPE_CLAIM");
+
+  if (
+    token["https://purl.imsglobal.org/spec/lti/claim/message_type"] ===
+    "LtiResourceLinkRequest"
+  ) {
+    console.log("Checking Target Link Uri claim");
+    if (!token["https://purl.imsglobal.org/spec/lti/claim/target_link_uri"])
+      throw new Error("NO_TARGET_LINK_URI_CLAIM");
+    console.log("Checking Resource Link Id claim");
+    if (
+      !token["https://purl.imsglobal.org/spec/lti/claim/resource_link"] ||
+      !token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+    )
+      throw new Error("NO_RESOURCE_LINK_ID_CLAIM");
+  }
+
+  console.log("Checking LTI Version claim");
+  if (!token["https://purl.imsglobal.org/spec/lti/claim/version"])
+    throw new Error("NO_LTI_VERSION_CLAIM");
+  if (token["https://purl.imsglobal.org/spec/lti/claim/version"] !== "1.3.0")
+    throw new Error("WRONG_LTI_VERSION_CLAIM");
+  console.log("Checking Deployment Id claim");
+  if (!token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"])
+    throw new Error("NO_DEPLOYMENT_ID_CLAIM");
+  console.log("Checking Sub claim");
+  if (!token.sub) throw new Error("NO_SUB_CLAIM");
+  console.log("Checking Roles claim");
+  if (!token["https://purl.imsglobal.org/spec/lti/claim/roles"])
+    throw new Error("NO_ROLES_CLAIM");
+
+  return true;
+};
+/**
+ * @description Validates de token based on the OIDC specifications.
+ * @param {Object} token - Id token you wish to validate.
+ * @param {Platform} platform - Platform object.
+ * @param {Object} validationParameters - Validation parameters.
+ */
+
+const oidcValidation = (token: any, platform: any): any => {
+  console.log("Token signature verified");
+  console.log("Initiating OIDC aditional validation steps");
+  const aud = validateAud(token, platform);
+  const nonce = validateNonce(token, platform);
+  const claims = claimValidation(token);
+  return { aud: aud, nonce: nonce, claims: claims };
+};
+
+const validateToken = (token: any, plateform: any): any => {
+  const decodedtoken = getDecodedAccessToken(token);
+  if (!decodedtoken) throw new Error("INVALID_JWT_RECEIVED");
+  const verified = {
+    oidcVerified: Boolean,
+    claimValidation: Boolean,
+    clientId: String,
+    plateformId: String
+  };
+  if (plateform.iss !== decodedtoken.payload.iss)
+    throw new Error("ISS_CLAIM_DOES_NOT_MATCH");
+
+  verified.oidcVerified = oidcValidation(decodedtoken, plateform);
+  verified.claimValidation = claimValidation(decodedtoken);
+  verified.clientId = plateform.clientId;
+  verified.plateformId = plateform.plateformId;
+  return verified;
+};
+const rlInitiateOIDC = (req: any, res: any): any => {
+  let oidcData = req.query;
+  console.log("req.method:" + req.method);
+
+  if (req.method == "POST") oidcData = req.body;
+  console.log("Get Request query");
+  console.log(req.query);
+  const errors = ([] = isValidOIDCRequest(oidcData));
+  if (errors.length === 0) {
+    let responseWithLTIMessageHint = {};
+    const response = {
+      scope: "openid",
+      response_type: "id_token",
+      response_mode: "form_post",
+      client_id: oidcData.client_id,
+      redirect_uri: oidcData.target_link_uri,
+      login_hint: oidcData.login_hint,
+      state: generateUniqueString(30, true),
+      nonce: generateUniqueString(25, false),
+      prompt: "none"
+    };
+    if (oidcData.lti_message_hint) {
+      responseWithLTIMessageHint = {
+        ...response,
+        lti_message_hint: oidcData.lti_message_hint
+      };
+    } else {
+      responseWithLTIMessageHint = { ...response };
+    }
+
+    if (oidcData.lti_deployment_id)
+      responseWithLTIMessageHint = {
+        ...responseWithLTIMessageHint,
+        lti_deployment_id: oidcData.lti_deployment_id
+      };
+    // setCookie("nonce", response.nonce);
+    // setCookie("state", response.state);
+    // setCookie("client_id", response.client_id);
+    console.log("responseWithLTIMessageHint");
+    console.log(responseWithLTIMessageHint);
+    //return responseWithLTIMessageHint;
+    res.redirect(
+      url.format({
+        pathname:
+          "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new",
+        query: responseWithLTIMessageHint
+      })
+    );
+  }
+  if (errors.length > 0) {
+    res.send("Error with OIDC process: " + errors);
+  }
+};
+export { rlInitiateOIDC, validateToken };
