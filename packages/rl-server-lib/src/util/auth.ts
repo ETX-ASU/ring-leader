@@ -4,7 +4,6 @@ Validate if the OIDC request has all the required parameters i.e. iss, login_hin
 import url from "url";
 import { generateUniqueString } from "./generateUniqueString";
 import jwt from "jsonwebtoken";
-import { getCookie, setCookie } from "./cookie";
 const isValidOIDCRequest = (oidcData: any): string[] => {
   const errors = [];
   if (!oidcData.iss) {
@@ -118,10 +117,6 @@ const oidcValidation = (token: any, platform: any): any => {
 
 const validateToken = (req: any, plateform: any): any => {
   //this needs to come from Tool
-  plateform.nounce = getCookie("nounce");
-  plateform.state = getCookie("state");
-  plateform.client_id = getCookie("client_id");
-
   console.log("plateform.nounce-" + plateform.nounce);
   console.log("plateform.state-" + plateform.state);
   console.log("plateform.client_id-" + plateform.client_id);
@@ -161,8 +156,8 @@ const rlInitiateOIDC = (req: any, res: any): any => {
       client_id: oidcData.client_id,
       redirect_uri: oidcData.target_link_uri,
       login_hint: oidcData.login_hint,
-      state: generateUniqueString(30, true),
-      nonce: generateUniqueString(25, false),
+      state: "SDF7ASDLSFDS9", //generateUniqueString(30, true),
+      nonce: "SDF7ASDLSFDS9", //generateUniqueString(25, false),
       prompt: "none"
     };
     if (oidcData.lti_message_hint) {
@@ -179,9 +174,6 @@ const rlInitiateOIDC = (req: any, res: any): any => {
         ...responseWithLTIMessageHint,
         lti_deployment_id: oidcData.lti_deployment_id
       };
-    setCookie("nonce", response.nonce);
-    setCookie("state", response.state);
-    setCookie("client_id", response.client_id);
     console.log("responseWithLTIMessageHint");
     console.log(responseWithLTIMessageHint);
     //return responseWithLTIMessageHint;
