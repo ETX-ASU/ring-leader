@@ -19,11 +19,11 @@ const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 const LTI_STUDENT_REDIRECT = "/student";
 const plateform = {
   plateformOIDCAuthEndPoint:
-    "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new",
+    "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new", // we get this during plateform registration
   platformAccessTokenEndpoint:
-    "https://lti-ri.imsglobal.org/platforms/1285/access_tokens",
-  nounce: "SDF7ASDLSFDS9",
-  state: "SDF7ASDLSFDS9",
+    "https://lti-ri.imsglobal.org/platforms/1285/access_tokens", // we get this during plateform registration
+  nounce: "SDF7ASDLSFDS9", //This is the same value that passed during the OIDC request. Tool need to pass this.
+  state: "SDF7ASDLSFDS9", //This is the same value that passed during the OIDC request. Tool need to pass this.
   clientId: "SDF7ASDLSFDS9",
   platformKid: "",
   alg: ""
