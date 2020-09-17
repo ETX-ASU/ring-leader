@@ -174,10 +174,12 @@ const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
       };
     console.log("responseWithLTIMessageHint");
     console.log(response);
-    return {
-      pathname: plateform.plateformOIDCAuthEndPoint,
-      query: response
-    };
+    res.redirect(
+      url.format({
+        pathname: plateform.plateformOIDCAuthEndPoint,
+        query: response
+      })
+    );
   }
   if (errors.length > 0) {
     res.send("Error with OIDC process: " + errors);
