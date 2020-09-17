@@ -26,8 +26,8 @@ const plateformAccessToken = {
   platformAccessTokenEndpoint:
     "https://lti-ri.imsglobal.org/platforms/1285/access_tokens", // we get this during plateform registration
   clientId: "SDF7ASDLSFDS9",
-  platformKid: "",
-  alg: ""
+  platformKid: "ASU ETX - Ring Leader - rl-ims-platform - Public Key",
+  alg: "RS256"
 };
 
 const plateformLaunch = {
