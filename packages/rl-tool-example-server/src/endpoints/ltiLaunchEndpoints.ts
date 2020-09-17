@@ -1,6 +1,10 @@
 import path from "path";
 import { Express } from "express";
-import { rlInitiateOIDC, validateToken } from "@asu-etx/rl-server-lib";
+import {
+  rlInitiateOIDC,
+  validateToken,
+  getAccessToken
+} from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
@@ -52,6 +56,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(req);
     const verified = validateToken(req, plateformLaunch);
     console.log(verified);
+    if (verified) getAccessToken([], plateformAccessToken);
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 

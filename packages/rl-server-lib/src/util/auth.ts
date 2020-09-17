@@ -5,7 +5,7 @@ Validate if the OIDC request has all the required parameters i.e. iss, login_hin
 import axios from "axios";
 import url from "url";
 import { generateUniqueString } from "./generateUniqueString";
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 const isValidOIDCRequest = (oidcData: any): string[] => {
   const errors = [];
   if (!oidcData.iss) {
@@ -125,8 +125,8 @@ const validateToken = (req: any, plateform: any): any => {
   const idToken = req.body.id_token;
   console.log("idToken:" + idToken);
   const decodedtoken = jwt.decode(idToken);
-  console.log("decodedtoken:" + decodedtoken);
-
+  console.log("decodedtoken:");
+  console.log(JSON.stringify(decodedtoken));
   if (!decodedtoken) throw new Error("INVALID_JWT_RECEIVED");
   const oidcVerified = oidcValidation(decodedtoken, plateform);
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
