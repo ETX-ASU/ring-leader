@@ -104,7 +104,6 @@ const claimValidation = (token: any): any => {
  * @description Validates de token based on the OIDC specifications.
  * @param {Object} token - Id token you wish to validate.
  * @param {Platform} platform - Platform object.
- * @param {Object} validationParameters - Validation parameters.
  */
 
 const oidcValidation = (token: any, plateform: any): any => {
@@ -192,7 +191,7 @@ const getAccessToken = (plateform: any): any => {
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
-    jti: encodeURIComponent(generateUniqueString(30, true))
+    jti: "dffdbdce-a9f1-427b-8fca-604182198783" //encodeURIComponent(generateUniqueString(30, true))
   };
   const token = jwt.sign(confjwt, plateform.platformPrivateKey, {
     algorithm: plateform.alg,
@@ -205,6 +204,7 @@ const getAccessToken = (plateform: any): any => {
     client_assertion: token,
     scope: scopes
   };
+  console.log(message);
   axios
     .post(plateform.platformAccessTokenEndpoint, {
       data: message
