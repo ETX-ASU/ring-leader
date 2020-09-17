@@ -131,7 +131,11 @@ const validateToken = (req: any, plateform: any): any => {
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
-  return true;
+  const tokenDetails = {
+    token: idToken,
+    isValidToken: true
+  };
+  return tokenDetails;
 };
 const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
   let oidcData = req.query;
