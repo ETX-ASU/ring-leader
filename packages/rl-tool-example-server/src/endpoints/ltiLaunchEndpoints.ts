@@ -17,29 +17,34 @@ const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 const LTI_STUDENT_REDIRECT = "/student";
-
+const plateform = {
+  plateformOIDCAuthEndPoint:
+    "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new",
+  platformAccessTokenEndpoint:
+    "https://lti-ri.imsglobal.org/platforms/1285/access_tokens",
+  nounce: "SDF7ASDLSFDS9",
+  state: "SDF7ASDLSFDS9",
+  clientId: "SDF7ASDLSFDS9",
+  platformKid: "",
+  alg: ""
+};
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
-    rlInitiateOIDC(req, res);
+    rlInitiateOIDC(req, res, plateform);
   });
 
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     // OIDC POST initiation
     console.log(req);
-    rlInitiateOIDC(req, res);
+    rlInitiateOIDC(req, res, plateform);
   });
 
   // post to accept the LMS launch with idToken
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
     console.log("LTI Advantage Token");
     console.log(req);
-    const plateform: any = {
-      nounce: "SDF7ASDLSFDS9",
-      state: "SDF7ASDLSFDS9",
-      client_id: "SDF7ASDLSFDS9"
-    };
     const verified = validateToken(req, plateform);
     console.log(verified);
     res.redirect(LTI_INSTRUCTOR_REDIRECT);

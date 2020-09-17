@@ -1,6 +1,8 @@
 /*
 Validate if the OIDC request has all the required parameters i.e. iss, login_hint and target_link_url
 */
+// eslint-disable-next-line node/no-extraneous-import
+import axios from "axios";
 import url from "url";
 import { generateUniqueString } from "./generateUniqueString";
 import jwt from "jsonwebtoken";
@@ -109,17 +111,17 @@ const claimValidation = (token: any): any => {
 const oidcValidation = (token: any, platform: any): any => {
   console.log("Token signature verified");
   console.log("Initiating OIDC aditional validation steps");
-  const aud = validateAud(token, platform);
-  const nonce = validateNonce(token, platform);
-  const claims = claimValidation(token);
+  const aud: boolean = validateAud(token, platform);
+  const nonce: boolean = validateNonce(token, platform);
+  const claims: boolean = claimValidation(token);
+
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
 const validateToken = (req: any, plateform: any): any => {
-  //this needs to come from Tool
   console.log("plateform.nounce-" + plateform.nounce);
   console.log("plateform.state-" + plateform.state);
-  console.log("plateform.client_id-" + plateform.client_id);
+  console.log("plateform.client_id-" + plateform.clientId);
 
   const idToken = req.body.id_token;
   console.log("idToken:" + idToken);
@@ -127,19 +129,13 @@ const validateToken = (req: any, plateform: any): any => {
   console.log("decodedtoken:" + decodedtoken);
 
   if (!decodedtoken) throw new Error("INVALID_JWT_RECEIVED");
-  const verified = {
-    oidcVerified: Boolean,
-    claimValidation: Boolean,
-    clientId: String,
-    plateformId: String
-  };
-  verified.oidcVerified = oidcValidation(decodedtoken, plateform);
-  verified.claimValidation = claimValidation(decodedtoken);
-  verified.clientId = plateform.clientId;
-  verified.plateformId = plateform.plateformId;
-  return verified;
+  const oidcVerified = oidcValidation(decodedtoken, plateform);
+  if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
+  if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
+  if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
+  return true;
 };
-const rlInitiateOIDC = (req: any, res: any): any => {
+const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
   let oidcData = req.query;
   console.log("req.method:" + req.method);
 
@@ -148,8 +144,8 @@ const rlInitiateOIDC = (req: any, res: any): any => {
   console.log(req.query);
   const errors = ([] = isValidOIDCRequest(oidcData));
   if (errors.length === 0) {
-    let responseWithLTIMessageHint = {};
-    const response = {
+    let response = {};
+    const objResponse = {
       scope: "openid",
       response_type: "id_token",
       response_mode: "form_post",
@@ -161,27 +157,26 @@ const rlInitiateOIDC = (req: any, res: any): any => {
       prompt: "none"
     };
     if (oidcData.lti_message_hint) {
-      responseWithLTIMessageHint = {
-        ...response,
+      response = {
+        ...objResponse,
         lti_message_hint: oidcData.lti_message_hint
       };
     } else {
-      responseWithLTIMessageHint = { ...response };
+      response = { ...objResponse };
     }
 
     if (oidcData.lti_deployment_id)
-      responseWithLTIMessageHint = {
-        ...responseWithLTIMessageHint,
+      response = {
+        ...response,
         lti_deployment_id: oidcData.lti_deployment_id
       };
     console.log("responseWithLTIMessageHint");
-    console.log(responseWithLTIMessageHint);
+    console.log(response);
     //return responseWithLTIMessageHint;
     res.redirect(
       url.format({
-        pathname:
-          "https://lti-ri.imsglobal.org/platforms/1285/authorizations/new",
-        query: responseWithLTIMessageHint
+        pathname: plateform.plateformOIDCAuthEndPoint,
+        query: response
       })
     );
   }
@@ -189,4 +184,39 @@ const rlInitiateOIDC = (req: any, res: any): any => {
     res.send("Error with OIDC process: " + errors);
   }
 };
-export { rlInitiateOIDC, validateToken };
+const getAccessToken = (scopes: any, platform: any): any => {
+  const clientId = platform.clientId;
+  const confjwt = {
+    sub: clientId,
+    iss: clientId,
+    aud: platform.platformAccessTokenEndpoint,
+    iat: Date.now() / 1000,
+    exp: Date.now() / 1000 + 60,
+    jti: encodeURIComponent(generateUniqueString(30, true))
+  };
+  const token = jwt.sign(confjwt, platform.platformPrivateKey, {
+    algorithm: platform.alg,
+    keyid: platform.platformKid
+  });
+  const message = {
+    grant_type: "client_credentials",
+    client_assertion_type:
+      "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+    client_assertion: token,
+    scope: scopes
+  };
+  axios
+    .post(platform.platformAccessTokenEndpoint, {
+      form: message
+    })
+    .then((access) => {
+      console.log("Successfully generated new access_token");
+      return access.data.json();
+    })
+    .catch((err) => {
+      console.log("Error generating new access_token");
+      console.log(err);
+      return err;
+    });
+};
+export { rlInitiateOIDC, validateToken, getAccessToken };
