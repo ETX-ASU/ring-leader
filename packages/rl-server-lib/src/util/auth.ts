@@ -4,6 +4,7 @@ Validate if the OIDC request has all the required parameters i.e. iss, login_hin
 import { getDecodedAccessToken } from "./getDecodedAccessToken";
 import url from "url";
 import { generateUniqueString } from "./generateUniqueString";
+import jwt from "jsonwebtoken";
 
 const isValidOIDCRequest = (oidcData: any): string[] => {
   const errors = [];
@@ -118,6 +119,12 @@ const oidcValidation = (token: any, platform: any): any => {
 
 const validateToken = (token: any, plateform: any): any => {
   const decodedtoken = getDecodedAccessToken(token);
+  const decoded = jwt.decode(token, {
+    complete: true
+  });
+  console.log("decodedtoken:" + decodedtoken);
+  console.log("decoded:" + decoded);
+
   if (!decodedtoken) throw new Error("INVALID_JWT_RECEIVED");
   const verified = {
     oidcVerified: Boolean,
