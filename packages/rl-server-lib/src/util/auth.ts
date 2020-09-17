@@ -188,7 +188,7 @@ const getAccessToken = (plateform: any): any => {
   const clientId = plateform.clientId;
   const confjwt = {
     sub: clientId,
-    iss: clientId,
+    iss: plateform.iss,
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
