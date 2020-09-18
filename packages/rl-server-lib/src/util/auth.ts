@@ -43,7 +43,7 @@ const validateAud = (token: any, plateform: any): boolean => {
 const validateNonce = (token: any, plateform: any): boolean => {
   console.log("Validating nonce");
   console.log("Token Nonce: " + token.nonce);
-  if (token.nonce == plateform.nounce) return true;
+  if (token.nonce == plateform.nonce) return true;
   else return false;
 };
 
@@ -113,7 +113,7 @@ const oidcValidation = (token: any, plateform: any): any => {
 const rlValidateToken = (req: any, plateform: any): any => {
   console.log("plateform.nounce-" + plateform.nounce);
   console.log("plateform.state-" + plateform.state);
-  console.log("plateform.client_id-" + plateform.clientId);
+  console.log("plateform.client_id-" + plateform.client_id);
 
   const idToken = req.body.id_token;
   console.log("idToken:" + idToken);

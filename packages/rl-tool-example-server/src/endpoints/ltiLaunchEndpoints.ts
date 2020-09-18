@@ -77,7 +77,9 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
     console.log(verified.isValidToken);
     console.log("id_token from plateform");
     console.log(verified.token);
-
+    session.token = verified.token;
+    console.log("session.token");
+    console.log(session.token);
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 
