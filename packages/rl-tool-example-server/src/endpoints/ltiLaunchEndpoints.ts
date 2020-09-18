@@ -25,16 +25,23 @@ const plateformLaunch = {
     "https://unicon.instructure.com/api/lti/authorize_redirect" // we get this during plateform registration
 };
 
-const ltiLaunchEndpoints = (app: Express, session: any): void => {
+const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
-  app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
+  app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req, res) => {
     console.log(req);
 
     const nonce = generateUniqueString(25, false);
     const state = generateUniqueString(30, false);
     //This resposne will be save in session or DB and will be used in validating the nonce and other properties
     const response: any = rlProcessOIDCRequest(req, state, nonce);
-    session.response = response;
+
+    if (req.session) {
+      // req.session.nonce = nonce;
+      // req.session.state = state;
+      // await res.session.save()
+    } else {
+      throw new Error("no session detected, something is wrong");
+    }
 
     res.redirect(
       url.format({
@@ -44,13 +51,21 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
     );
   });
 
-  app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
+  app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req, res) => {
     // OIDC POST initiation
 
     const nonce = generateUniqueString(25, false);
     const state = generateUniqueString(30, false);
     const response: any = rlProcessOIDCRequest(req, state, nonce);
-    session.response = response;
+
+    if (req.session) {
+      // req.session.nonce = nonce;
+      // req.session.state = state;
+      // await res.session.save()
+    } else {
+      throw new Error("no session detected, something is wrong");
+    }
+
     res.redirect(
       url.format({
         pathname: plateformLaunch.plateformOIDCAuthEndPoint,
@@ -64,15 +79,20 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
     console.log("LTI Advantage Token");
     console.log(req);
     console.log("session.response");
-    console.log(session.response);
 
-    const verified = rlValidateToken(req, session.response);
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+
+    const idToken = req.session.idToken;
+
+    const verified = rlValidateToken(req, idToken);
     console.log(verified);
     console.log("Is Valid Token");
     console.log(verified.isValidToken);
     console.log("id_token from plateform");
     console.log(verified.token);
-    session.token = verified.token;
+    // session.token = verified.token;
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 

@@ -61,7 +61,7 @@ app.use("/", express.static(USER_INTERFACE_ROOT));
 /*========================== REGISTER REST ENDPOINTS ==========================*/
 
 // lti 1.3 launch with context and establish session
-ltiLaunchEndpoints(app, expressSession());
+ltiLaunchEndpoints(app);
 
 // lti 1.3 advantage service endpoints. NOTE: If we decide to only make calls client side with the idToken
 // then these endpoints will not be needed. They could be completed to show what a server side flow might look like
