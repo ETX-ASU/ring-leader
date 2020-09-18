@@ -1,6 +1,5 @@
 import path from "path";
 import { Express } from "express";
-import { expressSession } from "express-session";
 import url from "url";
 import {
   rlProcessOIDCRequest,
@@ -29,7 +28,7 @@ const plateformLaunch = {
     "https://unicon.instructure.com/api/lti/authorize_redirect" // we get this during plateform registration
 };
 
-const ltiLaunchEndpoints = (app: Express, session: expressSession): void => {
+const ltiLaunchEndpoints = (app: Express, session: any): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
