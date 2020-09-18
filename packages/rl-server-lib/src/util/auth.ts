@@ -184,7 +184,7 @@ const getAccessToken = (plateform: any): any => {
     exp: Date.now() / 1000 + 60,
     jti: "dffdbdce-a9f1-427b-8fca-604182198783" //encodeURIComponent(generateUniqueString(30, true))
   };
-  console.log("confjwt-" + confjwt);
+  console.log("confjwt-" + JSON.stringify(confjwt));
 
   const token = jwt.sign(confjwt, plateform.platformPrivateKey, {
     algorithm: plateform.alg,
