@@ -1,7 +1,7 @@
 import path from "path";
 import { Express } from "express";
 import url from "url";
-import { rlInitiateOIDC } from "@asu-etx/rl-server-lib";
+import { rlProcessOIDCRequest, rlValidateToken } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
@@ -28,7 +28,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
 
-    const response: any = rlInitiateOIDC(req);
+    const response: any = rlProcessOIDCRequest(req);
     //This resposne will be save in session or DB and will be used in validating the nonce and other properties
     res.redirect(
       url.format({
@@ -41,7 +41,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     // OIDC POST initiation
     console.log(req);
-    const response: any = rlInitiateOIDC(req);
+    const response: any = rlProcessOIDCRequest(req);
 
     res.redirect(
       url.format({
@@ -55,7 +55,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
     console.log("LTI Advantage Token");
     console.log(req);
-    //const verified = validateToken(req, plateformLaunch);
+    //const verified = rlValidateToken(req, plateformLaunch);
     //console.log(verified);
     /*if (verified.isValidToken) {
       console.log("Is Valid Token");

@@ -114,7 +114,7 @@ const oidcValidation = (token: any, plateform: any): any => {
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
-const validateToken = (req: any, plateform: any): any => {
+const rlValidateToken = (req: any, plateform: any): any => {
   console.log("plateform.nounce-" + plateform.nounce);
   console.log("plateform.state-" + plateform.state);
   console.log("plateform.client_id-" + plateform.clientId);
@@ -135,7 +135,7 @@ const validateToken = (req: any, plateform: any): any => {
   };
   return tokenDetails;
 };
-const rlInitiateOIDC = (req: any): any => {
+const rlProcessOIDCRequest = (req: any): any => {
   let oidcData = req.query;
   console.log("req.method:" + req.method);
 
@@ -213,4 +213,4 @@ const getAccessToken = (plateform: any): any => {
       return err;
     });
 };
-export { rlInitiateOIDC, validateToken, getAccessToken };
+export { rlProcessOIDCRequest, rlValidateToken, getAccessToken };
