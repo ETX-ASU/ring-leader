@@ -4,8 +4,8 @@ import { URLSearchParams } from "url";
 class Grade {
   async getLineItems(
     idtoken: any,
-    options: any,
-    accessToken: any
+    options?: any,
+    accessToken?: any
   ): Promise<any> {
     if (!idtoken) {
       throw new Error("MISSING_ID_TOKEN");

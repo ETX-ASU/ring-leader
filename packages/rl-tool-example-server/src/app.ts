@@ -10,6 +10,7 @@ import getConnection from "./database/db";
 import dbInit from "./database/init";
 
 import { PORT, USER_INTERFACE_ROOT } from "./environment";
+import session from "express-session";
 
 const USER_INTERFACE_PLAYER_PAGE = path.join(USER_INTERFACE_ROOT, "index.html");
 
@@ -60,7 +61,7 @@ app.use("/", express.static(USER_INTERFACE_ROOT));
 /*========================== REGISTER REST ENDPOINTS ==========================*/
 
 // lti 1.3 launch with context and establish session
-ltiLaunchEndpoints(app);
+ltiLaunchEndpoints(app, expressSession());
 
 // lti 1.3 advantage service endpoints. NOTE: If we decide to only make calls client side with the idToken
 // then these endpoints will not be needed. They could be completed to show what a server side flow might look like

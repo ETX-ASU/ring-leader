@@ -75,7 +75,7 @@ class NamesAndRoles {
         await axios
           .get(next, {
             headers: {
-              Authorization: token.token_type + " " + token.access_token,
+              Authorization: "Bearer  " + token,
               Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
             }
           })
