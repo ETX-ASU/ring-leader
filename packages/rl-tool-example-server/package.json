@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@asu-etx/rl-server-lib": "1.0.0",
+    "@asu-etx/rl-server-client": "1.0.0",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",

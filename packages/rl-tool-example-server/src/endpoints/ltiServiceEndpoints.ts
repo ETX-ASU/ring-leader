@@ -8,7 +8,12 @@ import requestLogger from "../middleware/requestLogger";
 // can be made server side if they don't want put the Canvas idToken into a
 // cookie and send it to the client
 const ltiServiceEndpoints = (app: Express): void => {
-  app.get("/lti-service/roster", requestLogger, (req, res) => {
+  app.get("/lti-service/roster", requestLogger, async (req, res) => {
+    // const idToken = req.session.idToken;
+    // pass the token from the session to the rl-client-lib to make the call to Canvas
+    // const results = await rlClientLib.getUsers(idToken);
+    // res.send(results)
+
     res.send("");
   });
 
