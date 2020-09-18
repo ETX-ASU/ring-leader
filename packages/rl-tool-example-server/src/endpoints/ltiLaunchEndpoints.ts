@@ -97,8 +97,8 @@ const ltiLaunchEndpoints = (app: Express): void => {
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
     console.log("LTI Advantage Token");
     console.log(req);
-    console.log("req.cookies.response");
-    console.log(req.cookies.response);
+    //console.log("req.cookies.response");
+    //console.log(req.cookies.response);
 
     /* const verified = rlValidateToken(req, req.cookies.response);
     console.log(verified);
