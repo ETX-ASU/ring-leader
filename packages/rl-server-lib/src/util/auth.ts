@@ -111,7 +111,7 @@ const oidcValidation = (token: any, plateform: any): any => {
 };
 
 const rlValidateToken = (req: any, plateform: any): any => {
-  console.log("plateform.nounce-" + plateform.nounce);
+  console.log("plateform.nonce-" + plateform.nonce);
   console.log("plateform.state-" + plateform.state);
   console.log("plateform.client_id-" + plateform.client_id);
 
@@ -174,7 +174,7 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
 const getAccessToken = (plateform: any): any => {
   const scopes =
     " https://purl.imsglobal.org/spec/lti-ags/lineitem https://purl.imsglobal.org/spec/lti-ags/result/read";
-  const clientId = plateform.clientId;
+  const clientId = plateform.client_id;
   const confjwt = {
     sub: clientId,
     iss: plateform.iss,
