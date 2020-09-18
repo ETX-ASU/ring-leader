@@ -1,10 +1,7 @@
 import path from "path";
 import { Express } from "express";
-import {
-  rlInitiateOIDC,
-  validateToken,
-  getAccessToken
-} from "@asu-etx/rl-server-lib";
+import url from "url";
+import { rlInitiateOIDC } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
@@ -30,13 +27,28 @@ const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
-    rlInitiateOIDC(req, res, plateformLaunch);
+
+    const response: any = rlInitiateOIDC(req);
+    //This resposne will be save in session or DB and will be used in validating the nonce and other properties
+    res.redirect(
+      url.format({
+        pathname: plateformLaunch.plateformOIDCAuthEndPoint,
+        query: response
+      })
+    );
   });
 
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     // OIDC POST initiation
     console.log(req);
-    rlInitiateOIDC(req, res, plateformLaunch);
+    const response: any = rlInitiateOIDC(req);
+
+    res.redirect(
+      url.format({
+        pathname: plateformLaunch.plateformOIDCAuthEndPoint,
+        query: response
+      })
+    );
   });
 
   // post to accept the LMS launch with idToken

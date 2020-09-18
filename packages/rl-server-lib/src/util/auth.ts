@@ -3,21 +3,19 @@ Validate if the OIDC request has all the required parameters i.e. iss, login_hin
 */
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
-import url from "url";
 import { generateUniqueString } from "./generateUniqueString";
-import jwt, { JsonWebTokenError } from "jsonwebtoken";
-const isValidOIDCRequest = (oidcData: any): string[] => {
-  const errors = [];
+import jwt from "jsonwebtoken";
+const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
-    errors.push("Issuer missing");
+    throw new Error("ISSUER_MISSING_IN_OIDC_REQUEST");
   }
   if (!oidcData.login_hint) {
-    errors.push("Login hint missing");
+    throw new Error("LOGIN_HINT_MISSING_IN_OIDC_REQUEST");
   }
   if (!oidcData.target_link_uri) {
-    errors.push("Target Link URI missing");
+    throw new Error("TARGET_LINK_URI_MISSING_IN_OIDC_REQUEST");
   }
-  return errors;
+  return true;
 };
 
 /**
@@ -137,15 +135,15 @@ const validateToken = (req: any, plateform: any): any => {
   };
   return tokenDetails;
 };
-const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
+const rlInitiateOIDC = (req: any): any => {
   let oidcData = req.query;
   console.log("req.method:" + req.method);
 
   if (req.method == "POST") oidcData = req.body;
   console.log("Get Request query");
   console.log(req.query);
-  const errors = ([] = isValidOIDCRequest(oidcData));
-  if (errors.length === 0) {
+
+  if (isValidOIDCRequest(oidcData)) {
     let response = {};
     const objResponse = {
       scope: "openid",
@@ -172,17 +170,9 @@ const rlInitiateOIDC = (req: any, res: any, plateform: any): any => {
         ...response,
         lti_deployment_id: oidcData.lti_deployment_id
       };
-    console.log("responseWithLTIMessageHint");
+    console.log("OIDC response object");
     console.log(response);
-    res.redirect(
-      url.format({
-        pathname: plateform.plateformOIDCAuthEndPoint,
-        query: response
-      })
-    );
-  }
-  if (errors.length > 0) {
-    res.send("Error with OIDC process: " + errors);
+    return response;
   }
 };
 const getAccessToken = (plateform: any): any => {
