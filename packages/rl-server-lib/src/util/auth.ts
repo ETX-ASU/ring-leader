@@ -1,6 +1,3 @@
-/*
-Validate if the OIDC request has all the required parameters i.e. iss, login_hint and target_link_url
-*/
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
 import { generateUniqueString } from "./generateUniqueString";
@@ -87,9 +84,9 @@ const claimValidation = (token: any): any => {
     throw new Error("NO_LTI_VERSION_CLAIM");
   if (token["https://purl.imsglobal.org/spec/lti/claim/version"] !== "1.3.0")
     throw new Error("WRONG_LTI_VERSION_CLAIM");
-  //console.log("Checking Deployment Id claim");
-  // if (!token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"])
-  // throw new Error("NO_DEPLOYMENT_ID_CLAIM");
+  console.log("Checking Deployment Id claim");
+  if (!token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"])
+    throw new Error("NO_DEPLOYMENT_ID_CLAIM");
   console.log("Checking Sub claim");
   if (!token.sub) throw new Error("NO_SUB_CLAIM");
   console.log("Checking Roles claim");

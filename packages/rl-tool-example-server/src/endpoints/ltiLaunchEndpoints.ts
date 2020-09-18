@@ -29,6 +29,8 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(req);
 
     const response: any = rlProcessOIDCRequest(req);
+    req.cookies.response = response;
+
     //This resposne will be save in session or DB and will be used in validating the nonce and other properties
     res.redirect(
       url.format({
@@ -42,7 +44,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     // OIDC POST initiation
     console.log(req);
     const response: any = rlProcessOIDCRequest(req);
-
+    req.cookies.response = response;
     res.redirect(
       url.format({
         pathname: plateformLaunch.plateformOIDCAuthEndPoint,
@@ -55,14 +57,17 @@ const ltiLaunchEndpoints = (app: Express): void => {
   app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
     console.log("LTI Advantage Token");
     console.log(req);
-    //const verified = rlValidateToken(req, plateformLaunch);
-    //console.log(verified);
-    /*if (verified.isValidToken) {
+    console.log("req.cookies.response");
+    console.log(req.cookies.response);
+
+    const verified = rlValidateToken(req, req.cookies.response);
+    console.log(verified);
+    if (verified.isValidToken) {
       console.log("Is Valid Token");
       console.log(verified.isValidToken);
       console.log("id_token from plateform");
       console.log(verified.token);
-    }*/
+    }
     //getAccessToken(plateformAccessToken);
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
