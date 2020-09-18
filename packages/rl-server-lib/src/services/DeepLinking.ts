@@ -1,16 +1,17 @@
-import { generateUniqueString } from "../util/generateUniqueString";
 import jwt from "jsonwebtoken";
 
 class DeepLinking {
   async createDeepLinkingForm(
     idtoken: any,
     contentItems: any,
-    options: any
+    options: any,
+    nonce: string
   ): Promise<any> {
     const message = await this.createDeepLinkingMessage(
       idtoken,
       contentItems,
-      options
+      options,
+      nonce
     ); // Creating auto submitting form
 
     const form =
@@ -30,7 +31,8 @@ class DeepLinking {
   async createDeepLinkingMessage(
     idtoken: any,
     contentItems: any,
-    options: any
+    options: any,
+    nonce: string
   ): Promise<any> {
     if (!idtoken) {
       console.log("IdToken object missing.");
@@ -68,7 +70,7 @@ class DeepLinking {
       aud: idtoken.iss,
       iat: Date.now() / 1000,
       exp: Date.now() / 1000 + 60,
-      nonce: generateUniqueString(25, false),
+      nonce: nonce,
       "https://purl.imsglobal.org/spec/lti/claim/deployment_id":
         idtoken.deploymentId,
       "https://purl.imsglobal.org/spec/lti/claim/message_type":

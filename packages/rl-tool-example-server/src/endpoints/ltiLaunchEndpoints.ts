@@ -33,7 +33,10 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
 
-    const response: any = rlProcessOIDCRequest(req);
+    const nonce = "state";
+    const state = "state";
+
+    const response: any = rlProcessOIDCRequest(req, state, nonce);
     session.response = response;
 
     //This resposne will be save in session or DB and will be used in validating the nonce and other properties
@@ -65,14 +68,13 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
     console.log("session.response");
     console.log(session.response);
 
-    /* const verified = rlValidateToken(req, req.cookies.response);
+    const verified = rlValidateToken(req, session.response);
     console.log(verified);
-    if (verified.isValidToken) {
-      console.log("Is Valid Token");
-      console.log(verified.isValidToken);
-      console.log("id_token from plateform");
-      console.log(verified.token);
-    }*/
+    console.log("Is Valid Token");
+    console.log(verified.isValidToken);
+    console.log("id_token from plateform");
+    console.log(verified.token);
+
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 

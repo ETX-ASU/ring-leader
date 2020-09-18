@@ -1,6 +1,5 @@
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
-import { generateUniqueString } from "./generateUniqueString";
 import jwt from "jsonwebtoken";
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
@@ -132,7 +131,7 @@ const rlValidateToken = (req: any, plateform: any): any => {
   };
   return tokenDetails;
 };
-const rlProcessOIDCRequest = (req: any): any => {
+const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   let oidcData = req.query;
   console.log("req.method:" + req.method);
 
@@ -149,8 +148,8 @@ const rlProcessOIDCRequest = (req: any): any => {
       client_id: oidcData.client_id,
       redirect_uri: oidcData.target_link_uri,
       login_hint: oidcData.login_hint,
-      state: generateUniqueString(30, true),
-      nonce: generateUniqueString(25, false),
+      state: state,
+      nonce: nonce,
       prompt: "none"
     };
     if (oidcData.lti_message_hint) {
@@ -181,8 +180,7 @@ const getAccessToken = (plateform: any): any => {
     iss: plateform.iss,
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
-    exp: Date.now() / 1000 + 60,
-    jti: "dffdbdce-a9f1-427b-8fca-604182198783" //encodeURIComponent(generateUniqueString(30, true))
+    exp: Date.now() / 1000 + 60
   };
   console.log("confjwt-" + JSON.stringify(confjwt));
 
