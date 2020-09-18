@@ -1,11 +1,7 @@
 import path from "path";
 import { Express } from "express";
 import url from "url";
-import {
-  rlProcessOIDCRequest,
-  rlValidateToken,
-  getAccessToken
-} from "@asu-etx/rl-server-lib";
+import { rlProcessOIDCRequest, rlValidateToken } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
@@ -36,11 +32,10 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
 
     const nonce = generateUniqueString(25, false);
     const state = generateUniqueString(30, false);
-
+    //This resposne will be save in session or DB and will be used in validating the nonce and other properties
     const response: any = rlProcessOIDCRequest(req, state, nonce);
     session.response = response;
 
-    //This resposne will be save in session or DB and will be used in validating the nonce and other properties
     res.redirect(
       url.format({
         pathname: plateformLaunch.plateformOIDCAuthEndPoint,
