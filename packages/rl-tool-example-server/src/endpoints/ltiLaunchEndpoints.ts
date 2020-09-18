@@ -10,6 +10,7 @@ import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
 import { APPLICATION_URL } from "../environment";
+import { generateUniqueString } from "../generateUniqueString";
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {
   const connection = await getConnection();
@@ -33,8 +34,8 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     console.log(req);
 
-    const nonce = "state";
-    const state = "state";
+    const nonce = generateUniqueString(25, false);
+    const state = generateUniqueString(30, false);
 
     const response: any = rlProcessOIDCRequest(req, state, nonce);
     session.response = response;
@@ -50,8 +51,10 @@ const ltiLaunchEndpoints = (app: Express, session: any): void => {
 
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, (req, res) => {
     // OIDC POST initiation
-    console.log(req);
-    const response: any = rlProcessOIDCRequest(req);
+
+    const nonce = generateUniqueString(25, false);
+    const state = generateUniqueString(30, false);
+    const response: any = rlProcessOIDCRequest(req, state, nonce);
     session.response = response;
     res.redirect(
       url.format({
