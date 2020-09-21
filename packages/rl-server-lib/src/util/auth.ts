@@ -171,7 +171,7 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
     return response;
   }
 };
-const getAccessToken = (plateform: any, idtToken: any): any => {
+const getAccessToken = (plateform: any): any => {
   const scopes =
     " https://purl.imsglobal.org/spec/lti-ags/lineitem https://purl.imsglobal.org/spec/lti-ags/result/read";
   const clientId = plateform.client_id;
@@ -188,19 +188,12 @@ const getAccessToken = (plateform: any, idtToken: any): any => {
     algorithm: plateform.alg,
     keyid: plateform.platformKid
   });
-  const message1 = {
+  const message = {
     grant_type: "client_credentials",
     client_assertion_type:
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: token,
     scope: scopes
-  };
-  const message = {
-    grant_type: "refresh_token",
-    client_id: "97140000000000177",
-    client_secret: idtToken,
-    redirect_uri: plateform.redirect_uri,
-    refresh_token: idtToken
   };
   console.log(message);
   axios
