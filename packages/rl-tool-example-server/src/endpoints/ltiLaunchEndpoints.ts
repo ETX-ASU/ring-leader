@@ -36,9 +36,12 @@ const ltiLaunchEndpoints = (app: Express): void => {
     const response: any = rlProcessOIDCRequest(req, state, nonce);
 
     if (req.session) {
-      // req.session.nonce = nonce;
-      // req.session.state = state;
-      // await res.session.save()
+      req.session.nonce = nonce;
+      req.session.state = state;
+      req.session.client_id = response.client_id;
+      await req.session.save(() => {
+        console.log("session data saved");
+      });
     } else {
       throw new Error("no session detected, something is wrong");
     }
@@ -59,9 +62,12 @@ const ltiLaunchEndpoints = (app: Express): void => {
     const response: any = rlProcessOIDCRequest(req, state, nonce);
 
     if (req.session) {
-      // req.session.nonce = nonce;
-      // req.session.state = state;
-      // await res.session.save()
+      req.session.nonce = nonce;
+      req.session.state = state;
+      req.session.client_id = response.client_id;
+      await req.session.save(() => {
+        console.log("session data saved");
+      });
     } else {
       throw new Error("no session detected, something is wrong");
     }
@@ -75,24 +81,27 @@ const ltiLaunchEndpoints = (app: Express): void => {
   });
 
   // post to accept the LMS launch with idToken
-  app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, (req, res) => {
-    console.log("LTI Advantage Token");
-    console.log(req);
-    console.log("session.response");
-
+  app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
 
-    const idToken = req.session.idToken;
+    const oidcOriginalResponseData = {
+      nonce: req.session.nonce,
+      state: req.session.state,
+      client_id: req.session.client_id
+    };
 
-    const verified = rlValidateToken(req, idToken);
-    console.log(verified);
+    const verified = rlValidateToken(req, oidcOriginalResponseData);
     console.log("Is Valid Token");
     console.log(verified.isValidToken);
-    console.log("id_token from plateform");
-    console.log(verified.token);
-    // session.token = verified.token;
+
+    req.session.token = verified.isValidToken;
+
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
+
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 
