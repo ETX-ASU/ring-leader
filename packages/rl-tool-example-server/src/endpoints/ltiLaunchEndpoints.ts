@@ -29,8 +29,6 @@ const plateformLaunch = {
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req, res) => {
-    console.log(req);
-
     const nonce = generateUniqueString(25, false);
     const state = generateUniqueString(30, false);
     //This resposne will be save in session or DB and will be used in validating the nonce and other properties

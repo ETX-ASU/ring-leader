@@ -46,7 +46,7 @@ app.use(
     resave: true,
     saveUninitialized: true, // don't create cookie or session unless we actually set the user through authentication
     cookie: {
-      sameSite: "lax",
+      sameSite: "none",
       secure: true, // set this to true when served from https
       httpOnly: false // ideally set this to true so the client window can't access the cookie
     }
