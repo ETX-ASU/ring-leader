@@ -1,14 +1,20 @@
 import { URLSearchParams } from "url";
 import { parseLink } from "parse-link";
+import jwt from "jsonwebtoken";
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
 class NamesAndRoles {
-  async getMembers(token: any, options: any): Promise<any> {
-    if (!token) {
+  async getMembers(idToken: any, options: any): Promise<any> {
+    if (!idToken) {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
     }
+    const token: any = await jwt.decode(idToken);
     console.log(JSON.stringify(token));
+    console.log(
+      "membership url-" +
+        token["https://purl.imsglobal.org/spec/lti/claim/roles"]
+    );
 
     let query: any = [];
     let isQuery = true;
