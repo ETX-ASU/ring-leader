@@ -108,7 +108,6 @@ const ltiLaunchEndpoints = (app: Express): void => {
     await req.session.save(() => {
       console.log("session data saved");
     });
-    console.log(new NamesAndRoles().getMembers(req.body.id_token, {}));
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 
