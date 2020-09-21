@@ -44,7 +44,7 @@ app.use(
   expressSession({
     secret: "demo-secret",
     resave: true,
-    saveUninitialized: false, // don't create cookie or session unless we actually set the user through authentication
+    saveUninitialized: true, // don't create cookie or session unless we actually set the user through authentication
     cookie: {
       sameSite: "none",
       secure: false, // set this to true when served from https
