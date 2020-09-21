@@ -1,11 +1,7 @@
 import path from "path";
 import { Express } from "express";
 import url from "url";
-import {
-  rlProcessOIDCRequest,
-  rlValidateToken,
-  NamesAndRoles
-} from "@asu-etx/rl-server-lib";
+import { rlProcessOIDCRequest, rlValidateToken } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
