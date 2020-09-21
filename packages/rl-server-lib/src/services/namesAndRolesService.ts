@@ -11,21 +11,7 @@ class NamesAndRoles {
     }
     const token: any = await jwt.decode(idToken);
     console.log(JSON.stringify(token));
-    console.log(
-      "membership url-" +
-        token["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"]
-    );
-    console.log(
-      "membership url-context_memberships_url-" +
-        token["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"]
-          .context_memberships_url
-    );
-    console.log(
-      "membership url-0-" +
-        token[
-          "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"
-        ][0].context_memberships_url
-    );
+
     let query: any = [];
     let isQuery = true;
     if (options && options.role) {
@@ -42,7 +28,9 @@ class NamesAndRoles {
       console.log("Maximum number of pages retrieved: " + options.pages);
     if (query.length > 0) query = new URLSearchParams(query);
     else isQuery = false;
-    let next = token.context_memberships_url;
+    let next =
+      token["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"]
+        .context_memberships_url;
     console.log("token.context_memberships_url");
     console.log(token.context_memberships_url);
     if (options && options.url) {
