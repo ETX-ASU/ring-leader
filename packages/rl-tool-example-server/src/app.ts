@@ -10,7 +10,6 @@ import getConnection from "./database/db";
 import dbInit from "./database/init";
 
 import { PORT, USER_INTERFACE_ROOT } from "./environment";
-import session from "express-session";
 
 const USER_INTERFACE_PLAYER_PAGE = path.join(USER_INTERFACE_ROOT, "index.html");
 
