@@ -31,8 +31,8 @@ class NamesAndRoles {
     let next =
       token["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"]
         .context_memberships_url;
-    console.log("token.context_memberships_url");
-    console.log(token.context_memberships_url);
+    console.log("next");
+    console.log(next);
     if (options && options.url) {
       next = options.url;
       isQuery = false;
@@ -44,6 +44,8 @@ class NamesAndRoles {
 
     do {
       if (options && options.pages && curPage > options.pages) {
+        console.log("inside option section");
+
         if (next) result.next = next;
         break;
       }
@@ -55,7 +57,7 @@ class NamesAndRoles {
           .get(next, {
             params: query,
             headers: {
-              Authorization: "Bearer  " + token,
+              Authorization: "Bearer  " + idToken,
               Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
             }
           })
@@ -75,13 +77,14 @@ class NamesAndRoles {
             else next = false;
           })
           .catch((err) => {
+            console.log("error in if block ");
             console.log("error" + err);
           });
       else
         await axios
           .get(next, {
             headers: {
-              Authorization: "Bearer  " + token,
+              Authorization: "Bearer  " + idToken,
               Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
             }
           })
@@ -104,6 +107,7 @@ class NamesAndRoles {
           })
           .catch((err) => {
             console.log("error" + err);
+            next = false;
           });
       curPage++;
     } while (next);
