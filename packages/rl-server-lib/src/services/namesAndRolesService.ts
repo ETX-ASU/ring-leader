@@ -8,6 +8,7 @@ class NamesAndRoles {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
     }
+    console.log(JSON.stringify(token));
 
     let query: any = [];
     let isQuery = true;
