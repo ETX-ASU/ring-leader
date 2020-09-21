@@ -26,8 +26,9 @@ class NamesAndRoles {
       console.log("Maximum number of pages retrieved: " + options.pages);
     if (query.length > 0) query = new URLSearchParams(query);
     else isQuery = false;
-    let next = token.memberships_url;
-
+    let next = token.context_memberships_url;
+    console.log("token.context_memberships_url");
+    console.log(token.context_memberships_url);
     if (options && options.url) {
       next = options.url;
       isQuery = false;
@@ -83,6 +84,8 @@ class NamesAndRoles {
           .then((response) => {
             const headers = response.headers;
             const body = JSON.parse(response.data);
+            console.log("Memberships retrieved data");
+            console.log(body);
             if (!result) result = JSON.parse(JSON.stringify(body));
             else {
               result.members = [...result.members, ...body.members];
