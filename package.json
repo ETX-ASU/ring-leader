@@ -1,42 +1,42 @@
 {
-  "name": "@asu-etx/ring-leader",
-  "version": "1.0.0",
-  "description": "©, 2020 Arizona State University ETX. Libraries to support LTI 1.3 enabled tools",
-  "main": "NONE",
-  "repository": "https://github.com/ETX-ASU/ring-leader.git",
-  "author": "Melanie.Narish@asu.edu",
-  "license": "NOLICENSE",
-  "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/rl-shared",
-      "packages/rl-server-lib",
-      "packages/rl-client-lib",
-      "packages/rl-tool-example-server",
-      "packages/rl-tool-example-client"
-    ]
-  },
-  "dependencies": {
-    "pem-jwk": "^2.0.0",
-    "ts-node": "^9.0.0",
-    "typescript": "~4.0.2"
-  },
-  "devDependencies": {
-    "concurrently": "^5.2.0",
-    "prettier": "2.0.5"
-  },
-  "engines": {
-    "node": ">=8.3.0"
-  },
-  "scripts": {
-    "build": "cd packages/rl-shared && yarn run build && cd ../rl-client-lib && yarn run build && cd ../rl-server-lib && yarn run build && cd ../rl-tool-example-server && yarn run build && cd ../rl-tool-example-client && yarn run build",
-    "watch-client-lib": "cd packages/rl-client-lib && yarn run watch",
-    "watch-server-lib": "cd packages/rl-server-lib && yarn run watch",
-    "watch-tool-example-client": "cd packages/rl-tool-example-client && yarn run watch",
-    "watch-shared": "cd packages/rl-shared && yarn run watch",
-    "develop": "yarn run install && yarn run build && concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\" \"yarn run watch-tool-example-client\"",
-    "heroku-update-configs": "npx ts-node scripts/heroku-update-configs.ts",
-    "setup-tool-keys": "npx ts-node scripts/setup-tool-keys.ts",
-    "heroku-create": "npx ts-node scripts/heroku-init.ts && yarn run heroku-update-configs && yarn run setup-tool-keys"
-  }
+    "name": "@asu-etx/ring-leader",
+    "version": "1.0.0",
+    "description": "©, 2020 Arizona State University ETX. Libraries to support LTI 1.3 enabled tools",
+    "main": "NONE",
+    "repository": "https://github.com/ETX-ASU/ring-leader.git",
+    "author": "Melanie.Narish@asu.edu",
+    "license": "NOLICENSE",
+    "private": true,
+    "workspaces": {
+        "packages": [
+            "packages/rl-shared",
+            "packages/rl-server-lib",
+            "packages/rl-client-lib",
+            "packages/rl-tool-example-server",
+            "packages/rl-tool-example-client"
+        ]
+    },
+    "dependencies": {
+        "pem-jwk": "^2.0.0",
+        "ts-node": "^9.0.0",
+        "typescript": "~4.0.2"
+    },
+    "devDependencies": {
+        "concurrently": "^5.2.0",
+        "prettier": "2.0.5"
+    },
+    "engines": {
+        "node": ">=8.3.0"
+    },
+    "scripts": {
+        "build": "cd packages/rl-shared && yarn run build && cd ../rl-server-lib && yarn run build && cd ../rl-client-lib && yarn run build  && cd ../rl-tool-example-server && yarn run build && cd ../rl-tool-example-client && yarn run build",
+        "watch-client-lib": "cd packages/rl-client-lib && yarn run watch",
+        "watch-server-lib": "cd packages/rl-server-lib && yarn run watch",
+        "watch-tool-example-client": "cd packages/rl-tool-example-client && yarn run watch",
+        "watch-shared": "cd packages/rl-shared && yarn run watch",
+        "develop": "yarn run install && yarn run build && concurrently --kill-others \"yarn run watch-client-lib\" \"yarn run watch-server-lib\" \"yarn run watch-shared\" \"yarn run watch-tool-example-client\"",
+        "heroku-update-configs": "npx ts-node scripts/heroku-update-configs.ts",
+        "setup-tool-keys": "npx ts-node scripts/setup-tool-keys.ts",
+        "heroku-create": "npx ts-node scripts/heroku-init.ts && yarn run heroku-update-configs && yarn run setup-tool-keys"
+    }
 }
