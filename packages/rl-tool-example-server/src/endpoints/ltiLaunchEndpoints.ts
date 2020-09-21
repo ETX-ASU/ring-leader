@@ -75,6 +75,8 @@ const ltiLaunchEndpoints = (app: Express): void => {
     } else {
       throw new Error("no session detected, something is wrong");
     }
+    console.log("req.session");
+    console.log(req.session);
 
     res.redirect(
       url.format({
@@ -89,7 +91,8 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-
+    console.log("req.session-LTI_ADVANTAGE_LAUNCH_ROUTE");
+    console.log(req.session);
     const oidcOriginalResponseData = {
       nonce: req.session.nonce,
       state: req.session.state,
