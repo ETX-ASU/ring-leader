@@ -4,8 +4,7 @@ import url from "url";
 import {
   rlProcessOIDCRequest,
   rlValidateToken,
-  NamesAndRoles,
-  getAccessToken
+  NamesAndRoles
 } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
@@ -100,11 +99,11 @@ const ltiLaunchEndpoints = (app: Express): void => {
       client_id: req.session.client_id
     };
 
-    //const verified = rlValidateToken(req, oidcOriginalResponseData);
-    // console.log("Is Valid Token");
-    //console.log(verified.isValidToken);
+    const verified = rlValidateToken(req, oidcOriginalResponseData);
+    console.log("Is Valid Token");
+    console.log(verified.isValidToken);
 
-    //eq.session.token = verified.token;
+    req.session.token = verified.token;
 
     await req.session.save(() => {
       console.log("session data saved");
