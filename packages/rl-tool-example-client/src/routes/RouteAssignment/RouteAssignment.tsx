@@ -10,6 +10,7 @@ const RouteAssignment: React.FC = () => {
   const [users, setUsers] = useState([]);
 
   const getUsers = () => {
+    alert("inside Assignment");
     axios.get("/lti-service/roster").then((results) => {
       console.log(JSON.stringify(results));
       setUsers(results.data.usersList);
