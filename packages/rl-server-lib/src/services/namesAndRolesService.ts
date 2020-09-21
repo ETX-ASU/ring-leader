@@ -13,9 +13,19 @@ class NamesAndRoles {
     console.log(JSON.stringify(token));
     console.log(
       "membership url-" +
-        token["https://purl.imsglobal.org/spec/lti/claim/roles"]
+        token["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"]
     );
-
+    console.log(
+      "membership url-context_memberships_url-" +
+        token["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"]
+          .context_memberships_url
+    );
+    console.log(
+      "membership url-0-" +
+        token[
+          "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"
+        ][0].context_memberships_url
+    );
     let query: any = [];
     let isQuery = true;
     if (options && options.role) {
