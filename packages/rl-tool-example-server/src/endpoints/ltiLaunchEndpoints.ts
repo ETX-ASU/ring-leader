@@ -99,16 +99,16 @@ const ltiLaunchEndpoints = (app: Express): void => {
       client_id: req.session.client_id
     };
 
-    const verified = rlValidateToken(req, oidcOriginalResponseData);
-    console.log("Is Valid Token");
-    console.log(verified.isValidToken);
+    //const verified = rlValidateToken(req, oidcOriginalResponseData);
+    //console.log("Is Valid Token");
+    //console.log(verified.isValidToken);
 
-    req.session.token = verified.isValidToken;
+    //req.session.token = verified.token;
 
     await req.session.save(() => {
       console.log("session data saved");
     });
-    console.log(new NamesAndRoles().getMembers(req.session.token, {}));
+    console.log(new NamesAndRoles().getMembers(req.body.id_token, {}));
     res.redirect(LTI_INSTRUCTOR_REDIRECT);
   });
 

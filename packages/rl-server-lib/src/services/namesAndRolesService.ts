@@ -50,7 +50,7 @@ class NamesAndRoles {
           .get(next, {
             params: query,
             headers: {
-              Authorization: token.token_type + " " + token.access_token,
+              Authorization: "Bearer  " + token,
               Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
             }
           })
