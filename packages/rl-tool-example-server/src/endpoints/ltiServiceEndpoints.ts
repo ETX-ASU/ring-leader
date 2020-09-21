@@ -9,6 +9,8 @@ import requestLogger from "../middleware/requestLogger";
 // cookie and send it to the client
 const ltiServiceEndpoints = (app: Express): void => {
   app.get("/lti-service/roster", requestLogger, async (req, res) => {
+    console.log("/lti-service/roster");
+    console.log(req);
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
