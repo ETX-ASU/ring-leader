@@ -1,5 +1,5 @@
 import { Express } from "express";
-
+import { getUsers } from "@asu-etx/rl-client-lib";
 import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
 
@@ -16,8 +16,8 @@ const ltiServiceEndpoints = (app: Express): void => {
     console.log("This is id token from session-" + idToken);
 
     // pass the token from the session to the rl-client-lib to make the call to Canvas
-    // const results = await rlClientLib.getUsers(idToken);
-    //res.send(results);
+    const results = await getUsers(idToken);
+    res.send(results);
 
     res.send("");
   });
