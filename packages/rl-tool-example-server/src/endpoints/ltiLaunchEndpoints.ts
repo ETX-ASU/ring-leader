@@ -18,6 +18,7 @@ const getToolConsumers = async (): Promise<ToolConsumer[]> => {
 const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 const LTI_INSTRUCTOR_REDIRECT = "/instructor";
+const LTI_ASSIGNMENT_REDIRECT = "/assignment";
 const LTI_STUDENT_REDIRECT = "/student";
 
 const plateformLaunch = {
@@ -104,7 +105,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     await req.session.save(() => {
       console.log("session data saved");
     });
-    res.redirect(LTI_INSTRUCTOR_REDIRECT);
+    res.redirect(LTI_ASSIGNMENT_REDIRECT);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
