@@ -14,11 +14,11 @@ const ltiServiceEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    const idToken = req.session.idToken;
-    console.log("This is id token from session-" + idToken);
+    const token = req.session.token;
+    console.log("This is id token from session-" + token);
 
     // pass the token from the session to the rl-client-lib to make the call to Canvas
-    const results = await getUsers(idToken);
+    const results = await getUsers(token);
     res.send(results);
   });
 
