@@ -20,8 +20,6 @@ const ltiServiceEndpoints = (app: Express): void => {
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const results = await getUsers(idToken);
     res.send(results);
-
-    res.send("");
   });
 
   app.get("/lti-service/assignments", requestLogger, (req, res) => {
