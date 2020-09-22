@@ -217,7 +217,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
       keyid: plateform.plateformDetails.keyid
     }
   );
-
+  console.log("jwtToken- " + JSON.stringify(jwtToken));
   const payload = {
     grant_type: "client_credentials",
     client_assertion_type:
@@ -225,8 +225,10 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     client_assertion: jwtToken,
     scope: scopes
   };
-  console.log("jwtToken payload- " + payload);
-  console.log("plateform plateformDetails- " + plateform.plateformDetails);
+  console.log("jwtToken payload- " + JSON.stringify(payload));
+  console.log(
+    "plateform plateformDetails- " + JSON.stringify(plateform.plateformDetails)
+  );
   const access = await got
     .post(await plateform.plateformDetails.platformAccessTokenEndpoint, {
       form: payload
