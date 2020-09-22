@@ -38,7 +38,6 @@ const RouteAssignment: React.FC = () => {
         </div>
         <div className="row">
           <div className="col">
-            if(courseDetails)
             {<div key="index">{JSON.stringify(courseDetails)}</div>}
             {users.map((user, index) => {
               return <div key="index">{JSON.stringify(user)}</div>;
