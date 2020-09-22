@@ -201,15 +201,28 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     jti: plateform.jti
   };
   console.log(JSON.stringify(confjwt));
+  const confjwt1 = {
+    sub: clientId,
+    iss: clientId,
+    aud: plateform.platformAccessTokenEndpoint,
+    iat: Date.now() / 1000,
+    exp: Date.now() / 1000 + 60,
+    jti: encodeURIComponent("dffdbdce-a9f1-427b-8fca-604182198783")
+  };
   const token = await jwt.sign(confjwt, plateform.platformPrivateKey, {
     algorithm: plateform.alg,
     keyid: plateform.keyid
   });
+  const token1 = await jwt.sign(confjwt1, plateform.platformPrivateKey, {
+    algorithm: plateform.alg,
+    keyid: plateform.keyid
+  });
+
   const message = {
     grant_type: "client,_credentials",
     client_assertion_type:
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-    client_assertion: token,
+    client_assertion: token1,
     scope: scopes
   };
   console.log(message);
@@ -222,13 +235,17 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   };
 
   console.log("Got Post 1 start");
-  const access = await got
-    .post(await plateform.platformAccessTokenEndpoint, {
-      form: message
-    })
-    .json();
-  console.log("Got Post");
-  console.log(access);
+  try {
+    const access = await got
+      .post(await plateform.platformAccessTokenEndpoint, {
+        form: message
+      })
+      .json();
+    console.log("Got Post");
+    console.log(access);
+  } catch (ex) {
+    console.log("error in got 2");
+  }
   console.log("Got Post 2 start");
   const access1 = await got
     .post(await plateform.platformAccessTokenEndpoint, {
