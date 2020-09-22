@@ -60,7 +60,8 @@ class NamesAndRoles {
         if (next) result.next = next;
         break;
       }
-
+      console.log("tokenRes.access_token: " + tokenRes.access_token);
+      console.log("tokenRes.token_type: " + tokenRes.token_type);
       let response;
       if (query && curPage === 1)
         response = await axios.get(next, {
