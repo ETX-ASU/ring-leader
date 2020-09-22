@@ -185,7 +185,7 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
     return response;
   }
 };
-const getAccessToken = (plateform: any, scopes: any): any => {
+const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   const clientId = plateform.client_id;
   const confjwt = {
     sub: clientId,
@@ -210,7 +210,7 @@ const getAccessToken = (plateform: any, scopes: any): any => {
     scope: scopes
   };
   console.log(message);
-  axios
+  await axios
     .post(plateform.platformAccessTokenEndpoint, {
       data: message
     })
