@@ -30,7 +30,6 @@ const RouteAssignment: React.FC = () => {
             <button className="btn btn-primary" onClick={getAccessToken}>
               Get Access Token
             </button>
-            <div key="index1">{JSON.stringify(accesstoken)}</div>;
             <button className="btn btn-primary" onClick={getUsers}>
               Get Users
             </button>
