@@ -191,7 +191,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   const clientId = plateform.client_id;
   const confjwt = {
     sub: clientId,
-    iss: plateform.iss,
+    iss: clientId,
     aud: platformAccessTokenEndpoint,
     iat: plateform.iat,
     exp: plateform.exp,
