@@ -193,7 +193,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
 
   console.log("clientId - " + clientId);
   const confjwt = {
-    iss: clientId,
+    iss: plateform.tokenDetails.iss,
     sub: clientId,
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
@@ -203,7 +203,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   console.log(JSON.stringify(confjwt));
   const confjwt1 = {
     sub: clientId,
-    iss: clientId,
+    iss: plateform.tokenDetails.iss,
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
