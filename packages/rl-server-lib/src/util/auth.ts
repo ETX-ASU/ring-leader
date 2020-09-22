@@ -45,7 +45,7 @@ const getaccessTokenObject = (token: any): any => {
     nonce: token.nonce,
     sub: token.sub,
     exp: token.exp,
-    clientId: token.client_id
+    client_id: token.client_id
   };
   return accessTokenObject;
 };
@@ -190,9 +190,9 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
 const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   const platformAccessTokenEndpoint =
     "https://unicon.instructure.com/login/oauth2/token";
-  const clientId = plateform.clientId;
+  const clientId = plateform.aud;
 
-  console.log(JSON.stringify(plateform));
+  console.log("clientId - " + JSON.stringify(plateform));
   const confjwt = {
     iss: clientId,
     sub: clientId,
@@ -210,16 +210,38 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   });
   const message = {
     grant_type: "client,_credentials",
-    client_id: clientId,
     client_assertion_type:
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: token,
     scope: scopes
   };
   console.log(message);
+  const messageWithIdToken = {
+    grant_type: "client,_credentials",
+    client_assertion_type:
+      "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+    client_assertion: plateform.token,
+    scope: scopes
+  };
+  console.log("starting with jwt.sign token");
   await axios
     .post(platformAccessTokenEndpoint, {
       data: message
+    })
+    .then((access) => {
+      console.log("Successfully generated new access_token");
+      return access.data.json();
+    })
+    .catch((err) => {
+      console.log("Error generating new access_token");
+      console.log(err);
+      return err;
+    });
+  console.log("Ending with jwt.sign token");
+  console.log("starting with idToken");
+  await axios
+    .post(platformAccessTokenEndpoint, {
+      data: messageWithIdToken
     })
     .then((access) => {
       console.log("Successfully generated new access_token");
