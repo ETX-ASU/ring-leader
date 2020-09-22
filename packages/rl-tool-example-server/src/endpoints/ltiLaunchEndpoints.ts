@@ -98,7 +98,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log("Is Valid Token");
     console.log(verified.isValidToken);
 
-    req.session.token = verified.token;
+    req.session.tokenObject = verified;
 
     await req.session.save(() => {
       console.log("session data saved");

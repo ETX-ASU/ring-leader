@@ -1,19 +1,30 @@
 import { URLSearchParams } from "url";
 import { parseLink } from "parse-link";
 import jwt from "jsonwebtoken";
+import { getAccessToken } from "../util/auth";
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
 class NamesAndRoles {
-  async getMembers(idToken: any, options: any): Promise<any> {
-    if (!idToken) {
+  async getMembers(tokenObject: any, options: any): Promise<any> {
+    if (!tokenObject) {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
     }
-    const token: any = await jwt.decode(idToken);
+    const token: any = await jwt.decode(tokenObject.token);
     console.log(JSON.stringify(token));
 
+    console.log(
+      "Attempting to retrieve platform access_token for [" +
+        tokenObject.iss +
+        "]"
+    );
+    const tokenRes = await getAccessToken(
+      tokenObject,
+      "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+    );
+    console.log("Access_token retrieved for [" + tokenObject.iss + "]");
+
     let query: any = [];
-    let isQuery = true;
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);
       query.push(["role", options.role]);
@@ -27,7 +38,7 @@ class NamesAndRoles {
     if (options && options.pages)
       console.log("Maximum number of pages retrieved: " + options.pages);
     if (query.length > 0) query = new URLSearchParams(query);
-    else isQuery = false;
+    else query = false;
     let next =
       token["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"]
         .context_memberships_url;
@@ -35,7 +46,7 @@ class NamesAndRoles {
     console.log(next);
     if (options && options.url) {
       next = options.url;
-      isQuery = false;
+      query = false;
     }
 
     let differences;
@@ -44,71 +55,39 @@ class NamesAndRoles {
 
     do {
       if (options && options.pages && curPage > options.pages) {
-        console.log("inside option section");
-
         if (next) result.next = next;
         break;
       }
 
-      console.log("Member pages found: ", curPage);
-      console.log("Current member page: ", next);
-      if (isQuery && curPage === 1)
-        await axios
-          .get(next, {
-            params: query,
-            headers: {
-              Authorization: "Bearer  " + idToken,
-              Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
-            }
-          })
-          .then((response) => {
-            const headers = response.headers;
-            const body = JSON.parse(response.data);
-            if (!result) result = JSON.parse(JSON.stringify(body));
-            else {
-              result.members = [...result.members, ...body.members];
-            }
-            const parsedLinks = parseLink(headers.link); // Trying to find "rel=differences" header
-
-            if (parsedLinks && parsedLinks.differences)
-              differences = parsedLinks.differences.url; // Trying to find "rel=next" header, indicating additional pages
-
-            if (parsedLinks && parsedLinks.next) next = parsedLinks.next.url;
-            else next = false;
-          })
-          .catch((err) => {
-            console.log("error in if block ");
-            console.log("error" + err);
-          });
+      let response;
+      if (query && curPage === 1)
+        response = await axios.get(next, {
+          params: query,
+          headers: {
+            Authorization: tokenRes.token_type + " " + tokenRes.access_token,
+            Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
+          }
+        });
       else
-        await axios
-          .get(next, {
-            headers: {
-              Authorization: "Bearer  " + idToken,
-              Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
-            }
-          })
-          .then((response) => {
-            const headers = response.headers;
-            const body = JSON.parse(response.data);
-            console.log("Memberships retrieved data");
-            console.log(body);
-            if (!result) result = JSON.parse(JSON.stringify(body));
-            else {
-              result.members = [...result.members, ...body.members];
-            }
-            const parsedLinks = parseLink(headers.link); // Trying to find "rel=differences" header
+        response = await axios.get(next, {
+          headers: {
+            Authorization: tokenRes.token_type + " " + tokenRes.access_token,
+            Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
+          }
+        });
+      const headers = response.headers;
+      const body = JSON.parse(response.data);
+      if (!result) result = JSON.parse(JSON.stringify(body));
+      else {
+        result.members = [...result.members, ...body.members];
+      }
+      const parsedLinks = parseLink(headers.link); // Trying to find "rel=differences" header
 
-            if (parsedLinks && parsedLinks.differences)
-              differences = parsedLinks.differences.url; // Trying to find "rel=next" header, indicating additional pages
+      if (parsedLinks && parsedLinks.differences)
+        differences = parsedLinks.differences.url; // Trying to find "rel=next" header, indicating additional pages
 
-            if (parsedLinks && parsedLinks.next) next = parsedLinks.next.url;
-            else next = false;
-          })
-          .catch((err) => {
-            console.log("error" + err);
-            next = false;
-          });
+      if (parsedLinks && parsedLinks.next) next = parsedLinks.next.url;
+      else next = false;
       curPage++;
     } while (next);
 
