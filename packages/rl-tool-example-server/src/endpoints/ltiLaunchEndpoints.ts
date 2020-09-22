@@ -104,6 +104,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     req.session.jti = verifiedTokenData.jti;
     req.session.iss = verifiedTokenData.iss;
     req.session.sub = verifiedTokenData.sub;
+    req.session.aud = verifiedTokenData.aud;
     await req.session.save(() => {
       console.log("session data saved");
     });
