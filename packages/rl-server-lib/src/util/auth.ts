@@ -200,7 +200,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     exp: Date.now() / 1000 + 60,
     jti: encodeURIComponent("dffdbdce-a9f1-427b-8fca-604182198783")
   };
-  console.log(JSON.stringify(confjwt));
+  console.log("confjwt - " + JSON.stringify(confjwt));
   const confjwt1 = {
     sub: clientId,
     iss: plateform.tokenDetails.iss,
@@ -209,6 +209,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     exp: Date.now() / 1000 + 60,
     jti: encodeURIComponent("dffdbdce-a9f1-427b-8fca-604182198783")
   };
+  console.log("confjwt1 - " + JSON.stringify(confjwt1));
   const token = await jwt.sign(confjwt, plateform.platformPrivateKey, {
     algorithm: plateform.alg,
     keyid: plateform.keyid
@@ -225,7 +226,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     client_assertion: token1,
     scope: scopes
   };
-  console.log(message);
+  console.log("token1 - " + message);
   const messageWithIdToken = {
     grant_type: "client_credentials",
     client_assertion_type:
@@ -233,7 +234,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     client_assertion: token,
     scope: scopes
   };
-
+  console.log("messageWithIdToken - " + messageWithIdToken);
   console.log("Got Post 1 start");
   try {
     const access = await got
