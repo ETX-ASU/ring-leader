@@ -5,7 +5,7 @@ import { getAccessToken } from "../util/auth";
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
 class NamesAndRoles {
-  async getMembers(tokenObject: any, options: any): Promise<any> {
+  async getMembers(tokenObject: any, options?: any): Promise<any> {
     if (!tokenObject) {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
@@ -25,7 +25,11 @@ class NamesAndRoles {
       "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
     );
     console.log("Access_token retrieved for [" + tokenObject.iss + "]");
-    console.log("Access token received -" + JSON.stringify(tokenRes));
+    console.log("Access token received -" + tokenRes);
+
+    console.log("tokenRes.access_token: " + tokenRes.access_token);
+    console.log("tokenRes.token_type: " + tokenRes.token_type);
+    console.log("options: " + options);
     let query: any = [];
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);
@@ -60,8 +64,7 @@ class NamesAndRoles {
         if (next) result.next = next;
         break;
       }
-      console.log("tokenRes.access_token: " + tokenRes.access_token);
-      console.log("tokenRes.token_type: " + tokenRes.token_type);
+
       let response;
       if (query && curPage === 1)
         response = await axios.get(next, {
