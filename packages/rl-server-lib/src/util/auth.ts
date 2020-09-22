@@ -219,7 +219,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   });
 
   const message = {
-    grant_type: "client,_credentials",
+    grant_type: "client_credentials",
     client_assertion_type:
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: token1,
@@ -227,7 +227,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   };
   console.log(message);
   const messageWithIdToken = {
-    grant_type: "client,_credentials",
+    grant_type: "client_credentials",
     client_assertion_type:
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: plateform.token,
