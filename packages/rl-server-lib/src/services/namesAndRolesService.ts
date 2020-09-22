@@ -25,7 +25,7 @@ class NamesAndRoles {
       "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
     );
     console.log("Access_token retrieved for [" + tokenObject.iss + "]");
-
+    console.log("Access token received -" + JSON.stringify(tokenRes));
     let query: any = [];
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);

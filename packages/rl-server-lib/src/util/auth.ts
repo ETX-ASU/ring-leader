@@ -235,7 +235,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
       form: payload
     })
     .json();
-  console.log("Access token received -" + access);
+  console.log("Access token received -" + JSON.stringify(access));
   console.log("Access token for the scopes - " + scopes);
 
   return access;

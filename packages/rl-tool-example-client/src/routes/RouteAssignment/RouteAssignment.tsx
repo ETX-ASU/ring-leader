@@ -17,7 +17,7 @@ const RouteAssignment: React.FC = () => {
   const getAccessToken = () => {
     axios.get("/lti-service/accesstoken").then((results) => {
       console.log(JSON.stringify(results));
-      alert("Access Token -" + results.data);
+      alert("Access Token -" + JSON.stringify(results.data));
     });
   };
   return (
