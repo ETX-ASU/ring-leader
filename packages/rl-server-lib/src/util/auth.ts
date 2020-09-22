@@ -204,15 +204,19 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   const confjwt = {
     sub: clientId,
     iss: plateform.iss,
-    aud: plateform.platformAccessTokenEndpoint,
+    aud: plateform.plateformDetails.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
     jti: plateform.jti
   };
-  const jwtToken = await jwt.sign(confjwt, plateform.platformPrivateKey, {
-    algorithm: plateform.alg,
-    keyid: plateform.keyid
-  });
+  const jwtToken = await jwt.sign(
+    confjwt,
+    plateform.plateformDetails.platformPrivateKey,
+    {
+      algorithm: plateform.plateformDetails.alg,
+      keyid: plateform.plateformDetails.keyid
+    }
+  );
 
   const payload = {
     grant_type: "client_credentials",
@@ -222,8 +226,9 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     scope: scopes
   };
   console.log("jwtToken payload- " + payload);
+  console.log("plateform plateformDetails- " + plateform.plateformDetails);
   const access = await got
-    .post(await plateform.platformAccessTokenEndpoint, {
+    .post(await plateform.plateformDetails.platformAccessTokenEndpoint, {
       form: payload
     })
     .json();
