@@ -186,11 +186,13 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   }
 };
 const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
+  const platformAccessTokenEndpoint =
+    "https://unicon.instructure.com/login/oauth2/token";
   const clientId = plateform.client_id;
   const confjwt = {
     sub: clientId,
     iss: plateform.iss,
-    aud: plateform.platformAccessTokenEndpoint,
+    aud: platformAccessTokenEndpoint,
     iat: plateform.iat,
     exp: plateform.exp,
     jti: plateform.jti
@@ -211,7 +213,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   };
   console.log(message);
   await axios
-    .post(plateform.platformAccessTokenEndpoint, {
+    .post(platformAccessTokenEndpoint, {
       data: message
     })
     .then((access) => {
