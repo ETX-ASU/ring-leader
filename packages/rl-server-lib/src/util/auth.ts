@@ -141,7 +141,7 @@ const rlValidateToken = (req: any, plateform: any): any => {
   const tokenDetails = {
     token: idToken,
     isValidToken: true,
-    ...getaccessTokenObject
+    ...getaccessTokenObject(decodedtoken)
   };
   return tokenDetails;
 };
