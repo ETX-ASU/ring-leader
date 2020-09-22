@@ -39,7 +39,7 @@ const validateAud = (token: any, plateform: any): boolean => {
 
 const getaccessTokenObject = (token: any): any => {
   const accessTokenObject = {
-    jti: token.jti,
+    jti: "30826f46-056a-46e9-8aaa-d99ab2e38cd7",
     iss: token.iss,
     aud: token.aud,
     iat: token.iat,
@@ -142,6 +142,7 @@ const rlValidateToken = (req: any, plateform: any): any => {
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
   const objData = getaccessTokenObject(decodedtoken);
+  console.log("rlValidateToken - objData value -" + JSON.stringify(objData));
   const tokenDetails = {
     token: idToken,
     isValidToken: true,
