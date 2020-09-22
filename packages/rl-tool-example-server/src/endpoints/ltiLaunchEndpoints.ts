@@ -95,10 +95,10 @@ const ltiLaunchEndpoints = (app: Express): void => {
     };
     console.log("oidcOriginalResponseData - " + oidcOriginalResponseData);
     const verified = rlValidateToken(req, oidcOriginalResponseData);
-    console.log("Is Valid Token");
-    console.log(verified.isValidToken);
 
     req.session.tokenObject = verified;
+    console.log(req.session.tokenObject);
+    console.log(JSON.stringify(req.session.tokenObject));
 
     await req.session.save(() => {
       console.log("session data saved");
