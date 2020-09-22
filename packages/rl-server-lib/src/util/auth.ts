@@ -220,6 +220,24 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     client_assertion: plateform.token,
     scope: scopes
   };
+
+  console.log("Got Post 1 start");
+  const access = await got
+    .post(await plateform.platformAccessTokenEndpoint, {
+      form: message
+    })
+    .json();
+  console.log("Got Post");
+  console.log(access);
+  console.log("Got Post 2 start");
+  const access1 = await got
+    .post(await plateform.platformAccessTokenEndpoint, {
+      form: messageWithIdToken
+    })
+    .json();
+  console.log("Got Post 2");
+  console.log(access1);
+
   console.log("starting with jwt.sign token");
   await axios
     .post(plateform.platformAccessTokenEndpoint, {
@@ -249,21 +267,5 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
       console.log(err);
       return err;
     });
-  console.log("Got Post 1 start");
-  const access = await got
-    .post(await plateform.platformAccessTokenEndpoint(), {
-      form: message
-    })
-    .json();
-  console.log("Got Post");
-  console.log(access);
-  console.log("Got Post 2 start");
-  const access1 = await got
-    .post(await plateform.platformAccessTokenEndpoint(), {
-      form: messageWithIdToken
-    })
-    .json();
-  console.log("Got Post 2");
-  console.log(access1);
 };
 export { rlProcessOIDCRequest, rlValidateToken, getAccessToken };
