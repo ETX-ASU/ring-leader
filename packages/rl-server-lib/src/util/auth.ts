@@ -196,8 +196,8 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     iss: clientId,
     sub: clientId,
     aud: plateform.platformAccessTokenEndpoint,
-    iat: plateform.iat,
-    exp: plateform.exp,
+    iat: Date.now() / 1000,
+    exp: Date.now() / 1000 + 60,
     jti: plateform.jti
   };
   console.log(JSON.stringify(confjwt));
