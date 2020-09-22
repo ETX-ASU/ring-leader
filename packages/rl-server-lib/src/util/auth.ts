@@ -189,9 +189,9 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   }
 };
 const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
-  const clientId = plateform.aud;
+  const clientId = plateform.tokenDetails.aud;
 
-  console.log("clientId - " + JSON.stringify(plateform));
+  console.log("clientId - " + clientId);
   const confjwt = {
     iss: clientId,
     sub: clientId,
