@@ -1,6 +1,7 @@
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import got from "got";
 
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
@@ -188,25 +189,21 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   }
 };
 const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
-  const platformAccessTokenEndpoint =
-    "https://unicon.instructure.com/login/oauth2/token";
   const clientId = plateform.aud;
 
   console.log("clientId - " + JSON.stringify(plateform));
   const confjwt = {
     iss: clientId,
     sub: clientId,
-    aud: platformAccessTokenEndpoint,
+    aud: plateform.platformAccessTokenEndpoint,
     iat: plateform.iat,
     exp: plateform.exp,
     jti: plateform.jti
   };
   console.log(JSON.stringify(confjwt));
-  const platformPrivateKey =
-    "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDDB6FNGSUu3jmZ\nLlIigYOrEq2rNIK8/0614RUAQKpVkY1FaRNRthsOJ9Xz0wK4QcZn2eRxkfxKYMNB\n4Z/pvKlXACtkjwbJ/zResrzG9QTIKpskXs3C/tNDgDdIQXvJcfz/2gN4zFdihR7m\nDR+qrG/MFUA85zY/gG2wRSveSia3pA45D4t3odakWX7OizNR0A7pbHHpXz0gmGLz\nv64B6WVpwqWEc7vvNBQBpYA5P5Y7XRotZ/kmwzP+shYOE3Mm5x5HMORxsK7+ZPDw\ng8Qy5dAaXR+OTtW6fKpwZZwBsS5R5BTpB2nu45Cz2BscjdFbJRzUOT8AmljqFj1x\n1MUGiMOfAgMBAAECggEAO/qNvcM87zQCrLxVIC2Ki8Mby+pDRtKRp1fIeKJqgBRa\nSP1uppOFsI3Ju8mqLXZ1CR02p0LJPyqRAiLcZirSPWJc9fkSkm688V6wtdNGnDSW\nL9JEH3L1D+5PkhYpdqNqtlia9ryJJ1BfV0qz8W5El5P1hIVq5o6drTcorZ1KWPE+\nDB4bcdCWHCYq4Iw0SExQGRBao/YcLK+73BtFLDaF/yG6zVwRige+Utn0tnuJT69F\nObPaSjL7EvV+yMV7j5ZZgiQ8Ki6h74BV0Or3/o4ADwTS87rI7aHxRYL6euZcrwlz\nazrV7lRr3dRc7MVa/S3/4iPlShzizQBk98ZXBtEmiQKBgQD38WPYiNiCYFhv9P2j\n17+K11Tq6zLBLmxpyRJTr6WBEo7B6JtE2Mte47Rf5w8tuY5LFw9PDQp3QfeHuFFM\no7AfljayV3Sh6kIQ7LivplEV5fPDVpnShUwh8T4Pt3ltYODwx9xDkdcNPr0LhOQY\npdwwgJMbvyv8ZAWmH0jM8L5EKwKBgQDJXg/Edj+LJwdBi516SMMeyJuNFeqJMkCX\n/TQzptLIKQX2CaB3HJdRVrBd1EM8DH0jl1Ro1tTuZq5dokGrfz2I9EyCugkXRrxe\nkenu+KVbznUlzA1OMUd18ld/G3PgHmSrr0h5yQU4ZpW8WD2SHS8MnMMRANqn8m6b\nxA6ErT4AXQKBgGTVwhKFDPBw+GaHz0N78cUob7uebaTNGYAoKxDnxTpp7q8Dx2nH\ndWYg2vGJyc2BwlHdjfdLSW9Y369NkZrGk1E1SQdcs+1JlRbG/xFIZX+vZmSR6rsI\nRP8k2mWP641FMhYaYgUE4d3cHwv5Pr6bbaI4GBvXsq7Ris6VuIjIe8jDAoGBAMYZ\n7XUfx9/D45WOHrzgvGSagr1H5FZYw8dC6IowAom8Igss6VqFHDB/Ej8cxZBb0Pik\ntfv17cEj70JakDSBly4W+PZawvrNMh/veK8KmtM4x3MJzcUxIdZdNcrsXRENlYh5\nhtmY87PK6GBEhz4py9Ginx0pM/OpwzsmpAnOzYJZAoGAQXuFrooAf4HaKlEg3WJX\nuIU5GBLnEmreFTeEuoThwW7ZIBpItlZ2S07h8Lbt8kUT/Bmx6g2/MMwu79OgTt3u\nEZP+SwmaR+04J8x/iGpTnXQ5DPCLQ1XECCX9zXtNfzdgdEKC1+Qsx+X4eGXVG6t0\nv4Bi04mrNCbBi+qfMZwKN8I=\n-----END PRIVATE KEY-----\n"; //plateform.platformKid
-  const token = await jwt.sign(confjwt, platformPrivateKey, {
-    algorithm: "RS256", //plateform.alg,
-    keyid: "ASU ETX - Ring Leader - canvas-unicon - Public Key"
+  const token = await jwt.sign(confjwt, plateform.platformPrivateKey, {
+    algorithm: plateform.alg,
+    keyid: plateform.keyid
   });
   const message = {
     grant_type: "client,_credentials",
@@ -225,7 +222,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   };
   console.log("starting with jwt.sign token");
   await axios
-    .post(platformAccessTokenEndpoint, {
+    .post(plateform.platformAccessTokenEndpoint, {
       data: message
     })
     .then((access) => {
@@ -240,7 +237,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   console.log("Ending with jwt.sign token");
   console.log("starting with idToken");
   await axios
-    .post(platformAccessTokenEndpoint, {
+    .post(plateform.platformAccessTokenEndpoint, {
       data: messageWithIdToken
     })
     .then((access) => {
@@ -252,5 +249,21 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
       console.log(err);
       return err;
     });
+  console.log("Got Post 1 start");
+  const access = await got
+    .post(await plateform.platformAccessTokenEndpoint(), {
+      form: message
+    })
+    .json();
+  console.log("Got Post");
+  console.log(access);
+  console.log("Got Post 2 start");
+  const access1 = await got
+    .post(await plateform.platformAccessTokenEndpoint(), {
+      form: messageWithIdToken
+    })
+    .json();
+  console.log("Got Post 2");
+  console.log(access1);
 };
 export { rlProcessOIDCRequest, rlValidateToken, getAccessToken };
