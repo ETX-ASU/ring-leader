@@ -30,11 +30,12 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
 
-    const tokenDetails = req.session.tokenObject;
-    const tokenObject = { tokenDetails, ...req.session.plateformDetails };
+    const plateformDetails = req.session;
+    console.log("plateformDetails - " + JSON.stringify(plateformDetails));
+
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const tokenRes = await getAccessToken(
-      tokenObject,
+      plateformDetails,
       "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
     );
     res.send(tokenRes);
