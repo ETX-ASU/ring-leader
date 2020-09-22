@@ -37,7 +37,7 @@ const validateAud = (token: any, plateform: any): boolean => {
 
 const getaccessTokenObject = (token: any): any => {
   const accessTokenObject = {
-    jti: token.token,
+    jti: token.jti,
     iss: token.iss,
     aud: token.aud,
     iat: token.iat,
@@ -190,7 +190,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     "https://unicon.instructure.com/login/oauth2/token";
   const clientId = plateform.client_id;
   const confjwt = {
-    sub: clientId,
+    sub: plateform.sub,
     iss: clientId,
     aud: platformAccessTokenEndpoint,
     iat: plateform.iat,
