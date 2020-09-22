@@ -25,7 +25,14 @@ const plateformLaunch = {
   plateformOIDCAuthEndPoint:
     "https://unicon.instructure.com/api/lti/authorize_redirect" // we get this during plateform registration
 };
-
+const plateformDetails = {
+  platformAccessTokenEndpoint:
+    "https://unicon.instructure.com/login/oauth2/token",
+  alg: "RS256",
+  keyid: "ASU ETX - Ring Leader - canvas-unicon - Public Key",
+  platformPrivateKey:
+    "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDDB6FNGSUu3jmZ\nLlIigYOrEq2rNIK8/0614RUAQKpVkY1FaRNRthsOJ9Xz0wK4QcZn2eRxkfxKYMNB\n4Z/pvKlXACtkjwbJ/zResrzG9QTIKpskXs3C/tNDgDdIQXvJcfz/2gN4zFdihR7m\nDR+qrG/MFUA85zY/gG2wRSveSia3pA45D4t3odakWX7OizNR0A7pbHHpXz0gmGLz\nv64B6WVpwqWEc7vvNBQBpYA5P5Y7XRotZ/kmwzP+shYOE3Mm5x5HMORxsK7+ZPDw\ng8Qy5dAaXR+OTtW6fKpwZZwBsS5R5BTpB2nu45Cz2BscjdFbJRzUOT8AmljqFj1x\n1MUGiMOfAgMBAAECggEAO/qNvcM87zQCrLxVIC2Ki8Mby+pDRtKRp1fIeKJqgBRa\nSP1uppOFsI3Ju8mqLXZ1CR02p0LJPyqRAiLcZirSPWJc9fkSkm688V6wtdNGnDSW\nL9JEH3L1D+5PkhYpdqNqtlia9ryJJ1BfV0qz8W5El5P1hIVq5o6drTcorZ1KWPE+\nDB4bcdCWHCYq4Iw0SExQGRBao/YcLK+73BtFLDaF/yG6zVwRige+Utn0tnuJT69F\nObPaSjL7EvV+yMV7j5ZZgiQ8Ki6h74BV0Or3/o4ADwTS87rI7aHxRYL6euZcrwlz\nazrV7lRr3dRc7MVa/S3/4iPlShzizQBk98ZXBtEmiQKBgQD38WPYiNiCYFhv9P2j\n17+K11Tq6zLBLmxpyRJTr6WBEo7B6JtE2Mte47Rf5w8tuY5LFw9PDQp3QfeHuFFM\no7AfljayV3Sh6kIQ7LivplEV5fPDVpnShUwh8T4Pt3ltYODwx9xDkdcNPr0LhOQY\npdwwgJMbvyv8ZAWmH0jM8L5EKwKBgQDJXg/Edj+LJwdBi516SMMeyJuNFeqJMkCX\n/TQzptLIKQX2CaB3HJdRVrBd1EM8DH0jl1Ro1tTuZq5dokGrfz2I9EyCugkXRrxe\nkenu+KVbznUlzA1OMUd18ld/G3PgHmSrr0h5yQU4ZpW8WD2SHS8MnMMRANqn8m6b\nxA6ErT4AXQKBgGTVwhKFDPBw+GaHz0N78cUob7uebaTNGYAoKxDnxTpp7q8Dx2nH\ndWYg2vGJyc2BwlHdjfdLSW9Y369NkZrGk1E1SQdcs+1JlRbG/xFIZX+vZmSR6rsI\nRP8k2mWP641FMhYaYgUE4d3cHwv5Pr6bbaI4GBvXsq7Ris6VuIjIe8jDAoGBAMYZ\n7XUfx9/D45WOHrzgvGSagr1H5FZYw8dC6IowAom8Igss6VqFHDB/Ej8cxZBb0Pik\ntfv17cEj70JakDSBly4W+PZawvrNMh/veK8KmtM4x3MJzcUxIdZdNcrsXRENlYh5\nhtmY87PK6GBEhz4py9Ginx0pM/OpwzsmpAnOzYJZAoGAQXuFrooAf4HaKlEg3WJX\nuIU5GBLnEmreFTeEuoThwW7ZIBpItlZ2S07h8Lbt8kUT/Bmx6g2/MMwu79OgTt3u\nEZP+SwmaR+04J8x/iGpTnXQ5DPCLQ1XECCX9zXtNfzdgdEKC1+Qsx+X4eGXVG6t0\nv4Bi04mrNCbBi+qfMZwKN8I=\n-----END PRIVATE KEY-----\n" //plateform.platformKid
+};
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req, res) => {
@@ -38,6 +45,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       req.session.nonce = nonce;
       req.session.state = state;
       req.session.client_id = response.client_id;
+      req.session.plateformDetails = plateformDetails;
       await req.session.save(() => {
         console.log("session data saved");
       });
@@ -64,6 +72,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       req.session.nonce = nonce;
       req.session.state = state;
       req.session.client_id = response.client_id;
+      req.session.plateformDetails = plateformDetails;
       await req.session.save(() => {
         console.log("session data saved");
       });
@@ -88,18 +97,13 @@ const ltiLaunchEndpoints = (app: Express): void => {
     }
     console.log("req.session-LTI_ADVANTAGE_LAUNCH_ROUTE");
     console.log(req.session);
-    const oidcOriginalResponseData = {
-      nonce: req.session.nonce,
-      state: req.session.state,
-      client_id: req.session.client_id
-    };
-    console.log("oidcOriginalResponseData - " + oidcOriginalResponseData);
-    const verified = rlValidateToken(req, oidcOriginalResponseData);
 
-    req.session.tokenObject = verified;
-    console.log(req.session.tokenObject);
-    console.log(JSON.stringify(req.session.tokenObject));
-
+    const verifiedTokenData = rlValidateToken(req, req.session);
+    console.log("verifiedTokenData - " + JSON.stringify(verifiedTokenData));
+    req.session.token = verifiedTokenData.token;
+    req.session.jti = verifiedTokenData.jti;
+    req.session.iss = verifiedTokenData.iss;
+    req.session.sub = verifiedTokenData.sub;
     await req.session.save(() => {
       console.log("session data saved");
     });

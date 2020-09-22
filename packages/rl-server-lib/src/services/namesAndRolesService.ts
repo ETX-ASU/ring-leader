@@ -11,8 +11,10 @@ class NamesAndRoles {
       throw new Error("MISSING_TOKEN");
     }
     const token: any = await jwt.decode(tokenObject.token);
-    console.log(JSON.stringify(token));
-
+    console.log(JSON.stringify("getMembers token- " + token));
+    console.log(
+      JSON.stringify("getMembers tokenObject- " + JSON.stringify(tokenObject))
+    );
     console.log(
       "Attempting to retrieve platform access_token for [" +
         tokenObject.iss +

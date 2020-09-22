@@ -8,7 +8,6 @@ const RouteAssignment: React.FC = () => {
   const {} = useParams();
 
   const [users, setUsers] = useState([]);
-  const [accesstoken, setaccesstoken] = useState([]);
   const getUsers = () => {
     axios.get("/lti-service/roster").then((results) => {
       console.log(JSON.stringify(results));
@@ -18,7 +17,7 @@ const RouteAssignment: React.FC = () => {
   const getAccessToken = () => {
     axios.get("/lti-service/accesstoken").then((results) => {
       console.log(JSON.stringify(results));
-      setaccesstoken(results.data);
+      alert("Access Token -" + results.data);
     });
   };
   return (

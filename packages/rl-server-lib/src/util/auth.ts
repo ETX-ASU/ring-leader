@@ -141,11 +141,19 @@ const rlValidateToken = (req: any, plateform: any): any => {
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
+  const objData = getaccessTokenObject(decodedtoken);
   const tokenDetails = {
     token: idToken,
     isValidToken: true,
-    ...getaccessTokenObject(decodedtoken)
+    jti: objData.jti,
+    iss: objData.iss,
+    aud: objData.aud,
+    sub: objData.sub
   };
+  console.log(
+    "rlValidateToken - tokenDetails value -" + JSON.stringify(tokenDetails)
+  );
+
   return tokenDetails;
 };
 const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
@@ -189,101 +197,39 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   }
 };
 const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
+  console.log("getAccessToken plateform value -" + JSON.stringify(plateform));
+
   const clientId = plateform.tokenDetails.aud;
 
-  console.log("clientId - " + clientId);
   const confjwt = {
-    sub: clientId,
-    iss: clientId,
-    aud: plateform.platformAccessTokenEndpoint,
-    iat: Date.now() / 1000,
-    exp: Date.now() / 1000 + 60,
-    jti: encodeURIComponent("dffdbdce-a9f1-427b-8fca-604182198783")
-  };
-  console.log("confjwt - " + JSON.stringify(confjwt));
-  const confjwt1 = {
     sub: clientId,
     iss: plateform.tokenDetails.iss,
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
-    jti: encodeURIComponent("dffdbdce-a9f1-427b-8fca-604182198783")
+    jti: plateform.jti
   };
-  console.log("confjwt1 - " + JSON.stringify(confjwt1));
-  const token = await jwt.sign(confjwt, plateform.platformPrivateKey, {
-    algorithm: plateform.alg,
-    keyid: plateform.keyid
-  });
-  const token1 = await jwt.sign(confjwt1, plateform.platformPrivateKey, {
+  const jwtToken = await jwt.sign(confjwt, plateform.platformPrivateKey, {
     algorithm: plateform.alg,
     keyid: plateform.keyid
   });
 
-  const message = {
+  const payload = {
     grant_type: "client_credentials",
     client_assertion_type:
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-    client_assertion: token1,
+    client_assertion: jwtToken,
     scope: scopes
   };
-  console.log("token1 - " + message);
-  const messageWithIdToken = {
-    grant_type: "client_credentials",
-    client_assertion_type:
-      "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-    client_assertion: token,
-    scope: scopes
-  };
-  console.log("messageWithIdToken - " + messageWithIdToken);
-  console.log("Got Post 1 start");
-  try {
-    const access = await got
-      .post(await plateform.platformAccessTokenEndpoint, {
-        form: message
-      })
-      .json();
-    console.log("Got Post");
-    console.log(access);
-  } catch (ex) {
-    console.log("error in got 2");
-  }
-  console.log("Got Post 2 start");
-  const access1 = await got
+  console.log("jwtToken payload- " + payload);
+  const access = await got
     .post(await plateform.platformAccessTokenEndpoint, {
-      form: messageWithIdToken
+      form: payload
     })
     .json();
-  console.log("Got Post 2");
-  console.log(access1);
+  console.log("Access token received -" + access);
+  console.log("Access token for the scopes - " + scopes);
 
-  console.log("starting with jwt.sign token");
-  await axios
-    .post(plateform.platformAccessTokenEndpoint, {
-      data: message
-    })
-    .then((access) => {
-      console.log("Successfully generated new access_token");
-      return access.data.json();
-    })
-    .catch((err) => {
-      console.log("Error generating new access_token");
-      console.log(err);
-      return err;
-    });
-  console.log("Ending with jwt.sign token");
-  console.log("starting with idToken");
-  await axios
-    .post(plateform.platformAccessTokenEndpoint, {
-      data: messageWithIdToken
-    })
-    .then((access) => {
-      console.log("Successfully generated new access_token");
-      return access.data.json();
-    })
-    .catch((err) => {
-      console.log("Error generating new access_token");
-      console.log(err);
-      return err;
-    });
+  return access;
 };
 export { rlProcessOIDCRequest, rlValidateToken, getAccessToken };
