@@ -38,28 +38,8 @@ const RouteAssignment: React.FC = () => {
         </div>
         <div className="row">
           <div className="col">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Course Id</th>
-                  <th>Course Label</th>
-                  <th>Course Title</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  if(courseDetails)
-                  {
-                    <>
-                      <td scope="row">{courseDetails.id}</td>
-                      <td>{courseDetails.label}</td>
-                      <td>{courseDetails.title}</td>
-                    </>
-                  }
-                </tr>
-              </tbody>
-            </table>
-
+            if(courseDetails)
+            {<div key="index">{JSON.stringify(courseDetails)}</div>}
             {users.map((user, index) => {
               return <div key="index">{JSON.stringify(user)}</div>;
             })}
