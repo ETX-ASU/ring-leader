@@ -1,5 +1,5 @@
 import { URLSearchParams } from "url";
-import { parseLink } from "parse-link";
+import parseLink from "parse-link";
 import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
@@ -89,7 +89,7 @@ class NamesAndRoles {
         result.members = [...result.members, ...body.members];
       }
       const parsedLinks = parseLink(headers.link); // Trying to find "rel=differences" header
-
+      next = false;
       if (parsedLinks && parsedLinks.differences)
         differences = parsedLinks.differences.url; // Trying to find "rel=next" header, indicating additional pages
 
