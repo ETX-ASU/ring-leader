@@ -2,8 +2,8 @@ import { URLSearchParams } from "url";
 import { parseLink } from "parse-link";
 import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
-// eslint-disable-next-line node/no-extraneous-import
-import axios from "axios";
+import got from "got";
+
 class NamesAndRoles {
   async getMembers(tokenObject: any, options?: any): Promise<any> {
     if (!tokenObject) {
@@ -58,31 +58,32 @@ class NamesAndRoles {
     let differences;
     let result: any;
     let curPage = 1;
-
+    console.log("query");
+    console.log(query);
     do {
       if (options && options.pages && curPage > options.pages) {
         if (next) result.next = next;
         break;
       }
 
-      let response;
-      if (query && curPage === 1)
-        response = await axios.get(next, {
-          params: query,
+      //let response: any;
+      /* if (query && curPage === 1)
+        response = await got.get(next, {
+          searchParams: query,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
             Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
-          }
-        });
-      else
-        response = await axios.get(next, {
-          headers: {
-            Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
-          }
-        });
+          //}*/
+      //});
+      // else
+      const response: any = await got.get(next, {
+        headers: {
+          Authorization: tokenRes.token_type + " " + tokenRes.access_token,
+          Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
+        }
+      });
       const headers = response.headers;
-      const body = JSON.parse(response.data);
+      const body = JSON.parse(response.body);
       if (!result) result = JSON.parse(JSON.stringify(body));
       else {
         result.members = [...result.members, ...body.members];
