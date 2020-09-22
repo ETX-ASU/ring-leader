@@ -193,12 +193,12 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
 
   console.log("clientId - " + clientId);
   const confjwt = {
-    iss: plateform.tokenDetails.iss,
     sub: clientId,
+    iss: clientId,
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
-    jti: plateform.jti
+    jti: encodeURIComponent("dffdbdce-a9f1-427b-8fca-604182198783")
   };
   console.log(JSON.stringify(confjwt));
   const confjwt1 = {
@@ -230,7 +230,7 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     grant_type: "client_credentials",
     client_assertion_type:
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-    client_assertion: plateform.token,
+    client_assertion: token,
     scope: scopes
   };
 
