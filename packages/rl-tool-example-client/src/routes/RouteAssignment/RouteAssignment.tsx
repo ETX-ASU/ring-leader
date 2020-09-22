@@ -11,7 +11,7 @@ const RouteAssignment: React.FC = () => {
   const getUsers = () => {
     axios.get("/lti-service/roster").then((results) => {
       console.log(JSON.stringify(results));
-      setUsers(results.data.usersList);
+      setUsers(results.data.members);
     });
   };
   const getAccessToken = () => {
