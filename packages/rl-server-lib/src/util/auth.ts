@@ -199,11 +199,11 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
 const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
   console.log("getAccessToken plateform value -" + JSON.stringify(plateform));
 
-  const clientId = plateform.tokenDetails.aud;
+  const clientId = plateform.aud;
 
   const confjwt = {
     sub: clientId,
-    iss: plateform.tokenDetails.iss,
+    iss: plateform.iss,
     aud: plateform.platformAccessTokenEndpoint,
     iat: Date.now() / 1000,
     exp: Date.now() / 1000 + 60,
