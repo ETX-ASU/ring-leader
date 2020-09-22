@@ -190,8 +190,8 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     "https://unicon.instructure.com/login/oauth2/token";
   const clientId = plateform.client_id;
   const confjwt = {
-    sub: plateform.sub,
     iss: clientId,
+    sub: clientId,
     aud: platformAccessTokenEndpoint,
     iat: plateform.iat,
     exp: plateform.exp,

@@ -8,21 +8,29 @@ const RouteAssignment: React.FC = () => {
   const {} = useParams();
 
   const [users, setUsers] = useState([]);
-
+  const [accesstoken, setaccesstoken] = useState([]);
   const getUsers = () => {
-    alert("inside Assignment");
     axios.get("/lti-service/roster").then((results) => {
       console.log(JSON.stringify(results));
       setUsers(results.data.usersList);
     });
   };
-
+  const getAccessToken = () => {
+    axios.get("/lti-service/accesstoken").then((results) => {
+      console.log(JSON.stringify(results));
+      setaccesstoken(results.data);
+    });
+  };
   return (
     <div className="route-assignment">
       <h1>Assignment Route</h1>
       <div className="container">
         <div className="row">
           <div className="col">
+            <button className="btn btn-primary" onClick={getAccessToken}>
+              Get Access Token
+            </button>
+            <div key="index1">{JSON.stringify(accesstoken)}</div>;
             <button className="btn btn-primary" onClick={getUsers}>
               Get Users
             </button>
