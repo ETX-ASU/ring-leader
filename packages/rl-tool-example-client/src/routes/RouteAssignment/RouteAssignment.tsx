@@ -8,7 +8,7 @@ const RouteAssignment: React.FC = () => {
   const {} = useParams();
 
   const [users, setUsers] = useState([]);
-  const [courseDetails, setcourseDetails] = useState([]);
+  const [courseDetails, setcourseDetails] = useState({});
   const getUsers = () => {
     axios.get("/lti-service/roster").then((results) => {
       console.log(JSON.stringify(results));

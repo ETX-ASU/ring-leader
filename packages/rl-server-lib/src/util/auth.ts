@@ -1,5 +1,3 @@
-// eslint-disable-next-line node/no-extraneous-import
-import axios from "axios";
 import jwt from "jsonwebtoken";
 import got from "got";
 
