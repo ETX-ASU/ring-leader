@@ -26,6 +26,7 @@ const validateAud = (token: any, plateform: any): boolean => {
   );
   console.log("Aud claim: " + token.aud);
   console.log("Tool's clientId: " + plateform.clientId);
+  console.log("plateform: " + JSON.stringify(plateform))
 
   if (Array.isArray(token.aud)) {
     console.log("More than one aud listed, searching for azp claim");
@@ -77,9 +78,9 @@ const claimValidation = (token: any): any => {
   console.log("Checking Message type claim");
   if (
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-      "LtiResourceLinkRequest" &&
+    "LtiResourceLinkRequest" &&
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-      "LtiDeepLinkingRequest"
+    "LtiDeepLinkingRequest"
   )
     throw new Error("NO_MESSAGE_TYPE_CLAIM");
 
