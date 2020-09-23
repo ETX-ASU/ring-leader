@@ -1,16 +1,16 @@
 // eslint-disable-next-line node/no-extraneous-import
-import axios from "axios";
+import got from "got";
 import { URLSearchParams } from "url";
+import { getAccessToken } from "../util/auth";
 class Grade {
-  async getLineItems(
-    idtoken: any,
-    options?: any,
-    accessToken?: any
-  ): Promise<any> {
+  async getLineItems(idtoken: any, options?: any): Promise<any> {
     if (!idtoken) {
       throw new Error("MISSING_ID_TOKEN");
     }
-
+    const accessToken = await getAccessToken(
+      idtoken,
+      "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+    );
     if (!accessToken) {
       const platform = {};
 
@@ -44,21 +44,17 @@ class Grade {
       }
 
       queryParams = new URLSearchParams(queryParams);
-      let lineItems: any = await axios
+      let lineItems: any = await got
         .get(lineitemsEndpoint, {
-          params: queryParams,
+          searchParams: queryParams,
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
             Accept: "application/vnd.ims.lis.v2.lineitemcontainer+json"
           }
         })
-        .then((res) => {
-          return res.data.json();
-        })
-        .catch(() => {
-          console.log("");
-        });
+        .json(); // Applying special filters
+
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
           return lineitem.id === options.id;
@@ -98,7 +94,7 @@ class Grade {
 
     const lineitemsEndpoint = idtoken.platformContext.endpoint.lineitems;
 
-    const newLineItem: any = await axios
+    const newLineItem = await got
       .post(lineitemsEndpoint, {
         headers: {
           Authorization:
@@ -107,12 +103,8 @@ class Grade {
         },
         json: lineItem
       })
-      .then((res) => {
-        return res.data.json();
-      })
-      .catch(() => {
-        console.log("");
-      });
+      .json();
+    console.log("Line item successfully created");
     return newLineItem;
   }
 
@@ -142,7 +134,7 @@ class Grade {
         resourceLinkId: true
       };
 
-    const lineItems: any = this.getLineItems(idtoken, options, accessToken);
+    const lineItems: any = this.getLineItems(idtoken, options);
     const result: any = {
       success: [],
       failure: []
@@ -178,7 +170,7 @@ class Grade {
         else score.userId = idtoken.user;
         score.timestamp = new Date(Date.now()).toISOString();
         score.scoreMaximum = lineitem.scoreMaximum;
-        await axios.post(scoreUrl, {
+        await got.post(scoreUrl, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
@@ -186,6 +178,7 @@ class Grade {
           },
           json: score
         });
+        console.log("Score successfully sent");
         result.success.push({
           lineitem: lineitemUrl
         });
@@ -230,7 +223,7 @@ class Grade {
         resourceLinkId: true
       };
 
-    const lineItems = await this.getLineItems(idtoken, options, accessToken);
+    const lineItems = await this.getLineItems(idtoken, options);
     const queryParams = [];
 
     if (options) {
@@ -254,21 +247,17 @@ class Grade {
 
         let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
-        const results = await axios
+        const results = await got
           .get(resultsUrl, {
-            params: searchParams,
+            searchParams: searchParams,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
               Accept: "application/vnd.ims.lis.v2.resultcontainer+json"
             }
           })
-          .then((res) => {
-            return res.data.json();
-          })
-          .catch(() => {
-            console.log("");
-          });
+          .json();
+
         resultsArray.push({
           lineitem: lineitem.id,
           results: results

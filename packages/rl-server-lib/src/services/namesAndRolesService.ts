@@ -58,36 +58,41 @@ class NamesAndRoles {
     let differences;
     let result: any;
     let curPage = 1;
-    console.log("query");
+    console.log("query value");
     console.log(query);
     do {
       if (options && options.pages && curPage > options.pages) {
         if (next) result.next = next;
         break;
       }
-
-      //let response: any;
-      /* if (query && curPage === 1)
+      console.log("query-" + query + "curPage-" + curPage);
+      let response: any;
+      if (query && curPage === 1) {
+        console.log("starting get call inside if loop");
         response = await got.get(next, {
           searchParams: query,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
             Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
-          //}*/
-      //});
-      // else
-      const response: any = await got.get(next, {
-        headers: {
-          Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-          Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
-        }
-      });
+          }
+        });
+      } else {
+        console.log("starting get call inside else loop");
+        response = await got.get(next, {
+          headers: {
+            Authorization: tokenRes.token_type + " " + tokenRes.access_token,
+            Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
+          }
+        });
+      }
+      console.log("LTI advantage call successfull");
       const headers = response.headers;
       const body = JSON.parse(response.body);
       if (!result) result = JSON.parse(JSON.stringify(body));
       else {
         result.members = [...result.members, ...body.members];
       }
+      console.log("headers.link" + headers.link);
       const parsedLinks = parseLink(headers.link); // Trying to find "rel=differences" header
       next = false;
       if (parsedLinks && parsedLinks.differences)
