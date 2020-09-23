@@ -75,7 +75,7 @@ HEROKU_APP_NAME=ring-leader-<replace me>
 HEROKU_APP_NAME=ring-leader-john-martin
 ```
 
-4. Save your updated `.env.local` file.
+4. Save your updated `.env.local.json` file.
 
 # Local Development
 

@@ -2,6 +2,9 @@
     "folders": [
       {
         "path": "."
+      },
+      {
+        "path": "../../../Unicon_Admin/Bench_Activities/LTI/github/tool13demo"
       }
     ],
     "settings": {

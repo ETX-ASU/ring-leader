@@ -17,8 +17,8 @@ class NamesAndRoles {
     );
     console.log(
       "Attempting to retrieve platform access_token for [" +
-        tokenObject.iss +
-        "]"
+      tokenObject.iss +
+      "]"
     );
     const tokenRes = await getAccessToken(
       tokenObject,
@@ -73,7 +73,9 @@ class NamesAndRoles {
           searchParams: query,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
+            // Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json",
+            Accept: "application/vnd.ims.lis.v2.membershipcontainer+json",
+            ContentType: "application/vnd.ims.lis.v2.membershipcontainer+json"
           }
         });
       } else {
@@ -81,7 +83,9 @@ class NamesAndRoles {
         response = await got.get(next, {
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
+            //Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
+            Accept: "application/vnd.ims.lis.v2.membershipcontainer+json",
+            ContentType: "application/vnd.ims.lis.v2.membershipcontainer+json"
           }
         });
       }
