@@ -25,14 +25,14 @@ const validateAud = (token: any, plateform: any): boolean => {
     "Validating if aud (Audience) claim matches the value of the tool's clientId given by the platform"
   );
   console.log("Aud claim: " + token.aud);
-  console.log("Tool's clientId: " + plateform.clientId);
+  console.log("Tool's clientId: " + plateform.client_id);
   console.log("plateform: " + JSON.stringify(plateform))
 
   if (Array.isArray(token.aud)) {
     console.log("More than one aud listed, searching for azp claim");
-    if (token.azp && token.azp !== plateform.clientId)
+    if (token.azp && token.azp !== plateform.client_id)
       throw new Error("AZP_DOES_NOT_MATCH_CLIENTID");
-  } else if (token.aud == plateform.clientId) return true;
+  } else if (token.aud == plateform.client_id) return true;
   return true;
 };
 
