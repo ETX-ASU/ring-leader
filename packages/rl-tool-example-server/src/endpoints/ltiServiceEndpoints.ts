@@ -23,24 +23,6 @@ const ltiServiceEndpoints = (app: Express): void => {
     res.send(results);
   });
 
-  app.get("/lti-service/accesstoken", requestLogger, async (req, res) => {
-    console.log("/lti-service/accesstoken");
-    console.log(req);
-    if (!req.session) {
-      throw new Error("no session detected, something is wrong");
-    }
-
-    const plateformDetails = req.session;
-    console.log("plateformDetails - " + JSON.stringify(plateformDetails));
-
-    // pass the token from the session to the rl-client-lib to make the call to Canvas
-    const tokenRes = await getAccessToken(
-      plateformDetails,
-      "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
-    );
-    res.send(tokenRes);
-  });
-
   app.get("/lti-service/assignments", requestLogger, (req, res) => {
     res.send("");
   });

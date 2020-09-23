@@ -39,7 +39,13 @@ const validateAud = (token: any, plateform: any): boolean => {
 
 const getaccessTokenObject = (token: any): any => {
   const accessTokenObject = {
-    jti: "30826f46-056a-46e9-8aaa-d99ab2e38cd7",
+    jti:
+      token.jti ||
+      encodeURIComponent(
+        [...Array(25)]
+          .map((_) => ((Math.random() * 36) | 0).toString(36))
+          .join("-")
+      ),
     iss: token.iss,
     aud: token.aud,
     iat: token.iat,

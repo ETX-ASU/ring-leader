@@ -16,21 +16,12 @@ const RouteAssignment: React.FC = () => {
       setcourseDetails(results.data.context);
     });
   };
-  const getAccessToken = () => {
-    axios.get("/lti-service/accesstoken").then((results) => {
-      console.log(JSON.stringify(results));
-      alert("Access Token -" + JSON.stringify(results.data));
-    });
-  };
   return (
     <div className="route-assignment">
       <h1>Assignment Route</h1>
       <div className="container">
         <div className="row">
           <div className="col">
-            <button className="btn btn-primary" onClick={getAccessToken}>
-              Get Access Token
-            </button>
             <button className="btn btn-primary" onClick={getUsers}>
               Get Users
             </button>
@@ -38,7 +29,9 @@ const RouteAssignment: React.FC = () => {
         </div>
         <div className="row">
           <div className="col">
-            {<div key="index">{JSON.stringify(courseDetails)}</div>}
+            {courseDetails && (
+              <div key="index">{JSON.stringify(courseDetails)}</div>
+            )}
             {users.map((user, index) => {
               return <div key="index">{JSON.stringify(user)}</div>;
             })}

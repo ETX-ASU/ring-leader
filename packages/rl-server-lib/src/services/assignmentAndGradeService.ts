@@ -9,7 +9,7 @@ class Grade {
     }
     const accessToken = await getAccessToken(
       idtoken,
-      "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly"
     );
     if (!accessToken) {
       const platform = {};
