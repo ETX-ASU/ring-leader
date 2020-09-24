@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 
 const setDefaultValues = (token: any): any => {
+  console.log("setDefaultValues - " + JSON.stringify(token));
+
   const tokenData = {
     Jti:
       token.jti ||
@@ -16,6 +18,7 @@ const setDefaultValues = (token: any): any => {
     Exp: token.exp,
     ClientId: token.client_id
   };
+  console.log("setDefaultValues - tokenData - " + JSON.stringify(token));
   return tokenData;
 };
 const RlPlatform = (
@@ -43,6 +46,8 @@ const RlPlatform = (
     Exp: tokenData.exp,
     ClientId: tokenData.client_id
   };
+  console.log("RlPlatformplatform - " + platform);
+
   return platform;
 };
 export { RlPlatform };
