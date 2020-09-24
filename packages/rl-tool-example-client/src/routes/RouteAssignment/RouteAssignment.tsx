@@ -21,7 +21,7 @@ const RouteAssignment: React.FC = () => {
         console.log(JSON.stringify(courses));
       });
   };
-  const handleCheck = (event: any): void => {
+  const handleCheck = (event: any): any => {
     setradioInputValue(event.target.value);
   };
   return (
@@ -38,9 +38,8 @@ const RouteAssignment: React.FC = () => {
                 value="Student"
                 className="form-check-input"
                 name="optradio"
-              >
-                Student
-              </input>
+                title="Student"
+              ></input>
             </label>
           </div>
           <div className="form-check-inline">
@@ -51,9 +50,8 @@ const RouteAssignment: React.FC = () => {
                 value="Instructor"
                 className="form-check-input"
                 name="optradio"
-              >
-                Instructor
-              </input>
+                title="Instructor"
+              ></input>
             </label>
           </div>
           <div className="form-check-inline">
@@ -64,9 +62,8 @@ const RouteAssignment: React.FC = () => {
                 value="both"
                 className="form-check-input"
                 name="optradio"
-              >
-                Both
-              </input>
+                title="Both"
+              ></input>
             </label>
           </div>
           <div className="col">
