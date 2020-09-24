@@ -212,7 +212,7 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
     aud: platform.AccesstokenEndpoint,
     iat: platform.Iat || Date.now() / 1000,
     exp: platform.Exp || Date.now() / 1000 + 60,
-    jti: platform.Jti
+    jti: "dffdbdce-a9f1-427b-8fca-604182198783" //platform.Jti
   };
   console.log("confjwt- " + JSON.stringify(confjwt));
 
