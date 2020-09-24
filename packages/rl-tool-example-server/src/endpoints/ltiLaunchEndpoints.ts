@@ -99,7 +99,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     const sessionObject = req.session;
     console.log(sessionObject);
 
-    const verifiedTokenData = rlValidateToken(req, sessionObject);
+    const idToken = rlValidateToken(req, sessionObject);
 
     const rlPlatform = RlPlatform(
       plateformDetails.platformPulicKey,
@@ -107,7 +107,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       plateformDetails.platformAccessTokenEndpoint,
       plateformDetails.keyid,
       plateformDetails.alg,
-      verifiedTokenData.token
+      idToken
     );
 
     req.session.platform = rlPlatform;
