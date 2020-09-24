@@ -38,8 +38,8 @@ const RouteAssignment: React.FC = () => {
                 value="Student"
                 className="form-check-input"
                 name="optradio"
-                title="Student"
               ></input>
+              Student
             </label>
           </div>
           <div className="form-check-inline">
@@ -50,8 +50,8 @@ const RouteAssignment: React.FC = () => {
                 value="Instructor"
                 className="form-check-input"
                 name="optradio"
-                title="Instructor"
               ></input>
+              Instructor
             </label>
           </div>
           <div className="form-check-inline">
@@ -62,8 +62,8 @@ const RouteAssignment: React.FC = () => {
                 value="both"
                 className="form-check-input"
                 name="optradio"
-                title="Both"
               ></input>
+              Both
             </label>
           </div>
           <div className="col">
