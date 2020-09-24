@@ -20,7 +20,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       roles = {
         role: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
       };
-    else
+    else if (qryRole == "Student")
       roles = {
         role: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
       };
