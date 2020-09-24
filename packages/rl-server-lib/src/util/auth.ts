@@ -112,7 +112,7 @@ const oidcValidation = (token: any, platform: any): any => {
 const rlValidateToken = (req: any, platform: any): any => {
   console.log("platform.nonce-" + platform.nonce);
   console.log("platform.state-" + platform.state);
-  console.log("platform.client_id-" + platform.client_id);
+  console.log("platform.client_id-" + platform.clientId);
 
   const idToken = req.body.id_token;
   console.log("idToken:" + idToken);
@@ -170,21 +170,21 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
 const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
   console.log("Inside getAccessToken-" + JSON.stringify(platform));
 
-  const clientId = platform.Aud;
+  const clientId = platform.aud;
 
   const confjwt = {
     sub: clientId,
-    iss: platform.Iss,
-    aud: platform.AccesstokenEndpoint,
-    iat: platform.Iat || Date.now() / 1000,
-    exp: platform.Exp || Date.now() / 1000 + 60,
-    jti: platform.Jti || "dffdbdce-a9f1-427b-8fca-604182198783"
+    iss: platform.iss,
+    aud: platform.accesstokenEndpoint,
+    iat: platform.iat || Date.now() / 1000,
+    exp: platform.exp || Date.now() / 1000 + 60,
+    jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
   console.log("confjwt- " + JSON.stringify(confjwt));
 
-  const jwtToken = await jwt.sign(confjwt, platform.PlatformPublicKey, {
-    algorithm: platform.Alg,
-    keyid: platform.Kid
+  const jwtToken = await jwt.sign(confjwt, platform.platformPublicKey, {
+    algorithm: platform.alg,
+    keyid: platform.kid
   });
   console.log("jwtToken- " + JSON.stringify(jwtToken));
   const payload = {
@@ -197,7 +197,7 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
   console.log("jwtToken payload- " + JSON.stringify(payload));
 
   const access = await got
-    .post(await platform.AccesstokenEndpoint, {
+    .post(await platform.accesstokenEndpoint, {
       form: payload
     })
     .json();

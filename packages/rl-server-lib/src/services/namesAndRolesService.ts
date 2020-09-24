@@ -20,19 +20,19 @@ class NamesAndRoles {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
     }
-    const token: any = await jwt.decode(platform.IdToken);
+    const token: any = await jwt.decode(platform.idToken);
     console.log(JSON.stringify("getMembers token- " + token));
     console.log(
       JSON.stringify("getMembers tokenObject- " + JSON.stringify(platform))
     );
     console.log(
-      "Attempting to retrieve platform access_token for [" + platform.Iss + "]"
+      "Attempting to retrieve platform access_token for [" + platform.iss + "]"
     );
     const tokenRes = await getAccessToken(
       platform,
       "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
     );
-    console.log("Access_token retrieved for [" + platform.Iss + "]");
+    console.log("Access_token retrieved for [" + platform.iss + "]");
     console.log("Access token received -" + tokenRes);
 
     console.log("tokenRes.access_token: " + tokenRes.access_token);
@@ -41,7 +41,7 @@ class NamesAndRoles {
     let query: any = [];
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);
-      const plateformRole = platform.Roles.find(
+      const plateformRole = platform.roles.find(
         (e: any) => e.role === options.role
       );
       console.log("plateformRole - " + JSON.stringify(plateformRole));
