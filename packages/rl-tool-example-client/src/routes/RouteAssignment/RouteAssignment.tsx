@@ -39,7 +39,7 @@ const RouteAssignment: React.FC = () => {
                 className="form-check-input"
                 name="optradio"
               ></input>
-              Student
+              Learner
             </label>
           </div>
           <div className="form-check-inline">
@@ -85,7 +85,9 @@ const RouteAssignment: React.FC = () => {
             {users.map((user, index) => {
               return (
                 <div className="userprofile" key="index">
-                  <h2>Members - {index + 1}</h2>
+                  <h2>
+                    {radioInputValue} - {index + 1}
+                  </h2>
                   <ul className="li">
                     Profile Pic:
                     <img src={user.picture}></img>

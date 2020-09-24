@@ -4,17 +4,21 @@ const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
 
   const tokenData = {
-    Jti: encodeURIComponent(
+    jti: encodeURIComponent(
       [...Array(25)]
         .map((_) => ((Math.random() * 36) | 0).toString(36))
         .join("-")
     ),
-    Iss: token.iss,
-    Aud: token.aud,
-    Iat: token.iat,
-    Sub: token.sub,
-    Exp: token.exp,
-    ClientId: token.client_id
+    jss: token.iss,
+    aud: token.aud,
+    iat: token.iat,
+    sub: token.sub,
+    exp: token.exp,
+    clientId: token.client_id,
+    lineitems:
+      token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitems,
+    resourceLinkId:
+      token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
   };
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
@@ -31,20 +35,22 @@ const RlPlatform = (
   const tokenData = setDefaultValues(token);
   console.log("RlPlatform - tokenData - " + JSON.stringify(tokenData));
   const platform = {
-    Jti: tokenData.Jti,
-    Iss: tokenData.Iss,
-    Aud: tokenData.Aud,
-    Iat: tokenData.Iat,
-    Sub: tokenData.Sub,
-    Exp: tokenData.Exp,
-    ClientId: tokenData.ClientId,
-    AccesstokenEndpoint: accesstokenEndpoint,
-    AuthOIDCRedirectEndpoint: authenticationEndpoint,
-    Kid: kid,
-    PlatformPublicKey: platformPublicKey,
-    IdToken: idToken,
-    Alg: alg,
-    Roles: [
+    jti: tokenData.Jti,
+    iss: tokenData.Iss,
+    aud: tokenData.Aud,
+    iat: tokenData.Iat,
+    sub: tokenData.Sub,
+    exp: tokenData.Exp,
+    elientId: tokenData.ClientId,
+    lineitems: tokenData.Lineitems,
+    resourceLinkId: tokenData.ResourceLinkId,
+    accesstokenEndpoint: accesstokenEndpoint,
+    authOIDCRedirectEndpoint: authenticationEndpoint,
+    kid: kid,
+    platformPublicKey: platformPublicKey,
+    idToken: idToken,
+    alg: alg,
+    roles: [
       {
         role: "Instructor",
         claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"

@@ -5,26 +5,34 @@ import { getAccessToken } from "../util/auth";
 import got from "got";
 
 class NamesAndRoles {
-  async getMembers(tokenObject: any, options?: any): Promise<any> {
-    if (!tokenObject) {
+  /**
+   * @description Retrieves members from platform.
+   * @param {Object} platform - contains all the parameters required for calling LTI Advantage Calls.
+   * @param {Object} options - Request options.
+   * @param {String} [options.role] - Specific role to be returned.
+   * @param {Number} [options.limit] - Specifies maximum number of members per page.
+   * @param {Number} [options.pages] - Specifies maximum number of pages returned.
+   * @param {String} [options.url] - Specifies the initial members endpoint, usually retrieved from a previous incomplete request.
+   */
+
+  async getMembers(platform: any, options?: any): Promise<any> {
+    if (!platform) {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
     }
-    const token: any = await jwt.decode(tokenObject.IdToken);
+    const token: any = await jwt.decode(platform.IdToken);
     console.log(JSON.stringify("getMembers token- " + token));
     console.log(
-      JSON.stringify("getMembers tokenObject- " + JSON.stringify(tokenObject))
+      JSON.stringify("getMembers tokenObject- " + JSON.stringify(platform))
     );
     console.log(
-      "Attempting to retrieve platform access_token for [" +
-        tokenObject.Iss +
-        "]"
+      "Attempting to retrieve platform access_token for [" + platform.Iss + "]"
     );
     const tokenRes = await getAccessToken(
-      tokenObject,
+      platform,
       "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
     );
-    console.log("Access_token retrieved for [" + tokenObject.Iss + "]");
+    console.log("Access_token retrieved for [" + platform.Iss + "]");
     console.log("Access token received -" + tokenRes);
 
     console.log("tokenRes.access_token: " + tokenRes.access_token);
@@ -33,7 +41,7 @@ class NamesAndRoles {
     let query: any = [];
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);
-      const plateformRole = tokenObject.Roles.find(
+      const plateformRole = platform.Roles.find(
         (e: any) => e.role === options.role
       );
       console.log("plateformRole - " + JSON.stringify(plateformRole));

@@ -111,9 +111,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     );
 
     req.session.platform = rlPlatform;
-    console.log(
-      "req.session.platform - " + JSON.stringify(req.session.platform)
-    );
+    console.log("req.session.platform - " + JSON.stringify(rlPlatform));
     await req.session.save(() => {
       console.log("session data saved");
     });
