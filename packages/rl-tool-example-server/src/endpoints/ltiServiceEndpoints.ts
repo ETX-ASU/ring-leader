@@ -15,7 +15,9 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("req.session.platform - " + JSON.stringify(platform));
     // pass the token from the session to the rl-client-lib to make the call to Canvas
-    const results = await getUsers(platform);
+    const results = await getUsers(platform, {
+      role: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+    });
     res.send(results);
   });
 
