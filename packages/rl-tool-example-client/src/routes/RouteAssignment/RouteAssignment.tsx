@@ -21,7 +21,7 @@ const RouteAssignment: React.FC = () => {
         console.log(JSON.stringify(courses));
       });
   };
-  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleCheck = (event: any): void => {
     setradioInputValue(event.target.value);
   };
   return (
@@ -56,7 +56,7 @@ const RouteAssignment: React.FC = () => {
               </input>
             </label>
           </div>
-          <div className="form-check-inline disabled">
+          <div className="form-check-inline">
             <label className="form-check-label">
               <input
                 onChange={handleCheck}
