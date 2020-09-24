@@ -1,6 +1,25 @@
-import { NamesAndRoles } from "@asu-etx/rl-server-lib";
-const getUsers = (token: any): any => {
-  return new NamesAndRoles().getMembers(token);
+import { NamesAndRoles, RlPlatform, Grade } from "@asu-etx/rl-server-lib";
+const getUsers = (platform: any, options?: any): any => {
+  return new NamesAndRoles().getMembers(platform, options);
+};
+const getGrades = (platform: any, options?: any): any => {
+  return new Grade().getGrades(platform, options);
+};
+const putGrade = (platform: any, score: any, options?: any): any => {
+  return new Grade().putGrade(platform, score, options);
+};
+const createLineItem = (platform: any, lineItem: any, options?: any): any => {
+  return new Grade().createLineItem(platform, lineItem, options);
 };
 
-export { getUsers };
+const getLineItems = (platform: any, options?: any): any => {
+  return new Grade().getLineItems(platform, options);
+};
+export {
+  getUsers,
+  RlPlatform,
+  getGrades,
+  putGrade,
+  createLineItem,
+  getLineItems
+};

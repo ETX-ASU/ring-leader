@@ -1,7 +1,11 @@
 import path from "path";
 import { Express } from "express";
 import url from "url";
-import { rlProcessOIDCRequest, rlValidateToken } from "@asu-etx/rl-server-lib";
+import {
+  rlProcessOIDCRequest,
+  rlValidateToken,
+  RlPlatform
+} from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import requestLogger from "../middleware/requestLogger";
@@ -21,11 +25,9 @@ const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 const LTI_ASSIGNMENT_REDIRECT = "/assignment";
 const LTI_STUDENT_REDIRECT = "/student";
 
-const plateformLaunch = {
-  plateformOIDCAuthEndPoint:
-    "https://unicon.instructure.com/api/lti/authorize_redirect" // we get this during plateform registration
-};
 const plateformDetails = {
+  plateformOIDCAuthEndPoint:
+    "https://unicon.instructure.com/api/lti/authorize_redirect",
   platformAccessTokenEndpoint:
     "https://unicon.instructure.com/login/oauth2/token",
   alg: "RS256",
@@ -44,8 +46,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (req.session) {
       req.session.nonce = nonce;
       req.session.state = state;
-      req.session.client_id = response.client_id;
-      req.session.plateformDetails = plateformDetails;
+
       await req.session.save(() => {
         console.log("session data saved");
       });
@@ -55,7 +56,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
 
     res.redirect(
       url.format({
-        pathname: plateformLaunch.plateformOIDCAuthEndPoint,
+        pathname: plateformDetails.plateformOIDCAuthEndPoint,
         query: response
       })
     );
@@ -71,8 +72,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (req.session) {
       req.session.nonce = nonce;
       req.session.state = state;
-      req.session.client_id = response.client_id;
-      req.session.plateformDetails = plateformDetails;
+
       await req.session.save(() => {
         console.log("session data saved");
       });
@@ -84,7 +84,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
 
     res.redirect(
       url.format({
-        pathname: plateformLaunch.plateformOIDCAuthEndPoint,
+        pathname: plateformDetails.plateformOIDCAuthEndPoint,
         query: response
       })
     );
@@ -96,15 +96,22 @@ const ltiLaunchEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     console.log("req.session-LTI_ADVANTAGE_LAUNCH_ROUTE");
-    console.log(req.session);
+    const sessionObject = req.session;
+    console.log(sessionObject);
 
-    const verifiedTokenData = rlValidateToken(req, req.session);
-    console.log("verifiedTokenData - " + JSON.stringify(verifiedTokenData));
-    req.session.token = verifiedTokenData.token;
-    req.session.jti = verifiedTokenData.jti;
-    req.session.iss = verifiedTokenData.iss;
-    req.session.sub = verifiedTokenData.sub;
-    req.session.aud = verifiedTokenData.aud;
+    const idToken = rlValidateToken(req, sessionObject);
+
+    const rlPlatform = RlPlatform(
+      plateformDetails.platformPulicKey,
+      plateformDetails.plateformOIDCAuthEndPoint,
+      plateformDetails.platformAccessTokenEndpoint,
+      plateformDetails.keyid,
+      plateformDetails.alg,
+      idToken
+    );
+
+    req.session.platform = rlPlatform;
+    console.log("req.session.platform - " + JSON.stringify(rlPlatform));
     await req.session.save(() => {
       console.log("session data saved");
     });

@@ -3,22 +3,33 @@ import got from "got";
 import { URLSearchParams } from "url";
 import { getAccessToken } from "../util/auth";
 class Grade {
-  async getLineItems(idtoken: any, options?: any): Promise<any> {
-    if (!idtoken) {
+  /**
+   * @description Gets lineitems from a given platform
+   * @param {Object} platform - contains all the parameters required for calling LTI Advantage Calls.
+   * @param {Object} [options] - Options object
+   * @param {Boolean} [options.resourceLinkId = false] - Filters line items based on the resourceLinkId of the resource that originated the request
+   * @param {String} [options.resourceId = false] - Filters line items based on the resourceId
+   * @param {String} [options.tag = false] - Filters line items based on the tag
+   * @param {Number} [options.limit = false] - Sets a maximum number of line items to be returned
+   * @param {String} [options.id = false] - Filters line items based on the id
+   * @param {String} [options.label = false] - Filters line items based on the label
+   */
+
+  async getLineItems(
+    platform: any,
+    options?: any,
+    accessToken?: any
+  ): Promise<any> {
+    if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
-    const accessToken = await getAccessToken(
-      idtoken,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly"
-    );
-    if (!accessToken) {
-      const platform = {};
-
-      if (!platform) {
-        throw new Error("PLATFORM_NOT_FOUND");
-      }
-
-      let lineitemsEndpoint = idtoken.endpoint.lineitems;
+    if (!accessToken)
+      accessToken = await getAccessToken(
+        platform,
+        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly"
+      );
+    if (accessToken) {
+      let lineitemsEndpoint = platform.lineitems;
       let query: any = [];
 
       if (lineitemsEndpoint.indexOf("?") !== -1) {
@@ -32,10 +43,7 @@ class Grade {
 
       if (options) {
         if (options.resourceLinkId)
-          queryParams.push([
-            "resource_link_id",
-            idtoken.platformContext.resource.id
-          ]);
+          queryParams.push(["resource_link_id", platform.resourceLinkId]);
         if (options.limit && !options.id && !options.label)
           queryParams.push(["limit", options.limit]);
         if (options.tag) queryParams.push(["tag", options.tag]);
@@ -73,26 +81,38 @@ class Grade {
       return lineItems;
     }
   }
+  /**
+   * @description Creates a new lineItem for the given context
+   * @param {Object} platform - contains all the parameters required for calling LTI Advantage Calls.
+   * @param {Object} lineItem - LineItem Object, following the application/vnd.ims.lis.v2.lineitem+json specification
+   * @param {Object} [options] - Aditional configuration for the lineItem
+   * @param {Boolean} [options.resourceLinkId = false] - If set to true, binds the created lineItem to the resource that originated the request
+   */
 
   async createLineItem(
-    idtoken: any,
+    platform: any,
     lineItem: any,
     options: any,
-    accessToken: any
+    accessToken?: any
   ): Promise<any> {
     // Validating lineItem
-    if (!idtoken) {
+    if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
 
     if (!lineItem) {
       throw new Error("MISSING_LINE_ITEM");
     }
-
+    if (!accessToken) {
+      accessToken = await getAccessToken(
+        platform,
+        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
+      );
+    }
     if (options && options.resourceLinkId)
-      lineItem.resourceLinkId = idtoken.platformContext.resource.id;
+      lineItem.resourceLinkId = platform.resourceLinkId;
 
-    const lineitemsEndpoint = idtoken.platformContext.endpoint.lineitems;
+    const lineitemsEndpoint = platform.lineitems;
 
     const newLineItem = await got
       .post(lineitemsEndpoint, {
@@ -107,21 +127,34 @@ class Grade {
     console.log("Line item successfully created");
     return newLineItem;
   }
+  /**
+   * @description Publishes a score or grade to a platform. Represents the Score Publish service described in the lti 1.3 specification
+   * @param {Object} platform - contains all the parameters required for calling LTI Advantage Calls.
+   * @param {Object} score - Score/Grade following the Lti Standard application/vnd.ims.lis.v1.score+json
+   * @param {Object} [options] - Options object
+   * @param {Object} [options.autoCreate] - Line item that will be created automatically if it does not exist
+   * @param {String} [options.userId = false] - Send score to a specific user. If no userId is provided, the score is sent to the user that initiated the request
+   * @param {Boolean} [options.resourceLinkId = true] - Filters line items based on the resourceLinkId of the resource that originated the request. Defaults to true
+   * @param {String} [options.resourceId = false] - Filters line items based on the resourceId
+   * @param {String} [options.tag = false] - Filters line items based on the tag
+   * @param {Number} [options.limit = false] - Sets a maximum number of line items to be reached
+   * @param {String} [options.id = false] - Filters line items based on the id
+   * @param {String} [options.label = false] - Filters line items based on the label
+   */
 
-  async scorePublish(idtoken: any, score: any, options: any): Promise<any> {
-    if (!idtoken) {
+  async putGrade(platform: any, score: any, options: any): Promise<any> {
+    if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
 
     if (!score) {
       throw new Error("MISSING_SCORE");
     }
+    const accessToken: any = getAccessToken(
+      platform,
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+    );
 
-    const platform = {};
-    const accessToken = {
-      token_type: "",
-      access_token: ""
-    };
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
@@ -134,7 +167,7 @@ class Grade {
         resourceLinkId: true
       };
 
-    const lineItems: any = this.getLineItems(idtoken, options);
+    const lineItems: any = this.getLineItems(platform, options, accessToken);
     const result: any = {
       success: [],
       failure: []
@@ -144,7 +177,7 @@ class Grade {
       if (options && options.autoCreate) {
         lineItems.push(
           this.createLineItem(
-            idtoken,
+            platform,
             options.autoCreate,
             {
               resourceLinkId: options.resourceLinkId
@@ -167,7 +200,7 @@ class Grade {
         }
 
         if (options && options.userId) score.userId = options.userId;
-        else score.userId = idtoken.user;
+        else score.userId = platform.user; //Need to work on this property
         score.timestamp = new Date(Date.now()).toISOString();
         score.scoreMaximum = lineitem.scoreMaximum;
         await got.post(scoreUrl, {
@@ -193,21 +226,29 @@ class Grade {
 
     return result;
   }
-  async result(idtoken: any, options: any): Promise<any> {
-    if (!idtoken) {
-      throw new Error("MISSING_ID_TOKEN");
-    }
+  /**
+   * @description Retrieves a certain lineitem's results. Represents the Result service described in the lti 1.3 specification
+   * @param {Object} platform - contains all the parameters required for calling LTI Advantage Calls.
+   * @param {Object} [options] - Options object
+   * @param {String} [options.userId = false] - Filters based on the userId
+   * @param {Boolean} [options.resourceLinkId = true] - Filters line items based on the resourceLinkId of the resource that originated the request. Defaults to true
+   * @param {String} [options.resourceId = false] - Filters line items based on the resourceId
+   * @param {String} [options.tag = false] - Filters line items based on the tag
+   * @param {Number} [options.limit = false] - Sets a maximum number of results to be returned per line item
+   * @param {String} [options.id = false] - Filters line items based on the id
+   * @param {String} [options.label = false] - Filters line items based on the label
+   */
 
-    const platform = {};
-
+  async getGrades(platform: any, options: any): Promise<any> {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
     //we will change this when go for actual implementation
-    const accessToken = {
-      token_type: "",
-      access_token: ""
-    };
+    const accessToken = await getAccessToken(
+      platform,
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly"
+    );
+
     let limit = false;
 
     if (options) {
@@ -223,7 +264,7 @@ class Grade {
         resourceLinkId: true
       };
 
-    const lineItems = await this.getLineItems(idtoken, options);
+    const lineItems = await this.getLineItems(platform, options, accessToken);
     const queryParams = [];
 
     if (options) {
