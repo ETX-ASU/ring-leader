@@ -8,15 +8,21 @@ const RouteAssignment: React.FC = () => {
   const {} = useParams();
 
   const [users, setUsers] = useState<any[]>([]);
+  const [radioInputValue, setradioInputValue] = useState<string>("both");
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
-    axios.get("/lti-service/roster").then((results) => {
-      console.log(JSON.stringify(results));
-      setUsers(results.data.members);
-      setCourses(results.data.context);
-      console.log(JSON.stringify(users));
-      console.log(JSON.stringify(courses));
-    });
+    axios
+      .get("/lti-service/roster", { params: { role: radioInputValue } })
+      .then((results) => {
+        console.log(JSON.stringify(results));
+        setUsers(results.data.members);
+        setCourses(results.data.context);
+        console.log(JSON.stringify(users));
+        console.log(JSON.stringify(courses));
+      });
+  };
+  const handleCheck = (e) => {
+    setradioInputValue(e.target.value);
   };
   return (
     <div className="route-assignment">
@@ -24,9 +30,48 @@ const RouteAssignment: React.FC = () => {
       <hr></hr>
       <div className="container">
         <div className="row">
+          <div className="form-check-inline">
+            <label className="form-check-label">
+              <input
+                onChange={handleCheck}
+                type="radio"
+                value="Student"
+                className="form-check-input"
+                name="optradio"
+              >
+                Student
+              </input>
+            </label>
+          </div>
+          <div className="form-check-inline">
+            <label className="form-check-label">
+              <input
+                onChange={handleCheck}
+                type="radio"
+                value="Instructor"
+                className="form-check-input"
+                name="optradio"
+              >
+                Instructor
+              </input>
+            </label>
+          </div>
+          <div className="form-check-inline disabled">
+            <label className="form-check-label">
+              <input
+                onChange={handleCheck}
+                type="radio"
+                value="both"
+                className="form-check-input"
+                name="optradio"
+              >
+                Both
+              </input>
+            </label>
+          </div>
           <div className="col">
             <button className="btn btn-primary" onClick={getUsers}>
-              Get Users
+              Get Details from Platform
             </button>
           </div>
         </div>

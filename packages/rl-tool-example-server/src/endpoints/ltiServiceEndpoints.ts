@@ -14,10 +14,18 @@ const ltiServiceEndpoints = (app: Express): void => {
     }
     const platform: any = req.session.platform;
     console.log("req.session.platform - " + JSON.stringify(platform));
+    const qryRole = req.query.role;
+    let roles: any = {};
+    if (qryRole == "Instructor")
+      roles = {
+        role: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      };
+    else
+      roles = {
+        role: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      };
     // pass the token from the session to the rl-client-lib to make the call to Canvas
-    const results = await getUsers(platform, {
-      role: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
-    });
+    const results = await getUsers(platform, roles);
     res.send(results);
   });
 
