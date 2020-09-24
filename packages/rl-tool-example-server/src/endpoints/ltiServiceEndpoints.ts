@@ -9,16 +9,13 @@ import requestLogger from "../middleware/requestLogger";
 // cookie and send it to the client
 const ltiServiceEndpoints = (app: Express): void => {
   app.get("/lti-service/roster", requestLogger, async (req, res) => {
-    console.log("/lti-service/roster");
-    console.log(req);
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    const tokenObject: any = req.session;
-    console.log("This is tokenObject from session-" + tokenObject);
-
+    const platform: any = req.session.platform;
+    console.log("req.session.platform - " + JSON.stringify(platform));
     // pass the token from the session to the rl-client-lib to make the call to Canvas
-    const results = await getUsers(tokenObject);
+    const results = await getUsers(platform);
     res.send(results);
   });
 

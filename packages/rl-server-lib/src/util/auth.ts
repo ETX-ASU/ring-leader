@@ -20,18 +20,18 @@ const isValidOIDCRequest = (oidcData: any): boolean => {
  * @param {Platform} platform - Platform object.
  */
 
-const validateAud = (token: any, plateform: any): boolean => {
+const validateAud = (token: any, platform: any): boolean => {
   console.log(
     "Validating if aud (Audience) claim matches the value of the tool's clientId given by the platform"
   );
   console.log("Aud claim: " + token.aud);
-  console.log("Tool's clientId: " + plateform.clientId);
+  console.log("Tool's clientId: " + platform.clientId);
 
   if (Array.isArray(token.aud)) {
     console.log("More than one aud listed, searching for azp claim");
-    if (token.azp && token.azp !== plateform.clientId)
+    if (token.azp && token.azp !== platform.clientId)
       throw new Error("AZP_DOES_NOT_MATCH_CLIENTID");
-  } else if (token.aud == plateform.clientId) return true;
+  } else if (token.aud == platform.clientId) return true;
   return true;
 };
 
@@ -60,10 +60,10 @@ const getaccessTokenObject = (token: any): any => {
  * @param {Object} token - Id token you wish to validate.
  */
 
-const validateNonce = (token: any, plateform: any): boolean => {
+const validateNonce = (token: any, platform: any): boolean => {
   console.log("Validating nonce");
   console.log("Token Nonce: " + token.nonce);
-  if (token.nonce == plateform.nonce) return true;
+  if (token.nonce == platform.nonce) return true;
   else return false;
 };
 
@@ -120,20 +120,20 @@ const claimValidation = (token: any): any => {
  * @param {Platform} platform - Platform object.
  */
 
-const oidcValidation = (token: any, plateform: any): any => {
+const oidcValidation = (token: any, platform: any): any => {
   console.log("Token signature verified");
   console.log("Initiating OIDC aditional validation steps");
-  const aud: boolean = validateAud(token, plateform);
-  const nonce: boolean = validateNonce(token, plateform);
+  const aud: boolean = validateAud(token, platform);
+  const nonce: boolean = validateNonce(token, platform);
   const claims: boolean = claimValidation(token);
 
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
-const rlValidateToken = (req: any, plateform: any): any => {
-  console.log("plateform.nonce-" + plateform.nonce);
-  console.log("plateform.state-" + plateform.state);
-  console.log("plateform.client_id-" + plateform.client_id);
+const rlValidateToken = (req: any, platform: any): any => {
+  console.log("platform.nonce-" + platform.nonce);
+  console.log("platform.state-" + platform.state);
+  console.log("platform.client_id-" + platform.client_id);
 
   const idToken = req.body.id_token;
   console.log("idToken:" + idToken);
@@ -141,7 +141,7 @@ const rlValidateToken = (req: any, plateform: any): any => {
   console.log("decodedtoken:");
   console.log(JSON.stringify(decodedtoken));
   if (!decodedtoken) throw new Error("INVALID_JWT_RECEIVED");
-  const oidcVerified: any = oidcValidation(decodedtoken, plateform);
+  const oidcVerified: any = oidcValidation(decodedtoken, platform);
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
@@ -201,27 +201,21 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
     return response;
   }
 };
-const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
-  console.log("getAccessToken plateform value -" + JSON.stringify(plateform));
-
-  const clientId = plateform.aud;
+const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
+  const clientId = platform.Aud;
 
   const confjwt = {
     sub: clientId,
-    iss: plateform.iss,
-    aud: plateform.plateformDetails.platformAccessTokenEndpoint,
-    iat: Date.now() / 1000,
-    exp: Date.now() / 1000 + 60,
-    jti: plateform.jti
+    iss: platform.Iss,
+    aud: platform.AccesstokenEndpoint,
+    iat: platform.Iat || Date.now() / 1000,
+    exp: platform.Exp || Date.now() / 1000 + 60,
+    jti: platform.Jti
   };
-  const jwtToken = await jwt.sign(
-    confjwt,
-    plateform.plateformDetails.platformPrivateKey,
-    {
-      algorithm: plateform.plateformDetails.alg,
-      keyid: plateform.plateformDetails.keyid
-    }
-  );
+  const jwtToken = await jwt.sign(confjwt, platform.PlatformPublicKey, {
+    algorithm: platform.Alg,
+    keyid: platform.Kid
+  });
   console.log("jwtToken- " + JSON.stringify(jwtToken));
   const payload = {
     grant_type: "client_credentials",
@@ -231,11 +225,9 @@ const getAccessToken = async (plateform: any, scopes: any): Promise<any> => {
     scope: scopes
   };
   console.log("jwtToken payload- " + JSON.stringify(payload));
-  console.log(
-    "plateform plateformDetails- " + JSON.stringify(plateform.plateformDetails)
-  );
+
   const access = await got
-    .post(await plateform.plateformDetails.platformAccessTokenEndpoint, {
+    .post(await platform.AccesstokenEndpoint, {
       form: payload
     })
     .json();
