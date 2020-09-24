@@ -33,7 +33,12 @@ class NamesAndRoles {
     let query: any = [];
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);
-      query.push(["role", options.role]);
+      const plateformRole = tokenObject.Role.find(
+        (e: any) => e.role === options.role
+      );
+      console.log("plateformRole - " + JSON.stringify(plateformRole));
+
+      if (plateformRole) query.push(["role", plateformRole.claim]);
     }
 
     if (options && options.limit) {

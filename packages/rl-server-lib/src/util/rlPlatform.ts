@@ -43,7 +43,17 @@ const RlPlatform = (
     Kid: kid,
     PlatformPublicKey: platformPublicKey,
     IdToken: idToken,
-    Alg: alg
+    Alg: alg,
+    Roles: [
+      {
+        role: "Instructor",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      },
+      {
+        role: "Learner",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      }
+    ]
   };
   console.log("RlPlatformplatform - " + JSON.stringify(platform));
 
