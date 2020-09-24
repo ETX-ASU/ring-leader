@@ -4,13 +4,11 @@ const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
 
   const tokenData = {
-    Jti:
-      token.jti ||
-      encodeURIComponent(
-        [...Array(25)]
-          .map((_) => ((Math.random() * 36) | 0).toString(36))
-          .join("-")
-      ),
+    Jti: encodeURIComponent(
+      [...Array(25)]
+        .map((_) => ((Math.random() * 36) | 0).toString(36))
+        .join("-")
+    ),
     Iss: token.iss,
     Aud: token.aud,
     Iat: token.iat,
