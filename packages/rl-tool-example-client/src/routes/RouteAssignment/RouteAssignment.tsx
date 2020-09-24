@@ -21,6 +21,7 @@ const RouteAssignment: React.FC = () => {
   return (
     <div className="route-assignment">
       <h1>Assignment Route</h1>
+      <hr></hr>
       <div className="container">
         <div className="row">
           <div className="col">
@@ -31,23 +32,28 @@ const RouteAssignment: React.FC = () => {
         </div>
         <div className="row">
           <div className="col">
-            <div key="index">
-              <h1>Course Title - {JSON.stringify(courses.title)}</h1>
-            </div>
-
+            {courses.title && (
+              <>
+                <div key="index">
+                  <h2>Course Title - {JSON.stringify(courses.title)}</h2>
+                </div>
+                <hr></hr>
+              </>
+            )}
             {users.map((user, index) => {
               return (
-                <div key="index">
-                  <h2>Members - {index}</h2>
-                  <ul className="li">name : {user.name}</ul>
+                <div className="userprofile" key="index">
+                  <h2>Members - {index + 1}</h2>
                   <ul className="li">
                     Profile Pic:
                     <img src={user.picture}></img>
                   </ul>
-                  <ul className="li">given_name: {user.given_name}</ul>
-                  <ul className="li">family_name: {user.family_name}</ul>
-                  <ul className="li">email: {user.email}</ul>
-                  <ul className="li">user_id: {user.user_id}</ul>
+                  <ul className="li">Name : {user.name}</ul>
+                  <ul className="li">Given Name: {user.given_name}</ul>
+                  <ul className="li">Family Name: {user.family_name}</ul>
+                  <ul className="li">Email: {user.email}</ul>
+                  <ul className="li">User Id: {user.user_id}</ul>
+                  <ul className="li">Roles: {JSON.stringify(user.roles)}</ul>
                 </div>
               );
             })}
