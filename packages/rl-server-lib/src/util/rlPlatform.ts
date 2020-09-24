@@ -9,7 +9,7 @@ const setDefaultValues = (token: any): any => {
         .map((_) => ((Math.random() * 36) | 0).toString(36))
         .join("-")
     ),
-    jss: token.iss,
+    iss: token.iss,
     aud: token.aud,
     iat: token.iat,
     sub: token.sub,
