@@ -8,9 +8,11 @@ const RouteAssignment: React.FC = () => {
   const {} = useParams();
 
   const [users, setUsers] = useState<any[]>([]);
-  const [radioInputValue, setradioInputValue] = useState<string>("both");
+  const [displayDiv, setdisplayDiv] = useState<boolean>(true);
+  const [radioInputValue, setradioInputValue] = useState<string>("");
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
+    setdisplayDiv(true);
     axios
       .get("/lti-service/roster", { params: { role: radioInputValue } })
       .then((results) => {
@@ -23,6 +25,7 @@ const RouteAssignment: React.FC = () => {
   };
   const handleCheck = (event: any): any => {
     setradioInputValue(event.target.value);
+    setdisplayDiv(false);
   };
   return (
     <div className="route-assignment">
@@ -59,7 +62,7 @@ const RouteAssignment: React.FC = () => {
               <input
                 onChange={handleCheck}
                 type="radio"
-                value="both"
+                value="Member"
                 className="form-check-input"
                 name="optradio"
               ></input>
@@ -82,25 +85,26 @@ const RouteAssignment: React.FC = () => {
                 <hr></hr>
               </>
             )}
-            {users.map((user, index) => {
-              return (
-                <div className="userprofile" key="index">
-                  <h2>
-                    {radioInputValue} - {index + 1}
-                  </h2>
-                  <ul className="li">
-                    Profile Pic:
-                    <img src={user.picture}></img>
-                  </ul>
-                  <ul className="li">Name : {user.name}</ul>
-                  <ul className="li">Given Name: {user.given_name}</ul>
-                  <ul className="li">Family Name: {user.family_name}</ul>
-                  <ul className="li">Email: {user.email}</ul>
-                  <ul className="li">User Id: {user.user_id}</ul>
-                  <ul className="li">Roles: {JSON.stringify(user.roles)}</ul>
-                </div>
-              );
-            })}
+            {displayDiv &&
+              users.map((user, index) => {
+                return (
+                  <div className="userprofile" key="index">
+                    <h2>
+                      {radioInputValue} - {index + 1}
+                    </h2>
+                    <ul className="li">
+                      Profile Pic:
+                      <img src={user.picture}></img>
+                    </ul>
+                    <ul className="li">Name : {user.name}</ul>
+                    <ul className="li">Given Name: {user.given_name}</ul>
+                    <ul className="li">Family Name: {user.family_name}</ul>
+                    <ul className="li">Email: {user.email}</ul>
+                    <ul className="li">User Id: {user.user_id}</ul>
+                    <ul className="li">Roles: {JSON.stringify(user.roles)}</ul>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
