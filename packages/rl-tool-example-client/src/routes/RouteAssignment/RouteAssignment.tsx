@@ -21,8 +21,8 @@ const RouteAssignment: React.FC = () => {
         console.log(JSON.stringify(courses));
       });
   };
-  const handleCheck = (e) => {
-    setradioInputValue(e.target.value);
+  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setradioInputValue(event.target.value);
   };
   return (
     <div className="route-assignment">
