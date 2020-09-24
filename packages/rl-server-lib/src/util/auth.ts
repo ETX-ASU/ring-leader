@@ -182,7 +182,7 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
   };
   console.log("confjwt- " + JSON.stringify(confjwt));
 
-  const jwtToken = await jwt.sign(confjwt, platform.platformPublicKey, {
+  const jwtToken = await jwt.sign(confjwt, platform.platformPrivateKey, {
     algorithm: platform.alg,
     keyid: platform.kid
   });

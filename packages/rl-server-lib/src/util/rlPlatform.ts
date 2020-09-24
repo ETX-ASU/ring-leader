@@ -24,7 +24,7 @@ const setDefaultValues = (token: any): any => {
   return tokenData;
 };
 const RlPlatform = (
-  platformPublicKey: string,
+  platformPrivateKey: string,
   authenticationEndpoint: string,
   accesstokenEndpoint: string,
   kid: string,
@@ -47,7 +47,7 @@ const RlPlatform = (
     accesstokenEndpoint: accesstokenEndpoint,
     authOIDCRedirectEndpoint: authenticationEndpoint,
     kid: kid,
-    platformPublicKey: platformPublicKey,
+    platformPrivateKey: platformPrivateKey,
     idToken: idToken,
     alg: alg,
     roles: [
