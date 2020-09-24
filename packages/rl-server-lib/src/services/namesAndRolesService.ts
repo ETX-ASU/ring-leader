@@ -10,7 +10,7 @@ class NamesAndRoles {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
     }
-    const token: any = await jwt.decode(tokenObject.token);
+    const token: any = await jwt.decode(tokenObject.IdToken);
     console.log(JSON.stringify("getMembers token- " + token));
     console.log(
       JSON.stringify("getMembers tokenObject- " + JSON.stringify(tokenObject))
