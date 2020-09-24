@@ -35,7 +35,7 @@ const RouteAssignment: React.FC = () => {
               <input
                 onChange={handleCheck}
                 type="radio"
-                value="Student"
+                value="Learner"
                 className="form-check-input"
                 name="optradio"
               ></input>

@@ -108,7 +108,7 @@ class Grade {
     return newLineItem;
   }
 
-  async scorePublish(idtoken: any, score: any, options: any): Promise<any> {
+  async putGrade(idtoken: any, score: any, options: any): Promise<any> {
     if (!idtoken) {
       throw new Error("MISSING_ID_TOKEN");
     }
@@ -193,7 +193,7 @@ class Grade {
 
     return result;
   }
-  async result(idtoken: any, options: any): Promise<any> {
+  async getGrades(idtoken: any, options: any): Promise<any> {
     if (!idtoken) {
       throw new Error("MISSING_ID_TOKEN");
     }

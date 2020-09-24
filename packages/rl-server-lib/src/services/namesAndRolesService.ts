@@ -33,7 +33,7 @@ class NamesAndRoles {
     let query: any = [];
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);
-      const plateformRole = tokenObject.Role.find(
+      const plateformRole = tokenObject.Roles.find(
         (e: any) => e.role === options.role
       );
       console.log("plateformRole - " + JSON.stringify(plateformRole));
