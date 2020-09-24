@@ -18,7 +18,7 @@ const setDefaultValues = (token: any): any => {
     Exp: token.exp,
     ClientId: token.client_id
   };
-  console.log("setDefaultValues - tokenData - " + JSON.stringify(token));
+  console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
 };
 const RlPlatform = (
@@ -31,20 +31,21 @@ const RlPlatform = (
 ): any => {
   const token = jwt.decode(idToken);
   const tokenData = setDefaultValues(token);
+  console.log("RlPlatform - tokenData - " + JSON.stringify(tokenData));
   const platform = {
-    AccesstokenEndpoint: accesstokenEndpoint,
-    AuthOIDCRedirectEndpoint: authenticationEndpoint,
-    Kid: kid,
-    PlatformPublicKey: platformPublicKey,
-    IdToken: idToken,
-    Alg: alg,
     Jti: tokenData.jti,
     Iss: tokenData.iss,
     Aud: tokenData.aud,
     Iat: tokenData.iat,
     Sub: tokenData.sub,
     Exp: tokenData.exp,
-    ClientId: tokenData.client_id
+    ClientId: tokenData.client_id,
+    AccesstokenEndpoint: accesstokenEndpoint,
+    AuthOIDCRedirectEndpoint: authenticationEndpoint,
+    Kid: kid,
+    PlatformPublicKey: platformPublicKey,
+    IdToken: idToken,
+    Alg: alg
   };
   console.log("RlPlatformplatform - " + platform);
 
