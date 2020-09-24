@@ -33,13 +33,13 @@ const RlPlatform = (
   const tokenData = setDefaultValues(token);
   console.log("RlPlatform - tokenData - " + JSON.stringify(tokenData));
   const platform = {
-    Jti: tokenData.jti,
-    Iss: tokenData.iss,
-    Aud: tokenData.aud,
-    Iat: tokenData.iat,
-    Sub: tokenData.sub,
-    Exp: tokenData.exp,
-    ClientId: tokenData.client_id,
+    Jti: tokenData.Jti,
+    Iss: tokenData.Iss,
+    Aud: tokenData.Aud,
+    Iat: tokenData.Iat,
+    Sub: tokenData.Sub,
+    Exp: tokenData.Exp,
+    ClientId: tokenData.ClientId,
     AccesstokenEndpoint: accesstokenEndpoint,
     AuthOIDCRedirectEndpoint: authenticationEndpoint,
     Kid: kid,
@@ -47,7 +47,7 @@ const RlPlatform = (
     IdToken: idToken,
     Alg: alg
   };
-  console.log("RlPlatformplatform - " + platform);
+  console.log("RlPlatformplatform - " + JSON.stringify(platform));
 
   return platform;
 };
