@@ -8,12 +8,14 @@ const RouteAssignment: React.FC = () => {
   const {} = useParams();
 
   const [users, setUsers] = useState<any[]>([]);
-  const [courses, setCourses] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
     axios.get("/lti-service/roster").then((results) => {
       console.log(JSON.stringify(results));
       setUsers(results.data.members);
       setCourses(results.data.context);
+      console.log(JSON.stringify(users));
+      console.log(JSON.stringify(courses));
     });
   };
   return (
@@ -29,18 +31,23 @@ const RouteAssignment: React.FC = () => {
         </div>
         <div className="row">
           <div className="col">
-            {courses.map((course, index) => {
-              return <div key="index">{JSON.stringify(course)}</div>;
-            })}
+            <div key="index">
+              <h1>Course Title - {JSON.stringify(courses.title)}</h1>
+            </div>
+
             {users.map((user, index) => {
               return (
                 <div key="index">
-                  <ul className="li">{user.name}</ul>
-                  <ul className="li">{user.picture}</ul>
-                  <ul className="li">{user.given_name}</ul>
-                  <ul className="li">{user.family_name}</ul>
-                  <ul className="li">{user.email}</ul>
-                  <ul className="li">{user.user_id}</ul>
+                  <h2>Members - {index}</h2>
+                  <ul className="li">name : {user.name}</ul>
+                  <ul className="li">
+                    Profile Pic:
+                    <img src={user.picture}></img>
+                  </ul>
+                  <ul className="li">given_name: {user.given_name}</ul>
+                  <ul className="li">family_name: {user.family_name}</ul>
+                  <ul className="li">email: {user.email}</ul>
+                  <ul className="li">user_id: {user.user_id}</ul>
                 </div>
               );
             })}
