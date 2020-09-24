@@ -202,6 +202,8 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   }
 };
 const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
+  console.log("Inside getAccessToken-" + JSON.stringify(platform));
+
   const clientId = platform.Aud;
 
   const confjwt = {
@@ -212,6 +214,8 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
     exp: platform.Exp || Date.now() / 1000 + 60,
     jti: platform.Jti
   };
+  console.log("confjwt- " + JSON.stringify(confjwt));
+
   const jwtToken = await jwt.sign(confjwt, platform.PlatformPublicKey, {
     algorithm: platform.Alg,
     keyid: platform.Kid

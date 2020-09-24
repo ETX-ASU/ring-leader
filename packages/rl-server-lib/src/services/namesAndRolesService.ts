@@ -17,14 +17,14 @@ class NamesAndRoles {
     );
     console.log(
       "Attempting to retrieve platform access_token for [" +
-        tokenObject.iss +
+        tokenObject.Iss +
         "]"
     );
     const tokenRes = await getAccessToken(
       tokenObject,
       "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
     );
-    console.log("Access_token retrieved for [" + tokenObject.iss + "]");
+    console.log("Access_token retrieved for [" + tokenObject.Iss + "]");
     console.log("Access token received -" + tokenRes);
 
     console.log("tokenRes.access_token: " + tokenRes.access_token);
