@@ -34,27 +34,6 @@ const validateAud = (token: any, platform: any): boolean => {
   } else if (token.aud == platform.clientId) return true;
   return true;
 };
-
-const getaccessTokenObject = (token: any): any => {
-  const accessTokenObject = {
-    jti:
-      token.jti ||
-      encodeURIComponent(
-        [...Array(25)]
-          .map((_) => ((Math.random() * 36) | 0).toString(36))
-          .join("-")
-      ),
-    iss: token.iss,
-    aud: token.aud,
-    iat: token.iat,
-    nonce: token.nonce,
-    sub: token.sub,
-    exp: token.exp,
-    client_id: token.client_id
-  };
-  return accessTokenObject;
-};
-
 /**
  * @description Validates Nonce.
  * @param {Object} token - Id token you wish to validate.
@@ -145,21 +124,8 @@ const rlValidateToken = (req: any, platform: any): any => {
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
-  const objData = getaccessTokenObject(decodedtoken);
-  console.log("rlValidateToken - objData value -" + JSON.stringify(objData));
-  const tokenDetails = {
-    token: idToken,
-    isValidToken: true,
-    jti: objData.jti,
-    iss: objData.iss,
-    aud: objData.aud,
-    sub: objData.sub
-  };
-  console.log(
-    "rlValidateToken - tokenDetails value -" + JSON.stringify(tokenDetails)
-  );
 
-  return tokenDetails;
+  return idToken;
 };
 const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   let oidcData = req.query;
@@ -212,7 +178,7 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
     aud: platform.AccesstokenEndpoint,
     iat: platform.Iat || Date.now() / 1000,
     exp: platform.Exp || Date.now() / 1000 + 60,
-    jti: "dffdbdce-a9f1-427b-8fca-604182198783" //platform.Jti
+    jti: platform.Jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
   console.log("confjwt- " + JSON.stringify(confjwt));
 

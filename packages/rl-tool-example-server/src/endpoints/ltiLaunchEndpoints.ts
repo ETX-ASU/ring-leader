@@ -46,8 +46,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (req.session) {
       req.session.nonce = nonce;
       req.session.state = state;
-      req.session.client_id = response.client_id;
-      req.session.plateformDetails = plateformDetails;
+
       await req.session.save(() => {
         console.log("session data saved");
       });
@@ -73,7 +72,6 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (req.session) {
       req.session.nonce = nonce;
       req.session.state = state;
-      req.session.client_id = response.client_id;
 
       await req.session.save(() => {
         console.log("session data saved");
@@ -98,9 +96,10 @@ const ltiLaunchEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     console.log("req.session-LTI_ADVANTAGE_LAUNCH_ROUTE");
-    console.log(req.session);
+    const sessionObject = req.session;
+    console.log(sessionObject);
 
-    const verifiedTokenData = rlValidateToken(req, req.session);
+    const verifiedTokenData = rlValidateToken(req, sessionObject);
 
     const rlPlatform = RlPlatform(
       plateformDetails.platformPulicKey,

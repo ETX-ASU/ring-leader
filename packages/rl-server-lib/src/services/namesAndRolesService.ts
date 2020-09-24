@@ -88,6 +88,7 @@ class NamesAndRoles {
       console.log("LTI advantage call successfull");
       const headers = response.headers;
       const body = JSON.parse(response.body);
+      console.log("JSON.stringify(body)-" + JSON.stringify(body));
       if (!result) result = JSON.parse(JSON.stringify(body));
       else {
         result.members = [...result.members, ...body.members];
