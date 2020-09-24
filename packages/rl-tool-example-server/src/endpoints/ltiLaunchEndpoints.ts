@@ -102,7 +102,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
 
     const verifiedTokenData = rlValidateToken(req, req.session);
 
-    const rlPlatform = new RlPlatform(
+    const rlPlatform = RlPlatform(
       plateformDetails.platformPulicKey,
       plateformDetails.plateformOIDCAuthEndPoint,
       plateformDetails.platformAccessTokenEndpoint,
