@@ -8,7 +8,9 @@ const RouteInstructor: React.FC = () => {
   const {} = useParams();
 
   const [users, setUsers] = useState<any[]>([]);
+  const [assignments, setAssignments] = useState<any[]>([]);
   const [displayDiv, setdisplayDiv] = useState<boolean>(true);
+  const [displayAssignment, setdisplayAssignment] = useState<boolean>(false);
   const [radioInputValue, setradioInputValue] = useState<string>("");
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
@@ -26,13 +28,15 @@ const RouteInstructor: React.FC = () => {
   const createAssignment = () => {
     setdisplayDiv(false);
     axios.get("/lti-service/createassignment").then((results) => {
-      console.log(JSON.stringify(results));
+      console.log(JSON.stringify(results.data));
+      setAssignments(results.data);
     });
   };
 
   const getAssignment = () => {
     setdisplayDiv(false);
     axios.get("/lti-service/getassignment").then((results) => {
+      setdisplayAssignment(true);
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) alert("No Assignment to display");
     });
@@ -130,7 +134,36 @@ const RouteInstructor: React.FC = () => {
                   </div>
                 );
               })}
-            <div></div>
+            {displayAssignment &&
+              assignments.map((assignment, index) => {
+                return (
+                  <div className="userprofile" key="index">
+                    <h2>Assignment - {index + 1}</h2>
+                    <ul className="li">Id: {assignment.id}</ul>
+                    <ul className="li">Label : {assignment.label}</ul>
+                    <ul className="li">
+                      Maximum Score: {assignment.scoreMaximum}
+                    </ul>
+                    <ul className="li">Tag: {assignment.tag}</ul>
+                    <ul className="li">
+                      Submission Type:{" "}
+                      {
+                        assignment[
+                          "https://canvas.instructure.com/lti/submission_type"
+                        ].type
+                      }
+                    </ul>
+                    <ul className="li">
+                      External Tool Url:
+                      {
+                        assignment[
+                          "https://canvas.instructure.com/lti/submission_type"
+                        ].external_tool_url
+                      }
+                    </ul>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
