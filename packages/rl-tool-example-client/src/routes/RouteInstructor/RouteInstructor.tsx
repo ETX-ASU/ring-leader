@@ -23,6 +23,12 @@ const RouteInstructor: React.FC = () => {
         console.log(JSON.stringify(courses));
       });
   };
+  const createAssignment = () => {
+    setdisplayDiv(false);
+    axios.get("/lti-service/createassignment").then((results) => {
+      console.log(JSON.stringify(results));
+    });
+  };
   const handleCheck = (event: any): any => {
     setradioInputValue(event.target.value);
     setdisplayDiv(false);
@@ -72,6 +78,17 @@ const RouteInstructor: React.FC = () => {
           <div className="col">
             <button className="btn btn-primary" onClick={getUsers}>
               Get Details from Platform
+            </button>
+          </div>
+          <div className="col">
+            <button className="btn btn-primary" onClick={createAssignment}>
+              Create Assignment
+            </button>
+          </div>
+
+          <div className="col">
+            <button className="btn btn-primary" onClick={getUsers}>
+              Get Assignments
             </button>
           </div>
         </div>
