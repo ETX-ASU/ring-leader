@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { getUsers, createLineItem } from "@asu-etx/rl-client-lib";
+import { getUsers, createLineItem, getLineItems } from "@asu-etx/rl-client-lib";
 import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
 
@@ -45,6 +45,18 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     res.send(results);
   });
+  app.get("/lti-service/getassignment", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    console.log("createassignment - platform - " + platform);
+
+    const results = await getLineItems(platform);
+
+    res.send(results);
+  });
+
   app.get("/lti-service/grades", requestLogger, (req, res) => {
     res.send("");
   });

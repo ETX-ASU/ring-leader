@@ -120,19 +120,22 @@ class Grade {
 
     console.log("lineitemsEndpoint - " + lineitemsEndpoint);
     console.log("lineItem - " + JSON.stringify(lineItem));
-
-    const newLineItem = await got
-      .post(lineitemsEndpoint, {
-        headers: {
-          Authorization:
-            accessToken.token_type + " " + accessToken.access_token,
-          "Content-Type": "application/vnd.ims.lis.v2.lineitem+json"
-        },
-        json: lineItem
-      })
-      .json();
+    try {
+      const newLineItem = await got
+        .post(lineitemsEndpoint, {
+          headers: {
+            Authorization:
+              accessToken.token_type + " " + accessToken.access_token,
+            "Content-Type": "application/vnd.ims.lis.v2.lineitem+json"
+          },
+          json: lineItem
+        })
+        .json();
+      return newLineItem;
+    } catch (err) {
+      console.log(err);
+    }
     console.log("Line item successfully created");
-    return newLineItem;
   }
   /**
    * @description Publishes a score or grade to a platform. Represents the Score Publish service described in the lti 1.3 specification
