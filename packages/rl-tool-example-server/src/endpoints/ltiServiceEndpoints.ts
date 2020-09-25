@@ -28,6 +28,8 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
+    console.log("createassignment - platform - " + platform);
+
     const results = await createLineItem(platform, {
       scoreMaximum: 100.0,
       label: "LineItemLabel1",

@@ -95,6 +95,8 @@ class Grade {
     options: any,
     accessToken?: any
   ): Promise<any> {
+    console.log("Inside createLineItem");
+
     // Validating lineItem
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
@@ -109,6 +111,8 @@ class Grade {
         "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
       );
     }
+    console.log("access token retrived inside createLineItem");
+
     if (options && options.resourceLinkId)
       lineItem.resourceLinkId = platform.resourceLinkId;
 
