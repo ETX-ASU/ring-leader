@@ -118,6 +118,9 @@ class Grade {
 
     const lineitemsEndpoint = platform.lineitems;
 
+    console.log("lineitemsEndpoint - " + lineitemsEndpoint);
+    console.log("lineItem - " + lineItem);
+
     const newLineItem = await got
       .post(lineitemsEndpoint, {
         headers: {
