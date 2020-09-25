@@ -1,14 +1,24 @@
 import jwt from "jsonwebtoken";
 
 class DeepLinking {
+  /**
+   * @description Creates an auto submitting form containing the DeepLinking Message.
+   * @param {Object} platform - contains all the parameters required for calling LTI Advantage Calls.
+   * @param {Array} contentItems - Array of contentItems to be linked.
+   * @param {Object} options - Object containing extra options that mus be sent along the content items.
+   * @param {String} options.message - Message the platform may show to the end user upon return to the platform.
+   * @param {String} options.errmessage - Message the platform may show to the end user upon return to the platform if some error has occurred.
+   * @param {String} options.log - Message the platform may log in it's system upon return to the platform.
+   * @param {String} options.errlog - Message the platform may log in it's system upon return to the platform if some error has occurred.
+   */
   async createDeepLinkingForm(
-    idtoken: any,
+    platform: any,
     contentItems: any,
     options: any,
     nonce: string
   ): Promise<any> {
     const message = await this.createDeepLinkingMessage(
-      idtoken,
+      platform,
       contentItems,
       options,
       nonce
@@ -16,7 +26,7 @@ class DeepLinking {
 
     const form =
       '<form id="ltijs_submit" style="display: none;" action="' +
-      idtoken.platformContext.deepLinkingSettings.deep_link_return_url +
+      platform.deepLinkingSettings.deep_link_return_url +
       '" method="POST">' +
       '<input type="hidden" name="JWT" value="' +
       message +
@@ -27,19 +37,28 @@ class DeepLinking {
       "</script>";
     return form;
   }
-
+  /**
+   * @description Creates a DeepLinking signed message.
+   * @param {Object} platform - contains all the parameters required for calling LTI Advantage Calls.
+   * @param {Array} contentItems - Array of contentItems to be linked.
+   * @param {Object} options - Object containing extra options that mus be sent along the content items.
+   * @param {String} options.message - Message the platform may show to the end user upon return to the platform.
+   * @param {String} options.errmessage - Message the platform may show to the end user upon return to the platform if some error has occurred.
+   * @param {String} options.log - Message the platform may log in it's system upon return to the platform.
+   * @param {String} options.errlog - Message the platform may log in it's system upon return to the platform if some error has occurred.
+   */
   async createDeepLinkingMessage(
-    idtoken: any,
+    platform: any,
     contentItems: any,
     options: any,
     nonce: string
   ): Promise<any> {
-    if (!idtoken) {
+    if (!platform) {
       console.log("IdToken object missing.");
       throw new Error("MISSING_ID_TOKEN");
     }
 
-    if (!idtoken.platformContext.deepLinkingSettings) {
+    if (!platform.deepLinkingSettings) {
       console.log("DeepLinkingSettings object missing.");
       throw new Error("MISSING_DEEP_LINK_SETTINGS");
     }
@@ -51,13 +70,6 @@ class DeepLinking {
 
     if (!Array.isArray(contentItems)) contentItems = [contentItems]; // Gets platform
 
-    //we will replace this with actual data
-    const platform = {
-      platformClientId: "",
-      platformKid: "",
-      platformPrivateKey: ""
-    };
-
     if (!platform) {
       console.log("Platform not found");
       throw new Error("PLATFORM_NOT_FOUND");
@@ -66,13 +78,13 @@ class DeepLinking {
     console.log("Building basic JWT body"); // Builds basic jwt body
 
     const jwtBody: any = {
-      iss: platform.platformClientId,
-      aud: idtoken.iss,
+      iss: platform.clientId,
+      aud: platform.iss,
       iat: Date.now() / 1000,
       exp: Date.now() / 1000 + 60,
       nonce: nonce,
       "https://purl.imsglobal.org/spec/lti/claim/deployment_id":
-        idtoken.deploymentId,
+        platform.deploymentId,
       "https://purl.imsglobal.org/spec/lti/claim/message_type":
         "LtiDeepLinkingResponse",
       "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0"
@@ -90,18 +102,17 @@ class DeepLinking {
       jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/errorlog"] =
         options.errlog; // Adding Data claim if it exists in initial request
 
-    if (idtoken.platformContext.deepLinkingSettings.data)
+    if (platform.deepLinkingSettings.data)
       jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/data"] =
-        idtoken.platformContext.deepLinkingSettings.data;
+        platform.deepLinkingSettings.data;
     console.log(
       "Sanitizing content item array based on the platform's requirements:"
     );
     const selectedContentItems = [];
-    const acceptedTypes =
-      idtoken.platformContext.deepLinkingSettings.accept_types;
+    const acceptedTypes = platform.deepLinkingSettings.accept_types;
     const acceptMultiple = !(
-      idtoken.platformContext.deepLinkingSettings.accept_multiple === "false" ||
-      idtoken.platformContext.deepLinkingSettings.accept_multiple === false
+      platform.deepLinkingSettings.accept_multiple === "false" ||
+      platform.deepLinkingSettings.accept_multiple === false
     );
     console.log("Accepted Types: " + acceptedTypes);
     console.log("Accepts Mutiple: " + acceptMultiple);
