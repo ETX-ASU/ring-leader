@@ -9,12 +9,17 @@ const RouteInstructor: React.FC = () => {
 
   const [users, setUsers] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
-  const [displayDiv, setdisplayDiv] = useState<boolean>(true);
+  const [displayDiv, setDisplayDiv] = useState<boolean>(true);
+  const [displayCreateAssignment, setDisplayCreateAssignment] = useState<
+    boolean
+  >(false);
   const [displayAssignment, setdisplayAssignment] = useState<boolean>(false);
   const [radioInputValue, setradioInputValue] = useState<string>("");
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
-    setdisplayDiv(true);
+    setDisplayDiv(true);
+    setDisplayCreateAssignment(false);
+    setdisplayAssignment(false);
     axios
       .get("/lti-service/roster", { params: { role: radioInputValue } })
       .then((results) => {
@@ -26,24 +31,29 @@ const RouteInstructor: React.FC = () => {
       });
   };
   const createAssignment = () => {
-    setdisplayDiv(false);
     axios.get("/lti-service/createassignment").then((results) => {
       console.log(JSON.stringify(results.data));
-      setAssignments(results.data);
+      setDisplayDiv(false);
+      setDisplayCreateAssignment(true);
+      setdisplayAssignment(false);
     });
   };
 
   const getAssignment = () => {
-    setdisplayDiv(false);
+    setDisplayDiv(false);
+    setDisplayCreateAssignment(false);
     axios.get("/lti-service/getassignment").then((results) => {
       setdisplayAssignment(true);
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) alert("No Assignment to display");
+      setAssignments(results.data);
     });
   };
   const handleCheck = (event: any): any => {
     setradioInputValue(event.target.value);
-    setdisplayDiv(false);
+    setDisplayDiv(false);
+    setDisplayCreateAssignment(false);
+    setdisplayAssignment(false);
   };
   return (
     <div className="route-instructor">
@@ -134,6 +144,11 @@ const RouteInstructor: React.FC = () => {
                   </div>
                 );
               })}
+            {displayCreateAssignment && (
+              <div className="alert alert-success">
+                <strong>Success!</strong> Assignment created successfully!!.
+              </div>
+            )}
             {displayAssignment &&
               assignments.map((assignment, index) => {
                 return (
