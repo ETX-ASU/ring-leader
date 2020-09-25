@@ -33,9 +33,8 @@ const ltiServiceEndpoints = (app: Express): void => {
     const results = await createLineItem(platform, {
       scoreMaximum: 100.0,
       label: "LineItemLabel1",
-      resourceId: platform.resourceLinkId,
+      resourceId: "1",
       tag: "MyTag",
-      resourceLinkId: platform.resourceLinkId,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:

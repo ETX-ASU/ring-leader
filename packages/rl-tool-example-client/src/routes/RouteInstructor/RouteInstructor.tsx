@@ -33,7 +33,8 @@ const RouteInstructor: React.FC = () => {
   const getAssignment = () => {
     setdisplayDiv(false);
     axios.get("/lti-service/getassignment").then((results) => {
-      console.log(JSON.stringify(results));
+      console.log(JSON.stringify(results.data));
+      if (results.data.length <= 0) alert("No Assignment to display");
     });
   };
   const handleCheck = (event: any): any => {
