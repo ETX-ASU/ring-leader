@@ -28,8 +28,8 @@ const RouteInstructor: React.FC = () => {
     setdisplayDiv(false);
   };
   return (
-    <div className="route-assignment">
-      <h1>Assignment Route</h1>
+    <div className="route-instructor">
+      <h1>Instructor Route</h1>
       <hr></hr>
       <div className="container">
         <div className="row">
