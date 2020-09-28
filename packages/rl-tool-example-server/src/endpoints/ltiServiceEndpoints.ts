@@ -29,8 +29,8 @@ const ltiServiceEndpoints = (app: Express): void => {
     }
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
-
-    const resultss = await createLineItem(platform, req.body);
+    console.log("createassignment - req.body.params - " + req.body.params);
+    const resultss = await createLineItem(platform, req.body.params);
     console.log("resultss - " + JSON.stringify(resultss));
 
     res.send(resultss);
