@@ -15,6 +15,7 @@ const setDefaultValues = (token: any): any => {
     sub: token.sub,
     exp: token.exp,
     clientId: token.client_id,
+    userId: token.sub,
     lineitems:
       token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitems,
     resourceLinkId:
@@ -50,6 +51,7 @@ const RlPlatform = (
     platformPrivateKey: platformPrivateKey,
     idToken: idToken,
     alg: alg,
+    userId: tokenData.UserId,
     roles: [
       {
         role: "Instructor",

@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { getUsers } from "@asu-etx/rl-client-lib";
+import { getUsers, createLineItem, getLineItems } from "@asu-etx/rl-client-lib";
 import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
 
@@ -22,6 +22,42 @@ const ltiServiceEndpoints = (app: Express): void => {
 
   app.get("/lti-service/assignments", requestLogger, (req, res) => {
     res.send("");
+  });
+  app.get("/lti-service/createassignment", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    console.log("createassignment - platform - " + platform);
+    const lineItemData = req.query;
+    console.log(
+      "createassignment - lineItemData - " + JSON.stringify(lineItemData)
+    );
+    const newLineItemData = {
+      scoreMaximum: lineItemData.scoreMaximum,
+      label: lineItemData.label,
+      resourceId: "1",
+      tag: lineItemData.tag,
+      "https://canvas.instructure.com/lti/submission_type": {
+        type: "external_tool",
+        external_tool_url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
+      }
+    };
+    const results = await createLineItem(platform, newLineItemData);
+
+    res.send(results);
+  });
+  app.get("/lti-service/getassignment", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    console.log("createassignment - platform - " + platform);
+
+    const results = await getLineItems(platform);
+
+    res.send(results);
   });
 
   app.get("/lti-service/grades", requestLogger, (req, res) => {

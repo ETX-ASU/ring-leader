@@ -115,6 +115,14 @@ const ltiLaunchEndpoints = (app: Express): void => {
     await req.session.save(() => {
       console.log("session data saved");
     });
+    res.redirect(LTI_INSTRUCTOR_REDIRECT);
+  });
+
+  // post to accept the LMS launch with idToken
+  app.post(LTI_ASSIGNMENT_REDIRECT, requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
     res.redirect(LTI_ASSIGNMENT_REDIRECT);
   });
 

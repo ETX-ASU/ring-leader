@@ -95,6 +95,8 @@ class Grade {
     options: any,
     accessToken?: any
   ): Promise<any> {
+    console.log("Inside createLineItem");
+
     // Validating lineItem
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
@@ -109,23 +111,31 @@ class Grade {
         "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
       );
     }
+    console.log("access token retrived inside createLineItem");
+
     if (options && options.resourceLinkId)
       lineItem.resourceLinkId = platform.resourceLinkId;
 
     const lineitemsEndpoint = platform.lineitems;
 
-    const newLineItem = await got
-      .post(lineitemsEndpoint, {
-        headers: {
-          Authorization:
-            accessToken.token_type + " " + accessToken.access_token,
-          "Content-Type": "application/vnd.ims.lis.v2.lineitem+json"
-        },
-        json: lineItem
-      })
-      .json();
+    console.log("lineitemsEndpoint - " + lineitemsEndpoint);
+    console.log("lineItem - " + JSON.stringify(lineItem));
+    try {
+      const newLineItem = await got
+        .post(lineitemsEndpoint, {
+          headers: {
+            Authorization:
+              accessToken.token_type + " " + accessToken.access_token,
+            "Content-Type": "application/vnd.ims.lis.v2.lineitem+json"
+          },
+          json: lineItem
+        })
+        .json();
+      return newLineItem;
+    } catch (err) {
+      console.log(err);
+    }
     console.log("Line item successfully created");
-    return newLineItem;
   }
   /**
    * @description Publishes a score or grade to a platform. Represents the Score Publish service described in the lti 1.3 specification
