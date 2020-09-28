@@ -13,6 +13,7 @@ const createLineItem = (platform: any, lineItem: any, options?: any): any => {
 };
 
 const getLineItems = (platform: any, options?: any): any => {
+  console.log(`getting line items for: ${JSON.stringify(platform)} with options ${JSON.stringify(options)}`);
   return new Grade().getLineItems(platform, options);
 };
 export {
