@@ -135,9 +135,9 @@ class Grade {
       return newLineItem;
     } catch (err) {
       console.log(err);
-      throw new Error("Unable to return line item");
     }
     console.log("Line item successfully created");
+    return null;
   }
   /**
    * @description Publishes a score or grade to a platform. Represents the Score Publish service described in the lti 1.3 specification

@@ -42,7 +42,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
-          "https://ring-leader-james-stanley.herokuapp.com/getassignment"
+          "https://ring-leader-james-stanley.herokuapp.com/lti-advantage-launch"
       }
     };
     const results = await createLineItem(platform, newLineItemData);
