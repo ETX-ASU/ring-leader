@@ -23,16 +23,14 @@ const ltiServiceEndpoints = (app: Express): void => {
   app.get("/lti-service/assignments", requestLogger, (req, res) => {
     res.send("");
   });
-  app.post("/lti-service/createassignment", requestLogger, async (req, res) => {
+  app.get("/lti-service/createassignment", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    const createLineData = req.body.params;
     console.log("createassignment - platform - " + platform);
-    console.log("createassignment - createLineData - " + createLineData);
-    const results = await createLineItem(platform, createLineData);
-    console.log("results - " + JSON.stringify(results));
+
+    const results = await createLineItem(platform, req.query);
 
     res.send(results);
   });

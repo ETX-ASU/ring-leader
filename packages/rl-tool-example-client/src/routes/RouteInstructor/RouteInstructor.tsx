@@ -23,6 +23,8 @@ const RouteInstructor: React.FC = () => {
   const [title, setTitle] = useState<string>("");
   const [tag, setTag] = useState<string>("");
   const [maxScore, setMaxScore] = useState<number>();
+  const [startDate, setStartDate] = useState<string>();
+  const [endDate, setEndDate] = useState<string>();
 
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
@@ -42,16 +44,18 @@ const RouteInstructor: React.FC = () => {
   };
   const createAssignment = () => {
     axios
-      .post("/lti-service/createassignment", {
+      .get("/lti-service/createassignment", {
         params: {
           scoreMaximum: maxScore,
-          name: title,
+          label: title,
           resourceId: "1",
           tag: tag,
+          startDateTime: JSON.stringify(startDate),
+          endDateTime: JSON.stringify(endDate),
           "https://canvas.instructure.com/lti/submission_type": {
             type: "external_tool",
             external_tool_url:
-              "https://ring-leader-devesh-tiwari.herokuapp.com/assignment/1"
+              "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
           }
         }
       })
@@ -217,6 +221,34 @@ const RouteInstructor: React.FC = () => {
                       id="Tag"
                       placeholder="Enter Tag"
                       name="Tag"
+                    ></input>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="control-label col-sm-2">Start Date:</label>
+                  <div className="col-sm-10">
+                    <input
+                      value={startDate}
+                      onChange={(event) => {
+                        setStartDate(event.target.value);
+                      }}
+                      type="date"
+                      id="startdate"
+                      className="form-control"
+                    ></input>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="control-label col-sm-2">End Date:</label>
+                  <div className="col-sm-10">
+                    <input
+                      value={endDate}
+                      onChange={(event) => {
+                        setEndDate(event.target.value);
+                      }}
+                      type="date"
+                      id="enddate"
+                      className="form-control"
                     ></input>
                   </div>
                 </div>
