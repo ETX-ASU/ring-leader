@@ -30,16 +30,18 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
     const lineItemData = req.query;
-
+    console.log(
+      "createassignment - lineItemData - " + JSON.stringify(lineItemData)
+    );
     const newLineItemData = {
       scoreMaximum: lineItemData.maxScore,
       label: lineItemData.title,
-      resourceId: lineItemData.resourceId,
+      resourceId: "1",
       tag: lineItemData.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment/1"
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
       }
     };
     const results = await createLineItem(platform, newLineItemData);

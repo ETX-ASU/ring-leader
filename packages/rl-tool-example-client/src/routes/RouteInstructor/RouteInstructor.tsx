@@ -46,13 +46,7 @@ const RouteInstructor: React.FC = () => {
         params: {
           scoreMaximum: maxScore,
           label: title,
-          resourceId: "1",
-          tag: tag,
-          "https://canvas.instructure.com/lti/submission_type": {
-            type: "external_tool",
-            external_tool_url:
-              "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
-          }
+          tag: tag
         }
       })
       .then((results) => {
