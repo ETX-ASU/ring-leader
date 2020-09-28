@@ -44,7 +44,7 @@ const RouteInstructor: React.FC = () => {
   };
   const createAssignment = () => {
     axios
-      .get("/lti-service/createassignment", {
+      .post("/lti-service/createassignment", {
         params: {
           scoreMaximum: maxScore,
           label: title,
@@ -55,7 +55,7 @@ const RouteInstructor: React.FC = () => {
           "https://canvas.instructure.com/lti/submission_type": {
             type: "external_tool",
             external_tool_url:
-              "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
+              "https://ring-leader-devesh-tiwari.herokuapp.com/assignment/1"
           }
         }
       })
