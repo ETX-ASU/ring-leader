@@ -38,6 +38,8 @@ const ltiServiceEndpoints = (app: Express): void => {
       label: lineItemData.label,
       resourceId: "1",
       tag: lineItemData.tag,
+      description: "<p>Do the following:</p>...",
+      due_at: "2020-09-30T20:05:02Z",
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
