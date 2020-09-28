@@ -23,8 +23,6 @@ const RouteInstructor: React.FC = () => {
   const [title, setTitle] = useState<string>("");
   const [tag, setTag] = useState<string>("");
   const [maxScore, setMaxScore] = useState<number>();
-  const [startDate, setStartDate] = useState<string>();
-  const [endDate, setEndDate] = useState<string>();
 
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
@@ -222,34 +220,7 @@ const RouteInstructor: React.FC = () => {
                     ></input>
                   </div>
                 </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">Start Date:</label>
-                  <div className="col-sm-10">
-                    <input
-                      value={startDate}
-                      onChange={(event) => {
-                        setStartDate(event.target.value);
-                      }}
-                      type="date"
-                      id="startdate"
-                      className="form-control"
-                    ></input>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">End Date:</label>
-                  <div className="col-sm-10">
-                    <input
-                      value={endDate}
-                      onChange={(event) => {
-                        setEndDate(event.target.value);
-                      }}
-                      type="date"
-                      id="enddate"
-                      className="form-control"
-                    ></input>
-                  </div>
-                </div>
+
                 <div className="form-group">
                   <div className="col-sm-offset-2 col-sm-10">
                     <button
