@@ -41,7 +41,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
+          "https://ring-leader-james-stanley.herokuapp.com/getassignment"
       }
     };
     const results = await createLineItem(platform, newLineItemData);
