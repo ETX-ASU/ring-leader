@@ -86,7 +86,7 @@ const RouteInstructor: React.FC = () => {
   return (
     <div className="route-instructor">
       <h2>
-        Instructor Route -{" "}
+        Instructor Route -
         {courses.title && (
           <>
             <div key="index">
