@@ -23,9 +23,6 @@ const RouteInstructor: React.FC = () => {
   const [title, setTitle] = useState<string>("");
   const [tag, setTag] = useState<string>("");
   const [maxScore, setMaxScore] = useState<number>();
-  const [unLockAtDate, setUnLockAtDate] = useState<string>();
-  const [lockAtDate, setLockAtDate] = useState<string>();
-  const [dueDate, setDueDate] = useState<string>();
 
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
@@ -51,9 +48,6 @@ const RouteInstructor: React.FC = () => {
           name: title,
           resourceId: "1",
           tag: tag,
-          due_at: JSON.stringify(dueDate),
-          unlock_at: JSON.stringify(unLockAtDate),
-          lock_at: JSON.stringify(lockAtDate),
           "https://canvas.instructure.com/lti/submission_type": {
             type: "external_tool",
             external_tool_url:
@@ -223,48 +217,6 @@ const RouteInstructor: React.FC = () => {
                       id="Tag"
                       placeholder="Enter Tag"
                       name="Tag"
-                    ></input>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">Due Date:</label>
-                  <div className="col-sm-10">
-                    <input
-                      value={dueDate}
-                      onChange={(event) => {
-                        setDueDate(event.target.value);
-                      }}
-                      type="datetime-local"
-                      id="startdate"
-                      className="form-control"
-                    ></input>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">UnLock Date:</label>
-                  <div className="col-sm-10">
-                    <input
-                      value={unLockAtDate}
-                      onChange={(event) => {
-                        setUnLockAtDate(event.target.value);
-                      }}
-                      type="datetime-local"
-                      id="enddate"
-                      className="form-control"
-                    ></input>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">Lock Date:</label>
-                  <div className="col-sm-10">
-                    <input
-                      value={lockAtDate}
-                      onChange={(event) => {
-                        setLockAtDate(event.target.value);
-                      }}
-                      type="datetime-local"
-                      id="enddate"
-                      className="form-control"
                     ></input>
                   </div>
                 </div>
