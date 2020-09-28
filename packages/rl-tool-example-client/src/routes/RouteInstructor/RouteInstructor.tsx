@@ -90,14 +90,12 @@ const RouteInstructor: React.FC = () => {
         {courses.title && (
           <>
             <div key="index">
-              <h3>: Course Title - {JSON.stringify(courses.title)}</h3>
+              <h3>Course Title - {JSON.stringify(courses.title)}</h3>
             </div>
             <hr></hr>
           </>
         )}
       </h3>
-
-      <hr></hr>
       <div className="container">
         <div className="row">
           <div className="form-check-inline">
@@ -140,6 +138,7 @@ const RouteInstructor: React.FC = () => {
             </button>
           </div>
         </div>
+        <hr></hr>
         <div className="row">
           <div className="col">
             {displayDiv &&
