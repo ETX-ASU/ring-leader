@@ -41,12 +41,12 @@ class NamesAndRoles {
     let query: any = [];
     if (options && options.role) {
       console.log("Adding role parameter with value: " + options.role);
-      const plateformRole = platform.roles.find(
+      const platformRole = platform.roles.find(
         (e: any) => e.role === options.role
       );
-      console.log("plateformRole - " + JSON.stringify(plateformRole));
+      console.log("platformRole - " + JSON.stringify(platformRole));
 
-      if (plateformRole) query.push(["role", plateformRole.claim]);
+      if (platformRole) query.push(["role", platformRole.claim]);
     }
 
     if (options && options.limit) {
