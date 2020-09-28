@@ -50,8 +50,6 @@ const RouteInstructor: React.FC = () => {
           label: title,
           resourceId: "1",
           tag: tag,
-          startDateTime: JSON.stringify(startDate),
-          endDateTime: JSON.stringify(endDate),
           "https://canvas.instructure.com/lti/submission_type": {
             type: "external_tool",
             external_tool_url:
@@ -96,6 +94,14 @@ const RouteInstructor: React.FC = () => {
   return (
     <div className="route-instructor">
       <h1>Instructor Route</h1>
+      {courses.title && (
+        <>
+          <div key="index">
+            <h2>Course Title - {JSON.stringify(courses.title)}</h2>
+          </div>
+          <hr></hr>
+        </>
+      )}
       <hr></hr>
       <div className="container">
         <div className="row">
@@ -142,14 +148,6 @@ const RouteInstructor: React.FC = () => {
         </div>
         <div className="row">
           <div className="col">
-            {courses.title && (
-              <>
-                <div key="index">
-                  <h2>Course Title - {JSON.stringify(courses.title)}</h2>
-                </div>
-                <hr></hr>
-              </>
-            )}
             {displayDiv &&
               users.map((user, index) => {
                 return (
