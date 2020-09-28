@@ -14,6 +14,9 @@ const RouteInstructor: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
   const [displayDiv, setDisplayDiv] = useState<boolean>(true);
+  const [displayNoAssignment, setDisplayNoAssignment] = useState<boolean>(
+    false
+  );
   const [displayCreateAssignment, setDisplayCreateAssignment] = useState<
     boolean
   >(false);
@@ -30,6 +33,7 @@ const RouteInstructor: React.FC = () => {
     setDisplayCreateAssignment(false);
     setdisplayAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
+    setDisplayNoAssignment(false);
     axios
       .get("/lti-service/roster", { params: { role: radioInputValue } })
       .then((results) => {
@@ -54,6 +58,7 @@ const RouteInstructor: React.FC = () => {
         setDisplayDiv(false);
         setDisplayCreateAssignment(false);
         setdisplayAssignment(false);
+        setDisplayNoAssignment(false);
         setDisplayCreateAssignmentSuccess(true);
       });
   };
@@ -63,15 +68,18 @@ const RouteInstructor: React.FC = () => {
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
     axios.get("/lti-service/getassignment").then((results) => {
-      setdisplayAssignment(true);
       console.log(JSON.stringify(results.data));
-      if (results.data.length <= 0) alert("No Assignment to display");
-      setAssignments(results.data);
+      if (results.data.length <= 0) {
+        setDisplayNoAssignment(true);
+        setAssignments(results.data);
+      }
+      setdisplayAssignment(true);
     });
   };
   const handleCheck = (event: any): any => {
     setRadioInputValue(event.target.value);
     setDisplayDiv(false);
+    setDisplayNoAssignment(false);
     setDisplayCreateAssignment(false);
     setdisplayAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
@@ -82,6 +90,7 @@ const RouteInstructor: React.FC = () => {
     setDisplayCreateAssignment(true);
     setdisplayAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
+    setDisplayNoAssignment(false);
   };
   return (
     <div className="route-instructor">
@@ -141,6 +150,14 @@ const RouteInstructor: React.FC = () => {
         <hr></hr>
         <div className="row">
           <div className="col">
+            {displayNoAssignment && (
+              <div>
+                <div className="alert alert-info">
+                  <strong>Info!</strong> You do not have any assignment at the
+                  moment!!!
+                </div>
+              </div>
+            )}
             {displayDiv &&
               users.map((user, index) => {
                 return (
@@ -237,7 +254,7 @@ const RouteInstructor: React.FC = () => {
               </div>
             )}
             {displayAssignment &&
-              (assignments.map((assignment, index) => {
+              assignments.map((assignment, index) => {
                 return (
                   <div className="userprofile" key="index">
                     <h2>Assignment - {index + 1}</h2>
@@ -265,15 +282,7 @@ const RouteInstructor: React.FC = () => {
                     </ul>
                   </div>
                 );
-              }) ||
-                (assignments.length <= 0 && (
-                  <div>
-                    <div className="alert alert-info">
-                      <strong>Info!</strong> You do not have any assignment at
-                      the moment!!!
-                    </div>
-                  </div>
-                )))}
+              })}
           </div>
         </div>
       </div>
