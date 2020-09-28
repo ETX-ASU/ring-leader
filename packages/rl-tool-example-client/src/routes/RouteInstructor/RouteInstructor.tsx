@@ -67,13 +67,13 @@ const RouteInstructor: React.FC = () => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
+    setdisplayAssignment(true);
     axios.get("/lti-service/getassignment").then((results) => {
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) {
         setDisplayNoAssignment(true);
         setAssignments(results.data);
       }
-      setdisplayAssignment(true);
     });
   };
   const handleCheck = (event: any): any => {
@@ -150,14 +150,6 @@ const RouteInstructor: React.FC = () => {
         <hr></hr>
         <div className="row">
           <div className="col">
-            {displayNoAssignment && (
-              <div>
-                <div className="alert alert-info">
-                  <strong>Info!</strong> You do not have any assignment at the
-                  moment!!!
-                </div>
-              </div>
-            )}
             {displayDiv &&
               users.map((user, index) => {
                 return (
@@ -283,6 +275,14 @@ const RouteInstructor: React.FC = () => {
                   </div>
                 );
               })}
+            {displayNoAssignment && (
+              <div>
+                <div className="alert alert-info">
+                  <strong>Info!</strong> You do not have any assignment at the
+                  moment!!!
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
