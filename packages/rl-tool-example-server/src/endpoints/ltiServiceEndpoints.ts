@@ -53,7 +53,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    console.log("createassignment - platform - " + platform);
+    console.log(`createassignment - platform - ${JSON.stringify(platform)}`);
 
     const results = await getLineItems(platform);
 
