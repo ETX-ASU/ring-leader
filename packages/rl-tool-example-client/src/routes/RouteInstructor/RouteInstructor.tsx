@@ -72,8 +72,10 @@ const RouteInstructor: React.FC = () => {
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) {
         setDisplayNoAssignment(true);
-        setAssignments(results.data);
+        return;
       }
+
+      setAssignments(results.data);
     });
   };
   const handleCheck = (event: any): any => {
