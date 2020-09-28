@@ -21,10 +21,12 @@ const RouteInstructor: React.FC = () => {
   const [radioInputValue, setRadioInputValue] = useState<string>("");
 
   const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [tag, setTag] = useState<string>("");
   const [maxScore, setMaxScore] = useState<number>();
-  const [startDate, setStartDate] = useState<string>();
-  const [endDate, setEndDate] = useState<string>();
+  const [unLockAtDate, setUnLockAtDate] = useState<string>();
+  const [lockAtDate, setLockAtDate] = useState<string>();
+  const [dueDate, setDueDate] = useState<string>();
 
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
@@ -47,11 +49,13 @@ const RouteInstructor: React.FC = () => {
       .post("/lti-service/createassignment", {
         params: {
           scoreMaximum: maxScore,
-          label: title,
+          name: title,
+          description: description,
           resourceId: "1",
           tag: tag,
-          startDateTime: startDate,
-          endDateTime: endDate,
+          due_at: dueDate,
+          unlock_at: unLockAtDate,
+          lock_at: lockAtDate,
           "https://canvas.instructure.com/lti/submission_type": {
             type: "external_tool",
             external_tool_url:
@@ -225,28 +229,42 @@ const RouteInstructor: React.FC = () => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="control-label col-sm-2">Start Date:</label>
+                  <label className="control-label col-sm-2">Due Date:</label>
                   <div className="col-sm-10">
                     <input
-                      value={startDate}
+                      value={dueDate}
                       onChange={(event) => {
-                        setStartDate(event.target.value);
+                        setDueDate(JSON.stringify(event.target.value));
                       }}
-                      type="date"
+                      type="datetime-local"
                       id="startdate"
                       className="form-control"
                     ></input>
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="control-label col-sm-2">End Date:</label>
+                  <label className="control-label col-sm-2">UnLock Date:</label>
                   <div className="col-sm-10">
                     <input
-                      value={endDate}
+                      value={unLockAtDate}
                       onChange={(event) => {
-                        setEndDate(event.target.value);
+                        setUnLockAtDate(JSON.stringify(event.target.value));
                       }}
-                      type="date"
+                      type="datetime-local"
+                      id="enddate"
+                      className="form-control"
+                    ></input>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="control-label col-sm-2">Lock Date:</label>
+                  <div className="col-sm-10">
+                    <input
+                      value={lockAtDate}
+                      onChange={(event) => {
+                        setLockAtDate(JSON.stringify(event.target.value));
+                      }}
+                      type="datetime-local"
                       id="enddate"
                       className="form-control"
                     ></input>
