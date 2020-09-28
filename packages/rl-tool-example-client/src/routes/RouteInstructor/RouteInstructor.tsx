@@ -85,15 +85,18 @@ const RouteInstructor: React.FC = () => {
   };
   return (
     <div className="route-instructor">
-      <h1>Instructor Route</h1>
-      {courses.title && (
-        <>
-          <div key="index">
-            <h2>Course Title - {JSON.stringify(courses.title)}</h2>
-          </div>
-          <hr></hr>
-        </>
-      )}
+      <h2>
+        Instructor Route -{" "}
+        {courses.title && (
+          <>
+            <div key="index">
+              <h2>Course Title - {JSON.stringify(courses.title)}</h2>
+            </div>
+            <hr></hr>
+          </>
+        )}
+      </h2>
+
       <hr></hr>
       <div className="container">
         <div className="row">
@@ -131,7 +134,6 @@ const RouteInstructor: React.FC = () => {
               Create Assignment
             </button>
           </div>
-
           <div className="col">
             <button className="btn btn-primary" onClick={getAssignment}>
               Get Assignments
