@@ -34,8 +34,8 @@ const ltiServiceEndpoints = (app: Express): void => {
       "createassignment - lineItemData - " + JSON.stringify(lineItemData)
     );
     const newLineItemData = {
-      scoreMaximum: lineItemData.maxScore,
-      label: lineItemData.title,
+      scoreMaximum: lineItemData.scoreMaximum,
+      label: lineItemData.label,
       resourceId: "1",
       tag: lineItemData.tag,
       "https://canvas.instructure.com/lti/submission_type": {
