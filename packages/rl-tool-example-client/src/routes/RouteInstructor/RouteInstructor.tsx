@@ -21,7 +21,6 @@ const RouteInstructor: React.FC = () => {
   const [radioInputValue, setRadioInputValue] = useState<string>("");
 
   const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
   const [tag, setTag] = useState<string>("");
   const [maxScore, setMaxScore] = useState<number>();
   const [unLockAtDate, setUnLockAtDate] = useState<string>();
@@ -50,7 +49,6 @@ const RouteInstructor: React.FC = () => {
         params: {
           scoreMaximum: maxScore,
           name: title,
-          description: description,
           resourceId: "1",
           tag: tag,
           due_at: JSON.stringify(dueDate),
