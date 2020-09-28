@@ -124,8 +124,7 @@ class Grade {
       const newLineItem = await got
         .post(lineitemsEndpoint, {
           headers: {
-            Authorization:
-              accessToken.token_type + " " + accessToken.access_token,
+
             "Content-Type": "application/vnd.ims.lis.v2.lineitem+json",
             "Accept": "application/vnd.ims.lis.v2.lineitem+json"
           },
