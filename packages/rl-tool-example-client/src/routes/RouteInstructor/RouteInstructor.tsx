@@ -53,9 +53,9 @@ const RouteInstructor: React.FC = () => {
           description: description,
           resourceId: "1",
           tag: tag,
-          due_at: dueDate,
-          unlock_at: unLockAtDate,
-          lock_at: lockAtDate,
+          due_at: JSON.stringify(dueDate),
+          unlock_at: JSON.stringify(unLockAtDate),
+          lock_at: JSON.stringify(lockAtDate),
           "https://canvas.instructure.com/lti/submission_type": {
             type: "external_tool",
             external_tool_url:
@@ -234,7 +234,7 @@ const RouteInstructor: React.FC = () => {
                     <input
                       value={dueDate}
                       onChange={(event) => {
-                        setDueDate(JSON.stringify(event.target.value));
+                        setDueDate(event.target.value);
                       }}
                       type="datetime-local"
                       id="startdate"
@@ -248,7 +248,7 @@ const RouteInstructor: React.FC = () => {
                     <input
                       value={unLockAtDate}
                       onChange={(event) => {
-                        setUnLockAtDate(JSON.stringify(event.target.value));
+                        setUnLockAtDate(event.target.value);
                       }}
                       type="datetime-local"
                       id="enddate"
@@ -262,7 +262,7 @@ const RouteInstructor: React.FC = () => {
                     <input
                       value={lockAtDate}
                       onChange={(event) => {
-                        setLockAtDate(JSON.stringify(event.target.value));
+                        setLockAtDate(event.target.value);
                       }}
                       type="datetime-local"
                       id="enddate"
