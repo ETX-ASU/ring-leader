@@ -237,7 +237,7 @@ const RouteInstructor: React.FC = () => {
               </div>
             )}
             {displayAssignment &&
-              assignments.map((assignment, index) => {
+              (assignments.map((assignment, index) => {
                 return (
                   <div className="userprofile" key="index">
                     <h2>Assignment - {index + 1}</h2>
@@ -265,7 +265,15 @@ const RouteInstructor: React.FC = () => {
                     </ul>
                   </div>
                 );
-              })}
+              }) ||
+                (assignments.length <= 0 && (
+                  <div>
+                    <div className="alert alert-info">
+                      <strong>Info!</strong> You do not have any assignment at
+                      the moment!!!
+                    </div>
+                  </div>
+                )))}
           </div>
         </div>
       </div>
