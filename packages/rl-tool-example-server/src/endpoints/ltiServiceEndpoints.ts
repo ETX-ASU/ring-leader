@@ -1,5 +1,11 @@
 import { Express } from "express";
-import { getUsers, createLineItem, getLineItems } from "@asu-etx/rl-client-lib";
+import {
+  getUsers,
+  createLineItem,
+  getLineItems,
+  putGrade,
+  getGrades
+} from "@asu-etx/rl-client-lib";
 import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
 
@@ -41,7 +47,8 @@ const ltiServiceEndpoints = (app: Express): void => {
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment/" +
+          lineItemData.label
       }
     };
     const results = await createLineItem(platform, newLineItemData);
@@ -59,9 +66,39 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     res.send(results);
   });
+  app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    console.log("createassignment - platform - " + platform);
 
-  app.get("/lti-service/grades", requestLogger, (req, res) => {
-    res.send("");
+    const results = await putGrade(
+      platform,
+      {
+        timestamp: "2017-04-16T18:54:36.736+00:00",
+        scoreGiven: 83,
+        scoreMaximum: 100,
+        comment: "This is exceptional work.",
+        activityProgress: "Completed",
+        gradingProgress: "FullyGraded",
+        userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
+      },
+      { resourceId: "1", id: 188 }
+    );
+
+    res.send(results);
+  });
+  app.get("/lti-service/grades", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    console.log("createassignment - platform - " + platform);
+
+    const results = await getGrades(platform, { resourceId: "1", id: 188 });
+
+    res.send(results);
   });
 };
 

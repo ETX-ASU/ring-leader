@@ -179,6 +179,7 @@ class Grade {
       };
 
     const lineItems: any = this.getLineItems(platform, options, accessToken);
+    console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
       success: [],
       failure: []
@@ -214,6 +215,9 @@ class Grade {
         else score.userId = platform.user; //Need to work on this property
         score.timestamp = new Date(Date.now()).toISOString();
         score.scoreMaximum = lineitem.scoreMaximum;
+        console.log(
+          "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
+        );
         await got.post(scoreUrl, {
           headers: {
             Authorization:
@@ -226,6 +230,7 @@ class Grade {
         result.success.push({
           lineitem: lineitemUrl
         });
+        console.log("Inside PutGrades - scoreUrl - " + JSON.stringify(result));
       } catch (err) {
         result.failure.push({
           lineitem: lineitem.id,
@@ -276,6 +281,8 @@ class Grade {
       };
 
     const lineItems = await this.getLineItems(platform, options, accessToken);
+    console.log("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
+
     const queryParams = [];
 
     if (options) {
@@ -299,6 +306,10 @@ class Grade {
 
         let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
+        console.log(
+          "Inside GetGrades - searchParams - " + JSON.stringify(searchParams)
+        );
+
         const results = await got
           .get(resultsUrl, {
             searchParams: searchParams,
@@ -309,7 +320,9 @@ class Grade {
             }
           })
           .json();
-
+        console.log(
+          "Inside GetGrades - searchParams - " + JSON.stringify(results)
+        );
         resultsArray.push({
           lineitem: lineitem.id,
           results: results
