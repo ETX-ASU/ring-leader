@@ -23,11 +23,14 @@ class Grade {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
-    if (!accessToken)
+    if (!accessToken) {
+      console.log("Access token blank - get new token");
+
       accessToken = await getAccessToken(
         platform,
         "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly"
       );
+    }
     if (accessToken) {
       let lineitemsEndpoint = platform.lineitems;
       let query: any = [];
@@ -52,6 +55,9 @@ class Grade {
       }
 
       queryParams = new URLSearchParams(queryParams);
+      console.log("getlines - queryParams-" + JSON.stringify(queryParams));
+      console.log("lineitemsEndpoint - " + lineitemsEndpoint);
+
       let lineItems: any = await got
         .get(lineitemsEndpoint, {
           searchParams: queryParams,
@@ -62,6 +68,7 @@ class Grade {
           }
         })
         .json(); // Applying special filters
+      console.log("lineItems retreived - " + JSON.stringify(lineItems));
 
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
@@ -112,6 +119,7 @@ class Grade {
       );
     }
     console.log("access token retrived inside createLineItem");
+    console.log(JSON.stringify(options));
 
     if (options && options.resourceLinkId)
       lineItem.resourceLinkId = platform.resourceLinkId;
@@ -162,14 +170,11 @@ class Grade {
     if (!score) {
       throw new Error("MISSING_SCORE");
     }
-    const accessToken: any = getAccessToken(
-      platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
-    );
 
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
+    console.log("put grades - options - " + JSON.stringify(options));
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
@@ -178,17 +183,23 @@ class Grade {
       options = {
         resourceLinkId: true
       };
+    const accessToken: any = await getAccessToken(
+      platform,
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+    );
+    const lineItems: any = await this.getLineItems(platform);
 
-    const lineItems: any = this.getLineItems(platform, options, accessToken);
+    console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
       success: [],
       failure: []
     };
+    console.log("options.autoCreate - " + options.autoCreate);
 
     if (lineItems.length === 0) {
       if (options && options.autoCreate) {
         lineItems.push(
-          this.createLineItem(
+          await this.createLineItem(
             platform,
             options.autoCreate,
             {
@@ -202,6 +213,8 @@ class Grade {
 
     for (const lineitem of lineItems) {
       try {
+        console.log("lineitem - " + JSON.stringify(lineitem));
+
         const lineitemUrl = lineitem.id;
         let scoreUrl = lineitemUrl + "/scores";
 
@@ -211,11 +224,16 @@ class Grade {
           scoreUrl = url + "/scores?" + query;
         }
 
-        if (options && options.userId) score.userId = options.userId;
-        else score.userId = platform.user; //Need to work on this property
-        score.timestamp = new Date(Date.now()).toISOString();
-        score.scoreMaximum = lineitem.scoreMaximum;
-        await got.post(scoreUrl, {
+        // if (options && options.userId) score.userId = options.userId;
+        //  else score.userId = platform.user; //Need to work on this property
+        // score.timestamp = new Date(Date.now()).toISOString();
+        // score.scoreMaximum = lineitem.scoreMaximum;
+        console.log(
+          "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
+        );
+        console.log("score - " + JSON.stringify(score));
+
+        const res = await got.post(scoreUrl, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
@@ -223,11 +241,17 @@ class Grade {
           },
           json: score
         });
+        console.log("res -" + res);
+
         console.log("Score successfully sent");
         result.success.push({
           lineitem: lineitemUrl
         });
+        console.log("Inside PutGrades - scoreUrl - " + JSON.stringify(result));
       } catch (err) {
+        console.log(
+          "Inside PutGrades - err.message - " + JSON.stringify(err.message)
+        );
         result.failure.push({
           lineitem: lineitem.id,
           error: err.message
@@ -277,6 +301,8 @@ class Grade {
       };
 
     const lineItems = await this.getLineItems(platform, options, accessToken);
+    console.log("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
+
     const queryParams = [];
 
     if (options) {
@@ -300,6 +326,10 @@ class Grade {
 
         let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
+        console.log(
+          "Inside GetGrades - searchParams - " + JSON.stringify(searchParams)
+        );
+
         const results = await got
           .get(resultsUrl, {
             searchParams: searchParams,
@@ -310,7 +340,9 @@ class Grade {
             }
           })
           .json();
-
+        console.log(
+          "Inside GetGrades - searchParams - " + JSON.stringify(results)
+        );
         resultsArray.push({
           lineitem: lineitem.id,
           results: results

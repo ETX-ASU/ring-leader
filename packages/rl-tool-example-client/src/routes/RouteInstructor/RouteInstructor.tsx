@@ -63,6 +63,30 @@ const RouteInstructor: React.FC = () => {
       });
   };
 
+  const putGrades = () => {
+    axios.get("/lti-service/putgrades").then((results) => {
+      alert("Grade submitted successfully!!!");
+      console.log(JSON.stringify(results.data));
+      setDisplayDiv(false);
+      setDisplayCreateAssignment(false);
+      setdisplayAssignment(false);
+      setDisplayNoAssignment(false);
+      setDisplayCreateAssignmentSuccess(false);
+    });
+  };
+
+  const grades = () => {
+    axios.get("/lti-service/grades").then((results) => {
+      alert("Grade fetched successfully!!!");
+      console.log(JSON.stringify(results.data));
+      setDisplayDiv(false);
+      setDisplayCreateAssignment(false);
+      setdisplayAssignment(false);
+      setDisplayNoAssignment(false);
+      setDisplayCreateAssignmentSuccess(false);
+    });
+  };
+
   const getAssignment = () => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
@@ -144,8 +168,20 @@ const RouteInstructor: React.FC = () => {
             </button>
           </div>
           <div className="col">
+            <button className="btn btn-primary" onClick={putGrades}>
+              Submit Grades
+            </button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             <button className="btn btn-primary" onClick={getAssignment}>
-              Get Assignments
+              Get Assignments from Platform
+            </button>
+          </div>
+          <div className="col">
+            <button className="btn btn-primary" onClick={grades}>
+              Get Grades from Platform
             </button>
           </div>
         </div>

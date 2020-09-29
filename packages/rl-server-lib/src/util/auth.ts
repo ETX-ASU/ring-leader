@@ -187,7 +187,6 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
     algorithm: platform.alg,
     keyid: platform.kid
   });
-  console.log("jwtToken- " + JSON.stringify(jwtToken));
   const payload = {
     grant_type: "client_credentials",
     client_assertion_type:
@@ -195,14 +194,12 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
     client_assertion: jwtToken,
     scope: scopes
   };
-  console.log("jwtToken payload- " + JSON.stringify(payload));
-
   const access = await got
     .post(await platform.accesstokenEndpoint, {
       form: payload
     })
     .json();
-  console.log("Access token received -" + JSON.stringify(access));
+  console.log("Access token received ");
   console.log("Access token for the scopes - " + scopes);
 
   return access;
