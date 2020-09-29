@@ -140,11 +140,12 @@ class Grade {
           json: lineItem
         })
         .json();
+      console.log("Line item successfully created");
       return newLineItem;
     } catch (err) {
       console.log(err);
     }
-    console.log("Line item successfully created");
+    console.log("Line item creation was unsuccessful");
     return null;
   }
   /**

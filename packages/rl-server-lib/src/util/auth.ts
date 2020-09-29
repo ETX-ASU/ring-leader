@@ -199,7 +199,7 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
       form: payload
     })
     .json();
-  console.log("Access token received ");
+  console.log(`Access token received ${JSON.stringify(access)}`)
   console.log("Access token for the scopes - " + scopes);
 
   return access;
