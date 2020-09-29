@@ -84,7 +84,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         gradingProgress: "FullyGraded",
         userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
       },
-      { resourceId: "1", id: 188 }
+      { id: 188 }
     );
 
     res.send(results);

@@ -52,6 +52,8 @@ class Grade {
       }
 
       queryParams = new URLSearchParams(queryParams);
+      console.log("getlines - queryParams-" + JSON.stringify(queryParams));
+
       let lineItems: any = await got
         .get(lineitemsEndpoint, {
           searchParams: queryParams,
