@@ -168,13 +168,15 @@ const RouteInstructor: React.FC = () => {
             </button>
           </div>
           <div className="col">
-            <button className="btn btn-primary" onClick={getAssignment}>
-              Get Assignments
-            </button>
-          </div>
-          <div className="col">
             <button className="btn btn-primary" onClick={putGrades}>
               Submit Grades
+            </button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <button className="btn btn-primary" onClick={getAssignment}>
+              Get Assignments from Platform
             </button>
           </div>
           <div className="col">

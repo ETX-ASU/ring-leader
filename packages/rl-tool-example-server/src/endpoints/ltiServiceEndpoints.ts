@@ -85,8 +85,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
       },
       {
-        id: "https://unicon.instructure.com/api/lti/courses/718/line_items/188",
-        autoCreate: true
+        id: "https://unicon.instructure.com/api/lti/courses/718/line_items/188"
       }
     );
 
