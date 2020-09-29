@@ -76,7 +76,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     const results = await putGrade(
       platform,
       {
-        timestamp: "2017-04-16T18:54:36.736+00:00",
+        timestamp: "2020-10-05T18:54:36.736+00:00",
         scoreGiven: 83,
         scoreMaximum: 100,
         comment: "This is exceptional work.",

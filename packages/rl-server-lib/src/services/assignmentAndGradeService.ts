@@ -168,14 +168,11 @@ class Grade {
     if (!score) {
       throw new Error("MISSING_SCORE");
     }
-    const accessToken: any = getAccessToken(
-      platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
-    );
 
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
+    console.log("put grades - options - " + JSON.stringify(options));
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
@@ -185,12 +182,17 @@ class Grade {
         resourceLinkId: true
       };
 
-    const lineItems: any = this.getLineItems(platform, options, accessToken);
+    const lineItems: any = this.getLineItems(platform, options);
+    const accessToken: any = getAccessToken(
+      platform,
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+    );
     console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
       success: [],
       failure: []
     };
+    console.log("options.autoCreate - " + options.autoCreate);
 
     if (lineItems.length === 0) {
       if (options && options.autoCreate) {
@@ -209,6 +211,8 @@ class Grade {
 
     for (const lineitem of lineItems) {
       try {
+        console.log("lineitem - " + JSON.stringify(lineitem));
+
         const lineitemUrl = lineitem.id;
         let scoreUrl = lineitemUrl + "/scores";
 
