@@ -44,7 +44,9 @@ const ltiServiceEndpoints = (app: Express): void => {
           "https://ring-leader-devesh-tiwari.herokuapp.com/assignment"
       }
     };
-    const results = await createLineItem(platform, newLineItemData);
+    const results = await createLineItem(platform, newLineItemData, {
+      resourceLinkId: true
+    });
 
     res.send(results);
   });

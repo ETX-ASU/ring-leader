@@ -112,6 +112,7 @@ class Grade {
       );
     }
     console.log("access token retrived inside createLineItem");
+    console.log(JSON.stringify(options));
 
     if (options && options.resourceLinkId)
       lineItem.resourceLinkId = platform.resourceLinkId;
