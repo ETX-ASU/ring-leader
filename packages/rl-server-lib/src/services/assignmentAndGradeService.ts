@@ -23,11 +23,14 @@ class Grade {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
-    if (!accessToken)
+    if (!accessToken) {
+      console.log("Access token blank - get new token");
+
       accessToken = await getAccessToken(
         platform,
         "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly"
       );
+    }
     if (accessToken) {
       let lineitemsEndpoint = platform.lineitems;
       let query: any = [];
@@ -53,6 +56,7 @@ class Grade {
 
       queryParams = new URLSearchParams(queryParams);
       console.log("getlines - queryParams-" + JSON.stringify(queryParams));
+      console.log("lineitemsEndpoint - " + lineitemsEndpoint);
 
       let lineItems: any = await got
         .get(lineitemsEndpoint, {
@@ -64,6 +68,7 @@ class Grade {
           }
         })
         .json(); // Applying special filters
+      console.log("lineItems retreived - " + JSON.stringify(lineItems));
 
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
