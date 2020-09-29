@@ -229,7 +229,9 @@ class Grade {
         console.log(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
         );
-        await got.post(scoreUrl, {
+        console.log("score - " + JSON.stringify(score));
+
+        const res = await got.post(scoreUrl, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
@@ -237,12 +239,17 @@ class Grade {
           },
           json: score
         });
+        console.log("res -" + res);
+
         console.log("Score successfully sent");
         result.success.push({
           lineitem: lineitemUrl
         });
         console.log("Inside PutGrades - scoreUrl - " + JSON.stringify(result));
       } catch (err) {
+        console.log(
+          "Inside PutGrades - err.message - " + JSON.stringify(err.message)
+        );
         result.failure.push({
           lineitem: lineitem.id,
           error: err.message
