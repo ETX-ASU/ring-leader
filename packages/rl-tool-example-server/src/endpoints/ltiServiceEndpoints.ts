@@ -82,12 +82,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         comment: "This is exceptional work.",
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
-        userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c",
-        "https://canvas.instructure.com/lti/submission": {
-          new_submission: true,
-          submission_type: "online_url",
-          submission_data: "https://instructure.com"
-        }
+        userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
       },
       {
         id: "https://unicon.instructure.com/api/lti/courses/718/line_items/188"
