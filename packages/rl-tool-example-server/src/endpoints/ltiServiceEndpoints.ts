@@ -85,7 +85,8 @@ const ltiServiceEndpoints = (app: Express): void => {
         userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
       },
       {
-        id: "https://unicon.instructure.com/api/lti/courses/718/line_items/188"
+        id: "https://unicon.instructure.com/api/lti/courses/718/line_items/188",
+        autoCreate: true
       }
     );
 
@@ -98,7 +99,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results = await getGrades(platform, { resourceId: "1", id: 188 });
+    const results = await getGrades(platform);
 
     res.send(results);
   });
