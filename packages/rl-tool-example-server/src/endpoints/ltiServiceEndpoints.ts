@@ -42,14 +42,14 @@ const ltiServiceEndpoints = (app: Express): void => {
     const newLineItemData = {
       scoreMaximum: lineItemData.scoreMaximum,
       label: lineItemData.label,
-      //resourceId: "1",
+      resourceId: "1",
       //resourceLinkId: "f586b531937ec6de8c616546c606fe87eb278ae7",
-      tag: lineItemData.tag
-      //"https://canvas.instructure.com/lti/submission_type": {
-      //type: "external_tool",
-      //external_tool_url: "https://ring-leader-james-stanley.herokuapp.com/lti-advantage-launch"
-      //lineItemData.label
-      //}
+      tag: lineItemData.tag,
+      "https://canvas.instructure.com/lti/submission_type": {
+        type: "external_tool",
+        external_tool_url: "https://ring-leader-james-stanley.herokuapp.com/assignment"
+        //lineItemData.label
+      }
     };
     const results = await createLineItem(platform, newLineItemData);
 
