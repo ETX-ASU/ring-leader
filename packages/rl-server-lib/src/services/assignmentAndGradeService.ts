@@ -181,12 +181,16 @@ class Grade {
       options = {
         resourceLinkId: true
       };
-
-    const lineItems: any = this.getLineItems(platform, options);
-    const accessToken: any = getAccessToken(
+    const accessToken: any = await getAccessToken(
       platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
+    const lineItems: any = await this.getLineItems(
+      platform,
+      options,
+      accessToken
+    );
+
     console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
       success: [],
@@ -197,7 +201,7 @@ class Grade {
     if (lineItems.length === 0) {
       if (options && options.autoCreate) {
         lineItems.push(
-          this.createLineItem(
+          await this.createLineItem(
             platform,
             options.autoCreate,
             {
