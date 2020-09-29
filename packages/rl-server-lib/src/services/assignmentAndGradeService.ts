@@ -170,7 +170,7 @@ class Grade {
     }
     const accessToken: any = getAccessToken(
       platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
 
     if (!platform) {
