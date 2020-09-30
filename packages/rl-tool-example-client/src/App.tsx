@@ -13,7 +13,7 @@ const App: React.FC = () => {
           <Route exact path="/instructor">
             <RouteInstructor />
           </Route>
-          <Route path="/assignment">
+          <Route exact path="/assignment/:resourceId">
             <RouteAssignment />
           </Route>
         </Switch>

@@ -48,7 +48,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment/" +
           resourceId
       }
     };
