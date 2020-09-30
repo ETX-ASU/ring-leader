@@ -183,7 +183,7 @@ class Grade {
       };
     const accessToken: any = await getAccessToken(
       platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
     const lineItems: any = await this.getLineItems(platform);
 
