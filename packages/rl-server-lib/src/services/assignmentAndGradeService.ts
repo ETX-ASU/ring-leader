@@ -224,7 +224,7 @@ class Grade {
 
         // if (options && options.userId) score.userId = options.userId;
         //  else score.userId = platform.user; //Need to work on this property
-        // score.timestamp = new Date(Date.now()).toISOString();
+        score.timestamp = new Date(Date.now()).toISOString();
         // score.scoreMaximum = lineitem.scoreMaximum;
         console.log(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)

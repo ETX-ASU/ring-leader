@@ -44,6 +44,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       scoreMaximum: lineItemData.scoreMaximum,
       label: lineItemData.label,
       resourceId: resourceId,
+      resourceLinkId: resourceId,
       tag: lineItemData.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
@@ -81,12 +82,9 @@ const ltiServiceEndpoints = (app: Express): void => {
         scoreGiven: 83,
         scoreMaximum: 100,
         comment: "This is exceptional work.",
-        userId: "fa8fde11-43df-4328-9939-58b56309d20d",
-        "https://canvas.instructure.com/lti/submission": {
-          new_submission: true,
-          submission_type: "online_url",
-          submission_data: "https://instructure.com"
-        }
+        activityProgress: "Completed",
+        gradingProgress: "FullyGraded",
+        userId: "fa8fde11-43df-4328-9939-58b56309d20d"
       },
       {
         id: "https://unicon.instructure.com/api/lti/courses/718/line_items/201"
