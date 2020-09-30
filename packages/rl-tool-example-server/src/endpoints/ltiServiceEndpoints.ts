@@ -39,16 +39,15 @@ const ltiServiceEndpoints = (app: Express): void => {
     console.log(
       "createassignment - lineItemData - " + JSON.stringify(lineItemData)
     );
+    const resourceId = Math.floor(Math.random() * 100) + 1;
     const newLineItemData = {
       scoreMaximum: lineItemData.scoreMaximum,
       label: lineItemData.label,
-      resourceId: "1",
-      //resourceLinkId: "f586b531937ec6de8c616546c606fe87eb278ae7",
+      resourceId: resourceId,
       tag: lineItemData.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
-        external_tool_url: "https://ring-leader-james-stanley.herokuapp.com/assignment"
-        //lineItemData.label
+        external_tool_url: `https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=${resourceId}`
       }
     };
     const results = await createLineItem(platform, newLineItemData);
@@ -62,7 +61,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log(`createassignment - platform - ${JSON.stringify(platform)}`);
 
-    const results = await getLineItems(platform);
+    const results = await getLineItems(platform, {});
 
     res.send(results);
   });
@@ -72,21 +71,21 @@ const ltiServiceEndpoints = (app: Express): void => {
     }
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
-
+    const options = {
+      id: "https://unicon.instructure.com/api/lti/courses/718/line_items/207"
+    };
     const results = await putGrade(
       platform,
       {
         timestamp: "2020-10-05T18:54:36.736+00:00",
-        scoreGiven: 83,
+        scoreGiven: 53,
         scoreMaximum: 100,
         comment: "This is exceptional work.",
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
-        userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
+        userId: "fa8fde11-43df-4328-9939-58b56309d20d"
       },
-      {
-        id: "https://unicon.instructure.com/api/lti/courses/718/line_items/188"
-      }
+      options
     );
 
     res.send(results);
@@ -98,7 +97,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results = await getGrades(platform);
+    const results = await getGrades(platform, { resourceLinkId: false });
 
     res.send(results);
   });

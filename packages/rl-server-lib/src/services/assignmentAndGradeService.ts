@@ -17,7 +17,7 @@ class Grade {
 
   async getLineItems(
     platform: any,
-    options?: any,
+    options: any,
     accessToken?: any
   ): Promise<any> {
     if (!platform) {
@@ -43,6 +43,7 @@ class Grade {
       }
 
       let queryParams: any = [...query];
+      console.log("getLineItems -  options - " + JSON.stringify(options));
 
       if (options) {
         if (options.resourceLinkId)
@@ -72,6 +73,8 @@ class Grade {
 
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
+          console.log("lineitem.id" + lineitem.id);
+          console.log("options.id" + options.id);
           return lineitem.id === options.id;
         });
       if (options && options.label)
@@ -179,23 +182,18 @@ class Grade {
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
-      else options.resourceLinkId = true;
-    } else
-      options = {
-        resourceLinkId: true
-      };
+    }
     const accessToken: any = await getAccessToken(
       platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
-    const lineItems: any = await this.getLineItems(platform);
+    const lineItems: any = await this.getLineItems(platform, options);
 
     console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
       success: [],
       failure: []
     };
-    console.log("options.autoCreate - " + options.autoCreate);
 
     if (lineItems.length === 0) {
       if (options && options.autoCreate) {
@@ -227,7 +225,7 @@ class Grade {
 
         // if (options && options.userId) score.userId = options.userId;
         //  else score.userId = platform.user; //Need to work on this property
-        // score.timestamp = new Date(Date.now()).toISOString();
+        score.timestamp = new Date(Date.now()).toISOString();
         // score.scoreMaximum = lineitem.scoreMaximum;
         console.log(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
@@ -253,6 +251,8 @@ class Grade {
         console.log(
           "Inside PutGrades - err.message - " + JSON.stringify(err.message)
         );
+
+        console.log("Inside PutGrades - err - " + JSON.stringify(err));
         result.failure.push({
           lineitem: lineitem.id,
           error: err.message
