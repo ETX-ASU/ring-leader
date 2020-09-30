@@ -44,7 +44,6 @@ const ltiServiceEndpoints = (app: Express): void => {
       scoreMaximum: lineItemData.scoreMaximum,
       label: lineItemData.label,
       resourceId: resourceId,
-      resourceLinkId: platform.resourceLinkId,
       tag: lineItemData.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
