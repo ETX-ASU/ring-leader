@@ -17,7 +17,7 @@ class Grade {
 
   async getLineItems(
     platform: any,
-    options?: any,
+    options: any,
     accessToken?: any
   ): Promise<any> {
     if (!platform) {
@@ -174,8 +174,7 @@ class Grade {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
-    if (!options)
-      console.log("put grades - options - " + JSON.stringify(options));
+    console.log("put grades - options - " + JSON.stringify(options));
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
