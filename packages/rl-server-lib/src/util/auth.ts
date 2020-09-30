@@ -133,8 +133,8 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   console.log("req.method:" + req.method);
 
   if (req.method == "POST") oidcData = req.body;
-  console.log("Get Request query");
-  console.log(req.query);
+  console.log(`oidcData ${JSON.stringify(oidcData)}`);
+  console.log(`Get Request query: ${JSON.stringify(req.query)}`);
 
   if (isValidOIDCRequest(oidcData)) {
     let response = {};
@@ -143,6 +143,7 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
       response_type: "id_token",
       response_mode: "form_post",
       client_id: oidcData.client_id,
+      iss: oidcData.iss,
       redirect_uri: oidcData.target_link_uri,
       login_hint: oidcData.login_hint,
       state: state,
