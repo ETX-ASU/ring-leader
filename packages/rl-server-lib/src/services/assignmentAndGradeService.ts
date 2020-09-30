@@ -179,7 +179,6 @@ class Grade {
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
-      else options.resourceLinkId = true;
     }
     const accessToken: any = await getAccessToken(
       platform,
