@@ -98,7 +98,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results = await getGrades(platform);
+    const results = await getGrades(platform, { resourceLinkId: false });
 
     res.send(results);
   });
