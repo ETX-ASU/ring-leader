@@ -81,8 +81,6 @@ const ltiServiceEndpoints = (app: Express): void => {
         scoreGiven: 83,
         scoreMaximum: 100,
         comment: "This is exceptional work.",
-        activityProgress: "Completed",
-        gradingProgress: "FullyGraded",
         userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
       },
       {
