@@ -8,6 +8,7 @@ import {
 } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
+//import { getDeploymentConsumer } from "../services/ToolConsumerService";
 import requestLogger from "../middleware/requestLogger";
 import { APPLICATION_URL } from "../environment";
 import { generateUniqueString } from "../generateUniqueString";
@@ -46,7 +47,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (req.session) {
       req.session.nonce = nonce;
       req.session.state = state;
-      console.log(`request for GET OIDC_LOGIN_INIT_ROUTE{ ${OIDC_LOGIN_INIT_ROUTE} : ${req}`);
+      console.log(`request for GET OIDC_LOGIN_INIT_ROUTE{ ${OIDC_LOGIN_INIT_ROUTE} : ${JSON.stringify(req)}`);
       await req.session.save(() => {
         console.log("session data saved");
       });
@@ -79,7 +80,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     } else {
       throw new Error("no session detected, something is wrong");
     }
-    console.log(`request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${req}`);
+    console.log(`request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${JSON.stringify(req)}`);
 
     res.redirect(
       url.format({
@@ -96,7 +97,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     }
 
     const sessionObject = req.session;
-    console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : ${req.session}`);
+    console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : ${JSON.stringify(req)} `);
     const idToken = rlValidateToken(req, sessionObject);
 
     const rlPlatform = RlPlatform(
@@ -136,14 +137,16 @@ const ltiLaunchEndpoints = (app: Express): void => {
       "OpenID Connect Initiation Url": `${path.join(
         APPLICATION_URL,
         OIDC_LOGIN_INIT_ROUTE
-      )}`,
+      )
+        } `,
       "Target Link URI": `${path.join(
         APPLICATION_URL,
         LTI_ADVANTAGE_LAUNCH_ROUTE
-      )}`,
+      )
+        } `,
       "Redirect URIS:": [
-        `${path.join(APPLICATION_URL, LTI_INSTRUCTOR_REDIRECT)}`,
-        `${path.join(APPLICATION_URL, LTI_STUDENT_REDIRECT)}`
+        `${path.join(APPLICATION_URL, LTI_INSTRUCTOR_REDIRECT)} `,
+        `${path.join(APPLICATION_URL, LTI_STUDENT_REDIRECT)} `
       ]
     };
 
@@ -167,7 +170,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       2
     );
 
-    res.send(`<pre>${data}</pre>`);
+    res.send(`< pre > ${data} </pre>`);
   });
 };
 
