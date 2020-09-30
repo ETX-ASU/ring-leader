@@ -69,7 +69,6 @@ class Grade {
         })
         .json(); // Applying special filters
       console.log("lineItems retreived - " + JSON.stringify(lineItems));
-      console.log("options.id" + options.id);
 
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
