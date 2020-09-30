@@ -123,7 +123,9 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    res.redirect(LTI_ASSIGNMENT_REDIRECT);
+    console.log("LTI_ASSIGNMENT_REDIRECT -  req.query" + req.query);
+
+    res.redirect(LTI_ASSIGNMENT_REDIRECT + "?" + req.query);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )

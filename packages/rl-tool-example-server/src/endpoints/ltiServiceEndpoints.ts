@@ -39,15 +39,17 @@ const ltiServiceEndpoints = (app: Express): void => {
     console.log(
       "createassignment - lineItemData - " + JSON.stringify(lineItemData)
     );
+    const resourceId = Math.floor(Math.random() * 100) + 1;
     const newLineItemData = {
       scoreMaximum: lineItemData.scoreMaximum,
       label: lineItemData.label,
-      resourceId: Math.floor(Math.random() * 100) + 1,
+      resourceId: resourceId,
       tag: lineItemData.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment/"
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
+          resourceId
       }
     };
     const results = await createLineItem(platform, newLineItemData);
