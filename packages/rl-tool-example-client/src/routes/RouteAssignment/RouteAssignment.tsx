@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import "./RouteAssignment.scss";
 
 const RouteAssignment: React.FC = () => {
-  const {} = useParams();
+  const params = ({} = useParams());
+  console.log("params - " + params);
 
   return (
     <div className="route-assignment">

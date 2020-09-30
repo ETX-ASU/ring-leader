@@ -1,10 +1,10 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import RouteInstructor from './routes/RouteInstructor/RouteInstructor';
-import RouteAssignment from './routes/RouteAssignment/RouteAssignment';
+import RouteInstructor from "./routes/RouteInstructor/RouteInstructor";
+import RouteAssignment from "./routes/RouteAssignment/RouteAssignment";
 
-import './App.scss';
+import "./App.scss";
 const App: React.FC = () => {
   return (
     <div className="app">
@@ -13,7 +13,7 @@ const App: React.FC = () => {
           <Route exact path="/instructor">
             <RouteInstructor />
           </Route>
-          <Route exact path="/assignment">
+          <Route exact path="/assignment/:resourceId">
             <RouteAssignment />
           </Route>
         </Switch>
