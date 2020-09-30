@@ -13,7 +13,9 @@ const App: React.FC = () => {
           <Route exact path="/instructor">
             <RouteInstructor />
           </Route>
-          <Route path="/assignment/:resourceId" component={RouteAssignment} />
+          <Route path="/assignment">
+            <RouteAssignment />
+          </Route>
         </Switch>
       </BrowserRouter>
     </div>

@@ -8,7 +8,7 @@ const RouteAssignment: React.FC = () => {
   const params = ({} = useParams());
   return (
     <div className="route-assignment">
-      <h1>Assignment Route</h1>
+      This is a sample assignment page from example tool!!
       <hr></hr>
     </div>
   );
