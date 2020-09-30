@@ -43,6 +43,7 @@ class Grade {
       }
 
       let queryParams: any = [...query];
+      console.log("getLineItems -  options - " + JSON.stringify(options));
 
       if (options) {
         if (options.resourceLinkId)
@@ -162,7 +163,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async putGrade(platform: any, score: any, options?: any): Promise<any> {
+  async putGrade(platform: any, score: any, options: any): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
