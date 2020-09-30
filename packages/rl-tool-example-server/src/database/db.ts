@@ -1,4 +1,5 @@
 import ToolConsumer from "./entities/ToolConsumer";
+import Assignment from "./entities/Assignment";
 import {
   createConnection,
   getConnection as getTypeOrmConnection,

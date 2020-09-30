@@ -168,6 +168,12 @@ SH into the Heroku server:
 heroku run bash
 ```
 
+## Updating configs for your heroku app:
+```bash
+yarn heroku-update-configs
+```
+Will take config from .env.local.json
+
 # Sample Tool Registration with Canvas
 
 [Follow these steps to integrate the example tool with Canvas](./documentation/SampleToolCanvasRegistration.md)

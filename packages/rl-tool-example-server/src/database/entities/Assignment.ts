@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity("TOOL_CONSUMER")
-class ToolConsumer {
+@Entity("ASSIGNMENT")
+class Assignment {
+
   @PrimaryGeneratedColumn("uuid")
   id: number | undefined = undefined;
 
@@ -9,13 +10,7 @@ class ToolConsumer {
   name = "";
 
   @Column("varchar", { length: 128 })
-  iss = "";
-
-  @Column("varchar", { length: 128 })
-  client_id = "";
-
-  @Column({ type: "varchar", length: 128, default: "0" })
-  deployment_id = "";
+  resourceLinkId = "";
 
   @Column("varchar", { length: 4096 })
   private_key = "";
@@ -27,4 +22,4 @@ class ToolConsumer {
   public_key_jwk = "";
 }
 
-export default ToolConsumer;
+export default Assignment;

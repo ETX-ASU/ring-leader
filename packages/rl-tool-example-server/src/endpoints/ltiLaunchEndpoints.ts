@@ -46,7 +46,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (req.session) {
       req.session.nonce = nonce;
       req.session.state = state;
-
+      console.log(`request for GET OIDC_LOGIN_INIT_ROUTE{ ${OIDC_LOGIN_INIT_ROUTE} : ${req}`);
       await req.session.save(() => {
         console.log("session data saved");
       });
@@ -79,8 +79,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     } else {
       throw new Error("no session detected, something is wrong");
     }
-    console.log("req.session");
-    console.log(req.session);
+    console.log(`request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${req}`);
 
     res.redirect(
       url.format({
@@ -95,10 +94,9 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    console.log("req.session-LTI_ADVANTAGE_LAUNCH_ROUTE");
-    const sessionObject = req.session;
-    console.log(sessionObject);
 
+    const sessionObject = req.session;
+    console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : ${req.session}`);
     const idToken = rlValidateToken(req, sessionObject);
 
     const rlPlatform = RlPlatform(

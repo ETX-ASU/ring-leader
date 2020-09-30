@@ -2,8 +2,8 @@ import path from "path";
 import ToolConsumer from "./database/entities/ToolConsumer";
 
 // local dev
-// import dotenv from "dotenv";
-// const ENV_VARS = dotenv.config().parsed as any;
+//import dotenv from "dotenv";
+//const ENV_VARS = dotenv.config().parsed as any;
 
 // heroku
 const ENV_VARS = process.env;
