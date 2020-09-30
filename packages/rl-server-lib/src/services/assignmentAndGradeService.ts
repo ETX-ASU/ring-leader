@@ -250,6 +250,8 @@ class Grade {
         console.log(
           "Inside PutGrades - err.message - " + JSON.stringify(err.message)
         );
+
+        console.log("Inside PutGrades - err - " + JSON.stringify(err));
         result.failure.push({
           lineitem: lineitem.id,
           error: err.message
