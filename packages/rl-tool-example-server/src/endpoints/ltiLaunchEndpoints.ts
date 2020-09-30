@@ -127,9 +127,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
 
-    res.redirect(
-      LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + req.query.resourceId
-    );
+    res.redirect(LTI_ASSIGNMENT_REDIRECT + "/" + req.query.resourceId);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
