@@ -69,9 +69,12 @@ class Grade {
         })
         .json(); // Applying special filters
       console.log("lineItems retreived - " + JSON.stringify(lineItems));
+      console.log("options.id" + options.id);
 
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
+          console.log("lineitem.id" + lineitem.id);
+          console.log("options.id" + options.id);
           return lineitem.id === options.id;
         });
       if (options && options.label)
@@ -185,7 +188,7 @@ class Grade {
       platform,
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
-    const lineItems: any = await this.getLineItems(platform);
+    const lineItems: any = await this.getLineItems(platform, options);
 
     console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
