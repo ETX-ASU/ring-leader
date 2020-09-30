@@ -162,7 +162,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async putGrade(platform: any, score: any, options: any): Promise<any> {
+  async putGrade(platform: any, score: any, options?: any): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
@@ -185,7 +185,7 @@ class Grade {
       platform,
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
-    const lineItems: any = await this.getLineItems(platform);
+    const lineItems: any = await this.getLineItems(platform, options);
 
     console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
