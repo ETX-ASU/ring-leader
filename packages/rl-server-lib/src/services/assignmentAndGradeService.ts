@@ -174,20 +174,18 @@ class Grade {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
-    console.log("put grades - options - " + JSON.stringify(options));
+    if (!options)
+      console.log("put grades - options - " + JSON.stringify(options));
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
       else options.resourceLinkId = true;
-    } else
-      options = {
-        resourceLinkId: true
-      };
+    }
     const accessToken: any = await getAccessToken(
       platform,
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
-    const lineItems: any = await this.getLineItems(platform);
+    const lineItems: any = await this.getLineItems(platform, options);
 
     console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {

@@ -74,15 +74,21 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results = await putGrade(platform, {
-      timestamp: "2020-10-05T18:54:36.736+00:00",
-      scoreGiven: 83,
-      scoreMaximum: 100,
-      comment: "This is exceptional work.",
-      activityProgress: "Completed",
-      gradingProgress: "FullyGraded",
-      userId: "fa8fde11-43df-4328-9939-58b56309d20d"
-    });
+    const results = await putGrade(
+      platform,
+      {
+        timestamp: "2020-10-05T18:54:36.736+00:00",
+        scoreGiven: 63,
+        scoreMaximum: 100,
+        comment: "This is exceptional work.",
+        activityProgress: "Completed",
+        gradingProgress: "FullyGraded",
+        userId: "fa8fde11-43df-4328-9939-58b56309d20d"
+      },
+      {
+        id: "https://unicon.instructure.com/api/lti/courses/718/line_items/207"
+      }
+    );
 
     res.send(results);
   });
