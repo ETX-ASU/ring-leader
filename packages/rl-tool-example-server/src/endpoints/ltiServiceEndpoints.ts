@@ -81,7 +81,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         scoreGiven: 83,
         scoreMaximum: 100,
         comment: "This is exceptional work.",
-        userId: "7cae08ba-5ecc-457a-835e-4b9b7bff806c"
+        userId: "fa8fde11-43df-4328-9939-58b56309d20d"
       },
       {
         id: "https://unicon.instructure.com/api/lti/courses/718/line_items/199",
