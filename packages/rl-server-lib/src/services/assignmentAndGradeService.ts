@@ -187,14 +187,13 @@ class Grade {
       platform,
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
     );
-    const lineItems: any = await this.getLineItems(platform, options);
+    const lineItems: any = await this.getLineItems(platform);
 
     console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
       success: [],
       failure: []
     };
-    console.log("options.autoCreate - " + options.autoCreate);
 
     if (lineItems.length === 0) {
       if (options && options.autoCreate) {
