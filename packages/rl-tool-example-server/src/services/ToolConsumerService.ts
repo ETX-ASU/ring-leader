@@ -16,7 +16,8 @@ const getDeploymentConsumer = async (request: ToolConsumerRequest): Promise<Tool
   const consumerDeployment = await toolConsumerRepository.findOne({
     where: {
       iss: request.iss,
-      client_id: request.client_id, deployment_id: request.deployment_id
+      client_id: request.client_id,
+      deployment_id: request.deployment_id
     }
   });
   if (consumerDeployment == undefined) {
@@ -34,11 +35,22 @@ const getDeploymentConsumer = async (request: ToolConsumerRequest): Promise<Tool
 const getToolConsumer = async (request: ToolConsumerRequest): Promise<ToolConsumer | undefined> => {
   const connection = await getConnection();
   const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  const toolConsumer = await toolConsumerRepository.findOne({
+  const toolConsumer: ToolConsumer | undefined = await toolConsumerRepository.findOne({
     where: {
       iss: request.iss,
       client_id: request.client_id,
       deployment_id: "0"
+    }
+  });
+  return toolConsumer;
+};
+
+const getToolConsumerByName = async (name: String): Promise<ToolConsumer | undefined> => {
+  const connection = await getConnection();
+  const toolConsumerRepository = connection.getRepository(ToolConsumer);
+  const toolConsumer = await toolConsumerRepository.findOne({
+    where: {
+      name: name
     }
   });
   return toolConsumer;

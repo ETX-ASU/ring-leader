@@ -14,8 +14,15 @@ class ToolConsumer {
   @Column("varchar", { length: 128 })
   client_id = "";
 
+  @Column("varchar", { length: 128 })
+  keyid = "";
+
+  @Column("varchar", { length: 128 })
+  alg = "";
+
+
   @Column({ type: "varchar", length: 128, default: "0" })
-  deployment_id = "";
+  deployment_id = "0";
 
   @Column("varchar", { length: 4096 })
   private_key = "";
@@ -25,6 +32,12 @@ class ToolConsumer {
 
   @Column("varchar", { length: 8192 })
   public_key_jwk = "";
+
+  @Column("varchar", { length: 512 })
+  platformOIDCAuthEndPoint = "";
+
+  @Column("varchar", { length: 512 })
+  platformAccessTokenEndpoint = "";
 }
 
 export default ToolConsumer;
