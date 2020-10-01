@@ -29,7 +29,6 @@ const RouteInstructor: React.FC = () => {
 
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
-    setDisplayDiv(true);
     setDisplayCreateAssignment(false);
     setdisplayAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
@@ -42,6 +41,7 @@ const RouteInstructor: React.FC = () => {
         setCourses(results.data.context);
         console.log(JSON.stringify(users));
         console.log(JSON.stringify(courses));
+        setDisplayDiv(true);
       });
   };
   const createAssignment = () => {
@@ -103,14 +103,14 @@ const RouteInstructor: React.FC = () => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
-    setdisplayAssignment(true);
+
     axios.get("/lti-service/getassignment").then((results) => {
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) {
         setDisplayNoAssignment(true);
         return;
       }
-
+      setdisplayAssignment(true);
       setAssignments(results.data);
     });
   };

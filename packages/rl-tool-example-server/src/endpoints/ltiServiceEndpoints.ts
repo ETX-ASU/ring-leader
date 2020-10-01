@@ -110,8 +110,28 @@ const ltiServiceEndpoints = (app: Express): void => {
       id: req.query.assignmentId,
       resourceLinkId: false
     });
+    const scoreData = [];
+    console.log("req.session.members - " + JSON.stringify(req.session.members));
+    console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
-    res.send(results);
+    const members = req.session.members;
+    for (const key in results[0].results) {
+      const score = results[0].results[key];
+      const tooltipsData = members.filter(function (member: any, index: any) {
+        return member.user_id == score.userId;
+      });
+      console.log("tooltipsData - " + JSON.stringify(tooltipsData));
+
+      scoreData.push({
+        userId: score.userId,
+        StudenName: tooltipsData.name,
+        score: score.resultScore,
+        comment: score.comment
+      });
+    }
+    console.log("scoreData - " + scoreData);
+
+    res.send(scoreData);
   });
 };
 
