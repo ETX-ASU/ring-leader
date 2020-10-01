@@ -7,6 +7,11 @@ import "./Assignment.scss";
 const Assignment: React.FC = (props: any) => {
   console.log("props - " + JSON.stringify(props));
   const assignmentData = props.assignmentData;
+  console.log("assignmentData - " + assignmentData);
+  console.log("assignmentData - json - " + JSON.stringify(assignmentData));
+  console.log("assignmentData - json - " + JSON.parse(assignmentData));
+  console.log("assignmentData - id - " + assignmentData.id);
+
   const index = props.index;
   const [scores, setScores] = useState<any[]>([]);
 
