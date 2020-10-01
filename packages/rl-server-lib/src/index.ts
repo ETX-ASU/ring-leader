@@ -2,9 +2,9 @@ import { Grade } from "./services/assignmentAndGradeService";
 import { DeepLinking } from "./services/DeepLinking";
 import { NamesAndRoles } from "./services/namesAndRolesService";
 import { RlPlatform } from "./util/rlPlatform";
-import getConnection from "./database/db";
+import { getConnection } from "./database/db";
 import ToolConsumer from "./database/entities/ToolConsumer";
-import { initToolConsumers } from "./database/init";
+import { initToolConsumers, dbInit } from "./database/init";
 import {
   rlValidateToken,
   rlValidateDecodedToken,
@@ -38,5 +38,6 @@ export {
   ltiLaunchPost,
   initToolConsumers,
   getConnection,
+  dbInit,
   ToolConsumer
 };

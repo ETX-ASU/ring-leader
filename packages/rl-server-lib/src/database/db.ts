@@ -34,5 +34,4 @@ const createConnectionFromConfig = (options: any): Promise<Connection> => {
 }
 
 
-export default getConnection;
-export { createConnectionFromConfig };
+export { getConnection, createConnectionFromConfig };

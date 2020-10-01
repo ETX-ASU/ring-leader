@@ -1,4 +1,4 @@
-import getConnection, { createConnectionFromConfig } from "./db";
+import { getConnection, createConnectionFromConfig } from "./db";
 import ToolConsumer from "./entities/ToolConsumer";
 import { createToolConsumer } from "../services/ToolConsumerService";
 
@@ -29,5 +29,4 @@ const dbInit = async (toolConsumers: ToolConsumer[], options: any): Promise<void
   initToolConsumers(toolConsumers);
 }
 
-export default dbInit;
-export { initToolConsumers, ensureToolConsumer };
+export { dbInit, initToolConsumers, ensureToolConsumer };
