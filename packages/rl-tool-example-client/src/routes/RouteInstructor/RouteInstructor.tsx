@@ -271,7 +271,7 @@ const RouteInstructor: React.FC = () => {
               return (
                 <Assignment
                   data-index={index}
-                  data-assignment={assignment}
+                  data-assignmentData={assignment}
                 ></Assignment>
               );
             })}
