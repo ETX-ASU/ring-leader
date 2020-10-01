@@ -24,7 +24,7 @@ const initToolConsumers = async (toolConsumers: ToolConsumer[]): Promise<any> =>
   });
 };
 
-const dbInit = async (toolConsumers: ToolConsumer[], options: any): Promise<void> => {
+const dbInit = (toolConsumers: ToolConsumer[], options: any): void => {
   createConnectionFromConfig(options);
   initToolConsumers(toolConsumers);
 }
