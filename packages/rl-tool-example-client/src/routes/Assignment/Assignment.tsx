@@ -40,7 +40,7 @@ const Assignment: React.FC = (props: any) => {
   };
   return (
     <div
-      className="card"
+      className="card assignment"
       assignment-id={assignmentData.id}
       external-tool-url={
         assignmentData["https://canvas.instructure.com/lti/submission_type"]
@@ -68,7 +68,7 @@ const Assignment: React.FC = (props: any) => {
         </button>
         <button
           assignment-id={assignmentData.id}
-          className="btn btn-primary assignmentbutton"
+          className="btn btn-primary"
           onClick={() => grades(assignmentData.id)}
         >
           Get Grades
@@ -84,7 +84,10 @@ const Assignment: React.FC = (props: any) => {
               data-content={course.comment}
             >
               {course.StudenName} -
-              <span className="badge"> {course.score}</span>
+              <span className="badge">
+                {" "}
+                {course.score ? course.score : "Not Graded"}
+              </span>
             </a>
           );
         })}
