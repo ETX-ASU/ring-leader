@@ -1,7 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
+import React, { useState } from "react";
 import "./Assignment.scss";
 
 const Assignment: React.FC = (props: any) => {
@@ -12,17 +10,29 @@ const Assignment: React.FC = (props: any) => {
   console.log("assignmentData id- " + assignmentData.id);
   console.log("index - " + index);
   const [scores, setScores] = useState<any[]>([]);
-
+  const [grade, setGrade] = useState<number>();
+  const [displayCreateScoreSuccess, setDisplayCreateScoreSuccess] = useState<
+    boolean
+  >(false);
+  const [displayCreateScore, setDisplayCreateScore] = useState<boolean>(false);
+  const [displayGrade, setDisplayGrade] = useState<boolean>(false);
+  const showSubmitGrade = () => {
+    setDisplayGrade(false);
+    setDisplayCreateScore(true);
+  };
   const putGrades = (assignmentId: string) => {
     axios
       .get("/lti-service/putgrades", {
         params: {
-          assignmentId: assignmentId
+          assignmentId: assignmentId,
+          grade: grade
         }
       })
       .then((results) => {
-        alert("Grade submitted successfully!!!");
+        setDisplayCreateScoreSuccess(true);
         console.log(JSON.stringify(results.data));
+        setDisplayGrade(false);
+        setDisplayCreateScore(false);
       });
   };
 
@@ -36,6 +46,8 @@ const Assignment: React.FC = (props: any) => {
       .then((results) => {
         console.log(JSON.stringify(results.data));
         setScores(results.data);
+        setDisplayGrade(true);
+        setDisplayCreateScore(false);
       });
   };
   return (
@@ -62,7 +74,7 @@ const Assignment: React.FC = (props: any) => {
         <button
           assignment-id={assignmentData.id}
           className="btn btn-primary assignmentbutton"
-          onClick={() => putGrades(assignmentData.id)}
+          onClick={showSubmitGrade}
         >
           Submit Grades
         </button>
@@ -75,22 +87,55 @@ const Assignment: React.FC = (props: any) => {
         </button>
         <br></br>
         <hr></hr>
-        {scores.map((course: any) => {
-          return (
-            <a
-              href="#"
-              data-toggle="popover"
-              title="Comment"
-              data-content={course.comment}
-            >
-              {course.StudenName} -
-              <span className="badge">
-                {" "}
-                {course.score ? course.score : "Not Graded"}
-              </span>
-            </a>
-          );
-        })}
+        {displayGrade &&
+          scores.map((course: any) => {
+            return (
+              <a
+                href="#"
+                data-toggle="popover"
+                title="Comment"
+                data-content={course.comment}
+              >
+                {course.StudenName} -
+                <span className="badge">
+                  {" "}
+                  {course.score ? course.score : "Not Graded"}
+                </span>
+              </a>
+            );
+          })}
+        {displayCreateScore && (
+          <div className="container">
+            <div className="form-group">
+              <label className="control-label">Grade:</label>
+              <input
+                value={grade}
+                onChange={(event) => {
+                  setGrade(parseInt(event.target.value));
+                }}
+                type="text"
+                className="form-control"
+                id="inputGrade"
+                placeholder="Enter grade for Student"
+                name="title"
+              ></input>
+              <button
+                assignment-id={assignmentData.id}
+                className="btn btn-primary assignmentbutton"
+                onClick={() => putGrades(assignmentData.id)}
+              >
+                Submit Grades
+              </button>
+            </div>
+          </div>
+        )}
+        {displayCreateScoreSuccess && (
+          <div>
+            <div className="alert alert-success">
+              <strong>Success!</strong> Grade submitted successfully!!!
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
