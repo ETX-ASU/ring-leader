@@ -10,12 +10,13 @@ let connectionCreationPromise: any = false;
 
 const getConnection = (): Promise<Connection> => {
   if (connectionCreationPromise === false) {
+    console.log("creating connection")
     connectionCreationPromise = createConnection({
       type: "sqlite",
       database: ":memory:",
       dropSchema: true,
       synchronize: true,
-      entities: [ToolConsumer],
+      entities: [ToolConsumer, Assignment],
       logging: true
     });
   }

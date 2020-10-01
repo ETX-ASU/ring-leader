@@ -42,6 +42,7 @@ const getToolConsumer = async (request: ToolConsumerRequest): Promise<ToolConsum
       deployment_id: "0"
     }
   });
+  console.log(`found tool consumer: ${JSON.stringify(toolConsumer)}`)
   return toolConsumer;
 };
 
