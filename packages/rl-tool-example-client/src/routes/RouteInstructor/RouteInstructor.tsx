@@ -185,7 +185,7 @@ const RouteInstructor: React.FC = () => {
           {displayDiv &&
             users.map((user, index) => {
               return (
-                <div className="userprofile card" key={user.user_id}>
+                <div className="userprofile card details" key={user.user_id}>
                   <img
                     className="card-img-top"
                     src={user.picture}
@@ -203,7 +203,7 @@ const RouteInstructor: React.FC = () => {
               );
             })}
           {displayCreateAssignment && (
-            <div className="details container">
+            <div className=" container">
               <div className="form-group">
                 <label className="control-label">Assignment Title:</label>
                 <input
