@@ -19,6 +19,7 @@ const Assignment: React.FC = (props: any) => {
   const showSubmitGrade = () => {
     setDisplayGrade(false);
     setDisplayCreateScore(true);
+    setDisplayCreateScoreSuccess(false);
   };
   const putGrades = (assignmentId: string) => {
     axios
@@ -48,6 +49,7 @@ const Assignment: React.FC = (props: any) => {
         setScores(results.data);
         setDisplayGrade(true);
         setDisplayCreateScore(false);
+        setDisplayCreateScoreSuccess(false);
       });
   };
   return (
@@ -71,20 +73,22 @@ const Assignment: React.FC = (props: any) => {
           Maximum Score: {assignmentData.scoreMaximum} <br /> Tag:{" "}
           {assignmentData.tag}
         </p>
-        <button
-          assignment-id={assignmentData.id}
-          className="btn btn-primary assignmentbutton"
-          onClick={showSubmitGrade}
-        >
-          Submit Grades
-        </button>
-        <button
-          assignment-id={assignmentData.id}
-          className="btn btn-primary"
-          onClick={() => grades(assignmentData.id)}
-        >
-          Get Grades
-        </button>
+        <div className="btn-group">
+          <button
+            assignment-id={assignmentData.id}
+            className="btn btn-primary assignmentbutton"
+            onClick={showSubmitGrade}
+          >
+            Submit Grades
+          </button>
+          <button
+            assignment-id={assignmentData.id}
+            className="btn btn-primary"
+            onClick={() => grades(assignmentData.id)}
+          >
+            Get Grades
+          </button>
+        </div>
         <br></br>
         <hr></hr>
         {displayGrade &&
@@ -105,27 +109,29 @@ const Assignment: React.FC = (props: any) => {
             );
           })}
         {displayCreateScore && (
-          <div className="container">
-            <div className="form-group">
-              <label className="control-label">Grade:</label>
-              <input
-                value={grade}
-                onChange={(event) => {
-                  setGrade(parseInt(event.target.value));
-                }}
-                type="text"
-                className="form-control"
-                id="inputGrade"
-                placeholder="Enter grade for Student"
-                name="title"
-              ></input>
-              <button
-                assignment-id={assignmentData.id}
-                className="btn btn-primary assignmentbutton"
-                onClick={() => putGrades(assignmentData.id)}
-              >
-                Submit Grades
-              </button>
+          <div className="card-footer">
+            <div className="container">
+              <div className="form-group">
+                <label className="control-label">student's Grade:</label>
+                <input
+                  value={grade}
+                  onChange={(event) => {
+                    setGrade(parseInt(event.target.value));
+                  }}
+                  type="number"
+                  className="form-control"
+                  id="inputGrade"
+                  placeholder="Enter grade for Student"
+                  name="title"
+                ></input>
+                <button
+                  assignment-id={assignmentData.id}
+                  className="btn btn-primary assignmentbutton"
+                  onClick={() => putGrades(assignmentData.id)}
+                >
+                  Submit Grades
+                </button>
+              </div>
             </div>
           </div>
         )}

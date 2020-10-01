@@ -79,15 +79,16 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
+    const scoreData = req.query;
     console.log("createassignment - platform - " + platform);
     const options = {
-      id: req.query.assignmentId
+      id: scoreData.assignmentId
     };
     const results = await putGrade(
       platform,
       {
         timestamp: "2020-10-05T18:54:36.736+00:00",
-        scoreGiven: 53,
+        scoreGiven: scoreData.grade,
         scoreMaximum: 100,
         comment: "This is exceptional work.",
         activityProgress: "Completed",
