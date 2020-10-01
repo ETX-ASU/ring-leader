@@ -89,7 +89,7 @@ async function start(): Promise<any> {
   await connection.synchronize(); // this creates the tables based on our entity definitions
 
   // Make sure we have our test activities
-  await dbInit(TOOL_CONSUMERS);
+  await dbInit(TOOL_CONSUMERS, null);
 
   // Start the app
   app.listen(PORT, "0.0.0.0", () => {

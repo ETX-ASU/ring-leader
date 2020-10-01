@@ -1,6 +1,6 @@
-import getConnection from "./db";
+import getConnection, { createConnectionFromConfig } from "./db";
 import ToolConsumer from "./entities/ToolConsumer";
-import { createToolConsumer } from "@asu-etx/rl-server-lib/src/services/ToolConsumerService";
+import { createToolConsumer } from "../services/ToolConsumerService";
 
 const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
   const connection = await getConnection();
@@ -24,4 +24,10 @@ const initToolConsumers = async (toolConsumers: ToolConsumer[]): Promise<any> =>
   });
 };
 
-export default initToolConsumers;
+const dbInit = async (toolConsumers: ToolConsumer[], options: any): Promise<void> => {
+  createConnectionFromConfig(options);
+  initToolConsumers(toolConsumers);
+}
+
+export default dbInit;
+export { initToolConsumers, ensureToolConsumer };

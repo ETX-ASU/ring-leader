@@ -2,6 +2,8 @@ import { Grade } from "./services/assignmentAndGradeService";
 import { DeepLinking } from "./services/DeepLinking";
 import { NamesAndRoles } from "./services/namesAndRolesService";
 import { RlPlatform } from "./util/rlPlatform";
+import getConnection from "./database/db";
+import { initToolConsumers } from "./database/init";
 import {
   rlValidateToken,
   rlValidateDecodedToken,
@@ -32,5 +34,7 @@ export {
   initOidcPost,
   toolInfoGet,
   assignmentRedirectPost,
-  ltiLaunchPost
+  ltiLaunchPost,
+  initToolConsumers,
+  getConnection
 };

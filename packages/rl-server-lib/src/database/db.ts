@@ -26,5 +26,13 @@ const getConnection = (): Promise<Connection> => {
   });
 };
 
+const createConnectionFromConfig = (options: any): Promise<Connection> => {
+  if (options == null || options == undefined) {
+    return getConnection();
+  }
+  return getConnection();
+}
+
 
 export default getConnection;
+export { createConnectionFromConfig };
