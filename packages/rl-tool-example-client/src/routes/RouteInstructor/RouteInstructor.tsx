@@ -260,6 +260,7 @@ const RouteInstructor: React.FC = () => {
               return (
                 <div
                   className="card"
+                  assignment-id={assignment.id}
                   external-tool-url={
                     assignment[
                       "https://canvas.instructure.com/lti/submission_type"
@@ -280,12 +281,14 @@ const RouteInstructor: React.FC = () => {
                       {assignment.tag}
                     </p>
                     <button
+                      assignment-id={assignment.id}
                       className="btn btn-primary assignmentbutton"
                       onClick={putGrades}
                     >
                       Submit Grades
                     </button>
                     <button
+                      assignment-id={assignment.id}
                       className="btn btn-primary assignmentbutton"
                       onClick={grades}
                     >

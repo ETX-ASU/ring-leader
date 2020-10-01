@@ -23,6 +23,10 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const results = await getUsers(platform, { role: req.query.role });
+    req.session.members = results;
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
     res.send(results);
   });
 
@@ -65,6 +69,9 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     const results = await getLineItems(platform);
     req.session.assignments = results;
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
     res.send(results);
   });
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
