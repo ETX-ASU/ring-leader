@@ -110,7 +110,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : ${inspect(sessionObject)} `);
     const idToken = rlValidateToken(req, sessionObject);
 
-    const platformDetails = await getToolConsumer({ name: "", client_id: idToken.aud, iss: idToken.iss, deployment_id: idToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] });
+    const platformDetails = await getToolConsumer({ name: "", client_id: idToken["aud"], iss: idToken["iss"], deployment_id: idToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] });
     if (platformDetails == undefined) {
       return;
     }
