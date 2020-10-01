@@ -76,6 +76,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     const nonce = generateUniqueString(25, false);
     const state = generateUniqueString(30, false);
     const response: any = rlProcessOIDCRequest(req, state, nonce);
+    console.log(`request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${inspect(req.body)}`);
     const platformDetails = await getToolConsumer({ name: "", client_id: response.client_id, iss: response.iss, deployment_id: "" });
     if (platformDetails == undefined) {
       return;
@@ -91,7 +92,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     } else {
       throw new Error("no session detected, something is wrong");
     }
-    console.log(`request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${inspect(req.body)}`);
+    console.log(`Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} with platform details:${platformDetails.platformOIDCAuthEndPoint} : ${JSON.stringify(platformDetails)}`);
 
     res.redirect(
       url.format({
@@ -108,9 +109,9 @@ const ltiLaunchEndpoints = (app: Express): void => {
     }
 
     const sessionObject = req.session;
-    console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : ${inspect(sessionObject)} `);
+    console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : Session Object: ${inspect(sessionObject)} Request body: ${inspect(req.body)}`);
 
-    const decodedToken = rlDecodeIdToken(req.body.id_token)
+    const decodedToken = rlDecodeIdToken(sessionObject.id_token)
     const idToken = rlValidateDecodedToken(decodedToken, sessionObject);
     const platformDetails = await getToolConsumer({ name: "", client_id: decodedToken["aud"], iss: decodedToken["iss"], deployment_id: decodedToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] });
 
