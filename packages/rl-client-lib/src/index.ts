@@ -10,7 +10,7 @@ const putGrade = (platform: any, score: any, options: any): any => {
 
   return new Grade().putGrade(platform, score, options);
 };
-const createLineItem = (platform: any, lineItem: any, options?: any): any => {
+const createLineItem = (platform: any, lineItem: any, options: any): any => {
   return new Grade().createLineItem(platform, lineItem, options);
 };
 

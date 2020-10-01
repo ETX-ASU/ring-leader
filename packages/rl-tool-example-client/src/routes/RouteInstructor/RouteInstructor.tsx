@@ -132,11 +132,12 @@ const RouteInstructor: React.FC = () => {
         )}
       </h3>
       <div className="container">
-        <div className="row">
+        <div className="col-3">
           <div className="form-check-inline">
             <label className="form-check-label">
               <input
                 onChange={handleCheck}
+                checked
                 type="radio"
                 value="Learner"
                 className="form-check-input"
@@ -144,8 +145,7 @@ const RouteInstructor: React.FC = () => {
               ></input>
               Learner
             </label>
-          </div>
-          <div className="form-check-inline">
+
             <label className="form-check-label">
               <input
                 onChange={handleCheck}
@@ -157,36 +157,27 @@ const RouteInstructor: React.FC = () => {
               Instructor
             </label>
           </div>
-          <div className="col">
-            <button className="btn btn-primary" onClick={getUsers}>
-              Get Details from Platform
-            </button>
-          </div>
-          <div className="col">
-            <button className="btn btn-primary" onClick={handleCreateAssigment}>
-              Create Assignment
-            </button>
-          </div>
-          <div className="col">
-            <button className="btn btn-primary" onClick={putGrades}>
-              Submit Grades
-            </button>
-          </div>
+          <button className="btn btn-primary" onClick={getUsers}>
+            Get Details from Platform
+          </button>
+          <br />
+          <button className="btn btn-primary" onClick={handleCreateAssigment}>
+            Create Assignment
+          </button>
+          <br />
+          <button className="btn btn-primary" onClick={putGrades}>
+            Submit Grades
+          </button>
+          <br />
+          <button className="btn btn-primary" onClick={getAssignment}>
+            Get Assignments from Platform
+          </button>
+          <br />
+          <button className="btn btn-primary" onClick={grades}>
+            Get Grades from Platform
+          </button>
         </div>
-        <div className="row">
-          <div className="col">
-            <button className="btn btn-primary" onClick={getAssignment}>
-              Get Assignments from Platform
-            </button>
-          </div>
-          <div className="col">
-            <button className="btn btn-primary" onClick={grades}>
-              Get Grades from Platform
-            </button>
-          </div>
-        </div>
-        <hr></hr>
-        <div className="row">
+        <div className="col-9">
           <div className="col">
             {displayDiv &&
               users.map((user, index) => {
