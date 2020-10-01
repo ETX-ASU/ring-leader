@@ -89,7 +89,6 @@ const RouteInstructor: React.FC = () => {
         }
       })
       .then((results) => {
-        alert("Grade fetched successfully!!!");
         console.log(JSON.stringify(results.data));
         setScores(results.data);
         setDisplayDiv(false);
@@ -305,6 +304,8 @@ const RouteInstructor: React.FC = () => {
                     >
                       Get Grades
                     </button>
+                    <br></br>
+                    <hr></hr>
                     {scores.map((course: any) => {
                       return (
                         <a
