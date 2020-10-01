@@ -205,4 +205,4 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
 
   return access;
 };
-export { rlProcessOIDCRequest, rlValidateToken, getAccessToken };
+export { , rlValidateToken, getAccessToken };

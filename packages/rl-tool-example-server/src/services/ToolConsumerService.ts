@@ -57,5 +57,5 @@ const getToolConsumerByName = async (name: String): Promise<ToolConsumer | undef
   return toolConsumer;
 };
 
-export { createToolConsumer, getDeploymentConsumer, getToolConsumer }
+export { createToolConsumer, getDeploymentConsumer, getToolConsumer, getToolConsumerByName }
 
