@@ -23,6 +23,10 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const results = await getUsers(platform, { role: req.query.role });
+    req.session.members = results.members;
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
     res.send(results);
   });
 
@@ -61,8 +65,11 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log(`createassignment - platform - ${JSON.stringify(platform)}`);
 
-    const results = await getLineItems(platform, {});
-
+    const results = await getLineItems(platform);
+    req.session.assignments = results;
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
     res.send(results);
   });
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
@@ -70,15 +77,16 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
+    const scoreData = req.query;
     console.log("createassignment - platform - " + platform);
     const options = {
-      id: "https://unicon.instructure.com/api/lti/courses/718/line_items/207"
+      id: scoreData.assignmentId
     };
     const results = await putGrade(
       platform,
       {
         timestamp: "2020-10-05T18:54:36.736+00:00",
-        scoreGiven: 53,
+        scoreGiven: scoreData.grade,
         scoreMaximum: 100,
         comment: "This is exceptional work.",
         activityProgress: "Completed",
@@ -97,9 +105,35 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results = await getGrades(platform, { resourceLinkId: false });
+    const results: any = ([] = await getGrades(platform, {
+      id: req.query.assignmentId,
+      resourceLinkId: false
+    }));
+    const scoreData = [];
+    console.log("req.session.members - " + JSON.stringify(req.session.members));
+    console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
-    res.send(results);
+    const members = req.session.members;
+
+    for (const key in results[0].results) {
+      console.log("key - " + JSON.stringify(key));
+      const score = results[0].results[key];
+      console.log("score - " + JSON.stringify(score));
+      const tooltipsData = members.filter(function (member: any) {
+        return member.user_id == score.userId;
+      });
+      console.log("tooltipsData - " + JSON.stringify(tooltipsData));
+
+      scoreData.push({
+        userId: score.userId,
+        StudenName: tooltipsData[0].name,
+        score: score.resultScore,
+        comment: score.comment
+      });
+    }
+    console.log("scoreData - " + scoreData);
+
+    res.send(scoreData);
   });
 };
 

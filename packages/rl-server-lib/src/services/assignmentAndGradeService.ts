@@ -17,7 +17,7 @@ class Grade {
 
   async getLineItems(
     platform: any,
-    options: any,
+    options?: any,
     accessToken?: any
   ): Promise<any> {
     if (!platform) {
@@ -102,7 +102,7 @@ class Grade {
   async createLineItem(
     platform: any,
     lineItem: any,
-    options: any,
+    options?: any,
     accessToken?: any
   ): Promise<any> {
     console.log("Inside createLineItem");
@@ -166,7 +166,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async putGrade(platform: any, score: any, options: any): Promise<any> {
+  async putGrade(platform: any, score: any, options?: any): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
@@ -276,7 +276,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async getGrades(platform: any, options: any): Promise<any> {
+  async getGrades(platform: any, options?: any): Promise<any> {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }

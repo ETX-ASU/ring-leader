@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
 import "./RouteInstructor.scss";
+import Assignment from "../Assignment/Assignment";
 
 const RouteInstructor: React.FC = () => {
   const {} = useParams();
@@ -13,6 +13,7 @@ const RouteInstructor: React.FC = () => {
   ] = useState<boolean>(false);
   const [users, setUsers] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
+  const [scores, setScores] = useState<any[]>([]);
   const [displayDiv, setDisplayDiv] = useState<boolean>(true);
   const [displayNoAssignment, setDisplayNoAssignment] = useState<boolean>(
     false
@@ -29,7 +30,6 @@ const RouteInstructor: React.FC = () => {
 
   const [courses, setCourses] = useState<any>({});
   const getUsers = () => {
-    setDisplayDiv(true);
     setDisplayCreateAssignment(false);
     setdisplayAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
@@ -42,6 +42,7 @@ const RouteInstructor: React.FC = () => {
         setCourses(results.data.context);
         console.log(JSON.stringify(users));
         console.log(JSON.stringify(courses));
+        setDisplayDiv(true);
       });
   };
   const createAssignment = () => {
@@ -63,43 +64,55 @@ const RouteInstructor: React.FC = () => {
       });
   };
 
-  const putGrades = () => {
-    axios.get("/lti-service/putgrades").then((results) => {
-      alert("Grade submitted successfully!!!");
-      console.log(JSON.stringify(results.data));
-      setDisplayDiv(false);
-      setDisplayCreateAssignment(false);
-      setdisplayAssignment(false);
-      setDisplayNoAssignment(false);
-      setDisplayCreateAssignmentSuccess(false);
-    });
+  const putGrades = (assignmentId: string) => {
+    axios
+      .get("/lti-service/putgrades", {
+        params: {
+          assignmentId: assignmentId
+        }
+      })
+      .then((results) => {
+        alert("Grade submitted successfully!!!");
+        console.log(JSON.stringify(results.data));
+        setDisplayDiv(false);
+        setDisplayCreateAssignment(false);
+        setdisplayAssignment(false);
+        setDisplayNoAssignment(false);
+        setDisplayCreateAssignmentSuccess(false);
+      });
   };
 
-  const grades = () => {
-    axios.get("/lti-service/grades").then((results) => {
-      alert("Grade fetched successfully!!!");
-      console.log(JSON.stringify(results.data));
-      setDisplayDiv(false);
-      setDisplayCreateAssignment(false);
-      setdisplayAssignment(false);
-      setDisplayNoAssignment(false);
-      setDisplayCreateAssignmentSuccess(false);
-    });
+  const grades = (assignmentId: string) => {
+    axios
+      .get("/lti-service/grades", {
+        params: {
+          assignmentId: assignmentId
+        }
+      })
+      .then((results) => {
+        console.log(JSON.stringify(results.data));
+        setScores(results.data);
+        setDisplayDiv(false);
+        setDisplayCreateAssignment(false);
+        setdisplayAssignment(true);
+        setDisplayNoAssignment(false);
+        setDisplayCreateAssignmentSuccess(false);
+      });
   };
 
   const getAssignment = () => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
-    setdisplayAssignment(true);
+
     axios.get("/lti-service/getassignment").then((results) => {
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) {
         setDisplayNoAssignment(true);
         return;
       }
-
       setAssignments(results.data);
+      setdisplayAssignment(true);
     });
   };
   const handleCheck = (event: any): any => {
@@ -121,7 +134,6 @@ const RouteInstructor: React.FC = () => {
   return (
     <div className="route-instructor">
       <h3>
-        Instructor Route
         {courses.title && (
           <>
             <div key="index">
@@ -131,8 +143,8 @@ const RouteInstructor: React.FC = () => {
           </>
         )}
       </h3>
-      <div className="container">
-        <div className="row">
+      <div className="row">
+        <div className="col">
           <div className="form-check-inline">
             <label className="form-check-label">
               <input
@@ -144,8 +156,7 @@ const RouteInstructor: React.FC = () => {
               ></input>
               Learner
             </label>
-          </div>
-          <div className="form-check-inline">
+
             <label className="form-check-label">
               <input
                 onChange={handleCheck}
@@ -156,172 +167,126 @@ const RouteInstructor: React.FC = () => {
               ></input>
               Instructor
             </label>
-          </div>
-          <div className="col">
+
             <button className="btn btn-primary" onClick={getUsers}>
-              Get Details from Platform
+              Get Member Details
             </button>
-          </div>
-          <div className="col">
+            <button className="btn btn-primary" onClick={getAssignment}>
+              Get Assignments
+            </button>
             <button className="btn btn-primary" onClick={handleCreateAssigment}>
               Create Assignment
             </button>
           </div>
-          <div className="col">
-            <button className="btn btn-primary" onClick={putGrades}>
-              Submit Grades
-            </button>
-          </div>
         </div>
-        <div className="row">
-          <div className="col">
-            <button className="btn btn-primary" onClick={getAssignment}>
-              Get Assignments from Platform
-            </button>
-          </div>
-          <div className="col">
-            <button className="btn btn-primary" onClick={grades}>
-              Get Grades from Platform
-            </button>
-          </div>
-        </div>
-        <hr></hr>
-        <div className="row">
-          <div className="col">
+      </div>
+      <div className="row">
+        <div className="col">
+          <div className="details">
             {displayDiv &&
               users.map((user, index) => {
                 return (
-                  <div className="userprofile" key="index">
-                    <h2>
-                      {radioInputValue} - {index + 1}
-                    </h2>
-                    <ul className="li">
-                      Profile Pic:
-                      <img src={user.picture}></img>
-                    </ul>
-                    <ul className="li">Name : {user.name}</ul>
-                    <ul className="li">Given Name: {user.given_name}</ul>
-                    <ul className="li">Family Name: {user.family_name}</ul>
-                    <ul className="li">Email: {user.email}</ul>
-                    <ul className="li">User Id: {user.user_id}</ul>
-                    <ul className="li">Roles: {JSON.stringify(user.roles)}</ul>
+                  <div className="userprofile card" key={user.user_id}>
+                    <img
+                      className="card-img-top"
+                      src={user.picture}
+                      alt="Card image cap"
+                    ></img>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        {user.name} ({user.email})
+                      </h5>
+                      <p className="card-text">
+                        Email - {user.email} <br /> Role - {radioInputValue}
+                      </p>
+                    </div>
                   </div>
                 );
-              })}
-            {displayCreateAssignment && (
-              <div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">
-                    Assignment Title:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      value={title}
-                      onChange={(event) => {
-                        setTitle(event.target.value);
-                      }}
-                      type="text"
-                      className="form-control"
-                      id="title"
-                      placeholder="Enter Assignment Title"
-                      name="title"
-                    ></input>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">
-                    Maximum Score:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      value={maxScore}
-                      onChange={(event) => {
-                        setMaxScore(parseInt(event.target.value));
-                      }}
-                      type="number"
-                      className="form-control"
-                      id="MaximumScore"
-                      placeholder="Enter Maximum Score"
-                      name="MaximumScore"
-                    ></input>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">Tag:</label>
-                  <div className="col-sm-10">
-                    <input
-                      value={tag}
-                      onChange={(event) => {
-                        setTag(event.target.value);
-                      }}
-                      type="text"
-                      className="form-control"
-                      id="Tag"
-                      placeholder="Enter Tag"
-                      name="Tag"
-                    ></input>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <div className="col-sm-offset-2 col-sm-10">
-                    <button
-                      type="submit"
-                      onClick={createAssignment}
-                      className="btn btn-primary"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-            {displayCreateAssignmentSuccess && (
-              <div>
-                <div className="alert alert-success">
-                  <strong>Success!</strong> Assignment created successfully!!!
-                </div>
-              </div>
-            )}
-            {displayAssignment &&
-              assignments.map((assignment, index) => {
-                return (
-                  <div className="userprofile" key="index">
-                    <h2>Assignment - {index + 1}</h2>
-                    <ul className="li">Id: {assignment.id}</ul>
-                    <ul className="li">Label : {assignment.label}</ul>
-                    <ul className="li">
-                      Maximum Score: {assignment.scoreMaximum}
-                    </ul>
-                    <ul className="li">Tag: {assignment.tag}</ul>
-                    <ul className="li">
-                      Submission Type:{" "}
-                      {
-                        assignment[
-                          "https://canvas.instructure.com/lti/submission_type"
-                        ].type
-                      }
-                    </ul>
-                    <ul className="li">
-                      External Tool Url:
-                      {
-                        assignment[
-                          "https://canvas.instructure.com/lti/submission_type"
-                        ].external_tool_url
-                      }
-                    </ul>
-                  </div>
-                );
-              })}
-            {displayNoAssignment && (
-              <div>
-                <div className="alert alert-info">
-                  <strong>Info!</strong> You do not have any assignment at the
-                  moment!!!
-                </div>
-              </div>
-            )}
+              })}{" "}
           </div>
+          {displayCreateAssignment && (
+            <div className=" container">
+              <div className="form-group">
+                <label className="control-label">Assignment Title:</label>
+                <input
+                  value={title}
+                  onChange={(event) => {
+                    setTitle(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="title"
+                  placeholder="Enter Assignment Title"
+                  name="title"
+                ></input>
+              </div>
+              <div className="form-group">
+                <label className="control-label">Maximum Score:</label>
+
+                <input
+                  value={maxScore}
+                  onChange={(event) => {
+                    setMaxScore(parseInt(event.target.value));
+                  }}
+                  type="number"
+                  className="form-control"
+                  id="MaximumScore"
+                  placeholder="Enter Maximum Score"
+                  name="MaximumScore"
+                ></input>
+              </div>
+              <div className="form-group">
+                <label className="control-label">Tag:</label>
+                <input
+                  value={tag}
+                  onChange={(event) => {
+                    setTag(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="Tag"
+                  placeholder="Enter Tag"
+                  name="Tag"
+                ></input>
+              </div>
+
+              <div className="form-group">
+                <div className="col-sm-offset-2 col-sm-10">
+                  <button
+                    type="submit"
+                    onClick={createAssignment}
+                    className="btn btn-primary"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {displayCreateAssignmentSuccess && (
+            <div>
+              <div className="alert alert-success">
+                <strong>Success!</strong> Assignment created successfully!!!
+              </div>
+            </div>
+          )}
+          {displayAssignment &&
+            assignments.map((assignment, index) => {
+              return (
+                <Assignment
+                  data-index={index}
+                  data-assignmentData={assignment}
+                ></Assignment>
+              );
+            })}
+          {displayNoAssignment && (
+            <div>
+              <div className="alert alert-info">
+                <strong>Info!</strong> You do not have any assignment at the
+                moment!!!
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
