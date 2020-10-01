@@ -63,28 +63,40 @@ const RouteInstructor: React.FC = () => {
       });
   };
 
-  const putGrades = () => {
-    axios.get("/lti-service/putgrades").then((results) => {
-      alert("Grade submitted successfully!!!");
-      console.log(JSON.stringify(results.data));
-      setDisplayDiv(false);
-      setDisplayCreateAssignment(false);
-      setdisplayAssignment(false);
-      setDisplayNoAssignment(false);
-      setDisplayCreateAssignmentSuccess(false);
-    });
+  const putGrades = (assignmentId: string) => {
+    axios
+      .get("/lti-service/putgrades", {
+        params: {
+          assignmentId: assignmentId
+        }
+      })
+      .then((results) => {
+        alert("Grade submitted successfully!!!");
+        console.log(JSON.stringify(results.data));
+        setDisplayDiv(false);
+        setDisplayCreateAssignment(false);
+        setdisplayAssignment(false);
+        setDisplayNoAssignment(false);
+        setDisplayCreateAssignmentSuccess(false);
+      });
   };
 
-  const grades = () => {
-    axios.get("/lti-service/grades").then((results) => {
-      alert("Grade fetched successfully!!!");
-      console.log(JSON.stringify(results.data));
-      setDisplayDiv(false);
-      setDisplayCreateAssignment(false);
-      setdisplayAssignment(false);
-      setDisplayNoAssignment(false);
-      setDisplayCreateAssignmentSuccess(false);
-    });
+  const grades = (assignmentId: string) => {
+    axios
+      .get("/lti-service/grades", {
+        params: {
+          assignmentId: assignmentId
+        }
+      })
+      .then((results) => {
+        alert("Grade fetched successfully!!!");
+        console.log(JSON.stringify(results.data));
+        setDisplayDiv(false);
+        setDisplayCreateAssignment(false);
+        setdisplayAssignment(false);
+        setDisplayNoAssignment(false);
+        setDisplayCreateAssignmentSuccess(false);
+      });
   };
 
   const getAssignment = () => {
@@ -283,14 +295,14 @@ const RouteInstructor: React.FC = () => {
                     <button
                       assignment-id={assignment.id}
                       className="btn btn-primary assignmentbutton"
-                      onClick={putGrades}
+                      onClick={() => putGrades(assignment.id)}
                     >
                       Submit Grades
                     </button>
                     <button
                       assignment-id={assignment.id}
                       className="btn btn-primary assignmentbutton"
-                      onClick={grades}
+                      onClick={() => grades(assignment.id)}
                     >
                       Get Grades
                     </button>

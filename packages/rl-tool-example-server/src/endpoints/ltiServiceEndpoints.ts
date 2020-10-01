@@ -81,7 +81,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
     const options = {
-      id: "https://unicon.instructure.com/api/lti/courses/718/line_items/207"
+      id: req.query.assignmentId
     };
     const results = await putGrade(
       platform,
@@ -106,7 +106,10 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results = await getGrades(platform, { resourceLinkId: false });
+    const results = await getGrades(platform, {
+      id: req.query.assignmentId,
+      resourceLinkId: false
+    });
 
     res.send(results);
   });
