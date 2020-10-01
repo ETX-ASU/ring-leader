@@ -112,7 +112,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : Session Object: ${inspect(sessionObject)} \nRequest body: ${inspect(req.body)}`);
 
     const decodedToken = rlDecodeIdToken(req.body.id_token)
-    const idToken = rlValidateDecodedToken(decodedToken, sessionObject);
+    rlValidateDecodedToken(decodedToken, sessionObject);
     const platformDetails = await getToolConsumer({ name: "", client_id: decodedToken["aud"], iss: decodedToken["iss"], deployment_id: decodedToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] });
 
     if (platformDetails == undefined) {
@@ -124,7 +124,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       platformDetails.platformAccessTokenEndpoint,
       platformDetails.keyid,
       platformDetails.alg,
-      idToken
+      decodedToken
     );
 
     req.session.platform = rlPlatform;
