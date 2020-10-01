@@ -23,7 +23,7 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const results = await getUsers(platform, { role: req.query.role });
-    req.session.members = results;
+    req.session.members = results.members;
     await req.session.save(() => {
       console.log("session data saved");
     });
@@ -106,18 +106,19 @@ const ltiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results = await getGrades(platform, {
+    const results: any = ([] = await getGrades(platform, {
       id: req.query.assignmentId,
       resourceLinkId: false
-    });
+    }));
     const scoreData = [];
     console.log("req.session.members - " + JSON.stringify(req.session.members));
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
     const members = req.session.members;
-    for (const key in results[0].results) {
-      const score = results[0].results[key];
-      const tooltipsData = members.filter(function (member: any, index: any) {
+    for (const key in results) {
+      const score = results[key];
+      console.log("key - " + JSON.stringify(score));
+      const tooltipsData = members.filter(function (member: any) {
         return member.user_id == score.userId;
       });
       console.log("tooltipsData - " + JSON.stringify(tooltipsData));
