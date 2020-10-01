@@ -102,7 +102,6 @@ const Assignment: React.FC = (props: any) => {
               >
                 {course.StudenName} -
                 <span className="badge">
-                  {" "}
                   {course.score ? course.score : "Not Graded"}
                 </span>
               </a>
@@ -110,7 +109,7 @@ const Assignment: React.FC = (props: any) => {
           })}
         {displayCreateScore && (
           <div className="card-footer">
-            <div className="row">
+            <div className="container">
               <div className="form-group">
                 <label className="control-label">Enter Student's Grade:</label>
                 <input

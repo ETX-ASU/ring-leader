@@ -181,7 +181,7 @@ const RouteInstructor: React.FC = () => {
         </div>
       </div>
       <div className="row">
-        <div className="col details">
+        <div className="col">
           {displayDiv &&
             users.map((user, index) => {
               return (
@@ -203,7 +203,7 @@ const RouteInstructor: React.FC = () => {
               );
             })}
           {displayCreateAssignment && (
-            <div className="container">
+            <div className="details container">
               <div className="form-group">
                 <label className="control-label">Assignment Title:</label>
                 <input
