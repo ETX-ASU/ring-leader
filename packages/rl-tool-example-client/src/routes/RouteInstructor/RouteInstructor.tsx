@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./RouteInstructor.scss";
+import Assignment from "../Assignment/Assignment";
 
 const RouteInstructor: React.FC = () => {
   const {} = useParams();
@@ -268,59 +269,10 @@ const RouteInstructor: React.FC = () => {
           {displayAssignment &&
             assignments.map((assignment, index) => {
               return (
-                <div
-                  className="card"
-                  assignment-id={assignment.id}
-                  external-tool-url={
-                    assignment[
-                      "https://canvas.instructure.com/lti/submission_type"
-                    ].external_tool_url
-                  }
-                  submission-Type={
-                    assignment[
-                      "https://canvas.instructure.com/lti/submission_type"
-                    ].type
-                  }
-                >
-                  <h5 className="card-header">Assignment - {index + 1}</h5>
-                  <div className="card-body">
-                    <h5 className="card-title">{assignment.label}</h5>
-                    <p className="card-text">
-                      {" "}
-                      Maximum Score: {assignment.scoreMaximum} <br /> Tag:{" "}
-                      {assignment.tag}
-                    </p>
-                    <button
-                      assignment-id={assignment.id}
-                      className="btn btn-primary assignmentbutton"
-                      onClick={() => putGrades(assignment.id)}
-                    >
-                      Submit Grades
-                    </button>
-                    <button
-                      assignment-id={assignment.id}
-                      className="btn btn-primary assignmentbutton"
-                      onClick={() => grades(assignment.id)}
-                    >
-                      Get Grades
-                    </button>
-                    <br></br>
-                    <hr></hr>
-                    {scores.map((course: any) => {
-                      return (
-                        <a
-                          href="#"
-                          data-toggle="popover"
-                          title="Comment"
-                          data-content={course.comment}
-                        >
-                          {course.StudenName}
-                          <span className="badge"> {course.score}</span>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
+                <Assignment
+                  data-index={index}
+                  data-assignment={assignment}
+                ></Assignment>
               );
             })}
           {displayNoAssignment && (
