@@ -131,13 +131,12 @@ const RouteInstructor: React.FC = () => {
           </>
         )}
       </h3>
-      <div className="container">
+      <div className="row">
         <div className="col-3">
           <div className="form-check-inline">
             <label className="form-check-label">
               <input
                 onChange={handleCheck}
-                checked
                 type="radio"
                 value="Learner"
                 className="form-check-input"
@@ -177,142 +176,138 @@ const RouteInstructor: React.FC = () => {
             Get Grades from Platform
           </button>
         </div>
-        <div className="col-9">
-          <div className="col">
-            {displayDiv &&
-              users.map((user, index) => {
-                return (
-                  <div className="userprofile" key="index">
-                    <h2>
-                      {radioInputValue} - {index + 1}
-                    </h2>
-                    <ul className="li">
-                      Profile Pic:
-                      <img src={user.picture}></img>
-                    </ul>
-                    <ul className="li">Name : {user.name}</ul>
-                    <ul className="li">Given Name: {user.given_name}</ul>
-                    <ul className="li">Family Name: {user.family_name}</ul>
-                    <ul className="li">Email: {user.email}</ul>
-                    <ul className="li">User Id: {user.user_id}</ul>
-                    <ul className="li">Roles: {JSON.stringify(user.roles)}</ul>
-                  </div>
-                );
-              })}
-            {displayCreateAssignment && (
-              <div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">
-                    Assignment Title:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      value={title}
-                      onChange={(event) => {
-                        setTitle(event.target.value);
-                      }}
-                      type="text"
-                      className="form-control"
-                      id="title"
-                      placeholder="Enter Assignment Title"
-                      name="title"
-                    ></input>
-                  </div>
+        <div className="col-9 details">
+          {displayDiv &&
+            users.map((user, index) => {
+              return (
+                <div className="userprofile" key="index">
+                  <h2>
+                    {radioInputValue} - {index + 1}
+                  </h2>
+                  <ul className="li">
+                    Profile Pic:
+                    <img src={user.picture}></img>
+                  </ul>
+                  <ul className="li">Name : {user.name}</ul>
+                  <ul className="li">Given Name: {user.given_name}</ul>
+                  <ul className="li">Family Name: {user.family_name}</ul>
+                  <ul className="li">Email: {user.email}</ul>
+                  <ul className="li">User Id: {user.user_id}</ul>
+                  <ul className="li">Roles: {JSON.stringify(user.roles)}</ul>
                 </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">
-                    Maximum Score:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      value={maxScore}
-                      onChange={(event) => {
-                        setMaxScore(parseInt(event.target.value));
-                      }}
-                      type="number"
-                      className="form-control"
-                      id="MaximumScore"
-                      placeholder="Enter Maximum Score"
-                      name="MaximumScore"
-                    ></input>
-                  </div>
+              );
+            })}
+          {displayCreateAssignment && (
+            <div>
+              <div className="form-group">
+                <label className="control-label col-sm-2">
+                  Assignment Title:
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    value={title}
+                    onChange={(event) => {
+                      setTitle(event.target.value);
+                    }}
+                    type="text"
+                    className="form-control"
+                    id="title"
+                    placeholder="Enter Assignment Title"
+                    name="title"
+                  ></input>
                 </div>
-                <div className="form-group">
-                  <label className="control-label col-sm-2">Tag:</label>
-                  <div className="col-sm-10">
-                    <input
-                      value={tag}
-                      onChange={(event) => {
-                        setTag(event.target.value);
-                      }}
-                      type="text"
-                      className="form-control"
-                      id="Tag"
-                      placeholder="Enter Tag"
-                      name="Tag"
-                    ></input>
-                  </div>
+              </div>
+              <div className="form-group">
+                <label className="control-label col-sm-2">Maximum Score:</label>
+                <div className="col-sm-10">
+                  <input
+                    value={maxScore}
+                    onChange={(event) => {
+                      setMaxScore(parseInt(event.target.value));
+                    }}
+                    type="number"
+                    className="form-control"
+                    id="MaximumScore"
+                    placeholder="Enter Maximum Score"
+                    name="MaximumScore"
+                  ></input>
                 </div>
+              </div>
+              <div className="form-group">
+                <label className="control-label col-sm-2">Tag:</label>
+                <div className="col-sm-10">
+                  <input
+                    value={tag}
+                    onChange={(event) => {
+                      setTag(event.target.value);
+                    }}
+                    type="text"
+                    className="form-control"
+                    id="Tag"
+                    placeholder="Enter Tag"
+                    name="Tag"
+                  ></input>
+                </div>
+              </div>
 
-                <div className="form-group">
-                  <div className="col-sm-offset-2 col-sm-10">
-                    <button
-                      type="submit"
-                      onClick={createAssignment}
-                      className="btn btn-primary"
-                    >
-                      Submit
-                    </button>
-                  </div>
+              <div className="form-group">
+                <div className="col-sm-offset-2 col-sm-10">
+                  <button
+                    type="submit"
+                    onClick={createAssignment}
+                    className="btn btn-primary"
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
-            )}
-            {displayCreateAssignmentSuccess && (
-              <div>
-                <div className="alert alert-success">
-                  <strong>Success!</strong> Assignment created successfully!!!
-                </div>
+            </div>
+          )}
+          {displayCreateAssignmentSuccess && (
+            <div>
+              <div className="alert alert-success">
+                <strong>Success!</strong> Assignment created successfully!!!
               </div>
-            )}
-            {displayAssignment &&
-              assignments.map((assignment, index) => {
-                return (
-                  <div className="userprofile" key="index">
-                    <h2>Assignment - {index + 1}</h2>
-                    <ul className="li">Id: {assignment.id}</ul>
-                    <ul className="li">Label : {assignment.label}</ul>
-                    <ul className="li">
-                      Maximum Score: {assignment.scoreMaximum}
-                    </ul>
-                    <ul className="li">Tag: {assignment.tag}</ul>
-                    <ul className="li">
-                      Submission Type:{" "}
-                      {
-                        assignment[
-                          "https://canvas.instructure.com/lti/submission_type"
-                        ].type
-                      }
-                    </ul>
-                    <ul className="li">
-                      External Tool Url:
-                      {
-                        assignment[
-                          "https://canvas.instructure.com/lti/submission_type"
-                        ].external_tool_url
-                      }
-                    </ul>
-                  </div>
-                );
-              })}
-            {displayNoAssignment && (
-              <div>
-                <div className="alert alert-info">
-                  <strong>Info!</strong> You do not have any assignment at the
-                  moment!!!
+            </div>
+          )}
+          {displayAssignment &&
+            assignments.map((assignment, index) => {
+              return (
+                <div className="userprofile" key="index">
+                  <h2>Assignment - {index + 1}</h2>
+                  <ul className="li">Id: {assignment.id}</ul>
+                  <ul className="li">Label : {assignment.label}</ul>
+                  <ul className="li">
+                    Maximum Score: {assignment.scoreMaximum}
+                  </ul>
+                  <ul className="li">Tag: {assignment.tag}</ul>
+                  <ul className="li">
+                    Submission Type:{" "}
+                    {
+                      assignment[
+                        "https://canvas.instructure.com/lti/submission_type"
+                      ].type
+                    }
+                  </ul>
+                  <ul className="li">
+                    External Tool Url:
+                    {
+                      assignment[
+                        "https://canvas.instructure.com/lti/submission_type"
+                      ].external_tool_url
+                    }
+                  </ul>
                 </div>
+              );
+            })}
+          {displayNoAssignment && (
+            <div>
+              <div className="alert alert-info">
+                <strong>Info!</strong> You do not have any assignment at the
+                moment!!!
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
