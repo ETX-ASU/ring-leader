@@ -92,7 +92,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     } else {
       throw new Error("no session detected, something is wrong");
     }
-    console.log(`Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} with platform details:${platformDetails.platformOIDCAuthEndPoint} : ${JSON.stringify(platformDetails)}`);
+    console.log(`Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${platformDetails.platformOIDCAuthEndPoint} with platform details: ${JSON.stringify(platformDetails)}`);
 
     res.redirect(
       url.format({
@@ -118,13 +118,15 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (platformDetails == undefined) {
       return;
     }
+
+    console.log("Attempting to create RLPlatform");
     const rlPlatform = RlPlatform(
       platformDetails.private_key,
       platformDetails.platformOIDCAuthEndPoint,
       platformDetails.platformAccessTokenEndpoint,
       platformDetails.keyid,
       platformDetails.alg,
-      decodedToken
+      req.body.id_token
     );
 
     req.session.platform = rlPlatform;

@@ -14,7 +14,7 @@ const setDefaultValues = (token: any): any => {
     iat: token.iat,
     sub: token.sub,
     exp: token.exp,
-    clientId: token.client_id,
+    clientId: token.aud,
     userId: token.sub,
     lineitems:
       token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitems,
@@ -32,6 +32,7 @@ const RlPlatform = (
   alg: string,
   idToken: string
 ): any => {
+  console.log(`RlPlatform - received - idToken: ${idToken}`);
   const token = jwt.decode(idToken);
   const tokenData = setDefaultValues(token);
   console.log("RlPlatform - tokenData - " + JSON.stringify(tokenData));
