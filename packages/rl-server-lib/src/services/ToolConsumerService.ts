@@ -1,5 +1,5 @@
 
-import getConnection from "../database/db";
+import { getConnection } from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import ToolConsumerRequest from "../database/entities/ToolConsumerRequest";
 
