@@ -144,7 +144,7 @@ const RouteInstructor: React.FC = () => {
         )}
       </h3>
       <div className="row">
-        <div className="col-3 sidebar-left">
+        <div className="col">
           <div className="form-check-inline">
             <label className="form-check-label">
               <input
@@ -167,19 +167,21 @@ const RouteInstructor: React.FC = () => {
               ></input>
               Instructor
             </label>
+
+            <button className="btn btn-primary" onClick={getUsers}>
+              Get Member Details
+            </button>
+            <button className="btn btn-primary" onClick={getAssignment}>
+              Get Assignments
+            </button>
+            <button className="btn btn-primary" onClick={handleCreateAssigment}>
+              Create Assignment
+            </button>
           </div>
-          <button className="btn btn-primary" onClick={getUsers}>
-            Get Member Details
-          </button>
-          <button className="btn btn-primary" onClick={getAssignment}>
-            Get Assignments
-          </button>
-          <button className="btn btn-primary" onClick={handleCreateAssigment}>
-            Create Assignment
-          </button>
-          <br />
         </div>
-        <div className="col-9 details">
+      </div>
+      <div className="row">
+        <div className="col details">
           {displayDiv &&
             users.map((user, index) => {
               return (

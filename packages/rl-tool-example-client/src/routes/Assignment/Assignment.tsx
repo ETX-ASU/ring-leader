@@ -110,9 +110,9 @@ const Assignment: React.FC = (props: any) => {
           })}
         {displayCreateScore && (
           <div className="card-footer">
-            <div className="container">
+            <div className="row">
               <div className="form-group">
-                <label className="control-label">student's Grade:</label>
+                <label className="control-label">Enter Student's Grade:</label>
                 <input
                   value={grade}
                   onChange={(event) => {
