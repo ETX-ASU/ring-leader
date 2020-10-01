@@ -132,7 +132,7 @@ const RouteInstructor: React.FC = () => {
         )}
       </h3>
       <div className="row">
-        <div className="col-3">
+        <div className="col-3 sidebar-left">
           <div className="form-check-inline">
             <label className="form-check-label">
               <input
@@ -157,7 +157,7 @@ const RouteInstructor: React.FC = () => {
             </label>
           </div>
           <button className="btn btn-primary" onClick={getUsers}>
-            Get Details from Platform
+            Get Member Details
           </button>
           <br />
           <button className="btn btn-primary" onClick={handleCreateAssigment}>
@@ -169,11 +169,11 @@ const RouteInstructor: React.FC = () => {
           </button>
           <br />
           <button className="btn btn-primary" onClick={getAssignment}>
-            Get Assignments from Platform
+            Get Assignments
           </button>
           <br />
           <button className="btn btn-primary" onClick={grades}>
-            Get Grades from Platform
+            Get Grades
           </button>
         </div>
         <div className="col-9 details">

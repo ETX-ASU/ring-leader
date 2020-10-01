@@ -2,6 +2,25 @@
     margin: 10px !important;
 }
 
+.route-instructor {
+    background-color: whitesmoke;
+}
+
+.route-instructor .sidebar-left,
+.route-instructor .form-check-label {
+    padding-right: 5px !important;
+}
+
+.route-instructor .sidebar-left {
+    padding-right: 5px !important;
+    display: flex;
+    flex-flow: column;
+}
+
+.route-instructor .form-check-inline {
+    padding-left: 15px !important;
+}
+
 .route-instructor .details {
     background-color: silver !important;
 }

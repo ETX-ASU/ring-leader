@@ -64,7 +64,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     console.log("createassignment - platform - " + platform);
 
     const results = await getLineItems(platform);
-
+    req.session.assignments = results;
     res.send(results);
   });
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
