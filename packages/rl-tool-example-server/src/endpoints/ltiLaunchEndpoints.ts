@@ -112,7 +112,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
 
     const decodedToken = rlDecodeIdToken(req.body.id_token)
     const idToken = rlValidateDecodedToken(decodedToken, sessionObject);
-    const platformDetails = await getToolConsumer({ name: "", client_id: idToken["aud"], iss: idToken["iss"], deployment_id: idToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] });
+    const platformDetails = await getToolConsumer({ name: "", client_id: decodedToken["aud"], iss: decodedToken["iss"], deployment_id: decodedToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] });
 
     if (platformDetails == undefined) {
       return;
