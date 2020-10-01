@@ -7,11 +7,10 @@ import "./Assignment.scss";
 const Assignment: React.FC = (props: any) => {
   console.log("props - " + JSON.stringify(props));
   const assignmentData = props["data-assignmentData"];
-  console.log("assignmentData - " + assignmentData);
   console.log("assignmentData - json - " + JSON.stringify(assignmentData));
-  console.log("assignmentData - json - " + JSON.parse(assignmentData));
-
   const index = props["data-index"];
+  console.log("assignmentData id- " + assignmentData.id);
+  console.log("index - " + index);
   const [scores, setScores] = useState<any[]>([]);
 
   const putGrades = (assignmentId: string) => {
