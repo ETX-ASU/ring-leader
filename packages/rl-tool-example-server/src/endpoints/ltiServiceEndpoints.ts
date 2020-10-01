@@ -115,9 +115,10 @@ const ltiServiceEndpoints = (app: Express): void => {
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
     const members = req.session.members;
-    for (const key in results) {
-      const score = results[key];
-      console.log("key - " + JSON.stringify(score));
+    for (const key in results[0].results) {
+      console.log("key - " + JSON.stringify(key));
+      const score = results[0].results[key];
+      console.log("score - " + JSON.stringify(score));
       const tooltipsData = members.filter(function (member: any) {
         return member.user_id == score.userId;
       });
