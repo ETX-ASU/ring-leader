@@ -180,20 +180,20 @@ const RouteInstructor: React.FC = () => {
           {displayDiv &&
             users.map((user, index) => {
               return (
-                <div className="userprofile" key="index">
-                  <h2>
-                    {radioInputValue} - {index + 1}
-                  </h2>
-                  <ul className="li">
-                    Profile Pic:
-                    <img src={user.picture}></img>
-                  </ul>
-                  <ul className="li">Name : {user.name}</ul>
-                  <ul className="li">Given Name: {user.given_name}</ul>
-                  <ul className="li">Family Name: {user.family_name}</ul>
-                  <ul className="li">Email: {user.email}</ul>
-                  <ul className="li">User Id: {user.user_id}</ul>
-                  <ul className="li">Roles: {JSON.stringify(user.roles)}</ul>
+                <div className="userprofile card" key={user.user_id}>
+                  <img
+                    className="card-img-top"
+                    src={user.picture}
+                    alt="Card image cap"
+                  ></img>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      {user.name} ({user.email})
+                    </h5>
+                    <p className="card-text">
+                      Email - {user.email} <br /> Role - {radioInputValue}
+                    </p>
+                  </div>
                 </div>
               );
             })}
