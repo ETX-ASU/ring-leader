@@ -111,8 +111,8 @@ const RouteInstructor: React.FC = () => {
         setDisplayNoAssignment(true);
         return;
       }
-      setdisplayAssignment(true);
       setAssignments(results.data);
+      setdisplayAssignment(true);
     });
   };
   const handleCheck = (event: any): any => {
@@ -305,7 +305,7 @@ const RouteInstructor: React.FC = () => {
                     >
                       Get Grades
                     </button>
-                    {courses.map((course: any) => {
+                    {scores.map((course: any) => {
                       return (
                         <a
                           href="#"
