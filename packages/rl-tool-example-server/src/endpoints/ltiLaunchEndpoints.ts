@@ -1,8 +1,7 @@
 import { Express } from "express";
 
-import getConnection from "@asu-etx/rl-server-lib/src/database/db";
-import ToolConsumer from "@asu-etx/rl-server-lib/src/database/entities/ToolConsumer";
-import { initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "@asu-etx/rl-server-lib/src/services/ltiLaunchService";
+
+import { ToolConsumer, getConnection, initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "@asu-etx/rl-server-lib";
 import requestLogger from "../middleware/requestLogger";
 import { APPLICATION_URL } from "../environment";
 
