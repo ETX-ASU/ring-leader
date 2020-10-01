@@ -26,4 +26,5 @@ const getConnection = (): Promise<Connection> => {
   });
 };
 
+
 export default getConnection;

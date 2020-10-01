@@ -6,10 +6,10 @@ import bodyParser from "body-parser";
 import log from "./services/LogService";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import getConnection from "./database/db";
-import dbInit from "./database/init";
+import getConnection from "@asu-etx/rl-server-lib/src/database/db";
+import dbInit from "@asu-etx/rl-server-lib/src/database/init";
 
-import { PORT, USER_INTERFACE_ROOT } from "./environment";
+import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 
 const USER_INTERFACE_PLAYER_PAGE = path.join(USER_INTERFACE_ROOT, "index.html");
 
@@ -89,7 +89,7 @@ async function start(): Promise<any> {
   await connection.synchronize(); // this creates the tables based on our entity definitions
 
   // Make sure we have our test activities
-  await dbInit();
+  await dbInit(TOOL_CONSUMERS);
 
   // Start the app
   app.listen(PORT, "0.0.0.0", () => {

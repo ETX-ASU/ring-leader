@@ -9,6 +9,15 @@ import {
   rlProcessOIDCRequest,
   getAccessToken
 } from "./util/auth";
+
+import {
+  initOidcGet,
+  initOidcPost,
+  toolInfoGet,
+  assignmentRedirectPost,
+  ltiLaunchPost
+} from "./services/ltiLaunchService";
+
 export {
   rlProcessOIDCRequest,
   getAccessToken,
@@ -18,5 +27,10 @@ export {
   Grade,
   DeepLinking,
   NamesAndRoles,
-  RlPlatform
+  RlPlatform,
+  initOidcGet,
+  initOidcPost,
+  toolInfoGet,
+  assignmentRedirectPost,
+  ltiLaunchPost
 };

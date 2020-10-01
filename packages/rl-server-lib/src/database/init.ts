@@ -1,7 +1,6 @@
 import getConnection from "./db";
 import ToolConsumer from "./entities/ToolConsumer";
-import { createToolConsumer } from "../services/ToolConsumerService";
-import { TOOL_CONSUMERS } from "../environment";
+import { createToolConsumer } from "@asu-etx/rl-server-lib/src/services/ToolConsumerService";
 
 const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
   const connection = await getConnection();
@@ -16,10 +15,10 @@ const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
 
 // because this is an in-memory database we don't have to clear the table
 // assume it is empty and simply iterate through each tool consumer and add it
-const initToolConsumers = async (): Promise<any> => {
-  console.log("sticking these tool consumers in the DB:", TOOL_CONSUMERS);
+const initToolConsumers = async (toolConsumers: ToolConsumer[]): Promise<any> => {
+  console.log("sticking these tool consumers in the DB:", toolConsumers);
 
-  TOOL_CONSUMERS.forEach(async (toolConsumerData: ToolConsumer) => {
+  toolConsumers.forEach(async (toolConsumerData: ToolConsumer) => {
     toolConsumerData.public_key_jwk = JSON.stringify(toolConsumerData.public_key_jwk) || "";
     await createToolConsumer(toolConsumerData);
   });

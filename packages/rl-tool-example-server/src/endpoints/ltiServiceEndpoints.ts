@@ -6,7 +6,6 @@ import {
   putGrade,
   getGrades
 } from "@asu-etx/rl-client-lib";
-import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
