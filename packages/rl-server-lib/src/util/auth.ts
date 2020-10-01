@@ -121,6 +121,7 @@ const rlValidateToken = (idToken: any, platform: any): any => {
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
+  return idToken;
 };
 
 const rlValidateDecodedToken = (decodedToken: any, platform: any): any => {
