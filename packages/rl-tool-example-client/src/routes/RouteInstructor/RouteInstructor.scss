@@ -2,10 +2,6 @@
     margin: 10px !important;
 }
 
-.route-instructor {
-    background-color: whitesmoke;
-}
-
 .route-instructor .sidebar-left,
 .route-instructor .form-check-label {
     padding-right: 5px !important;
@@ -13,8 +9,6 @@
 
 .route-instructor .sidebar-left {
     padding-right: 5px !important;
-    display: flex;
-    flex-flow: column;
 }
 
 .route-instructor .form-check-inline {
@@ -25,6 +19,10 @@
     border-left: 1px solid grey;
     display: flex;
     flex-flow: row !important;
+}
+
+.route-instructor .assignmentbutton {
+    margin: 2px !important;
 }
 
 .route-instructor .userprofile {

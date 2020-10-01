@@ -167,13 +167,6 @@ const RouteInstructor: React.FC = () => {
             Create Assignment
           </button>
           <br />
-          <button className="btn btn-primary" onClick={putGrades}>
-            Submit Grades
-          </button>
-          <br />
-          <button className="btn btn-primary" onClick={grades}>
-            Get Grades
-          </button>
         </div>
         <div className="col-9 details">
           {displayDiv &&
@@ -199,9 +192,7 @@ const RouteInstructor: React.FC = () => {
           {displayCreateAssignment && (
             <div className="container">
               <div className="form-group">
-                <label className="control-label col-sm-2">
-                  Assignment Title:
-                </label>
+                <label className="control-label">Assignment Title:</label>
                 <input
                   value={title}
                   onChange={(event) => {
@@ -288,6 +279,18 @@ const RouteInstructor: React.FC = () => {
                       Maximum Score: {assignment.scoreMaximum} <br /> Tag:{" "}
                       {assignment.tag}
                     </p>
+                    <button
+                      className="btn btn-primary assignmentbutton"
+                      onClick={putGrades}
+                    >
+                      Submit Grades
+                    </button>
+                    <button
+                      className="btn btn-primary assignmentbutton"
+                      onClick={grades}
+                    >
+                      Get Grades
+                    </button>
                   </div>
                 </div>
               );
