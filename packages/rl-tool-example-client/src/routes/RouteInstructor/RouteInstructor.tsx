@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
 import "./RouteInstructor.scss";
 
 const RouteInstructor: React.FC = () => {
@@ -13,6 +12,7 @@ const RouteInstructor: React.FC = () => {
   ] = useState<boolean>(false);
   const [users, setUsers] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
+  const [scores, setScores] = useState<any[]>([]);
   const [displayDiv, setDisplayDiv] = useState<boolean>(true);
   const [displayNoAssignment, setDisplayNoAssignment] = useState<boolean>(
     false
@@ -91,9 +91,10 @@ const RouteInstructor: React.FC = () => {
       .then((results) => {
         alert("Grade fetched successfully!!!");
         console.log(JSON.stringify(results.data));
+        setScores(results.data);
         setDisplayDiv(false);
         setDisplayCreateAssignment(false);
-        setdisplayAssignment(false);
+        setdisplayAssignment(true);
         setDisplayNoAssignment(false);
         setDisplayCreateAssignmentSuccess(false);
       });
@@ -306,6 +307,19 @@ const RouteInstructor: React.FC = () => {
                     >
                       Get Grades
                     </button>
+                    {courses.map((course: any) => {
+                      return (
+                        <a
+                          href="#"
+                          data-toggle="popover"
+                          title="Comment"
+                          data-content={course.comment}
+                        >
+                          {course.StudenName}
+                          <span className="badge"> {course.score}</span>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               );

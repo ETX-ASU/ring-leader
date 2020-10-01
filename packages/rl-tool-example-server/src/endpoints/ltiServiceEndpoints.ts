@@ -115,6 +115,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
     const members = req.session.members;
+
     for (const key in results[0].results) {
       console.log("key - " + JSON.stringify(key));
       const score = results[0].results[key];
@@ -126,7 +127,7 @@ const ltiServiceEndpoints = (app: Express): void => {
 
       scoreData.push({
         userId: score.userId,
-        StudenName: tooltipsData.name,
+        StudenName: tooltipsData[0].name,
         score: score.resultScore,
         comment: score.comment
       });
