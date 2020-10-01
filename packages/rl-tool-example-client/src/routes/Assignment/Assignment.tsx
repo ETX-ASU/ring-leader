@@ -6,7 +6,8 @@ import "./Assignment.scss";
 
 const Assignment: React.FC = (props: any) => {
   console.log("props - " + JSON.stringify(props));
-
+  const assignmentData = props.assignmentData;
+  const index = props.index;
   const [scores, setScores] = useState<any[]>([]);
 
   const putGrades = (assignmentId: string) => {
@@ -37,36 +38,35 @@ const Assignment: React.FC = (props: any) => {
   return (
     <div
       className="card"
-      assignment-id={props.assignmentData.id}
+      assignment-id={assignmentData.id}
       external-tool-url={
-        props.assignmentData[
-          "https://canvas.instructure.com/lti/submission_type"
-        ].external_tool_url
+        assignmentData["https://canvas.instructure.com/lti/submission_type"]
+          .external_tool_url
       }
       submission-Type={
-        props.assignment["https://canvas.instructure.com/lti/submission_type"]
+        assignmentData["https://canvas.instructure.com/lti/submission_type"]
           .type
       }
     >
-      <h5 className="card-header">Assignment - {props.index + 1}</h5>
+      <h5 className="card-header">Assignment - {index + 1}</h5>
       <div className="card-body">
-        <h5 className="card-title">{props.assignmentData.label}</h5>
+        <h5 className="card-title">{assignmentData.label}</h5>
         <p className="card-text">
           {" "}
-          Maximum Score: {props.assignmentData.scoreMaximum} <br /> Tag:{" "}
-          {props.assignmentData.tag}
+          Maximum Score: {assignmentData.scoreMaximum} <br /> Tag:{" "}
+          {assignmentData.tag}
         </p>
         <button
-          assignment-id={props.assignmentData.id}
+          assignment-id={assignmentData.id}
           className="btn btn-primary assignmentbutton"
-          onClick={() => putGrades(props.assignmentData.id)}
+          onClick={() => putGrades(assignmentData.id)}
         >
           Submit Grades
         </button>
         <button
-          assignment-id={props.assignmentData.id}
+          assignment-id={assignmentData.id}
           className="btn btn-primary assignmentbutton"
-          onClick={() => grades(props.assignmentData.id)}
+          onClick={() => grades(assignmentData.id)}
         >
           Get Grades
         </button>
