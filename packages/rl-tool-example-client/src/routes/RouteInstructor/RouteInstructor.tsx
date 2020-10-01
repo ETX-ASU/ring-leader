@@ -182,26 +182,28 @@ const RouteInstructor: React.FC = () => {
       </div>
       <div className="row">
         <div className="col">
-          {displayDiv &&
-            users.map((user, index) => {
-              return (
-                <div className="userprofile card details" key={user.user_id}>
-                  <img
-                    className="card-img-top"
-                    src={user.picture}
-                    alt="Card image cap"
-                  ></img>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      {user.name} ({user.email})
-                    </h5>
-                    <p className="card-text">
-                      Email - {user.email} <br /> Role - {radioInputValue}
-                    </p>
+          <div className="details">
+            {displayDiv &&
+              users.map((user, index) => {
+                return (
+                  <div className="userprofile card" key={user.user_id}>
+                    <img
+                      className="card-img-top"
+                      src={user.picture}
+                      alt="Card image cap"
+                    ></img>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        {user.name} ({user.email})
+                      </h5>
+                      <p className="card-text">
+                        Email - {user.email} <br /> Role - {radioInputValue}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}{" "}
+          </div>
           {displayCreateAssignment && (
             <div className=" container">
               <div className="form-group">
