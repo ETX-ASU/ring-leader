@@ -174,8 +174,6 @@ const RouteInstructor: React.FC = () => {
           <button className="btn btn-primary" onClick={getAssignment}>
             Get Assignments
           </button>
-          <br />
-          <br />
           <button className="btn btn-primary" onClick={handleCreateAssigment}>
             Create Assignment
           </button>
