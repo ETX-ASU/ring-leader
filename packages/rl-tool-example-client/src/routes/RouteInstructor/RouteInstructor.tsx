@@ -121,7 +121,6 @@ const RouteInstructor: React.FC = () => {
   return (
     <div className="route-instructor">
       <h3>
-        Instructor Route
         {courses.title && (
           <>
             <div key="index">
@@ -159,6 +158,10 @@ const RouteInstructor: React.FC = () => {
           <button className="btn btn-primary" onClick={getUsers}>
             Get Member Details
           </button>
+          <button className="btn btn-primary" onClick={getAssignment}>
+            Get Assignments
+          </button>
+          <br />
           <br />
           <button className="btn btn-primary" onClick={handleCreateAssigment}>
             Create Assignment
@@ -166,10 +169,6 @@ const RouteInstructor: React.FC = () => {
           <br />
           <button className="btn btn-primary" onClick={putGrades}>
             Submit Grades
-          </button>
-          <br />
-          <button className="btn btn-primary" onClick={getAssignment}>
-            Get Assignments
           </button>
           <br />
           <button className="btn btn-primary" onClick={grades}>
@@ -198,56 +197,51 @@ const RouteInstructor: React.FC = () => {
               );
             })}
           {displayCreateAssignment && (
-            <div>
+            <div className="container">
               <div className="form-group">
                 <label className="control-label col-sm-2">
                   Assignment Title:
                 </label>
-                <div className="col-sm-10">
-                  <input
-                    value={title}
-                    onChange={(event) => {
-                      setTitle(event.target.value);
-                    }}
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    placeholder="Enter Assignment Title"
-                    name="title"
-                  ></input>
-                </div>
+                <input
+                  value={title}
+                  onChange={(event) => {
+                    setTitle(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="title"
+                  placeholder="Enter Assignment Title"
+                  name="title"
+                ></input>
               </div>
               <div className="form-group">
-                <label className="control-label col-sm-2">Maximum Score:</label>
-                <div className="col-sm-10">
-                  <input
-                    value={maxScore}
-                    onChange={(event) => {
-                      setMaxScore(parseInt(event.target.value));
-                    }}
-                    type="number"
-                    className="form-control"
-                    id="MaximumScore"
-                    placeholder="Enter Maximum Score"
-                    name="MaximumScore"
-                  ></input>
-                </div>
+                <label className="control-label">Maximum Score:</label>
+
+                <input
+                  value={maxScore}
+                  onChange={(event) => {
+                    setMaxScore(parseInt(event.target.value));
+                  }}
+                  type="number"
+                  className="form-control"
+                  id="MaximumScore"
+                  placeholder="Enter Maximum Score"
+                  name="MaximumScore"
+                ></input>
               </div>
               <div className="form-group">
-                <label className="control-label col-sm-2">Tag:</label>
-                <div className="col-sm-10">
-                  <input
-                    value={tag}
-                    onChange={(event) => {
-                      setTag(event.target.value);
-                    }}
-                    type="text"
-                    className="form-control"
-                    id="Tag"
-                    placeholder="Enter Tag"
-                    name="Tag"
-                  ></input>
-                </div>
+                <label className="control-label">Tag:</label>
+                <input
+                  value={tag}
+                  onChange={(event) => {
+                    setTag(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="Tag"
+                  placeholder="Enter Tag"
+                  name="Tag"
+                ></input>
               </div>
 
               <div className="form-group">
@@ -273,30 +267,28 @@ const RouteInstructor: React.FC = () => {
           {displayAssignment &&
             assignments.map((assignment, index) => {
               return (
-                <div className="userprofile" key="index">
-                  <h2>Assignment - {index + 1}</h2>
-                  <ul className="li">Id: {assignment.id}</ul>
-                  <ul className="li">Label : {assignment.label}</ul>
-                  <ul className="li">
-                    Maximum Score: {assignment.scoreMaximum}
-                  </ul>
-                  <ul className="li">Tag: {assignment.tag}</ul>
-                  <ul className="li">
-                    Submission Type:{" "}
-                    {
-                      assignment[
-                        "https://canvas.instructure.com/lti/submission_type"
-                      ].type
-                    }
-                  </ul>
-                  <ul className="li">
-                    External Tool Url:
-                    {
-                      assignment[
-                        "https://canvas.instructure.com/lti/submission_type"
-                      ].external_tool_url
-                    }
-                  </ul>
+                <div
+                  className="card"
+                  external-tool-url={
+                    assignment[
+                      "https://canvas.instructure.com/lti/submission_type"
+                    ].external_tool_url
+                  }
+                  submission-Type={
+                    assignment[
+                      "https://canvas.instructure.com/lti/submission_type"
+                    ].type
+                  }
+                >
+                  <h5 className="card-header">Assignment - {index + 1}</h5>
+                  <div className="card-body">
+                    <h5 className="card-title">{assignment.label}</h5>
+                    <p className="card-text">
+                      {" "}
+                      Maximum Score: {assignment.scoreMaximum} <br /> Tag:{" "}
+                      {assignment.tag}
+                    </p>
+                  </div>
                 </div>
               );
             })}
