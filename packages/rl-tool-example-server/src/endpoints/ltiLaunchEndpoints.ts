@@ -5,7 +5,8 @@ import url from "url";
 import { inspect } from 'util';
 import {
   rlProcessOIDCRequest,
-  rlValidateToken,
+  rlValidateDecodedToken,
+  rlDecodeIdToken,
   RlPlatform
 } from "@asu-etx/rl-server-lib";
 import getConnection from "../database/db";
@@ -108,9 +109,11 @@ const ltiLaunchEndpoints = (app: Express): void => {
 
     const sessionObject = req.session;
     console.log(`request session for POST LTI_ADVANTAGE_LAUNCH_ROUTE: ${LTI_ADVANTAGE_LAUNCH_ROUTE} : ${inspect(sessionObject)} `);
-    const idToken = rlValidateToken(req, sessionObject);
 
+    const decodedToken = rlDecodeIdToken(req.body.id_token)
+    const idToken = rlValidateDecodedToken(decodedToken, sessionObject);
     const platformDetails = await getToolConsumer({ name: "", client_id: idToken["aud"], iss: idToken["iss"], deployment_id: idToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] });
+
     if (platformDetails == undefined) {
       return;
     }

@@ -110,24 +110,39 @@ const oidcValidation = (token: any, platform: any): any => {
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
-const rlValidateToken = (req: any, platform: any): any => {
+const rlValidateToken = (idToken: any, platform: any): any => {
+
+  const decodedToken = rlDecodeIdToken(idToken);
   console.log("platform.nonce-" + platform.nonce);
   console.log("platform.state-" + platform.state);
   console.log("platform.client_id-" + platform.clientId);
 
-  const idToken = req.body.id_token;
-  console.log("idToken:" + idToken);
-  const decodedtoken = jwt.decode(idToken);
-  console.log("decodedtoken:");
-  console.log(JSON.stringify(decodedtoken));
-  if (!decodedtoken) throw new Error("INVALID_JWT_RECEIVED");
-  const oidcVerified: any = oidcValidation(decodedtoken, platform);
+  const oidcVerified: any = oidcValidation(decodedToken, platform);
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
-
-  return idToken;
 };
+
+const rlValidateDecodedToken = (decodedToken: any, platform: any): any => {
+  console.log("platform.nonce-" + platform.nonce);
+  console.log("platform.state-" + platform.state);
+  console.log("platform.client_id-" + platform.clientId);
+
+  const oidcVerified: any = oidcValidation(decodedToken, platform);
+  if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
+  if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
+  if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
+};
+
+const rlDecodeIdToken = (idToken: any): any => {
+
+  console.log("idToken:" + idToken);
+  const decodedToken = jwt.decode(idToken);
+  console.log("decodedtoken:");
+  console.log(JSON.stringify(decodedToken));
+  if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
+  return decodedToken;
+}
 const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   let oidcData = req.query;
   console.log("req.method:" + req.method);
@@ -205,4 +220,4 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
 
   return access;
 };
-export { rlProcessOIDCRequest, rlValidateToken, getAccessToken };
+export { rlProcessOIDCRequest, rlValidateToken, getAccessToken, rlValidateDecodedToken, rlDecodeIdToken };
