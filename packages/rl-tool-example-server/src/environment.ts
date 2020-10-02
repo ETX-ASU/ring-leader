@@ -1,5 +1,5 @@
 import path from "path";
-import ToolConsumer from "@asu-etx/rl-server-lib/src/database/entities/ToolConsumer";
+import { ToolConsumer } from "@asu-etx/rl-server-lib";
 
 // local dev
 //import dotenv from "dotenv";

@@ -5,7 +5,7 @@ import expressSession from "express-session";
 import bodyParser from "body-parser";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import { dbInit, log } from "@asu-etx/rl-server-lib";
+import { dbInit, logger } from "@asu-etx/rl-server-lib";
 
 import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 
@@ -15,12 +15,12 @@ const USER_INTERFACE_PLAYER_PAGE = path.join(USER_INTERFACE_ROOT, "index.html");
 
 globalRequestLog.initialize();
 globalRequestLog.on("success", (request: any, response: any) => {
-  log.info({ request: request });
-  log.info({ response: response });
+  logger.info({ request: request });
+  logger.info({ response: response });
 });
 globalRequestLog.on("error", (request: any, response: any) => {
-  log.info({ request: request });
-  log.info({ response: response });
+  logger.info({ request: request });
+  logger.info({ response: response });
 });
 
 /*========================== INITIAL SERVER CONFIG ==========================*/

@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import log from "../services/LogService";
+import logger from "../services/LogService";
 
 const requestLogger = (
   req: Request,
   res: Response,
   next: NextFunction
 ): any => {
-  log.info({ url: req.url, body: req.body });
+  logger.info({ url: req.url, body: req.body });
   next();
 };
 
