@@ -1,8 +1,8 @@
 import { Express } from "express";
 
 
-import { initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "@asu-etx/rl-server-lib";
-import requestLogger from "../middleware/requestLogger";
+import { rlLtiLaunchExpressEndpoints } from "@asu-etx/rl-server-lib";
+
 import { APPLICATION_URL } from "../environment";
 
 
@@ -14,29 +14,7 @@ const LTI_STUDENT_REDIRECT = "/student"
 const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 
 const ltiLaunchEndpoints = (app: Express): void => {
-  // OIDC GET initiation
-  app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req, res) => {
-    initOidcGet(req, res);
-  });
-
-  app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req, res) => {
-    initOidcPost(req, res);
-  });
-
-  // post to accept the LMS launch with idToken
-  app.post(LTI_ADVANTAGE_LAUNCH_ROUTE, requestLogger, async (req, res) => {
-    ltiLaunchPost(req, res);
-  });
-
-  // post to accept the LMS launch with idToken
-  app.post(LTI_ASSIGNMENT_REDIRECT, requestLogger, async (req, res) => {
-    assignmentRedirectPost(req, res);
-  });
-
-  // a convenience endpoint for sharing integration info ( not recommended to do this in production )
-  app.get("/tool-info", requestLogger, async (req, res) => {
-    toolInfoGet(req, res, APPLICATION_URL);
-  });
+  rlLtiLaunchExpressEndpoints(app, APPLICATION_URL)
 };
 
 export default ltiLaunchEndpoints;

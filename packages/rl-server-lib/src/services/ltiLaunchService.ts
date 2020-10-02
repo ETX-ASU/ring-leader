@@ -9,7 +9,7 @@ import {
   rlDecodeIdToken
 } from "../util/auth";
 
-import { RlPlatform } from "../util/rlPlatform"
+import { RlPlatform } from "../util/rlPlatform";
 import { getConnection } from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import { getToolConsumer } from "../services/ToolConsumerService";

@@ -6,13 +6,17 @@ import {
   putGrade,
   getGrades
 } from "@asu-etx/rl-client-lib";
-import requestLogger from "../middleware/requestLogger";
+
+import {
+  requestLogger
+} from "@asu-etx/rl-server-lib";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls
 // can be made server side if they don't want put the Canvas idToken into a
 // cookie and send it to the client
 const ltiServiceEndpoints = (app: Express): void => {
+
   app.get("/lti-service/roster", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");

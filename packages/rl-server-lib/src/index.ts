@@ -2,7 +2,9 @@ import { Grade } from "./services/assignmentAndGradeService";
 import { DeepLinking } from "./services/DeepLinking";
 import { NamesAndRoles } from "./services/namesAndRolesService";
 import { RlPlatform } from "./util/rlPlatform";
-import { dbInit } from "./database/init"
+import { dbInit } from "./database/init";
+import requestLogger from "./middleware/requestLogger";
+import rlLtiLaunchExpressEndpoints from "./endpoints/rlLtiLaunchExpressEndpoints";
 
 import {
   rlValidateToken,
@@ -35,5 +37,7 @@ export {
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,
-  dbInit
+  dbInit,
+  requestLogger,
+  rlLtiLaunchExpressEndpoints
 };
