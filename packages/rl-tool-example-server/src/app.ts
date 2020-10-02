@@ -6,8 +6,7 @@ import bodyParser from "body-parser";
 import log from "./services/LogService";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import { getConnection } from "@asu-etx/rl-server-lib/src/database/db";
-import { dbInit } from "@asu-etx/rl-server-lib/src/database/init";
+import { dbInit } from "@asu-etx/rl-server-lib/";
 
 import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 
@@ -83,10 +82,6 @@ app.route("/assignment").get(async (req, res) => {
 async function start(): Promise<any> {
   console.log("Starting server...");
 
-  // Init DB
-  console.log("Initializing the DB");
-  const connection = await getConnection();
-  await connection.synchronize(); // this creates the tables based on our entity definitions
 
   // Make sure we have our test activities
   await dbInit(TOOL_CONSUMERS, null);

@@ -26,8 +26,12 @@ const initToolConsumers = async (toolConsumers: ToolConsumer[]): Promise<any> =>
 };
 
 const dbInit = async (toolConsumers: ToolConsumer[], options: any): Promise<any> => {
+  // Init DB
+  console.log("Initializing the DB");
+  const connection = await getConnection();
+  await connection.synchronize(); // this creates the tables based on our entity definitions
   await createConnectionFromConfig(options);
   initToolConsumers(toolConsumers);
 }
 
-export { dbInit };
+export { dbInit, ensureToolConsumer };

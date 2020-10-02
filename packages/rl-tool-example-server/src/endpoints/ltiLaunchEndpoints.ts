@@ -1,25 +1,17 @@
 import { Express } from "express";
 
 
-import { ToolConsumer, initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "@asu-etx/rl-server-lib";
+import { initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "@asu-etx/rl-server-lib";
 import requestLogger from "../middleware/requestLogger";
 import { APPLICATION_URL } from "../environment";
-import { getConnection } from "@asu-etx/rl-server-lib/src/database/db";
 
-
-const getToolConsumers = async (): Promise<ToolConsumer[]> => {
-  const connection = await getConnection();
-  const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  const toolConsumers = await toolConsumerRepository.find();
-  return toolConsumers;
-};
 
 const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
-const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 const LTI_ASSIGNMENT_REDIRECT = "/assignment";
-const LTI_STUDENT_REDIRECT = "/student";
 
+const LTI_STUDENT_REDIRECT = "/student"
+const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
