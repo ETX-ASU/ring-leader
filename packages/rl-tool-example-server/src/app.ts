@@ -3,10 +3,9 @@ import globalRequestLog from "global-request-logger";
 import express from "express";
 import expressSession from "express-session";
 import bodyParser from "body-parser";
-import log from "@asu-etx/rl-server-lib/src/services/LogService";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import { dbInit } from "@asu-etx/rl-server-lib";
+import { dbInit, log } from "@asu-etx/rl-server-lib";
 
 import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 

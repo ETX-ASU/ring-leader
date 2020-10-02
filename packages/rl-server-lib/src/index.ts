@@ -5,6 +5,7 @@ import { RlPlatform } from "./util/rlPlatform";
 import { dbInit } from "./database/init";
 import requestLogger from "./middleware/requestLogger";
 import rlLtiLaunchExpressEndpoints from "./endpoints/rlLtiLaunchExpressEndpoints";
+import log from "./services/LogService";
 
 import {
   rlValidateToken,
@@ -39,5 +40,6 @@ export {
   ltiLaunchPost,
   dbInit,
   requestLogger,
-  rlLtiLaunchExpressEndpoints
+  rlLtiLaunchExpressEndpoints,
+  log
 };
