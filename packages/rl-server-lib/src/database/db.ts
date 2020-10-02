@@ -8,7 +8,7 @@ import {
 
 let connectionCreationPromise: any = false;
 
-const getConnection = (): Promise<Connection> => {
+const getConnection = async (): Promise<Connection> => {
   if (connectionCreationPromise === false) {
     console.log("creating connection")
     connectionCreationPromise = createConnection({
@@ -24,14 +24,12 @@ const getConnection = (): Promise<Connection> => {
   return connectionCreationPromise.then(() => {
     return getTypeOrmConnection();
   });
-};
-
-const createConnectionFromConfig = (options: any): Promise<Connection> => {
+}
+const createConnectionFromConfig = async (options: any): Promise<Connection> => {
   if (options == null || options == undefined) {
     return getConnection();
   }
   return getConnection();
 }
-
 
 export { getConnection, createConnectionFromConfig };

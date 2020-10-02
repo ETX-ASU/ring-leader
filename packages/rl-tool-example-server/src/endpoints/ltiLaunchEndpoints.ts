@@ -1,9 +1,10 @@
 import { Express } from "express";
 
 
-import { ToolConsumer, getConnection, initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "@asu-etx/rl-server-lib";
+import { ToolConsumer, initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "@asu-etx/rl-server-lib";
 import requestLogger from "../middleware/requestLogger";
 import { APPLICATION_URL } from "../environment";
+import { getConnection } from "@asu-etx/rl-server-lib/src/database/db";
 
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {

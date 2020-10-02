@@ -2,6 +2,7 @@ import { getConnection, createConnectionFromConfig } from "./db";
 import ToolConsumer from "./entities/ToolConsumer";
 import { createToolConsumer } from "../services/ToolConsumerService";
 
+
 const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
   const connection = await getConnection();
   const toolConsumerRepository = connection.getRepository(ToolConsumer);
@@ -24,9 +25,9 @@ const initToolConsumers = async (toolConsumers: ToolConsumer[]): Promise<any> =>
   });
 };
 
-const dbInit = (toolConsumers: ToolConsumer[], options: any): void => {
-  createConnectionFromConfig(options);
+const dbInit = async (toolConsumers: ToolConsumer[], options: any): Promise<any> => {
+  await createConnectionFromConfig(options);
   initToolConsumers(toolConsumers);
 }
 
-export { dbInit, initToolConsumers, ensureToolConsumer };
+export { dbInit };

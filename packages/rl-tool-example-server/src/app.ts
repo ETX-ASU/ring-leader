@@ -6,8 +6,8 @@ import bodyParser from "body-parser";
 import log from "./services/LogService";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import getConnection from "@asu-etx/rl-server-lib";
-import dbInit from "@asu-etx/rl-server-lib";
+import { getConnection } from "@asu-etx/rl-server-lib/src/database/db";
+import { dbInit } from "@asu-etx/rl-server-lib/src/database/init";
 
 import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 

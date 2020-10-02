@@ -14,7 +14,6 @@ import { getConnection } from "@asu-etx/rl-server-lib/src/database/db";
 import ToolConsumer from "@asu-etx/rl-server-lib/src/database/entities/ToolConsumer";
 import { getToolConsumer } from "@asu-etx/rl-server-lib/src/services/ToolConsumerService";
 import { generateUniqueString } from "../util/generateUniqueString";
-import ToolConsumerRequest from "@asu-etx/rl-server-lib/src/database/entities/ToolConsumerRequest";
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {
   const connection = await getConnection();
