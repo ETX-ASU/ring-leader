@@ -52,7 +52,7 @@ const Assignment: React.FC = (props: any) => {
         }
       })
       .then((results) => {
-        console.log(JSON.stringify(results.data));
+        console.log("getUnAssignedStudets-" + JSON.stringify(results.data));
         setUnAssignedStudents(results.data);
         setDisplayUnAssignedStudents(true);
         setDisplayGrade(false);
