@@ -220,10 +220,10 @@ class Grade {
           scoreUrl = url + "/scores?" + query;
         }
 
-        // if (options && options.userId) score.userId = options.userId;
-        //  else score.userId = platform.user; //Need to work on this property
+        if (options && options.userId) score.userId = options.userId;
+        else score.userId = platform.userId;
         score.timestamp = new Date(Date.now()).toISOString();
-        // score.scoreMaximum = lineitem.scoreMaximum;
+        score.scoreMaximum = lineitem.scoreMaximum;
         console.log(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
         );
