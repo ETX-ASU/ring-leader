@@ -120,8 +120,11 @@ const ltiServiceEndpoints = (app: Express): void => {
     const scoreData = req.query;
     console.log("createassignment - platform - " + platform);
     const options = {
-      id: scoreData.assignmentId
+      id: scoreData.assignmentId,
+      userId: scoreData.userId
     };
+    console.log("scoreData - " + JSON.stringify(scoreData));
+
     const results = await putGrade(
       platform,
       {
