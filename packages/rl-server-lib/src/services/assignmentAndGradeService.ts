@@ -293,10 +293,7 @@ class Grade {
         limit = options.limit;
         options.limit = false;
       }
-    } else
-      options = {
-        resourceLinkId: true
-      };
+    }
 
     const lineItems = await this.getLineItems(platform, options, accessToken);
     console.log("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
@@ -338,9 +335,7 @@ class Grade {
             }
           })
           .json();
-        console.log(
-          "Inside GetGrades - searchParams - " + JSON.stringify(results)
-        );
+        console.log("Inside GetGrades - results - " + JSON.stringify(results));
         resultsArray.push({
           lineitem: lineitem.id,
           results: results

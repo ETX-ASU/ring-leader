@@ -21,18 +21,24 @@ const Assignment: React.FC = (props: any) => {
   >(false);
   const [displayCreateScore, setDisplayCreateScore] = useState<boolean>(false);
   const [displayGrade, setDisplayGrade] = useState<boolean>(false);
+  const [selectValue, setSelectValue] = useState<string>(
+    "fa8fde11-43df-4328-9939-58b56309d20d"
+  );
+
   const showSubmitGrade = () => {
     setDisplayGrade(false);
     setDisplayCreateScore(true);
     setDisplayCreateScoreSuccess(false);
     setDisplayUnAssignedStudents(false);
   };
+
   const putGrades = (assignmentId: string) => {
     axios
       .get("/lti-service/putgrades", {
         params: {
           assignmentId: assignmentId,
-          grade: grade
+          grade: grade,
+          userId: selectValue
         }
       })
       .then((results) => {
@@ -160,6 +166,24 @@ const Assignment: React.FC = (props: any) => {
             <div className="container">
               <div className="form-group">
                 <label className="control-label">Enter Student's Grade:</label>
+
+                <label>Select Student:</label>
+                <select
+                  value={selectValue}
+                  onChange={(event) => {
+                    setSelectValue(event.target.value);
+                  }}
+                  className="form-control"
+                  id="sel"
+                >
+                  <option value="fa8fde11-43df-4328-9939-58b56309d20d">
+                    Devesh Tiwari Student A
+                  </option>
+                  <option value="50681b1d-72ce-4102-94d6-dc586f9ba43f">
+                    Devesh Tiwari Student B
+                  </option>
+                </select>
+
                 <input
                   value={grade}
                   onChange={(event) => {

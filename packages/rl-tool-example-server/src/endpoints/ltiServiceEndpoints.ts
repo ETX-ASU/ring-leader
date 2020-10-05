@@ -131,7 +131,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         comment: "This is exceptional work.",
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
-        userId: "fa8fde11-43df-4328-9939-58b56309d20d"
+        userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
       },
       options
     );
@@ -151,6 +151,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     }));
     const scoreData = [];
     console.log("req.session.members - " + JSON.stringify(req.session.members));
+    console.log(" results - " + JSON.stringify(results));
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
     const members = req.session.members;
