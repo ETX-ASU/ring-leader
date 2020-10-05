@@ -143,8 +143,11 @@ const Assignment: React.FC = (props: any) => {
             return (
               <div className="container">
                 <div className="form-group">
-                  <h5>Student not assigned to this assignment:</h5>
-
+                  (
+                  {index == 0 && (
+                    <h5>Student not assigned to this assignment:</h5>
+                  )}
+                  )
                   <a href="#">
                     {index + 1}) {student.StudenName}
                   </a>
