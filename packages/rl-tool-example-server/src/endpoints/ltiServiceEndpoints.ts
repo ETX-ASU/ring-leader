@@ -73,7 +73,6 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
-
   app.get(
     "/lti-service/getunassignedstudets",
     requestLogger,
@@ -109,13 +108,18 @@ const ltiServiceEndpoints = (app: Express): void => {
       res.send(scoreData);
     }
   );
-
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
     const scoreData = req.query;
+    if (!scoreData.assignmentId) {
+      scoreData.assignmentId = req.session.assignmentId;
+    }
+    if (!scoreData.userId) {
+      scoreData.userId = platform.userId;
+    }
     console.log("createassignment - platform - " + platform);
     const options = {
       id: scoreData.assignmentId,

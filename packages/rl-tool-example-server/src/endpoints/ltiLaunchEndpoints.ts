@@ -126,7 +126,11 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
-
+    req.session.assignmentId = req.query.resourceId;
+    console.log("req.session.assignmentId- " + JSON.stringify(req.session));
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
     res.redirect(
       LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + req.query.resourceId
     );

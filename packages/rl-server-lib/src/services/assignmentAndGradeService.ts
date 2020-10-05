@@ -222,6 +222,9 @@ class Grade {
 
         if (options && options.userId) score.userId = options.userId;
         else score.userId = platform.userId;
+
+        console.log("score.userId - " + score.userId);
+
         score.timestamp = new Date(Date.now()).toISOString();
         score.scoreMaximum = lineitem.scoreMaximum;
         console.log(
