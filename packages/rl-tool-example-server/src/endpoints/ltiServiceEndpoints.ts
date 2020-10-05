@@ -118,6 +118,9 @@ const ltiServiceEndpoints = (app: Express): void => {
         throw new Error("no session detected, something is wrong");
       }
       const platform: any = req.session.platform;
+      console.log(
+        "putGradesStudentView -platform - " + JSON.stringify(req.session)
+      );
       const scoreData = req.query;
       console.log(
         "putGradesStudentView -req.session - " + JSON.stringify(req.session)
