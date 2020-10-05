@@ -89,10 +89,12 @@ const ltiServiceEndpoints = (app: Express): void => {
         resourceLinkId: false
       }));
       const members = req.session.members;
-      for (const key in results[0].results) {
-        const score = results[0].results[key];
-        const tooltipsData = members.filter(function (member: any) {
-          return member.user_id != score.userId;
+      console.log("members - " + JSON.stringify(members));
+      console.log("results[0].results - " + JSON.stringify(results[0].results));
+      for (const key in members) {
+        const score = members[key];
+        const tooltipsData = results[0].results.filter(function (member: any) {
+          return member.userId != score.user_id;
         });
         console.log("tooltipsData - " + JSON.stringify(tooltipsData));
 

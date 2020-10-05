@@ -139,15 +139,15 @@ const Assignment: React.FC = (props: any) => {
             );
           })}
         {displayUnAssignedStudents &&
-          unAssignedStudents.map((student: any) => {
+          unAssignedStudents.map((student: any, index: number) => {
             return (
               <div className="container">
                 <div className="form-group">
-                  <label className="control-label">
-                    Student not assigned to this assignment:
-                  </label>
-                  <br></br>
-                  <a href="#">{student.StudenName}</a>;
+                  <h5>Student not assigned to this assignment:</h5>
+
+                  <a href="#">
+                    {index + 1}) {student.StudenName}
+                  </a>
                 </div>
               </div>
             );
