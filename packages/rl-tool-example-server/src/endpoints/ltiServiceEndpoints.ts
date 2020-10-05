@@ -29,7 +29,6 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
-
   app.get("/lti-service/assignments", requestLogger, (req, res) => {
     res.send("");
   });
