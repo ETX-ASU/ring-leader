@@ -141,6 +141,7 @@ const Assignment: React.FC = (props: any) => {
                 <span className="badge">
                   {course.score ? course.score : "Not Graded"}
                 </span>
+                <br />
               </a>
             );
           })}
@@ -149,13 +150,11 @@ const Assignment: React.FC = (props: any) => {
             return (
               <div className="container">
                 <div className="form-group">
-                  (
                   {index == 0 && (
                     <h5>Student not assigned to this assignment:</h5>
                   )}
-                  )
                   <a href="#">
-                    {index + 1}) {student.StudenName}
+                    {index + 1} {student.StudenName}
                   </a>
                 </div>
               </div>

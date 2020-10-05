@@ -94,13 +94,11 @@ const ltiServiceEndpoints = (app: Express): void => {
       for (const key in members) {
         const score = members[key];
         console.log("score-" + JSON.stringify(score));
-        console.log("key-" + JSON.stringify(key));
-
         const tooltipsData = results[0].results.filter(function (member: any) {
-          return member.userId != score.user_id;
+          return member.userId == score.user_id;
         });
         console.log("tooltipsData - " + JSON.stringify(tooltipsData));
-        if (tooltipsData.length > 0)
+        if (tooltipsData.length <= 0)
           scoreData.push({
             userId: score.userId,
             StudenName: score.name
