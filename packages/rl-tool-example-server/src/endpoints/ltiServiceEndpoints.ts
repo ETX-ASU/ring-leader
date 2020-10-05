@@ -73,6 +73,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
+
   app.get(
     "/lti-service/getunassignedstudets",
     requestLogger,
@@ -93,6 +94,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       for (const key in members) {
         const score = members[key];
         console.log("score-" + JSON.stringify(score));
+
         const tooltipsData = results[0].results.filter(function (member: any) {
           return member.userId == score.user_id;
         });
@@ -108,18 +110,53 @@ const ltiServiceEndpoints = (app: Express): void => {
       res.send(scoreData);
     }
   );
+  app.get(
+    "/lti-service/putGradesStudentView",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const platform: any = req.session.platform;
+      const scoreData = req.query;
+      console.log(
+        "putGradesStudentView -req.session - " + JSON.stringify(req.session)
+      );
+
+      scoreData.assignmentId = req.session.assignmentId;
+      scoreData.userId = platform.userId;
+      scoreData.grade = scoreData.grade;
+
+      console.log("createassignment - platform - " + platform);
+      const options = {
+        id: scoreData.assignmentId,
+        userId: scoreData.userId
+      };
+      console.log("scoreData - " + JSON.stringify(scoreData));
+
+      const results = await putGrade(
+        platform,
+        {
+          timestamp: "2020-10-05T18:54:36.736+00:00",
+          scoreGiven: scoreData.grade,
+          scoreMaximum: 100,
+          comment: "This is exceptional work.",
+          activityProgress: "Completed",
+          gradingProgress: "FullyGraded",
+          userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
+        },
+        options
+      );
+
+      res.send(results);
+    }
+  );
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
     const scoreData = req.query;
-    if (!scoreData.assignmentId) {
-      scoreData.assignmentId = req.session.assignmentId;
-    }
-    if (!scoreData.userId) {
-      scoreData.userId = platform.userId;
-    }
     console.log("createassignment - platform - " + platform);
     const options = {
       id: scoreData.assignmentId,
