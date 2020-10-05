@@ -73,6 +73,38 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
+
+  app.get(
+    "/lti-service/getunassignedstudets",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const scoreData = [];
+      const platform: any = req.session.platform;
+      console.log("getunassignedstudets - platform - " + platform);
+      const results: any = ([] = await getGrades(platform, {
+        id: req.query.assignmentId,
+        resourceLinkId: false
+      }));
+      const members = req.session.members;
+      for (const key in results[0].results) {
+        const score = results[0].results[key];
+        const tooltipsData = members.filter(function (member: any) {
+          return member.user_id != score.userId;
+        });
+        console.log("tooltipsData - " + JSON.stringify(tooltipsData));
+
+        scoreData.push({
+          userId: score.userId,
+          StudenName: tooltipsData[0].name
+        });
+      }
+      res.send(scoreData);
+    }
+  );
+
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
