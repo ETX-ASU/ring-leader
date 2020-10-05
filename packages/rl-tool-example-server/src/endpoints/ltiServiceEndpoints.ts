@@ -127,7 +127,9 @@ const ltiServiceEndpoints = (app: Express): void => {
       scoreData.userId = platform.userId;
       scoreData.grade = scoreData.grade;
 
-      console.log("createassignment - platform - " + platform);
+      console.log(
+        "putGradesStudentView - platform - " + JSON.stringify(platform)
+      );
       const options = {
         id: scoreData.assignmentId,
         userId: scoreData.userId

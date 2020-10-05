@@ -13,7 +13,7 @@ const RouteAssignment: React.FC = () => {
   ] = useState<boolean>(false);
   const submitGrade = () => {
     axios
-      .get("/lti-service/putgrades", {
+      .get("/lti-service/putGradesStudentView", {
         params: {
           grade: 81
         }
