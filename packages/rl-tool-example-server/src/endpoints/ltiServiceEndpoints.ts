@@ -97,11 +97,11 @@ const ltiServiceEndpoints = (app: Express): void => {
           return member.userId != score.user_id;
         });
         console.log("tooltipsData - " + JSON.stringify(tooltipsData));
-
-        scoreData.push({
-          userId: score.userId,
-          StudenName: tooltipsData[0].name
-        });
+        if (tooltipsData.length > 0)
+          scoreData.push({
+            userId: score.userId,
+            StudenName: tooltipsData[0].name
+          });
       }
       res.send(scoreData);
     }
