@@ -16,10 +16,23 @@ const setDefaultValues = (token: any): any => {
     exp: token.exp,
     clientId: token.client_id,
     userId: token.sub,
-    lineitems:
-      token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitems,
-    resourceLinkId:
-      token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+    lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
+      ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
+          .lineitems
+      : null,
+    resourceLinkId: token[
+      "https://purl.imsglobal.org/spec/lti/claim/resource_link"
+    ]
+      ? token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+      : null,
+    deepLinkingSettings: {
+      deep_link_return_url:
+        token[
+          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings" ||
+            null
+        ],
+      data: token["https://purl.imsglobal.org/spec/lti-dl/claim/data"] || null
+    }
   };
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
