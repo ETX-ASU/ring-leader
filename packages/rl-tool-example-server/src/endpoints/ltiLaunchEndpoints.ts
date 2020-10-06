@@ -23,6 +23,7 @@ const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 const LTI_ASSIGNMENT_REDIRECT = "/assignment";
+const LTI_DEEPLINK_REDIRECT = "/deeplink";
 const LTI_STUDENT_REDIRECT = "/student";
 
 const plateformDetails = {
@@ -126,23 +127,6 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
-    const sessionObject = req.session;
-    const idToken = rlValidateToken(req, sessionObject);
-
-    const rlPlatform = RlPlatform(
-      plateformDetails.platformPulicKey,
-      plateformDetails.plateformOIDCAuthEndPoint,
-      plateformDetails.platformAccessTokenEndpoint,
-      plateformDetails.keyid,
-      plateformDetails.alg,
-      idToken
-    );
-
-    req.session.platform = rlPlatform;
-    console.log("req.session.platform - " + JSON.stringify(rlPlatform));
-    await req.session.save(() => {
-      console.log("session data saved");
-    });
 
     req.session.assignmentId = req.query.resourceId;
     console.log("req.session- " + JSON.stringify(req.session));
@@ -156,6 +140,14 @@ const ltiLaunchEndpoints = (app: Express): void => {
         "&resourceId=" +
         req.query.resourceId
     );
+  });
+
+  // post to accept the LMS launch with idToken
+  app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    res.redirect(LTI_DEEPLINK_REDIRECT);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
