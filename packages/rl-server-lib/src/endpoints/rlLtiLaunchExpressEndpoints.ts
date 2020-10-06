@@ -9,7 +9,12 @@ import requestLogger from "../middleware/requestLogger";
 const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 const LTI_ASSIGNMENT_REDIRECT = "/assignment";
-
+/**
+   * @description Creates a set of endpoints to support LTI1.3 launch given an Express application.
+   * @param {Object} app - the express application that needs to bind endpoints.
+   * @param {String} applicationUrl - application url.
+   * 
+**/
 const rlLtiLaunchExpressEndpoints = (app: Express, applicationUrl: String): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req, res) => {
