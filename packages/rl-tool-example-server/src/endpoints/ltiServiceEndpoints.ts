@@ -4,7 +4,8 @@ import {
   createLineItem,
   getLineItems,
   putGrade,
-  getGrades
+  getGrades,
+  createDeepLinkingForm
 } from "@asu-etx/rl-client-lib";
 import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
@@ -111,7 +112,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     }
   );
   app.get(
-    "/lti-service/putGradesStudentView",
+    "/lti-service/putGradesStudentViewOld",
     requestLogger,
     async (req, res) => {
       if (!req.session) {
@@ -154,6 +155,49 @@ const ltiServiceEndpoints = (app: Express): void => {
       );
 
       res.send(results);
+    }
+  );
+  app.get(
+    "/lti-service/putGradesStudentView",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const platform: any = req.session.platform;
+      console.log(
+        "putGradesStudentView -platform - " + JSON.stringify(req.session)
+      );
+      const scoreData = req.query;
+      console.log(
+        "putGradesStudentView -req.session - " + JSON.stringify(req.session)
+      );
+
+      scoreData.assignmentId = req.session.assignmentId;
+      scoreData.userId = platform.userId;
+      scoreData.grade = scoreData.grade;
+
+      console.log(
+        "putGradesStudentView - platform - " + JSON.stringify(platform)
+      );
+      const items = [
+        {
+          type: "ltiResourceLink",
+          title: "test",
+          custom: {
+            resourceurl:
+              "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
+            resourcename: "Assignment Resource Id - 76"
+          }
+        }
+      ];
+
+      // Creates the deep linking request form
+      const form = await createDeepLinkingForm(res.locals.token, items, {
+        message: "Successfully registered resource!"
+      });
+
+      return res.send(form);
     }
   );
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
