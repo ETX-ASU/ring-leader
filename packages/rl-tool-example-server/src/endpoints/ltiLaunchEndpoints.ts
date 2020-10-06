@@ -135,7 +135,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       LTI_ASSIGNMENT_REDIRECT +
         "?resource_link_id=" +
         req.body.resource_link_id +
-        "resourceId=" +
+        "&resourceId=" +
         req.query.resourceId
     );
   });
