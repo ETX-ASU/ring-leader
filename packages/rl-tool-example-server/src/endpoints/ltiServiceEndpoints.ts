@@ -185,7 +185,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       ];
 
       // Creates the deep linking request form
-      const form = await createDeepLinkingForm(res.locals.token, items, {
+      const form = await createDeepLinkingForm(platform, items, {
         message: "Successfully registered resource!"
       });
 
