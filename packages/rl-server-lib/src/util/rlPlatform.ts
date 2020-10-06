@@ -69,6 +69,7 @@ const RlPlatform = (
     platformPrivateKey: platformPrivateKey,
     idToken: idToken,
     alg: alg,
+    deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.UserId,
     roles: [
       {
