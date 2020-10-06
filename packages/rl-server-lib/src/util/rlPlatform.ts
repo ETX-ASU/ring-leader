@@ -27,11 +27,8 @@ const setDefaultValues = (token: any): any => {
       : null,
     deepLinkingSettings: {
       deep_link_return_url:
-        token[
-          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings" ||
-            null
-        ],
-      data: token["https://purl.imsglobal.org/spec/lti-dl/claim/data"] || null
+        token.deepLinkingSettings.deep_link_return_url || null,
+      data: token.data || null
     }
   };
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
