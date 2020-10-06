@@ -2,6 +2,12 @@ import jwt from "jsonwebtoken";
 
 const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
+  console.log(
+    "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings" +
+      token[
+        "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+      ]
+  );
 
   const tokenData = {
     jti: encodeURIComponent(
@@ -16,10 +22,26 @@ const setDefaultValues = (token: any): any => {
     exp: token.exp,
     clientId: token.aud,
     userId: token.sub,
-    lineitems:
-      token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitems,
-    resourceLinkId:
-      token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+    lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
+      ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
+          .lineitems
+      : null,
+    resourceLinkId: token[
+      "https://purl.imsglobal.org/spec/lti/claim/resource_link"
+    ]
+      ? token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+      : null,
+    deepLinkingSettings: {
+      deep_link_return_url:
+        token[
+          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+        ].deep_link_return_url || null,
+      data: token.data || null,
+      accept_types:
+        token[
+          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+        ].accept_types
+    }
   };
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
@@ -52,6 +74,7 @@ const RlPlatform = (
     platformPrivateKey: platformPrivateKey,
     idToken: idToken,
     alg: alg,
+    deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.UserId,
     roles: [
       {

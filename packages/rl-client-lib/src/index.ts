@@ -1,4 +1,34 @@
-import { NamesAndRoles, RlPlatform, Grade } from "@asu-etx/rl-server-lib";
+import {
+  NamesAndRoles,
+  RlPlatform,
+  Grade,
+  DeepLinking
+} from "@asu-etx/rl-server-lib";
+
+const createDeepLinkingMessage = (
+  platform: any,
+  contentItems: any,
+  options?: any
+): any => {
+  return new DeepLinking().createDeepLinkingMessage(
+    platform,
+    contentItems,
+    options
+  );
+};
+
+const createDeepLinkingForm = (
+  platform: any,
+  contentItems: any,
+  options?: any
+): any => {
+  return new DeepLinking().createDeepLinkingForm(
+    platform,
+    contentItems,
+    options
+  );
+};
+
 const getUsers = (platform: any, options?: any): any => {
   return new NamesAndRoles().getMembers(platform, options);
 };
@@ -24,5 +54,7 @@ export {
   getGrades,
   putGrade,
   createLineItem,
-  getLineItems
+  getLineItems,
+  createDeepLinkingMessage,
+  createDeepLinkingForm
 };

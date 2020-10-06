@@ -4,7 +4,8 @@ import {
   createLineItem,
   getLineItems,
   putGrade,
-  getGrades
+  getGrades,
+  createDeepLinkingForm
 } from "@asu-etx/rl-client-lib";
 
 import {
@@ -32,7 +33,6 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
-
   app.get("/lti-service/assignments", requestLogger, (req, res) => {
     res.send("");
   });
@@ -75,6 +75,125 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
+
+  app.get(
+    "/lti-service/getunassignedstudets",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const scoreData = [];
+      const platform: any = req.session.platform;
+      console.log("getunassignedstudets - platform - " + platform);
+      const results: any = ([] = await getGrades(platform, {
+        id: req.query.assignmentId,
+        resourceLinkId: false
+      }));
+      const members = req.session.members;
+      console.log("members - " + JSON.stringify(members));
+      console.log("results[0].results - " + JSON.stringify(results[0].results));
+      for (const key in members) {
+        const score = members[key];
+        console.log("score-" + JSON.stringify(score));
+
+        const tooltipsData = results[0].results.filter(function (member: any) {
+          return member.userId == score.user_id;
+        });
+        console.log("tooltipsData - " + JSON.stringify(tooltipsData));
+        if (tooltipsData.length <= 0)
+          scoreData.push({
+            userId: score.userId,
+            StudenName: score.name
+          });
+      }
+      console.log("scoreData-" + JSON.stringify(scoreData));
+
+      res.send(scoreData);
+    }
+  );
+  app.get(
+    "/lti-service/putGradesStudentView",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const platform: any = req.session.platform;
+      console.log(
+        "putGradesStudentView -platform - " + JSON.stringify(req.session)
+      );
+      const scoreData = req.query;
+      console.log(
+        "putGradesStudentView -req.session - " + JSON.stringify(req.session)
+      );
+
+      scoreData.assignmentId = req.session.assignmentId;
+      scoreData.userId = platform.userId;
+      scoreData.grade = scoreData.grade;
+
+      console.log(
+        "putGradesStudentView - platform - " + JSON.stringify(platform)
+      );
+      const options = {
+        id: scoreData.assignmentId,
+        userId: scoreData.userId
+      };
+      console.log("scoreData - " + JSON.stringify(scoreData));
+
+      const results = await putGrade(
+        platform,
+        {
+          timestamp: "2020-10-05T18:54:36.736+00:00",
+          scoreGiven: scoreData.grade,
+          scoreMaximum: 100,
+          comment: "This is exceptional work.",
+          activityProgress: "Completed",
+          gradingProgress: "FullyGraded",
+          userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
+        },
+        options
+      );
+
+      res.send(results);
+    }
+  );
+  app.post("/lti-service/deeplink", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+
+    console.log("deeplink - platform - " + JSON.stringify(platform));
+    const items = [
+      {
+        type: "ltiResourceLink",
+        title: "test DeepLink",
+        lineItem: {
+          scoreMaximum: 100,
+          label: "Chapter 12 quiz",
+          resourceId: "xyzpdq1234",
+          tag: "originality"
+        },
+        available: {
+          startDateTime: "2020-10-06T20:05:02Z",
+          endDateTime: "2020-10-30T20:05:02Z"
+        },
+        custom: {
+          resourceurl:
+            "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
+          resourcename: "Assignment Resource Id - 76"
+        }
+      }
+    ];
+
+    // Creates the deep linking request form
+    const form = await createDeepLinkingForm(platform, items, {
+      message: "Successfully registered resource!"
+    });
+
+    return res.send(form);
+  });
   app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
@@ -83,8 +202,11 @@ const ltiServiceEndpoints = (app: Express): void => {
     const scoreData = req.query;
     console.log("createassignment - platform - " + platform);
     const options = {
-      id: scoreData.assignmentId
+      id: scoreData.assignmentId,
+      userId: scoreData.userId
     };
+    console.log("scoreData - " + JSON.stringify(scoreData));
+
     const results = await putGrade(
       platform,
       {
@@ -94,7 +216,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         comment: "This is exceptional work.",
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
-        userId: "fa8fde11-43df-4328-9939-58b56309d20d"
+        userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
       },
       options
     );
@@ -114,6 +236,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     }));
     const scoreData = [];
     console.log("req.session.members - " + JSON.stringify(req.session.members));
+    console.log(" results - " + JSON.stringify(results));
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
     const members = req.session.members;

@@ -223,10 +223,13 @@ class Grade {
           scoreUrl = url + "/scores?" + query;
         }
 
-        // if (options && options.userId) score.userId = options.userId;
-        //  else score.userId = platform.user; //Need to work on this property
+        if (options && options.userId) score.userId = options.userId;
+        else score.userId = platform.userId;
+
+        console.log("score.userId - " + score.userId);
+
         score.timestamp = new Date(Date.now()).toISOString();
-        // score.scoreMaximum = lineitem.scoreMaximum;
+        score.scoreMaximum = lineitem.scoreMaximum;
         console.log(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
         );
@@ -296,10 +299,7 @@ class Grade {
         limit = options.limit;
         options.limit = false;
       }
-    } else
-      options = {
-        resourceLinkId: true
-      };
+    }
 
     const lineItems = await this.getLineItems(platform, options, accessToken);
     console.log("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
@@ -341,9 +341,7 @@ class Grade {
             }
           })
           .json();
-        console.log(
-          "Inside GetGrades - searchParams - " + JSON.stringify(results)
-        );
+        console.log("Inside GetGrades - results - " + JSON.stringify(results));
         resultsArray.push({
           lineitem: lineitem.id,
           results: results

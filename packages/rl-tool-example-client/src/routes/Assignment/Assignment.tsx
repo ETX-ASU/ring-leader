@@ -10,23 +10,35 @@ const Assignment: React.FC = (props: any) => {
   console.log("assignmentData id- " + assignmentData.id);
   console.log("index - " + index);
   const [scores, setScores] = useState<any[]>([]);
+  const [unAssignedStudents, setUnAssignedStudents] = useState<any[]>([]);
   const [grade, setGrade] = useState<number>();
   const [displayCreateScoreSuccess, setDisplayCreateScoreSuccess] = useState<
     boolean
   >(false);
+
+  const [displayUnAssignedStudents, setDisplayUnAssignedStudents] = useState<
+    boolean
+  >(false);
   const [displayCreateScore, setDisplayCreateScore] = useState<boolean>(false);
   const [displayGrade, setDisplayGrade] = useState<boolean>(false);
+  const [selectValue, setSelectValue] = useState<string>(
+    "fa8fde11-43df-4328-9939-58b56309d20d"
+  );
+
   const showSubmitGrade = () => {
     setDisplayGrade(false);
     setDisplayCreateScore(true);
     setDisplayCreateScoreSuccess(false);
+    setDisplayUnAssignedStudents(false);
   };
+
   const putGrades = (assignmentId: string) => {
     axios
       .get("/lti-service/putgrades", {
         params: {
           assignmentId: assignmentId,
-          grade: grade
+          grade: grade,
+          userId: selectValue
         }
       })
       .then((results) => {
@@ -34,9 +46,26 @@ const Assignment: React.FC = (props: any) => {
         console.log(JSON.stringify(results.data));
         setDisplayGrade(false);
         setDisplayCreateScore(false);
+        setDisplayUnAssignedStudents(false);
       });
   };
 
+  const getUnAssignedStudets = (assignmentId: string) => {
+    axios
+      .get("/lti-service/getunassignedstudets", {
+        params: {
+          assignmentId: assignmentId
+        }
+      })
+      .then((results) => {
+        console.log("getUnAssignedStudets-" + JSON.stringify(results.data));
+        setUnAssignedStudents(results.data);
+        setDisplayUnAssignedStudents(true);
+        setDisplayGrade(false);
+        setDisplayCreateScore(false);
+        setDisplayCreateScoreSuccess(false);
+      });
+  };
   const grades = (assignmentId: string) => {
     axios
       .get("/lti-service/grades", {
@@ -48,6 +77,7 @@ const Assignment: React.FC = (props: any) => {
         console.log(JSON.stringify(results.data));
         setScores(results.data);
         setDisplayGrade(true);
+        setDisplayUnAssignedStudents(false);
         setDisplayCreateScore(false);
         setDisplayCreateScoreSuccess(false);
       });
@@ -88,6 +118,13 @@ const Assignment: React.FC = (props: any) => {
           >
             Get Grades
           </button>
+          <button
+            assignment-id={assignmentData.id}
+            className="btn btn-primary"
+            onClick={() => getUnAssignedStudets(assignmentData.id)}
+          >
+            Get Students not assigned to this Assignment
+          </button>
         </div>
         <br></br>
         <hr></hr>
@@ -104,7 +141,26 @@ const Assignment: React.FC = (props: any) => {
                 <span className="badge">
                   {course.score ? course.score : "Not Graded"}
                 </span>
+                <br />
               </a>
+            );
+          })}
+        {displayUnAssignedStudents &&
+          unAssignedStudents.map((student: any, index: number) => {
+            return (
+              <div className="form-group">
+                {index == 0 && (
+                  <h5>Student not assigned to this assignment:</h5>
+                )}
+                <div className="list-group">
+                  <a
+                    href="#"
+                    className="list-group-item list-group-item-action"
+                  >
+                    {student.StudenName}
+                  </a>
+                </div>
+              </div>
             );
           })}
         {displayCreateScore && (
@@ -112,6 +168,24 @@ const Assignment: React.FC = (props: any) => {
             <div className="container">
               <div className="form-group">
                 <label className="control-label">Enter Student's Grade:</label>
+
+                <label>Select Student:</label>
+                <select
+                  value={selectValue}
+                  onChange={(event) => {
+                    setSelectValue(event.target.value);
+                  }}
+                  className="form-control"
+                  id="sel"
+                >
+                  <option value="fa8fde11-43df-4328-9939-58b56309d20d">
+                    Devesh Tiwari Student A
+                  </option>
+                  <option value="50681b1d-72ce-4102-94d6-dc586f9ba43f">
+                    Devesh Tiwari Student B
+                  </option>
+                </select>
+
                 <input
                   value={grade}
                   onChange={(event) => {

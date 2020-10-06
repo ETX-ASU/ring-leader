@@ -14,14 +14,12 @@ class DeepLinking {
   async createDeepLinkingForm(
     platform: any,
     contentItems: any,
-    options: any,
-    nonce: string
+    options: any
   ): Promise<any> {
     const message = await this.createDeepLinkingMessage(
       platform,
       contentItems,
-      options,
-      nonce
+      options
     ); // Creating auto submitting form
 
     const form =
@@ -50,8 +48,7 @@ class DeepLinking {
   async createDeepLinkingMessage(
     platform: any,
     contentItems: any,
-    options: any,
-    nonce: string
+    options: any
   ): Promise<any> {
     if (!platform) {
       console.log("IdToken object missing.");
@@ -82,7 +79,7 @@ class DeepLinking {
       aud: platform.iss,
       iat: Date.now() / 1000,
       exp: Date.now() / 1000 + 60,
-      nonce: nonce,
+      nonce: platform.nonce,
       "https://purl.imsglobal.org/spec/lti/claim/deployment_id":
         platform.deploymentId,
       "https://purl.imsglobal.org/spec/lti/claim/message_type":
@@ -130,9 +127,9 @@ class DeepLinking {
     jwtBody[
       "https://purl.imsglobal.org/spec/lti-dl/claim/content_items"
     ] = selectedContentItems;
-    const message = jwt.sign(jwtBody, platform.platformPrivateKey, {
-      algorithm: "RS256",
-      keyid: platform.platformKid
+    const message = await jwt.sign(jwtBody, platform.platformPrivateKey, {
+      algorithm: platform.alg,
+      keyid: platform.kid
     });
     return message;
   }
