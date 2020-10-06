@@ -27,6 +27,7 @@ const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 const LTI_INSTRUCTOR_REDIRECT = "/instructor";
 const LTI_ASSIGNMENT_REDIRECT = "/assignment";
 const LTI_STUDENT_REDIRECT = "/student";
+const LTI_DEEPLINK_REDIRECT = "/deeplink";
 
 
 const initOidcGet = async (req: any, res: any): Promise<void> => {
@@ -133,6 +134,13 @@ const assignmentRedirectPost = async (req: any, res: any): Promise<void> => {
   res.redirect(
     LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + req.query.resourceId
   );
+}
+
+const deepLinkRedirect = async (req: any, res: any): Promise<void> => {
+  if (!req.session) {
+    throw new Error("no session detected, something is wrong");
+  }
+  res.redirect(LTI_DEEPLINK_REDIRECT);
 }
 
 const toolInfoGet = async (req: any, res: any, applicationURL: any): Promise<void> => {

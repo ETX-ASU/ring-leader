@@ -1,7 +1,6 @@
 import { Express } from "express";
 
 import { Grade } from "../services/assignmentAndGradeService";
-import { DeepLinking } from "../services/DeepLinking";
 import { NamesAndRoles } from "../services/namesAndRolesService";
 
 import requestLogger from "../middleware/requestLogger";
@@ -55,7 +54,7 @@ const rlLtiServiceEndpoints = (app: Express): void => {
         external_tool_url: `https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=${resourceId}`
       }
     };
-    const results = await createLineItem(platform, newLineItemData);
+    const results = await new Grade().createLineItem(platform, newLineItemData);
 
     res.send(results);
   });
@@ -67,7 +66,7 @@ const rlLtiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log(`createassignment - platform - ${JSON.stringify(platform)}`);
 
-    const results = await getLineItems(platform);
+    const results = await new Grade().getLineItems(platform);
     req.session.assignments = results;
     await req.session.save(() => {
       console.log("session data saved");
@@ -86,7 +85,7 @@ const rlLtiServiceEndpoints = (app: Express): void => {
     const options = {
       id: scoreData.assignmentId
     };
-    const results = await putGrade(
+    const results = await new Grade().putGrade(
       platform,
       {
         timestamp: "2020-10-05T18:54:36.736+00:00",
@@ -109,7 +108,7 @@ const rlLtiServiceEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     console.log("createassignment - platform - " + platform);
 
-    const results: any = ([] = await getGrades(platform, {
+    const results: any = ([] = await new Grade().getGrades(platform, {
       id: req.query.assignmentId,
       resourceLinkId: false
     }));
@@ -141,4 +140,4 @@ const rlLtiServiceEndpoints = (app: Express): void => {
   });
 };
 
-export default ltiServiceEndpoints;
+export default rlLtiServiceEndpoints;

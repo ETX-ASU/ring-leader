@@ -9,6 +9,7 @@ import requestLogger from "../middleware/requestLogger";
 const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
 const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
 const LTI_ASSIGNMENT_REDIRECT = "/assignment";
+const LTI_DEEPLINK_REDIRECT = "/deeplink";
 /**
    * @description Creates a set of endpoints to support LTI1.3 launch given an Express application.
    * @param {Object} app - the express application that needs to bind endpoints.
@@ -33,6 +34,11 @@ const rlLtiLaunchExpressEndpoints = (app: Express, applicationUrl: String): void
   // post to accept the LMS launch with idToken
   app.post(LTI_ASSIGNMENT_REDIRECT, requestLogger, async (req, res) => {
     assignmentRedirectPost(req, res);
+  });
+
+  // post to accept the LMS launch with idToken
+  app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
+
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )

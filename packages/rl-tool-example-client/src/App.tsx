@@ -5,7 +5,7 @@ import RouteInstructor from "./routes/RouteInstructor/RouteInstructor";
 import RouteAssignment from "./routes/RouteAssignment/RouteAssignment";
 
 import "./App.scss";
-import RouteDeepLinking from "./routes/RouteDeepLinking/DeepLinking";
+import RouteDeepLinking from "./routes/RouteDeepLinking/RouteDeepLinking";
 const App: React.FC = () => {
   return (
     <div className="app">
