@@ -4,17 +4,7 @@ import { Grade } from "../services/assignmentAndGradeService";
 import { DeepLinking } from "../services/DeepLinking";
 import { NamesAndRoles } from "../services/namesAndRolesService";
 
-import {
-  getUsers,
-  createLineItem,
-  getLineItems,
-  putGrade,
-  getGrades
-} from "@asu-etx/rl-client-lib";
-
-import {
-  requestLogger
-} from "../middleware/requestLogger";
+import requestLogger from "../middleware/requestLogger";
 
 const DEFAULT_ENDPOINTS: any = {
   LTI_ROSTER_ENDOINT: "/lti-service/roster",
@@ -31,7 +21,7 @@ const rlLtiServiceEndpoints = (app: Express): void => {
     console.log("req.session.platform - " + JSON.stringify(platform));
 
     // pass the token from the session to the rl-client-lib to make the call to Canvas
-    const results = await getUsers(platform, { role: req.query.role });
+    const results = await new NamesAndRoles().getMembers(platform, { role: req.query.role });
     req.session.members = results.members;
     await req.session.save(() => {
       console.log("session data saved");
