@@ -168,14 +168,6 @@ const ltiServiceEndpoints = (app: Express): void => {
       console.log(
         "putGradesStudentView -platform - " + JSON.stringify(req.session)
       );
-      const scoreData = req.query;
-      console.log(
-        "putGradesStudentView -req.session - " + JSON.stringify(req.session)
-      );
-
-      scoreData.assignmentId = req.session.assignmentId;
-      scoreData.userId = platform.userId;
-      scoreData.grade = scoreData.grade;
 
       console.log(
         "putGradesStudentView - platform - " + JSON.stringify(platform)
