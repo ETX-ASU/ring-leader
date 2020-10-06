@@ -2,6 +2,12 @@ import jwt from "jsonwebtoken";
 
 const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
+  console.log(
+    "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings" +
+      token[
+        "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+      ]
+  );
 
   const tokenData = {
     jti: encodeURIComponent(
@@ -27,7 +33,9 @@ const setDefaultValues = (token: any): any => {
       : null,
     deepLinkingSettings: {
       deep_link_return_url:
-        token.deepLinkingSettings.deep_link_return_url || null,
+        token[
+          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+        ].deep_link_return_url || null,
       data: token.data || null
     }
   };
