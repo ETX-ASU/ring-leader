@@ -149,15 +149,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     }
     res.redirect(LTI_DEEPLINK_REDIRECT);
   });
-  // post to accept the LMS launch with idToken
-  app.get(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
-    if (!req.session) {
-      throw new Error("no session detected, something is wrong");
-    }
-    console.log("__dirname - " + __dirname);
 
-    return res.sendFile(path.join(__dirname, "/resources.html"));
-  });
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
   app.get("/tool-info", requestLogger, async (req, res) => {
     const integrationInfo = {
