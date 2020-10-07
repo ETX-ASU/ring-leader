@@ -5,12 +5,24 @@ import "./RouteDeepLinking.scss";
 import $ from "jquery";
 
 const RouteDeepLinking: React.FC = () => {
-  const params = ({} = useParams());
-  const [appendFormData, setAppendFormData] = useState<any>();
+  const [radioInputValue, setRadioInputValue] = useState<string>("");
+  const handleCheck = (event: any): any => {
+    setRadioInputValue(event.target.value);
+  };
   const submitGrade = () => {
     axios
       .get("/lti-service/deeplink", {
-        params: {}
+        params: {
+          title: "Chapter 12 quiz",
+          url: "https://something.example.com/page.html",
+          resourceId: radioInputValue,
+          lineItem: {
+            scoreMaximum: 87,
+            label: "Chapter 12 quiz",
+            resourceId: "xyzpdq1234",
+            tag: "originality"
+          }
+        }
       })
       .then((result) => {
         console.log(result);
@@ -21,18 +33,36 @@ const RouteDeepLinking: React.FC = () => {
   return (
     <div className="route-assignment">
       <div className="card">
-        <div className="card-header">Featured</div>
+        <div className="card-header">Assignment list</div>
         <div className="card-body">
-          <h5 className="card-title">Special title treatment</h5>
-          <p className="card-text">
-            This is a sample deep linking page from example tool!!
-          </p>
+          <div className="radio">
+            <label>
+              <input
+                onChange={handleCheck}
+                type="radio"
+                value="Learner"
+                name="optradio"
+              ></input>
+              Math's Assignment - 1
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input type="radio" name="optradio" />
+              Math's Assignment - 2
+            </label>
+          </div>
+          <div className="radio disabled">
+            <label>
+              <input type="radio" name="optradio" />
+              English's Assignment - 1
+            </label>
+          </div>
           <button className="btn btn-primary" onClick={submitGrade}>
             Submit
           </button>
         </div>
       </div>
-      {appendFormData}
     </div>
   );
 };

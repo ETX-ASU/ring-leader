@@ -120,7 +120,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       }
       const platform: any = req.session.platform;
       console.log(
-        "putGradesStudentView -platform - " + JSON.stringify(req.session)
+        "putGradesStudentView -platform - " + JSON.stringify(platform)
       );
       const scoreData = req.query;
       console.log(
@@ -167,14 +167,14 @@ const ltiServiceEndpoints = (app: Express): void => {
     const items = [
       {
         type: "ltiResourceLink",
-        title: "test DeepLink",
+        title: "DeepLink ltiResourceLink",
         url:
           "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
         lineItem: {
           scoreMaximum: 100,
           label: "Chapter 12 quiz",
-          resourceId: "xyzpdq1234",
-          tag: "originality"
+          resourceId: "Chapter12quiz",
+          tag: "quiz"
         },
         available: {
           startDateTime: "2020-10-06T20:05:02Z",
@@ -203,7 +203,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    const scoreData = req.query;
+    const scoreData = req.body;
     console.log("createassignment - platform - " + platform);
     const options = {
       id: scoreData.assignmentId,
