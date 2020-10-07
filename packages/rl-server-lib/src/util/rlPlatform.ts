@@ -31,17 +31,21 @@ const setDefaultValues = (token: any): any => {
     ]
       ? token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
       : null,
-    deepLinkingSettings: {
-      deep_link_return_url:
-        token[
-          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-        ].deep_link_return_url || null,
-      data: token.data || null,
-      accept_types:
-        token[
-          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-        ].accept_types
-    }
+    deepLinkingSettings: token[
+      "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+    ]
+      ? {
+          deep_link_return_url:
+            token[
+              "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+            ].deep_link_return_url || null,
+          data: token.data || null,
+          accept_types:
+            token[
+              "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+            ].accept_types
+        }
+      : null
   };
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
