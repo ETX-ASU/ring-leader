@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./RouteDeepLinking.scss";
+import $ from "jquery";
 
 const RouteDeepLinking: React.FC = () => {
   const params = ({} = useParams());
@@ -14,7 +15,7 @@ const RouteDeepLinking: React.FC = () => {
       .then((result) => {
         console.log(result);
 
-        setAppendFormData(result.data);
+        $("body").append(result.data);
       });
   };
   return (
