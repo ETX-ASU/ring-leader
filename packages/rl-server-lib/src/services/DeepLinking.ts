@@ -109,6 +109,8 @@ class DeepLinking {
     console.log(
       "Sanitizing content item array based on the platform's requirements:"
     );
+    console.log("jwtBody-" + JSON.stringify(jwtBody));
+
     const selectedContentItems = [];
     const acceptedTypes = platform.deepLinkingSettings.accept_types;
     const acceptMultiple = !(
