@@ -1,16 +1,21 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
 import "./RouteDeepLinking.scss";
 
 const RouteDeepLinking: React.FC = () => {
   const params = ({} = useParams());
-
+  const [appendFormData, setAppendFormData] = useState<any>();
   const submitGrade = () => {
-    axios.post("/lti-service/deeplink", {
-      params: {}
-    });
+    axios
+      .post("/lti-service/deeplink", {
+        params: {}
+      })
+      .then((result) => {
+        console.log(result);
+
+        setAppendFormData(result.data);
+      });
   };
   return (
     <div className="route-assignment">
@@ -26,6 +31,7 @@ const RouteDeepLinking: React.FC = () => {
           </button>
         </div>
       </div>
+      {appendFormData}
     </div>
   );
 };
