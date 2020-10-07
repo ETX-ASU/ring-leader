@@ -204,13 +204,14 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    const scoreData = req.body;
+    const scoreData = req.body.params;
     console.log("createassignment - platform - " + platform);
     const options = {
       id: scoreData.assignmentId,
       userId: scoreData.userId
     };
     console.log("scoreData - " + JSON.stringify(scoreData));
+    console.log("options - " + JSON.stringify(options));
 
     const results = await putGrade(
       platform,
@@ -221,7 +222,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         comment: "This is exceptional work.",
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
-        userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
+        userId: scoreData.userId
       },
       options
     );
