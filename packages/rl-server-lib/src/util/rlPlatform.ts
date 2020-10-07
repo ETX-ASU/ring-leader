@@ -26,6 +26,9 @@ const setDefaultValues = (token: any): any => {
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
           .lineitems
       : null,
+    lineitem: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
+      ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitem
+      : null,
     resourceLinkId: token[
       "https://purl.imsglobal.org/spec/lti/claim/resource_link"
     ]
@@ -70,6 +73,7 @@ const RlPlatform = (
     exp: tokenData.exp,
     clientId: tokenData.clientId,
     lineitems: tokenData.lineitems,
+    lineitem: tokenData.lineitem,
     resourceLinkId: tokenData.resourceLinkId,
     accesstokenEndpoint: accesstokenEndpoint,
     authOIDCRedirectEndpoint: authenticationEndpoint,

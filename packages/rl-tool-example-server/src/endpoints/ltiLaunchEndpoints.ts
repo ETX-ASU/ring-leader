@@ -127,7 +127,21 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
+    const sessionObject = req.session;
+    console.log(sessionObject);
 
+    const idToken = rlValidateToken(req, sessionObject);
+
+    const rlPlatform = RlPlatform(
+      plateformDetails.platformPulicKey,
+      plateformDetails.plateformOIDCAuthEndPoint,
+      plateformDetails.platformAccessTokenEndpoint,
+      plateformDetails.keyid,
+      plateformDetails.alg,
+      idToken
+    );
+
+    req.session.platform = rlPlatform;
     req.session.assignmentId = req.query.resourceId;
     console.log("req.session- " + JSON.stringify(req.session));
     await req.session.save(() => {

@@ -127,7 +127,6 @@ const ltiServiceEndpoints = (app: Express): void => {
         "putGradesStudentView -req.session - " + JSON.stringify(req.session)
       );
 
-      scoreData.assignmentId = req.session.assignmentId;
       scoreData.userId = platform.userId;
       scoreData.grade = scoreData.grade;
 
@@ -135,11 +134,13 @@ const ltiServiceEndpoints = (app: Express): void => {
         "putGradesStudentView - platform - " + JSON.stringify(platform)
       );
       const options = {
-        id: scoreData.assignmentId,
+        id: platform.lineitem,
         userId: scoreData.userId
       };
       console.log("scoreData - " + JSON.stringify(scoreData));
-
+      console.log(
+        "putGradesStudentView - options - " + JSON.stringify(options)
+      );
       const results = await putGrade(
         platform,
         {
@@ -149,7 +150,7 @@ const ltiServiceEndpoints = (app: Express): void => {
           comment: "This is exceptional work.",
           activityProgress: "Completed",
           gradingProgress: "FullyGraded",
-          userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
+          userId: scoreData.userId
         },
         options
       );
