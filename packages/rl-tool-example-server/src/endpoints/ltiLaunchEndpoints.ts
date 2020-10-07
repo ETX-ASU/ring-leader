@@ -147,6 +147,26 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
+    console.log("req.session-LTI_DEEPLINK_REDIRECT");
+    const sessionObject = req.session;
+    console.log(sessionObject);
+
+    const idToken = rlValidateToken(req, sessionObject);
+
+    const rlPlatform = RlPlatform(
+      plateformDetails.platformPulicKey,
+      plateformDetails.plateformOIDCAuthEndPoint,
+      plateformDetails.platformAccessTokenEndpoint,
+      plateformDetails.keyid,
+      plateformDetails.alg,
+      idToken
+    );
+
+    req.session.platform = rlPlatform;
+    console.log("req.session.platform - " + JSON.stringify(rlPlatform));
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
     res.redirect(LTI_DEEPLINK_REDIRECT);
   });
 
