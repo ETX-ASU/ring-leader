@@ -35,8 +35,8 @@ const getUsers = (platform: any, options?: any): any => {
 const getGrades = (platform: any, options?: any): any => {
   return new Grade().getGrades(platform, options);
 };
-const putGrade = (platform: any, score: any, options?: any): any => {
-  console.log("putGrade - options" + JSON.stringify(options));
+const putGrade = (platform: any, score: any, options: any): any => {
+  console.log("client - putGrade - options -" + JSON.stringify(options));
 
   return new Grade().putGrade(platform, score, options);
 };

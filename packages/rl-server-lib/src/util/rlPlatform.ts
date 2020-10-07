@@ -82,7 +82,7 @@ const RlPlatform = (
     idToken: idToken,
     alg: alg,
     deepLinkingSettings: tokenData.deepLinkingSettings,
-    userId: tokenData.UserId,
+    userId: tokenData.userId,
     roles: [
       {
         role: "Instructor",
