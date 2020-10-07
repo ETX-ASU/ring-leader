@@ -34,7 +34,7 @@ const Assignment: React.FC = (props: any) => {
 
   const putGrades = (assignmentId: string) => {
     axios
-      .get("/lti-service/putgrades", {
+      .post("/lti-service/putgrades", {
         params: {
           assignmentId: assignmentId,
           grade: grade,

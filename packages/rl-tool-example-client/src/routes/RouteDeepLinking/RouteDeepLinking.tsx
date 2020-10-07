@@ -8,7 +8,7 @@ const RouteDeepLinking: React.FC = () => {
   const [appendFormData, setAppendFormData] = useState<any>();
   const submitGrade = () => {
     axios
-      .post("/lti-service/deeplink", {
+      .get("/lti-service/deeplink", {
         params: {}
       })
       .then((result) => {

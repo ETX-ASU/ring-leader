@@ -193,6 +193,43 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     return res.send(form);
   });
+
+  app.get("/lti-service/deeplink", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+
+    console.log("deeplink - platform - " + JSON.stringify(platform));
+    const items = [
+      {
+        type: "ltiResourceLink",
+        title: "test DeepLink",
+        lineItem: {
+          scoreMaximum: 100,
+          label: "Chapter 12 quiz",
+          resourceId: "xyzpdq1234",
+          tag: "originality"
+        },
+        available: {
+          startDateTime: "2020-10-06T20:05:02Z",
+          endDateTime: "2020-10-30T20:05:02Z"
+        },
+        custom: {
+          resourceurl:
+            "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
+          resourcename: "Assignment Resource Id - 76"
+        }
+      }
+    ];
+
+    // Creates the deep linking request form
+    const form = await createDeepLinkingForm(platform, items, {
+      message: "Successfully registered resource!"
+    });
+
+    return res.send(form);
+  });
   app.post("/lti-service/putgrades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");

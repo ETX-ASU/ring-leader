@@ -63,43 +63,6 @@ const RouteInstructor: React.FC = () => {
         setDisplayCreateAssignmentSuccess(true);
       });
   };
-
-  const putGrades = (assignmentId: string) => {
-    axios
-      .post("/lti-service/putgrades", {
-        params: {
-          assignmentId: assignmentId
-        }
-      })
-      .then((results) => {
-        alert("Grade submitted successfully!!!");
-        console.log(JSON.stringify(results.data));
-        setDisplayDiv(false);
-        setDisplayCreateAssignment(false);
-        setdisplayAssignment(false);
-        setDisplayNoAssignment(false);
-        setDisplayCreateAssignmentSuccess(false);
-      });
-  };
-
-  const grades = (assignmentId: string) => {
-    axios
-      .get("/lti-service/grades", {
-        params: {
-          assignmentId: assignmentId
-        }
-      })
-      .then((results) => {
-        console.log(JSON.stringify(results.data));
-        setScores(results.data);
-        setDisplayDiv(false);
-        setDisplayCreateAssignment(false);
-        setdisplayAssignment(true);
-        setDisplayNoAssignment(false);
-        setDisplayCreateAssignmentSuccess(false);
-      });
-  };
-
   const getAssignment = () => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
