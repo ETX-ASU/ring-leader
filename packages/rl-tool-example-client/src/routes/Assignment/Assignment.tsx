@@ -83,18 +83,7 @@ const Assignment: React.FC = (props: any) => {
       });
   };
   return (
-    <div
-      className="card assignment"
-      assignment-id={assignmentData.id}
-      external-tool-url={
-        assignmentData["https://canvas.instructure.com/lti/submission_type"]
-          .external_tool_url
-      }
-      submission-Type={
-        assignmentData["https://canvas.instructure.com/lti/submission_type"]
-          .type
-      }
-    >
+    <div className="card assignment" assignment-id={assignmentData.id}>
       <h5 className="card-header">Assignment - {index + 1}</h5>
       <div className="card-body">
         <h5 className="card-title">{assignmentData.label}</h5>
