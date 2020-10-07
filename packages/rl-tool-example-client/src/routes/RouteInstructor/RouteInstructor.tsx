@@ -66,7 +66,7 @@ const RouteInstructor: React.FC = () => {
 
   const putGrades = (assignmentId: string) => {
     axios
-      .get("/lti-service/putgrades", {
+      .post("/lti-service/putgrades", {
         params: {
           assignmentId: assignmentId
         }

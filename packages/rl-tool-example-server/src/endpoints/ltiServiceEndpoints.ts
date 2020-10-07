@@ -193,7 +193,7 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     return res.send(form);
   });
-  app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
+  app.post("/lti-service/putgrades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
