@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./RouteInstructor.scss";
-import Assignment from "../Assignment/Assignment";
+import RouteInstructorAssignment from "../RouteInstructorAssignment/RouteInstructorAssignment";
 
 const RouteInstructor: React.FC = () => {
   const {} = useParams();
@@ -236,10 +236,10 @@ const RouteInstructor: React.FC = () => {
           {displayAssignment &&
             assignments.map((assignment, index) => {
               return (
-                <Assignment
+                <RouteInstructorAssignment
                   data-index={index}
                   data-assignmentData={assignment}
-                ></Assignment>
+                ></RouteInstructorAssignment>
               );
             })}
           {displayNoAssignment && (

@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import "./RouteAssignment.scss";
+import "./RouteStudentAssignment.scss";
 
-const RouteAssignment: React.FC = () => {
+const RouteStudentAssignment: React.FC = () => {
   const params = ({} = useParams());
 
   const [
@@ -49,4 +49,4 @@ const RouteAssignment: React.FC = () => {
   );
 };
 
-export default RouteAssignment;
+export default RouteStudentAssignment;

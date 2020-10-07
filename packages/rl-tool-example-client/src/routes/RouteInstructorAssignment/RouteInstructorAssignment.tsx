@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
-import "./Assignment.scss";
+import "./RouteInstructorAssignment.scss";
 
-const Assignment: React.FC = (props: any) => {
+const RouteInstructorAssignment: React.FC = (props: any) => {
   console.log("props - " + JSON.stringify(props));
   const assignmentData = props["data-assignmentData"];
   console.log("assignmentData - json - " + JSON.stringify(assignmentData));
@@ -209,4 +209,4 @@ const Assignment: React.FC = (props: any) => {
   );
 };
 
-export default Assignment;
+export default RouteInstructorAssignment;
