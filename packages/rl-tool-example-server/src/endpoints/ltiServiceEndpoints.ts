@@ -227,6 +227,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     const form = await createDeepLinkingForm(platform, items, {
       message: "Successfully registered resource!"
     });
+    console.log("form - " + JSON.stringify(form));
 
     return res.send(form);
   });
