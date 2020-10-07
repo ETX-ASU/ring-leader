@@ -168,6 +168,8 @@ const ltiServiceEndpoints = (app: Express): void => {
       {
         type: "ltiResourceLink",
         title: "test DeepLink",
+        url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
         lineItem: {
           scoreMaximum: 100,
           label: "Chapter 12 quiz",
@@ -176,6 +178,10 @@ const ltiServiceEndpoints = (app: Express): void => {
         },
         available: {
           startDateTime: "2020-10-06T20:05:02Z",
+          endDateTime: "2020-10-30T20:05:02Z"
+        },
+        submission: {
+          startDateTime: "2020-10-07T20:05:02Z",
           endDateTime: "2020-10-30T20:05:02Z"
         },
         custom: {
