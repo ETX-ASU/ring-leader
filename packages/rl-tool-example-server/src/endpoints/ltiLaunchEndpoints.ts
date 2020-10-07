@@ -143,7 +143,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
   });
 
   // post to accept the LMS launch with idToken
-  app.get(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
+  app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
