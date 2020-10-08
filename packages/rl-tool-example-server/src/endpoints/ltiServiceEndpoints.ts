@@ -75,31 +75,14 @@ const ltiServiceEndpoints = (app: Express): void => {
         scoreMaximum: lineItemData.scoreMaximum,
         label: lineItemData.label,
         resourceId: resourceId,
-        tag: lineItemData.tag,
-        "https://canvas.instructure.com/lti/submission_type": {
-          type: "external_tool",
-          external_tool_url:
-            "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
-            resourceId
-        }
+        tag: lineItemData.tag
       };
       const LineItemData = {
         type: "ltiResourceLink",
         title: lineItemData.label,
         url:
           "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
-        lineItem: newLineItemData,
-        available: {
-          startDateTime: "2020-10-06T20:05:02Z",
-          endDateTime: "2020-10-30T20:05:02Z"
-        },
-        submission: {
-          endDateTime: "2020-10-30T20:05:02Z"
-        },
-        custom: {
-          quiz_id: "az-123",
-          duedate: "$Resource.submission.endDateTime"
-        }
+        lineItem: newLineItemData
       };
       console.log("Resource Link - " + JSON.stringify(LineItemData));
 
