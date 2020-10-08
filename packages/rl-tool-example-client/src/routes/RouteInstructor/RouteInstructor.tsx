@@ -15,6 +15,10 @@ const RouteInstructor: React.FC = () => {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [scores, setScores] = useState<any[]>([]);
   const [displayDiv, setDisplayDiv] = useState<boolean>(true);
+  const [
+    displayCreateResourceLinkAssignment,
+    setDisplayCreateResourceLinkAssignment
+  ] = useState<boolean>(false);
   const [displayNoAssignment, setDisplayNoAssignment] = useState<boolean>(
     false
   );
@@ -34,6 +38,7 @@ const RouteInstructor: React.FC = () => {
     setdisplayAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
     setDisplayNoAssignment(false);
+    setDisplayCreateResourceLinkAssignment(false);
     axios
       .get("/lti-service/roster", { params: { role: radioInputValue } })
       .then((results) => {
@@ -43,6 +48,25 @@ const RouteInstructor: React.FC = () => {
         console.log(JSON.stringify(users));
         console.log(JSON.stringify(courses));
         setDisplayDiv(true);
+      });
+  };
+  const CreateResourceLink = () => {
+    axios
+      .get("/lti-service/createresourcelink", {
+        params: {
+          scoreMaximum: maxScore,
+          label: title,
+          tag: tag
+        }
+      })
+      .then((results) => {
+        console.log(JSON.stringify(results.data));
+        setDisplayDiv(false);
+        setDisplayCreateAssignment(false);
+        setdisplayAssignment(false);
+        setDisplayNoAssignment(false);
+        setDisplayCreateAssignmentSuccess(true);
+        setDisplayCreateResourceLinkAssignment(false);
       });
   };
   const createAssignment = () => {
@@ -94,6 +118,15 @@ const RouteInstructor: React.FC = () => {
     setDisplayCreateAssignmentSuccess(false);
     setDisplayNoAssignment(false);
   };
+
+  const handleCreateResourceLink = (event: any): any => {
+    setDisplayDiv(false);
+    setDisplayCreateAssignment(false);
+    setdisplayAssignment(false);
+    setDisplayCreateAssignmentSuccess(false);
+    setDisplayNoAssignment(false);
+    setDisplayCreateResourceLinkAssignment(true);
+  };
   return (
     <div className="route-instructor">
       <h3>
@@ -140,6 +173,12 @@ const RouteInstructor: React.FC = () => {
             <button className="btn btn-primary" onClick={handleCreateAssigment}>
               Create Assignment
             </button>
+            <button
+              className="btn btn-primary"
+              onClick={handleCreateResourceLink}
+            >
+              Create Resource Linked Assignment
+            </button>
           </div>
         </div>
       </div>
@@ -167,6 +206,65 @@ const RouteInstructor: React.FC = () => {
                 );
               })}{" "}
           </div>
+          {displayCreateResourceLinkAssignment && (
+            <div className=" container">
+              <div className="form-group">
+                <label className="control-label">Assignment Title:</label>
+                <input
+                  value={title}
+                  onChange={(event) => {
+                    setTitle(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="title"
+                  placeholder="Enter Assignment Title"
+                  name="title"
+                ></input>
+              </div>
+              <div className="form-group">
+                <label className="control-label">Maximum Score:</label>
+
+                <input
+                  value={maxScore}
+                  onChange={(event) => {
+                    setMaxScore(parseInt(event.target.value));
+                  }}
+                  type="number"
+                  className="form-control"
+                  id="MaximumScore"
+                  placeholder="Enter Maximum Score"
+                  name="MaximumScore"
+                ></input>
+              </div>
+              <div className="form-group">
+                <label className="control-label">Tag:</label>
+                <input
+                  value={tag}
+                  onChange={(event) => {
+                    setTag(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="Tag"
+                  placeholder="Enter Tag"
+                  name="Tag"
+                ></input>
+              </div>
+
+              <div className="form-group">
+                <div className="col-sm-offset-2 col-sm-10">
+                  <button
+                    type="submit"
+                    onClick={CreateResourceLink}
+                    className="btn btn-primary"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {displayCreateAssignment && (
             <div className=" container">
               <div className="form-group">

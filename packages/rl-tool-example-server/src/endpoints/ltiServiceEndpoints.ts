@@ -48,42 +48,66 @@ const ltiServiceEndpoints = (app: Express): void => {
       scoreMaximum: lineItemData.scoreMaximum,
       label: lineItemData.label,
       resourceId: resourceId,
-      tag: lineItemData.tag
-    };
-    const LineItemData = {
-      type: "ltiResourceLink",
-      title: lineItemData.label,
-      url:
-        "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
-      lineItem: newLineItemData,
-      available: {
-        startDateTime: "2020-10-06T20:05:02Z",
-        endDateTime: "2020-10-30T20:05:02Z"
-      },
-      submission: {
-        endDateTime: "2020-10-30T20:05:02Z"
-      },
-      custom: {
-        quiz_id: "az-123",
-        duedate: "$Resource.submission.endDateTime"
+      tag: lineItemData.tag,
+      "https://canvas.instructure.com/lti/submission_type": {
+        type: "external_tool",
+        external_tool_url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
+          resourceId
       }
     };
-    const line = {
-      type: "ltiResourceLink",
-      title: "A title",
-      text: "This is a link to an activity that will be graded",
-      url: "https://ring-leader-devesh-tiwari.herokuapp.com/assignment",
-      lineItem: {
-        scoreMaximum: 87,
-        label: "Chapter 12 quiz",
-        resourceId: "xyzpdq1234",
-        tag: "originality"
-      }
-    };
-    const results = await createLineItem(platform, line);
+    const results = await createLineItem(platform, newLineItemData);
 
     res.send(results);
   });
+
+  app.get(
+    "/lti-service/createresourcelink",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const platform: any = req.session.platform;
+      const lineItemData = req.query;
+      const resourceId = Math.floor(Math.random() * 100) + 1;
+      const newLineItemData = {
+        scoreMaximum: lineItemData.scoreMaximum,
+        label: lineItemData.label,
+        resourceId: resourceId,
+        tag: lineItemData.tag,
+        "https://canvas.instructure.com/lti/submission_type": {
+          type: "external_tool",
+          external_tool_url:
+            "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
+            resourceId
+        }
+      };
+      const LineItemData = {
+        type: "ltiResourceLink",
+        title: lineItemData.label,
+        url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
+        lineItem: newLineItemData,
+        available: {
+          startDateTime: "2020-10-06T20:05:02Z",
+          endDateTime: "2020-10-30T20:05:02Z"
+        },
+        submission: {
+          endDateTime: "2020-10-30T20:05:02Z"
+        },
+        custom: {
+          quiz_id: "az-123",
+          duedate: "$Resource.submission.endDateTime"
+        }
+      };
+      console.log("Resource Link - " + JSON.stringify(LineItemData));
+
+      const results = await createLineItem(platform, LineItemData);
+
+      res.send(results);
+    }
+  );
   app.get("/lti-service/getassignment", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
