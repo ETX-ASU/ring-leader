@@ -26,22 +26,25 @@ const setDefaultValues = (token: any): any => {
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
           .lineitems
       : null,
-    resourceLinkId: token[
-      "https://purl.imsglobal.org/spec/lti/claim/resource_link"
-    ]
-      ? token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
+    lineitem: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
+      ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitem
       : null,
-    deepLinkingSettings: {
-      deep_link_return_url:
-        token[
-          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-        ].deep_link_return_url || null,
-      data: token.data || null,
-      accept_types:
-        token[
-          "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-        ].accept_types
-    }
+    resourceLinkId: token.resourceLinkId || null,
+    deepLinkingSettings: token[
+      "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+    ]
+      ? {
+          deep_link_return_url:
+            token[
+              "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+            ].deep_link_return_url || null,
+          data: token.data || null,
+          accept_types:
+            token[
+              "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
+            ].accept_types
+        }
+      : null
   };
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
@@ -67,6 +70,7 @@ const RlPlatform = (
     exp: tokenData.exp,
     clientId: tokenData.clientId,
     lineitems: tokenData.lineitems,
+    lineitem: tokenData.lineitem,
     resourceLinkId: tokenData.resourceLinkId,
     accesstokenEndpoint: accesstokenEndpoint,
     authOIDCRedirectEndpoint: authenticationEndpoint,
@@ -75,7 +79,7 @@ const RlPlatform = (
     idToken: idToken,
     alg: alg,
     deepLinkingSettings: tokenData.deepLinkingSettings,
-    userId: tokenData.UserId,
+    userId: tokenData.userId,
     roles: [
       {
         role: "Instructor",

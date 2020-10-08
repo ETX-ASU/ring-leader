@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
-import "./Assignment.scss";
+import "./RouteInstructorAssignment.scss";
 
-const Assignment: React.FC = (props: any) => {
+const RouteInstructorAssignment: React.FC = (props: any) => {
   console.log("props - " + JSON.stringify(props));
   const assignmentData = props["data-assignmentData"];
   console.log("assignmentData - json - " + JSON.stringify(assignmentData));
@@ -34,7 +34,7 @@ const Assignment: React.FC = (props: any) => {
 
   const putGrades = (assignmentId: string) => {
     axios
-      .get("/lti-service/putgrades", {
+      .post("/lti-service/putgrades", {
         params: {
           assignmentId: assignmentId,
           grade: grade,
@@ -83,18 +83,7 @@ const Assignment: React.FC = (props: any) => {
       });
   };
   return (
-    <div
-      className="card assignment"
-      assignment-id={assignmentData.id}
-      external-tool-url={
-        assignmentData["https://canvas.instructure.com/lti/submission_type"]
-          .external_tool_url
-      }
-      submission-Type={
-        assignmentData["https://canvas.instructure.com/lti/submission_type"]
-          .type
-      }
-    >
+    <div className="card assignment" assignment-id={assignmentData.id}>
       <h5 className="card-header">Assignment - {index + 1}</h5>
       <div className="card-body">
         <h5 className="card-title">{assignmentData.label}</h5>
@@ -220,4 +209,4 @@ const Assignment: React.FC = (props: any) => {
   );
 };
 
-export default Assignment;
+export default RouteInstructorAssignment;

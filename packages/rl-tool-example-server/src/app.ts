@@ -76,6 +76,11 @@ app.route("/assignment").get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
+// Deep Link
+app.route("/deeplink").get(async (req, res) => {
+  res.sendFile(USER_INTERFACE_PLAYER_PAGE);
+});
+
 /*========================== SERVER STARTUP ==========================*/
 
 async function start(): Promise<any> {

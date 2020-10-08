@@ -61,6 +61,69 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     res.send(results);
   });
+  app.get("/lti-service/createLineItem", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    const lineItemData = req.query;
+    console.log("lineItemData.resourceLinkId - " + lineItemData.resourceLinkId);
+    platform.resourceLinkId = lineItemData.resourceLinkId;
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
+    console.log("createassignment - platform - " + platform);
+
+    const resourceId = Math.floor(Math.random() * 100) + 1;
+    const newLineItemData = {
+      scoreMaximum: 100,
+      label: "sample line item -" + resourceId,
+      resourceId: resourceId,
+      resourceLinkId: lineItemData.resourceLinkId,
+      tag: "sample line item tag -" + resourceId,
+      "https://canvas.instructure.com/lti/submission_type": {
+        type: "external_tool",
+        external_tool_url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
+          resourceId
+      }
+    };
+    const results = await createLineItem(platform, newLineItemData, {
+      resourceLinkId: true
+    });
+
+    res.send(results);
+  });
+  app.get(
+    "/lti-service/createresourcelink",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const platform: any = req.session.platform;
+      const lineItemData = req.query;
+      const resourceId = Math.floor(Math.random() * 100) + 1;
+      const newLineItemData = {
+        scoreMaximum: lineItemData.scoreMaximum,
+        label: lineItemData.label,
+        resourceId: resourceId,
+        tag: lineItemData.tag
+      };
+      const LineItemData = {
+        type: "ltiResourceLink",
+        title: lineItemData.label,
+        url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
+        lineItem: newLineItemData
+      };
+      console.log("Resource Link - " + JSON.stringify(LineItemData));
+
+      const results = await createLineItem(platform, LineItemData);
+
+      res.send(results);
+    }
+  );
   app.get("/lti-service/getassignment", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
@@ -121,14 +184,13 @@ const ltiServiceEndpoints = (app: Express): void => {
       }
       const platform: any = req.session.platform;
       console.log(
-        "putGradesStudentView -platform - " + JSON.stringify(req.session)
+        "putGradesStudentView -platform - " + JSON.stringify(platform)
       );
       const scoreData = req.query;
       console.log(
         "putGradesStudentView -req.session - " + JSON.stringify(req.session)
       );
 
-      scoreData.assignmentId = req.session.assignmentId;
       scoreData.userId = platform.userId;
       scoreData.grade = scoreData.grade;
 
@@ -136,11 +198,13 @@ const ltiServiceEndpoints = (app: Express): void => {
         "putGradesStudentView - platform - " + JSON.stringify(platform)
       );
       const options = {
-        id: scoreData.assignmentId,
+        id: platform.lineitem,
         userId: scoreData.userId
       };
       console.log("scoreData - " + JSON.stringify(scoreData));
-
+      console.log(
+        "putGradesStudentView - options - " + JSON.stringify(options)
+      );
       const results = await putGrade(
         platform,
         {
@@ -150,7 +214,7 @@ const ltiServiceEndpoints = (app: Express): void => {
           comment: "This is exceptional work.",
           activityProgress: "Completed",
           gradingProgress: "FullyGraded",
-          userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
+          userId: scoreData.userId
         },
         options
       );
@@ -158,7 +222,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       res.send(results);
     }
   );
-  app.post("/lti-service/deeplink", requestLogger, async (req, res) => {
+  app.get("/lti-service/deeplink", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -168,21 +232,25 @@ const ltiServiceEndpoints = (app: Express): void => {
     const items = [
       {
         type: "ltiResourceLink",
-        title: "test DeepLink",
+        title: "DeepLink ltiResourceLink",
+        url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
         lineItem: {
           scoreMaximum: 100,
           label: "Chapter 12 quiz",
-          resourceId: "xyzpdq1234",
-          tag: "originality"
+          resourceId: "Chapter12quiz",
+          tag: "quiz"
         },
         available: {
           startDateTime: "2020-10-06T20:05:02Z",
           endDateTime: "2020-10-30T20:05:02Z"
         },
+        submission: {
+          endDateTime: "2020-10-30T20:05:02Z"
+        },
         custom: {
-          resourceurl:
-            "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
-          resourcename: "Assignment Resource Id - 76"
+          quiz_id: "az-123",
+          duedate: "$Resource.submission.endDateTime"
         }
       }
     ];
@@ -194,18 +262,20 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     return res.send(form);
   });
-  app.get("/lti-service/putgrades", requestLogger, async (req, res) => {
+
+  app.post("/lti-service/putgrades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    const scoreData = req.query;
+    const scoreData = req.body.params;
     console.log("createassignment - platform - " + platform);
     const options = {
       id: scoreData.assignmentId,
       userId: scoreData.userId
     };
     console.log("scoreData - " + JSON.stringify(scoreData));
+    console.log("options - " + JSON.stringify(options));
 
     const results = await putGrade(
       platform,
@@ -216,7 +286,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         comment: "This is exceptional work.",
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
-        userId: scoreData.userId //"fa8fde11-43df-4328-9939-58b56309d20d"
+        userId: scoreData.userId
       },
       options
     );

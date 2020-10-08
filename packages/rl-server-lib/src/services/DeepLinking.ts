@@ -21,7 +21,11 @@ class DeepLinking {
       contentItems,
       options
     ); // Creating auto submitting form
-
+    console.log("message - " + message);
+    console.log(
+      " platform.deepLinkingSettings.deep_link_return_url - " +
+        platform.deepLinkingSettings.deep_link_return_url
+    );
     const form =
       '<form id="ltijs_submit" style="display: none;" action="' +
       platform.deepLinkingSettings.deep_link_return_url +
@@ -75,7 +79,7 @@ class DeepLinking {
     console.log("Building basic JWT body"); // Builds basic jwt body
 
     const jwtBody: any = {
-      iss: platform.clientId,
+      iss: platform.aud,
       aud: platform.iss,
       iat: Date.now() / 1000,
       exp: Date.now() / 1000 + 60,
@@ -105,6 +109,8 @@ class DeepLinking {
     console.log(
       "Sanitizing content item array based on the platform's requirements:"
     );
+    console.log("jwtBody-" + JSON.stringify(jwtBody));
+
     const selectedContentItems = [];
     const acceptedTypes = platform.deepLinkingSettings.accept_types;
     const acceptMultiple = !(
