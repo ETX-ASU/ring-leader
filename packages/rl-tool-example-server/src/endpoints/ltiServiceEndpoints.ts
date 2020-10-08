@@ -68,8 +68,19 @@ const ltiServiceEndpoints = (app: Express): void => {
         duedate: "$Resource.submission.endDateTime"
       }
     };
-
-    const results = await createLineItem(platform, LineItemData);
+    const line = {
+      type: "ltiResourceLink",
+      title: "A title",
+      text: "This is a link to an activity that will be graded",
+      url: "https://ring-leader-devesh-tiwari.herokuapp.com/assignment",
+      lineItem: {
+        scoreMaximum: 87,
+        label: "Chapter 12 quiz",
+        resourceId: "xyzpdq1234",
+        tag: "originality"
+      }
+    };
+    const results = await createLineItem(platform, line);
 
     res.send(results);
   });
