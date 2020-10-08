@@ -65,6 +65,12 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
+    const lineItemData = req.query;
+    console.log("lineItemData.resourceLinkId - " + lineItemData.resourceLinkId);
+    platform.resourceLinkId = lineItemData.resourceLinkId;
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
     console.log("createassignment - platform - " + platform);
 
     const resourceId = Math.floor(Math.random() * 100) + 1;
@@ -72,7 +78,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       scoreMaximum: 100,
       label: "sample line item -" + resourceId,
       resourceId: resourceId,
-      resourceLinkId: platform.resourceLinkId,
+      resourceLinkId: lineItemData.resourceLinkId,
       tag: "sample line item tag -" + resourceId,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",

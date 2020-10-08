@@ -66,10 +66,10 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         setDisplayCreateScoreSuccess(false);
       });
   };
-  const createLineItem = () => {
+  const createLineItem = (assignmentId: string, resourceLinkId: string) => {
     axios
       .get("/lti-service/createLineItem", {
-        params: {}
+        params: { resourceLinkId: resourceLinkId }
       })
       .then((results) => {
         console.log(JSON.stringify(results.data));
@@ -104,6 +104,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         <div className="btn-group">
           <button
             assignment-id={assignmentData.id}
+            resourceLink-id={assignmentData.resourceLinkId}
             className="btn btn-primary assignmentbutton"
             onClick={showSubmitGrade}
           >
@@ -112,7 +113,9 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary"
-            onClick={() => grades(assignmentData.id)}
+            onClick={() =>
+              grades(assignmentData.id, assignmentData.resourceLinkId)
+            }
           >
             Get Grades
           </button>
