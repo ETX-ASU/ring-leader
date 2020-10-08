@@ -52,12 +52,6 @@ const RouteDeepLinking: React.FC = () => {
               Math's Assignment - 2
             </label>
           </div>
-          <div className="radio disabled">
-            <label>
-              <input type="radio" name="optradio" />
-              English's Assignment - 1
-            </label>
-          </div>
           <button className="btn btn-primary" onClick={submitGrade}>
             Submit
           </button>
