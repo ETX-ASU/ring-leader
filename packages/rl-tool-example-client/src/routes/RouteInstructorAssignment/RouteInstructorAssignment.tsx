@@ -66,6 +66,15 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         setDisplayCreateScoreSuccess(false);
       });
   };
+  const createLineItem = () => {
+    axios
+      .get("/lti-service/createLineItem", {
+        params: {}
+      })
+      .then((results) => {
+        console.log(JSON.stringify(results.data));
+      });
+  };
   const grades = (assignmentId: string) => {
     axios
       .get("/lti-service/grades", {
@@ -110,9 +119,9 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary"
-            onClick={() => getUnAssignedStudets(assignmentData.id)}
+            onClick={() => createLineItem()}
           >
-            Get Students not assigned to this Assignment
+            Create line item
           </button>
         </div>
         <br></br>

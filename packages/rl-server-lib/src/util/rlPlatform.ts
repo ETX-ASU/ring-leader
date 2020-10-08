@@ -29,11 +29,7 @@ const setDefaultValues = (token: any): any => {
     lineitem: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitem
       : null,
-    resourceLinkId: token[
-      "https://purl.imsglobal.org/spec/lti/claim/resource_link"
-    ]
-      ? token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
-      : null,
+    resourceLinkId: token.resourceLinkId || null,
     deepLinkingSettings: token[
       "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
     ]

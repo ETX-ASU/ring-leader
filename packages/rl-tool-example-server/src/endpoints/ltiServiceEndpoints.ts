@@ -60,7 +60,33 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     res.send(results);
   });
+  app.get("/lti-service/createLineItem", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    console.log("createassignment - platform - " + platform);
 
+    const resourceId = Math.floor(Math.random() * 100) + 1;
+    const newLineItemData = {
+      scoreMaximum: 100,
+      label: "sample line item -" + resourceId,
+      resourceId: resourceId,
+      resourceLinkId: platform.resourceLinkId,
+      tag: "sample line item tag -" + resourceId,
+      "https://canvas.instructure.com/lti/submission_type": {
+        type: "external_tool",
+        external_tool_url:
+          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
+          resourceId
+      }
+    };
+    const results = await createLineItem(platform, newLineItemData, {
+      resourceLinkId: true
+    });
+
+    res.send(results);
+  });
   app.get(
     "/lti-service/createresourcelink",
     requestLogger,
