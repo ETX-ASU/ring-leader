@@ -113,16 +113,16 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary"
-            onClick={() =>
-              grades(assignmentData.id, assignmentData.resourceLinkId)
-            }
+            onClick={() => grades(assignmentData.id)}
           >
             Get Grades
           </button>
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary"
-            onClick={() => createLineItem()}
+            onClick={() =>
+              createLineItem(assignmentData.id, assignmentData.resourceLinkId)
+            }
           >
             Create line item
           </button>
