@@ -201,10 +201,9 @@ const ltiServiceEndpoints = (app: Express): void => {
       const options = {
         id: platform.lineitem,
         userId: scoreData.userId,
-        title:
-          platform.lineitem || sessionObject.assignmentDetails.title || null
+        title: platform.lineitem || sessionObject.title || null
       };
-
+      console.log("sessionObject.title" + JSON.stringify(sessionObject.title));
       console.log(
         "putGradesStudentView - options - " + JSON.stringify(options)
       );
