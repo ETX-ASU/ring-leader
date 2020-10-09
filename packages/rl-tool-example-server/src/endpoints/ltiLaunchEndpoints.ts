@@ -98,7 +98,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     }
     console.log("req.session-LTI_ADVANTAGE_LAUNCH_ROUTE");
     const sessionObject = req.session;
-    console.log("sessionObject - " + sessionObject);
+    console.log("sessionObject - " + JSON.stringify(sessionObject));
 
     const idToken = rlValidateToken(req, sessionObject);
 
@@ -118,7 +118,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     });
 
     if (sessionObject.redirectUrl) {
-      res.redirect(req.url);
+      res.redirect(sessionObject.redirectUrl);
       return;
     } else {
       res.redirect(LTI_INSTRUCTOR_REDIRECT);
