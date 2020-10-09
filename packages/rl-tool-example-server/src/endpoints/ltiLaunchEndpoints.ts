@@ -101,7 +101,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log("sessionObject - " + JSON.stringify(sessionObject));
 
     const idToken = rlValidateToken(req, sessionObject);
-
+    const assignmentRedirectUrl = sessionObject.redirectUrl;
     const rlPlatform = RlPlatform(
       plateformDetails.platformPulicKey,
       plateformDetails.plateformOIDCAuthEndPoint,
@@ -118,11 +118,17 @@ const ltiLaunchEndpoints = (app: Express): void => {
     });
 
     if (sessionObject.redirectUrl) {
-      res.redirect(sessionObject.redirectUrl);
+      console.log("req.session - " + JSON.stringify(req.session));
+
+      req.session.redirectUrl = null;
+      res.redirect(assignmentRedirectUrl);
       return;
     } else {
       res.redirect(LTI_INSTRUCTOR_REDIRECT);
     }
+    await req.session.save(() => {
+      console.log("session data saved");
+    });
   });
 
   // post to accept the LMS launch with idToken
@@ -133,14 +139,13 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
+
     const sessionObject = req.session;
-    if (sessionObject.redirectUrl) {
-      sessionObject.redirectUrl = null;
-    } else req.session.redirectUrl = req.url;
-    console.log(sessionObject);
-    console.log("req.url - " + req.url);
 
     if (!req.body.id_token) {
+      req.session.redirectUrl = req.url;
+      console.log(sessionObject);
+      console.log("req.url - " + req.url);
       res.redirect(
         url.format({
           pathname:
@@ -149,6 +154,8 @@ const ltiLaunchEndpoints = (app: Express): void => {
         })
       );
       return;
+    } else {
+      req.session.redirectUrl = null;
     }
     const idToken = rlValidateToken(req, sessionObject);
 
