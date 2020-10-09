@@ -56,7 +56,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
   };
   const deleteAssignment = (assignmentId: string) => {
     axios
-      .get("/lti-service/deleteLineItem", {
+      .delete("/lti-service/deleteLineItem", {
         params: {
           assignmentId: assignmentId
         }

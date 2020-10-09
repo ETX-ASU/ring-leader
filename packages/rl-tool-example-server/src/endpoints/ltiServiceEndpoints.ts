@@ -297,7 +297,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     res.send(results);
   });
 
-  app.post("/lti-service/deleteLineItem", requestLogger, async (req, res) => {
+  app.delete("/lti-service/deleteLineItem", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
