@@ -134,7 +134,9 @@ const ltiLaunchEndpoints = (app: Express): void => {
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
     const sessionObject = req.session;
-    req.session.redirectUrl = req.url;
+    if (sessionObject.redirectUrl) {
+      sessionObject.redirectUrl = null;
+    } else req.session.redirectUrl = req.url;
     console.log(sessionObject);
     console.log("req.url - " + req.url);
 
