@@ -118,8 +118,9 @@ const ltiLaunchEndpoints = (app: Express): void => {
     });
 
     if (sessionObject.redirectUrl) {
-      console.log("req.session - " + JSON.stringify(req.session));
-
+      // This means that student/instrucot click on assignmnet and platform SSO was not performed
+      // it's a work around to get the SSO flow start so that we can get id_token
+      //Note:- this code will not execute when external tool is accessed from course navigation or deep linking
       req.session.redirectUrl = null;
       res.redirect(assignmentRedirectUrl);
       return;
@@ -143,8 +144,9 @@ const ltiLaunchEndpoints = (app: Express): void => {
     );
     const sessionObject = req.session;
     if (!req.body.id_token) {
-      ///if id_tokne is not present then it means that the platform SSO was not performed.
+      ///if id_token is not present then it means that the platform SSO was not performed.
       //we will redirect user to external tool url that will start SSO process internally
+      //user will automatically redirected to the assignment
       //and we will get id_token
       //Note:- if a deep link assignment is launch then this code section will not be executed.
       req.session.redirectUrl = req.url;

@@ -81,32 +81,28 @@ const ltiServiceEndpoints = (app: Express): void => {
       if (!req.session) {
         throw new Error("no session detected, something is wrong");
       }
+      //The idea here is that once all the students are graded
+      //we get list of all the students associated to the course and try to find out all the students who are not graded.
+      // we assume that if a student is not graded then he was assigned that assignment
       const scoreData = [];
       const platform: any = req.session.platform;
-      console.log("getunassignedstudets - platform - " + platform);
       const results: any = ([] = await getGrades(platform, {
         id: req.query.assignmentId,
         resourceLinkId: false
       }));
       const members = req.session.members;
-      console.log("members - " + JSON.stringify(members));
-      console.log("results[0].results - " + JSON.stringify(results[0].results));
       for (const key in members) {
         const score = members[key];
-        console.log("score-" + JSON.stringify(score));
 
         const tooltipsData = results[0].results.filter(function (member: any) {
           return member.userId == score.user_id;
         });
-        console.log("tooltipsData - " + JSON.stringify(tooltipsData));
         if (tooltipsData.length <= 0)
           scoreData.push({
             userId: score.userId,
             StudenName: score.name
           });
       }
-      console.log("scoreData-" + JSON.stringify(scoreData));
-
       res.send(scoreData);
     }
   );
@@ -173,7 +169,7 @@ const ltiServiceEndpoints = (app: Express): void => {
         },
         custom: {
           quiz_id: "az-123",
-          duedate: "$Resource.submission.endDateTime"
+          duedate: "2020-10-30T20:05:02Z"
         }
       }
     ];
