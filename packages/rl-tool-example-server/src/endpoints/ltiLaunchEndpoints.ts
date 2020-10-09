@@ -98,7 +98,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
     }
     console.log("req.session-LTI_ADVANTAGE_LAUNCH_ROUTE");
     const sessionObject = req.session;
-    console.log(sessionObject);
+    console.log("sessionObject - " + sessionObject);
 
     const idToken = rlValidateToken(req, sessionObject);
 
@@ -116,7 +116,13 @@ const ltiLaunchEndpoints = (app: Express): void => {
     await req.session.save(() => {
       console.log("session data saved");
     });
-    res.redirect(LTI_INSTRUCTOR_REDIRECT);
+
+    if (sessionObject.redirectUrl) {
+      res.redirect(req.url);
+      return;
+    } else {
+      res.redirect(LTI_INSTRUCTOR_REDIRECT);
+    }
   });
 
   // post to accept the LMS launch with idToken
@@ -128,8 +134,19 @@ const ltiLaunchEndpoints = (app: Express): void => {
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
     const sessionObject = req.session;
+    req.session.redirectUrl = req.url;
     console.log(sessionObject);
+    console.log("req.url - " + req.url);
 
+    if (!req.body.id_token) {
+      res.redirect(
+        url.format({
+          pathname: plateformDetails.plateformOIDCAuthEndPoint,
+          query: { assignmenturl: req.url }
+        })
+      );
+      return;
+    }
     const idToken = rlValidateToken(req, sessionObject);
 
     const rlPlatform = RlPlatform(

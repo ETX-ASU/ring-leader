@@ -45,10 +45,10 @@ const ltiServiceEndpoints = (app: Express): void => {
     );
     const resourceId = Math.floor(Math.random() * 100) + 1;
     const newLineItemData = {
-      scoreMaximum: lineItemData.scoreMaximum,
-      label: lineItemData.label,
-      resourceId: resourceId,
-      tag: lineItemData.tag,
+      scoreMaximum: 100,
+      label: "Sample line item",
+      resourceId: "xyz",
+      tag: "sample tag",
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
