@@ -101,7 +101,6 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log("sessionObject - " + JSON.stringify(sessionObject));
 
     const idToken = rlValidateToken(req, sessionObject);
-    const assignmentRedirectUrl = sessionObject.redirectUrl;
     const rlPlatform = RlPlatform(
       plateformDetails.platformPulicKey,
       plateformDetails.plateformOIDCAuthEndPoint,
@@ -122,7 +121,7 @@ const ltiLaunchEndpoints = (app: Express): void => {
       // it's a work around to get the SSO flow start so that we can get id_token
       //Note:- this code will not execute when external tool is accessed from course navigation or deep linking
       req.session.redirectUrl = null;
-      res.redirect(assignmentRedirectUrl);
+      res.redirect(sessionObject.redirectUrl);
       return;
     } else {
       res.redirect(LTI_INSTRUCTOR_REDIRECT);
