@@ -181,6 +181,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       if (!req.session) {
         throw new Error("no session detected, something is wrong");
       }
+      const sessionObject = req.session;
       const platform: any = req.session.platform;
       console.log(
         "putGradesStudentView -platform - " + JSON.stringify(platform)
@@ -196,11 +197,13 @@ const ltiServiceEndpoints = (app: Express): void => {
       console.log(
         "putGradesStudentView - platform - " + JSON.stringify(platform)
       );
+
       const options = {
         id: platform.lineitem,
-        userId: scoreData.userId
+        userId: scoreData.userId,
+        title: platform.lineitem || sessionObject.resource_link_title || null
       };
-      console.log("scoreData - " + JSON.stringify(scoreData));
+
       console.log(
         "putGradesStudentView - options - " + JSON.stringify(options)
       );

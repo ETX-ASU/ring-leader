@@ -139,13 +139,16 @@ const ltiLaunchEndpoints = (app: Express): void => {
     console.log(
       "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
     );
-
+    const queryObject = req.query;
     const sessionObject = req.session;
 
     if (!req.body.id_token) {
-      req.session.redirectUrl = req.url;
+      req.session.redirectUrl = queryObject.url;
+      req.session.assignmentDetails = {
+        title: queryObject.resource_link_title,
+        resourceId: queryObject.resourceId
+      };
       console.log(sessionObject);
-      console.log("req.url - " + req.url);
       res.redirect(
         url.format({
           pathname:
@@ -168,11 +171,11 @@ const ltiLaunchEndpoints = (app: Express): void => {
       idToken
     );
 
-    req.session.platform = rlPlatform;
-    req.session.assignmentId = req.query.resourceId;
-    console.log("req.session- " + JSON.stringify(req.session));
+    sessionObject.platform = rlPlatform;
+    sessionObject.assignmentId = req.query.resourceId;
+    console.log("sessionObject- " + JSON.stringify(sessionObject));
     await req.session.save(() => {
-      console.log("session data saved");
+      console.log("req.session- " + JSON.stringify(req.session));
     });
     res.redirect(
       LTI_ASSIGNMENT_REDIRECT +

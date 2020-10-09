@@ -77,6 +77,12 @@ class Grade {
           console.log("options.id" + options.id);
           return lineitem.id === options.id;
         });
+      if (options && !options.id && options.title)
+        lineItems = lineItems.filter((lineitem: any) => {
+          console.log("lineitem.label" + lineitem.label);
+          console.log("options.title" + options.title);
+          return lineitem.label === options.title;
+        });
       if (options && options.label)
         lineItems = lineItems.filter((lineitem: any) => {
           return lineitem.label === options.label;
