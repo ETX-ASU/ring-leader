@@ -21,10 +21,11 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    console.log("req.session.platform - " + JSON.stringify(platform));
-
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const results = await getUsers(platform, { role: req.query.role });
+
+    // we are storing member data in session only for demo purpose. We are using this in grade call. more comment in Grade service call
+    //In production env, we should call the Name and Role service and get the user details from there
     req.session.members = results.members;
     await req.session.save(() => {
       console.log("session data saved");
@@ -37,17 +38,19 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    console.log("createassignment - platform - " + platform);
-    const lineItemData = req.query;
-    console.log(
-      "createassignment - lineItemData - " + JSON.stringify(lineItemData)
-    );
+    const reqQueryString = req.query;
+
     const resourceId = Math.floor(Math.random() * 100) + 1;
-    const newLineItemData = {
-      scoreMaximum: lineItemData.scoreMaximum,
-      label: lineItemData.label,
+
+    //external_tool_url - Tool needs to pass this URL that will be launched when student
+    //clicks on the assignment.
+    //resourceId - this id is passed from platform to the tool so that the tool can
+    //identify the correct content that needs to be displayed
+    const lineItem = {
+      scoreMaximum: reqQueryString.scoreMaximum,
+      label: reqQueryString.label,
       resourceId: resourceId,
-      tag: lineItemData.tag,
+      tag: reqQueryString.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
@@ -55,7 +58,7 @@ const ltiServiceEndpoints = (app: Express): void => {
           resourceId
       }
     };
-    const results = await createLineItem(platform, newLineItemData);
+    const results = await createLineItem(platform, lineItem);
 
     res.send(results);
   });
@@ -65,13 +68,9 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    console.log("createassignment - platform - " + platform);
 
     const results = await getLineItems(platform);
-    req.session.assignments = results;
-    await req.session.save(() => {
-      console.log("session data saved");
-    });
+
     res.send(results);
   });
 
@@ -121,9 +120,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       }
       const sessionObject = req.session;
       const platform: any = sessionObject.platform;
-
       const score = req.body.params;
-      score.userId = platform.userId; //logged-in user Id
 
       const results = await putGrade(
         platform,
@@ -147,6 +144,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       res.send(results);
     }
   );
+
   app.get("/lti-service/deeplink", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
@@ -188,34 +186,34 @@ const ltiServiceEndpoints = (app: Express): void => {
     return res.send(form);
   });
 
-  app.post(
-    "/lti-service/putGradeInstructorView",
-    requestLogger,
-    async (req, res) => {
-      if (!req.session) {
-        throw new Error("no session detected, something is wrong");
-      }
-      const platform: any = req.session.platform;
-      const score = req.body.params;
-
-      const results = await putGrade(
-        platform,
-        {
-          timestamp: new Date().toISOString(),
-          scoreGiven: score.grade,
-          comment: score.comment,
-          activityProgress: score.activityProgress,
-          gradingProgress: score.gradingProgress
-        },
-        {
-          id: score.assignmentId,
-          userId: score.userId
-        }
-      );
-
-      res.send(results);
+  app.post("/lti-service/putGrade", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
     }
-  );
+    const sessionObject = req.session;
+    const platform: any = req.session.platform;
+    const score = req.body.params;
+
+    const results = await putGrade(
+      platform,
+      {
+        timestamp: new Date().toISOString(),
+        scoreGiven: score.grade,
+        comment: score.comment,
+        activityProgress: score.activityProgress,
+        gradingProgress: score.gradingProgress
+      },
+      {
+        id: score.assignmentId || null,
+        userId: score.userId,
+        title: platform.lineitem || sessionObject.title || null
+        //if platform.lineitem is null then it means that the SSO was not performed hence we
+        //will fetch line item id by matching the assignment title.
+      }
+    );
+
+    res.send(results);
+  });
 
   app.delete("/lti-service/deleteLineItem", requestLogger, async (req, res) => {
     if (!req.session) {
@@ -237,27 +235,24 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    console.log("createassignment - platform - " + platform);
-
     const results: any = ([] = await getGrades(platform, {
       id: req.query.assignmentId,
       resourceLinkId: false
     }));
     const scoreData = [];
-    console.log("req.session.members - " + JSON.stringify(req.session.members));
-    console.log(" results - " + JSON.stringify(results));
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
     const members = req.session.members;
 
     for (const key in results[0].results) {
-      console.log("key - " + JSON.stringify(key));
       const score = results[0].results[key];
-      console.log("score - " + JSON.stringify(score));
+      //Grades service call will only return user Id along with the score
+      //so for this demo, we are retrieving the user info from the session
+      //so that we can display name of the student
+      //In production env, we can call the Name and Role service and get the user details from there
       const tooltipsData = members.filter(function (member: any) {
         return member.user_id == score.userId;
       });
-      console.log("tooltipsData - " + JSON.stringify(tooltipsData));
 
       scoreData.push({
         userId: score.userId,

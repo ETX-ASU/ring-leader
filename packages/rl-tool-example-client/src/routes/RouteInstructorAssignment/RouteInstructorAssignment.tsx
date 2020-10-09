@@ -38,7 +38,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
 
   const putGrades = (assignmentId: string) => {
     axios
-      .post("/lti-service/putGradeInstructorView", {
+      .post("/lti-service/putGrade", {
         params: {
           assignmentId: assignmentId,
           grade: grade,
