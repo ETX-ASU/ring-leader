@@ -360,5 +360,59 @@ class Grade {
 
     return resultsArray;
   }
+  /**
+   * @description Deletes lineitems from a given platform
+   * @param {Object} idtoken - Idtoken for the user
+   * @param {Object} [options] - Options object
+   * @param {Boolean} [options.resourceLinkId = false] - Filters line items based on the resourceLinkId of the resource that originated the request
+   * @param {String} [options.resourceId = false] - Filters line items based on the resourceId
+   * @param {String} [options.tag = false] - Filters line items based on the tag
+   * @param {Number} [options.limit = false] - Sets a maximum number of line items to be deleted
+   * @param {String} [options.id = false] - Filters line items based on the id
+   * @param {String} [options.label = false] - Filters line items based on the label
+   */
+
+  async deleteLineItems(platform: any, options?: any): Promise<any> {
+    if (!platform) {
+      throw new Error("MISSING_ID_TOKEN");
+    }
+    if (!platform) {
+      throw new Error("PLATFORM_NOT_FOUND");
+    }
+
+    const accessToken = await getAccessToken(
+      platform,
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
+    );
+    const lineItems = await this.getLineItems(platform, options, accessToken);
+    const result: any = {
+      success: [],
+      failure: []
+    };
+
+    for (const lineitem of lineItems) {
+      try {
+        const lineitemUrl = lineitem.id;
+        await got.delete(lineitemUrl, {
+          headers: {
+            Authorization:
+              accessToken.token_type + " " + accessToken.access_token
+          }
+        });
+        result.success.push({
+          lineitem: lineitemUrl
+        });
+      } catch (err) {
+        console.log(err);
+        result.failure.push({
+          lineitem: lineitem.id,
+          error: err.message
+        });
+        continue;
+      }
+    }
+
+    return result;
+  }
 }
 export { Grade };

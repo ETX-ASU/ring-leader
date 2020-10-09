@@ -5,7 +5,8 @@ import {
   getLineItems,
   putGrade,
   getGrades,
-  createDeepLinkingForm
+  createDeepLinkingForm,
+  deleteLineItems
 } from "@asu-etx/rl-client-lib";
 import log from "../services/LogService";
 import requestLogger from "../middleware/requestLogger";
@@ -295,6 +296,23 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     res.send(results);
   });
+
+  app.post("/lti-service/deleteLineItem", requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const platform: any = req.session.platform;
+    const scoreData = req.body.params;
+    const options = {
+      id: scoreData.assignmentId
+    };
+    console.log("delete line item options -" + JSON.stringify(options));
+
+    const results = await deleteLineItems(platform, options);
+
+    res.send(results);
+  });
+
   app.get("/lti-service/grades", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
