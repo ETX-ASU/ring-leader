@@ -201,7 +201,10 @@ const ltiServiceEndpoints = (app: Express): void => {
       const options = {
         id: platform.lineitem,
         userId: scoreData.userId,
-        title: platform.lineitem || sessionObject.resource_link_title || null
+        title:
+          platform.lineitem ||
+          sessionObject.assignmentDetails.resource_link_title ||
+          null
       };
 
       console.log(
