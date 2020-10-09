@@ -46,10 +46,10 @@ const ltiServiceEndpoints = (app: Express): void => {
     );
     const resourceId = Math.floor(Math.random() * 100) + 1;
     const newLineItemData = {
-      scoreMaximum: 100,
-      label: "Sample line item",
-      resourceId: "xyz",
-      tag: "sample tag",
+      scoreMaximum: lineItemData.scoreMaximum,
+      label: lineItemData.label,
+      resourceId: resourceId,
+      tag: lineItemData.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
         external_tool_url:
@@ -61,69 +61,7 @@ const ltiServiceEndpoints = (app: Express): void => {
 
     res.send(results);
   });
-  app.get("/lti-service/createLineItem", requestLogger, async (req, res) => {
-    if (!req.session) {
-      throw new Error("no session detected, something is wrong");
-    }
-    const platform: any = req.session.platform;
-    const lineItemData = req.query;
-    console.log("lineItemData.resourceLinkId - " + lineItemData.resourceLinkId);
-    platform.resourceLinkId = lineItemData.resourceLinkId;
-    await req.session.save(() => {
-      console.log("session data saved");
-    });
-    console.log("createassignment - platform - " + platform);
 
-    const resourceId = Math.floor(Math.random() * 100) + 1;
-    const newLineItemData = {
-      scoreMaximum: 100,
-      label: "sample line item -" + resourceId,
-      resourceId: resourceId,
-      resourceLinkId: lineItemData.resourceLinkId,
-      tag: "sample line item tag -" + resourceId,
-      "https://canvas.instructure.com/lti/submission_type": {
-        type: "external_tool",
-        external_tool_url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
-          resourceId
-      }
-    };
-    const results = await createLineItem(platform, newLineItemData, {
-      resourceLinkId: true
-    });
-
-    res.send(results);
-  });
-  app.get(
-    "/lti-service/createresourcelink",
-    requestLogger,
-    async (req, res) => {
-      if (!req.session) {
-        throw new Error("no session detected, something is wrong");
-      }
-      const platform: any = req.session.platform;
-      const lineItemData = req.query;
-      const resourceId = Math.floor(Math.random() * 100) + 1;
-      const newLineItemData = {
-        scoreMaximum: lineItemData.scoreMaximum,
-        label: lineItemData.label,
-        resourceId: resourceId,
-        tag: lineItemData.tag
-      };
-      const LineItemData = {
-        type: "ltiResourceLink",
-        title: lineItemData.label,
-        url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
-        lineItem: newLineItemData
-      };
-      console.log("Resource Link - " + JSON.stringify(LineItemData));
-
-      const results = await createLineItem(platform, LineItemData);
-
-      res.send(results);
-    }
-  );
   app.get("/lti-service/getassignment", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
