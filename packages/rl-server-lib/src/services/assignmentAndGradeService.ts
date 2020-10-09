@@ -73,14 +73,10 @@ class Grade {
 
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
-          console.log("lineitem.id" + lineitem.id);
-          console.log("options.id" + options.id);
           return lineitem.id === options.id;
         });
       if (options && !options.id && options.title)
         lineItems = lineItems.filter((lineitem: any) => {
-          console.log("lineitem.label" + lineitem.label);
-          console.log("options.title" + options.title);
           return lineitem.label === options.title;
         });
       if (options && options.label)
@@ -385,6 +381,8 @@ class Grade {
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
     );
     const lineItems = await this.getLineItems(platform, options, accessToken);
+    console.log("delete line item - lineItems" + JSON.stringify(lineItems));
+
     const result: any = {
       success: [],
       failure: []
