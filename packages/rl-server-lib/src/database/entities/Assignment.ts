@@ -7,19 +7,25 @@ class Assignment {
   id: number | undefined = undefined;
 
   @Column("varchar", { length: 128 })
-  name = "";
+  type = "";
 
   @Column("varchar", { length: 128 })
-  resourceLinkId = "";
+  title = "";
 
-  @Column("varchar", { length: 4096 })
-  private_key = "";
+  @Column("varchar", { length: 2048 })
+  url = "";
 
-  @Column("varchar", { length: 4096 })
-  public_key = "";
+  @Column("varchar", { length: 128 })
+  score_maximum = "";
 
-  @Column("varchar", { length: 8192 })
-  public_key_jwk = "";
+  @Column("varchar", { length: 128 })
+  lineitem_label = "";
+
+  @Column("varchar", { length: 128 })
+  lineitem_resource_id = "";
+  @Column("varchar", { length: 128 })
+  lineitem_tag = "";
 }
 
 export default Assignment;
+

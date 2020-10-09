@@ -1,6 +1,7 @@
 // eslint-disable-next-line node/no-extraneous-import
 import got from "got";
 import { URLSearchParams } from "url";
+import Assignment from "../database/entities/Assignment";
 import { getAccessToken } from "../util/auth";
 class Grade {
   /**
@@ -145,7 +146,7 @@ class Grade {
           json: lineItem
         })
         .json();
-      console.log("Line item successfully created");
+      console.log(`Line item successfully created: ${lineItem}`);
       return newLineItem;
     } catch (err) {
       console.log(err);

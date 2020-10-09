@@ -3,13 +3,15 @@ import { Express } from "express";
 
 import { initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "../services/ltiLaunchService";
 import requestLogger from "../middleware/requestLogger";
+import {
+  OIDC_LOGIN_INIT_ROUTE,
+  LTI_ADVANTAGE_LAUNCH_ROUTE,
+  LTI_ASSIGNMENT_REDIRECT,
+  LTI_DEEPLINK_REDIRECT,
+  TOOL_INFO
+} from "../util/environment";
 
 
-
-const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
-const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
-const LTI_ASSIGNMENT_REDIRECT = "/assignment";
-const LTI_DEEPLINK_REDIRECT = "/deeplink";
 /**
    * @description Creates a set of endpoints to support LTI1.3 launch given an Express application.
    * @param {Object} app - the express application that needs to bind endpoints.
@@ -42,7 +44,7 @@ const rlLtiLaunchExpressEndpoints = (app: Express, applicationUrl: String): void
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
-  app.get("/tool-info", requestLogger, async (req, res) => {
+  app.get(TOOL_INFO, requestLogger, async (req, res) => {
     toolInfoGet(req, res, applicationUrl);
   });
 };

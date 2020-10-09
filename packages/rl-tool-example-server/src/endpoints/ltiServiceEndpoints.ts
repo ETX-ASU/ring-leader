@@ -10,8 +10,21 @@ import {
 } from "@asu-etx/rl-client-lib";
 
 import {
-  requestLogger
+  requestLogger,
+  getDeepLinkItems,
+  DEEP_LINK_ASSIGNMENT_ENDPOINT,
+  ROSTER_ENDPOINT,
+  CREATE_ASSIGNMENT_ENDPOINT,
+  GET_ASSIGNMENT_ENDPOINT,
+  GET_UNASSIGNED_STUDENTS_ENDPOINT,
+  PUT_STUDENT_GRADE_VIEW,
+  PUT_STUDENT_GRADE,
+  DELETE_LINE_ITEM,
+  GET_GRADES
+  
 } from "@asu-etx/rl-server-lib";
+
+import {APPLICATION_URL} from "../environment";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls
@@ -19,7 +32,7 @@ import {
 // cookie and send it to the client
 const ltiServiceEndpoints = (app: Express): void => {
 
-  app.get("/lti-service/roster", requestLogger, async (req, res) => {
+  app.get(ROSTER_ENDPOINT , requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -35,36 +48,8 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
-<<<<<<< HEAD
-  app.get("/lti-service/assignments", requestLogger, (req, res) => {
-    res.send("");
-  });
-  app.get("/lti-service/createassignment", requestLogger, async (req, res) => {
-    if (!req.session) {
-      throw new Error("no session detected, something is wrong");
-    }
-    const platform: any = req.session.platform;
-    console.log("createassignment - platform - " + platform);
-    const lineItemData = req.query;
-    console.log(
-      "createassignment - lineItemData - " + JSON.stringify(lineItemData)
-    );
-    const resourceId = Math.floor(Math.random() * 100) + 1;
-    const newLineItemData = {
-      scoreMaximum: lineItemData.scoreMaximum,
-      label: lineItemData.label,
-      resourceId: resourceId,
-      tag: lineItemData.tag,
-      "https://canvas.instructure.com/lti/submission_type": {
-        type: "external_tool",
-        external_tool_url: `https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=${resourceId}`
-      }
-    };
-    const results = await createLineItem(platform, newLineItemData);
-=======
->>>>>>> feature/example-app-canvas-integration
 
-  app.get("/lti-service/createassignment", requestLogger, async (req, res) => {
+  app.get(CREATE_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -84,9 +69,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       tag: reqQueryString.tag,
       "https://canvas.instructure.com/lti/submission_type": {
         type: "external_tool",
-        external_tool_url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
-          resourceId
+        external_tool_url: `${APPLICATION_URL}/assignment?resourceId="${resourceId}`
       }
     };
     const results = await createLineItem(platform, lineItem);
@@ -94,7 +77,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     res.send(results);
   });
 
-  app.get("/lti-service/getassignment", requestLogger, async (req, res) => {
+  app.get(GET_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -106,8 +89,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     res.send(results);
   });
 
-  app.get(
-    "/lti-service/getunassignedstudets",
+  app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT,
     requestLogger,
     async (req, res) => {
       if (!req.session) {
@@ -139,8 +121,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     }
   );
 
-  app.post(
-    "/lti-service/putGradeStudentView",
+  app.post(PUT_STUDENT_GRADE_VIEW,
     requestLogger,
     async (req, res) => {
       if (!req.session) {
@@ -173,38 +154,14 @@ const ltiServiceEndpoints = (app: Express): void => {
     }
   );
 
-  app.get("/lti-service/deeplink", requestLogger, async (req, res) => {
+  app.get(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
     if (!req.session) {
-      throw new Error("no session detected, something is wrong");
+      throw new Error(`${DEEP_LINK_ASSIGNMENT_ENDPOINT}: no session detected, something is wrong`);
     }
     const platform: any = req.session.platform;
-
+    const items = getDeepLinkItems(DEEP_LINK_ASSIGNMENT_ENDPOINT, platform);
     console.log("deeplink - platform - " + JSON.stringify(platform));
-    const items = [
-      {
-        type: "ltiResourceLink",
-        title: "DeepLink ltiResourceLink",
-        url:
-          "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=76",
-        lineItem: {
-          scoreMaximum: 100,
-          label: "Chapter 12 quiz",
-          resourceId: "Chapter12quiz",
-          tag: "quiz"
-        },
-        available: {
-          startDateTime: "2020-10-06T20:05:02Z",
-          endDateTime: "2020-10-30T20:05:02Z"
-        },
-        submission: {
-          endDateTime: "2020-10-30T20:05:02Z"
-        },
-        custom: {
-          quiz_id: "az-123",
-          duedate: "2020-10-30T20:05:02Z"
-        }
-      }
-    ];
+    
 
     // Creates the deep linking request form
     const form = await createDeepLinkingForm(platform, items, {
@@ -214,7 +171,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     return res.send(form);
   });
 
-  app.post("/lti-service/putGrade", requestLogger, async (req, res) => {
+  app.post(PUT_STUDENT_GRADE, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -243,7 +200,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     res.send(results);
   });
 
-  app.delete("/lti-service/deleteLineItem", requestLogger, async (req, res) => {
+  app.delete(DELETE_LINE_ITEM, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -258,7 +215,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     res.send(results);
   });
 
-  app.get("/lti-service/grades", requestLogger, async (req, res) => {
+  app.get(GET_GRADES, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
