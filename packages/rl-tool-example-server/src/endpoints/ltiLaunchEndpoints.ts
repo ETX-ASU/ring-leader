@@ -141,12 +141,12 @@ const ltiLaunchEndpoints = (app: Express): void => {
     );
     const queryObject = req.query;
     const sessionObject = req.session;
-
+    const assignmentBody = req.body;
     if (!req.body.id_token) {
       req.session.redirectUrl = queryObject.url;
       req.session.assignmentDetails = {
-        title: queryObject.resource_link_title,
-        resourceId: queryObject.resourceId
+        title: assignmentBody.resource_link_title,
+        resourceId: assignmentBody.resourceId
       };
       console.log(sessionObject);
       res.redirect(
