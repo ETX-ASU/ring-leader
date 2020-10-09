@@ -141,7 +141,8 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (!req.body.id_token) {
       res.redirect(
         url.format({
-          pathname: plateformDetails.plateformOIDCAuthEndPoint,
+          pathname:
+            "https://unicon.instructure.com/courses/718/external_tools/412",
           query: { assignmenturl: req.url }
         })
       );
