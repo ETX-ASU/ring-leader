@@ -302,9 +302,8 @@ const ltiServiceEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    const scoreData = req.body.params;
     const options = {
-      id: scoreData.assignmentId
+      id: req.query.assignmentId
     };
     console.log("delete line item options -" + JSON.stringify(options));
 
