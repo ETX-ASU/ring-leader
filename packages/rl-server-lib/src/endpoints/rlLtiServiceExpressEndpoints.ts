@@ -26,7 +26,7 @@ import {
 // then this service may not be needed. It could be used to show how the calls
 // can be made server side if they don't want put the Canvas idToken into a
 // cookie and send it to the client
-const ltiServiceEndpoints = (app: Express): void => {
+const rlLtiServiceExpressEndpoints = (app: Express): void => {
 
   app.get(ROSTER_ENDPOINT, requestLogger, async (req, res) => {
     if (!req.session) {
@@ -258,4 +258,4 @@ const ltiServiceEndpoints = (app: Express): void => {
   });
 };
 
-export default ltiServiceEndpoints;
+export default rlLtiServiceExpressEndpoints;
