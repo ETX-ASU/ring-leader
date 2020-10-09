@@ -50,25 +50,6 @@ const RouteInstructor: React.FC = () => {
         setDisplayDiv(true);
       });
   };
-  const CreateResourceLink = () => {
-    axios
-      .get("/lti-service/createresourcelink", {
-        params: {
-          scoreMaximum: maxScore,
-          label: title,
-          tag: tag
-        }
-      })
-      .then((results) => {
-        console.log(JSON.stringify(results.data));
-        setDisplayDiv(false);
-        setDisplayCreateAssignment(false);
-        setdisplayAssignment(false);
-        setDisplayNoAssignment(false);
-        setDisplayCreateAssignmentSuccess(true);
-        setDisplayCreateResourceLinkAssignment(false);
-      });
-  };
   const createAssignment = () => {
     axios
       .get("/lti-service/createassignment", {
@@ -254,18 +235,6 @@ const RouteInstructor: React.FC = () => {
                   placeholder="Enter Tag"
                   name="Tag"
                 ></input>
-              </div>
-
-              <div className="form-group">
-                <div className="col-sm-offset-2 col-sm-10">
-                  <button
-                    type="submit"
-                    onClick={CreateResourceLink}
-                    className="btn btn-primary"
-                  >
-                    Submit
-                  </button>
-                </div>
               </div>
             </div>
           )}

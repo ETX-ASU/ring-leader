@@ -48,6 +48,9 @@ const getLineItems = (platform: any, options?: any): any => {
   return new Grade().getLineItems(platform, options);
 };
 
+const deleteLineItems = (platform: any, options?: any): any => {
+  return new Grade().deleteLineItems(platform, options);
+};
 export {
   getUsers,
   RlPlatform,
@@ -56,5 +59,6 @@ export {
   createLineItem,
   getLineItems,
   createDeepLinkingMessage,
-  createDeepLinkingForm
+  createDeepLinkingForm,
+  deleteLineItems
 };

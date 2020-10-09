@@ -19,6 +19,10 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
   const [displayUnAssignedStudents, setDisplayUnAssignedStudents] = useState<
     boolean
   >(false);
+  const [
+    displayDeleteAssignmentSuccess,
+    setDisplayDeleteAssignmentSuccess
+  ] = useState<boolean>(false);
   const [displayCreateScore, setDisplayCreateScore] = useState<boolean>(false);
   const [displayGrade, setDisplayGrade] = useState<boolean>(false);
   const [selectValue, setSelectValue] = useState<string>(
@@ -34,11 +38,14 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
 
   const putGrades = (assignmentId: string) => {
     axios
-      .post("/lti-service/putgrades", {
+      .post("/lti-service/putGrade", {
         params: {
           assignmentId: assignmentId,
           grade: grade,
-          userId: selectValue
+          userId: selectValue,
+          comment: "Instructor comment on the student performance",
+          activityProgress: "Completed",
+          gradingProgress: "FullyGraded"
         }
       })
       .then((results) => {
@@ -47,9 +54,24 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         setDisplayGrade(false);
         setDisplayCreateScore(false);
         setDisplayUnAssignedStudents(false);
+        setDisplayDeleteAssignmentSuccess(false);
       });
   };
-
+  const deleteAssignment = (assignmentId: string) => {
+    axios
+      .delete("/lti-service/deleteLineItem", {
+        params: {
+          assignmentId: assignmentId
+        }
+      })
+      .then((results) => {
+        console.log(JSON.stringify(results.data));
+        setDisplayDeleteAssignmentSuccess(true);
+        setDisplayUnAssignedStudents(false);
+        setDisplayCreateScore(false);
+        setDisplayCreateScoreSuccess(false);
+      });
+  };
   const getUnAssignedStudets = (assignmentId: string) => {
     axios
       .get("/lti-service/getunassignedstudets", {
@@ -63,6 +85,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         setDisplayUnAssignedStudents(true);
         setDisplayGrade(false);
         setDisplayCreateScore(false);
+        setDisplayDeleteAssignmentSuccess(false);
         setDisplayCreateScoreSuccess(false);
       });
   };
@@ -78,6 +101,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         setScores(results.data);
         setDisplayGrade(true);
         setDisplayUnAssignedStudents(false);
+        setDisplayDeleteAssignmentSuccess(false);
         setDisplayCreateScore(false);
         setDisplayCreateScoreSuccess(false);
       });
@@ -106,6 +130,13 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
             onClick={() => grades(assignmentData.id)}
           >
             Get Grades
+          </button>
+          <button
+            assignment-id={assignmentData.id}
+            className="btn btn-primary"
+            onClick={() => deleteAssignment(assignmentData.id)}
+          >
+            Delete Assignment
           </button>
           <button
             assignment-id={assignmentData.id}
@@ -201,6 +232,13 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <div>
             <div className="alert alert-success">
               <strong>Success!</strong> Grade submitted successfully!!!
+            </div>
+          </div>
+        )}
+        {displayDeleteAssignmentSuccess && (
+          <div>
+            <div className="alert alert-success">
+              <strong>Success!</strong> Assignment deleted successfully!!!
             </div>
           </div>
         )}
