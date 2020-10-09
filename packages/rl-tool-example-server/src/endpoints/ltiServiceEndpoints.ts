@@ -31,9 +31,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     });
     res.send(results);
   });
-  app.get("/lti-service/assignments", requestLogger, (req, res) => {
-    res.send("");
-  });
+
   app.get("/lti-service/createassignment", requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
@@ -113,49 +111,37 @@ const ltiServiceEndpoints = (app: Express): void => {
       res.send(scoreData);
     }
   );
-  app.get(
-    "/lti-service/putGradesStudentView",
+
+  app.post(
+    "/lti-service/putGradeStudentView",
     requestLogger,
     async (req, res) => {
       if (!req.session) {
         throw new Error("no session detected, something is wrong");
       }
       const sessionObject = req.session;
-      const platform: any = req.session.platform;
-      console.log(
-        "putGradesStudentView -platform - " + JSON.stringify(platform)
-      );
-      const scoreData = req.query;
-      console.log(
-        "putGradesStudentView -req.session - " + JSON.stringify(req.session)
-      );
+      const platform: any = sessionObject.platform;
 
-      scoreData.userId = platform.userId;
-      scoreData.grade = scoreData.grade;
-
-      console.log(
-        "putGradesStudentView - platform - " + JSON.stringify(platform)
-      );
+      const score = req.body.params;
+      score.userId = platform.userId; //logged-in user Id
 
       const options = {
         id: platform.lineitem,
-        userId: scoreData.userId,
+        userId: score.userId,
         title: platform.lineitem || sessionObject.title || null
+        //if platform.lineitem is null then it means that the SSO was not performed hence we
+        //will fetch line item id by matching the assignment title.
       };
-      console.log("sessionObject.title" + JSON.stringify(sessionObject.title));
-      console.log(
-        "putGradesStudentView - options - " + JSON.stringify(options)
-      );
+
       const results = await putGrade(
         platform,
         {
-          timestamp: "2020-10-05T18:54:36.736+00:00",
-          scoreGiven: scoreData.grade,
-          scoreMaximum: 100,
-          comment: "This is exceptional work.",
-          activityProgress: "Completed",
-          gradingProgress: "FullyGraded",
-          userId: scoreData.userId
+          timestamp: new Date().toISOString(),
+          scoreGiven: score.grade,
+          comment: score.comment,
+          activityProgress: score.activityProgress,
+          gradingProgress: score.gradingProgress,
+          userId: score.userId
         },
         options
       );
@@ -204,36 +190,34 @@ const ltiServiceEndpoints = (app: Express): void => {
     return res.send(form);
   });
 
-  app.post("/lti-service/putgrades", requestLogger, async (req, res) => {
-    if (!req.session) {
-      throw new Error("no session detected, something is wrong");
+  app.post(
+    "/lti-service/putGradeInstructorView",
+    requestLogger,
+    async (req, res) => {
+      if (!req.session) {
+        throw new Error("no session detected, something is wrong");
+      }
+      const platform: any = req.session.platform;
+      const score = req.body.params;
+      const options = {
+        id: score.assignmentId,
+        userId: score.userId
+      };
+      const results = await putGrade(
+        platform,
+        {
+          timestamp: new Date().toISOString(),
+          scoreGiven: score.grade,
+          comment: score.comment,
+          activityProgress: score.activityProgress,
+          gradingProgress: score.gradingProgress
+        },
+        options
+      );
+
+      res.send(results);
     }
-    const platform: any = req.session.platform;
-    const scoreData = req.body.params;
-    console.log("createassignment - platform - " + platform);
-    const options = {
-      id: scoreData.assignmentId,
-      userId: scoreData.userId
-    };
-    console.log("scoreData - " + JSON.stringify(scoreData));
-    console.log("options - " + JSON.stringify(options));
-
-    const results = await putGrade(
-      platform,
-      {
-        timestamp: "2020-10-05T18:54:36.736+00:00",
-        scoreGiven: scoreData.grade,
-        scoreMaximum: 100,
-        comment: "This is exceptional work.",
-        activityProgress: "Completed",
-        gradingProgress: "FullyGraded",
-        userId: scoreData.userId
-      },
-      options
-    );
-
-    res.send(results);
-  });
+  );
 
   app.delete("/lti-service/deleteLineItem", requestLogger, async (req, res) => {
     if (!req.session) {

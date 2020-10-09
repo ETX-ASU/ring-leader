@@ -13,9 +13,12 @@ const RouteStudentAssignment: React.FC = () => {
   ] = useState<boolean>(false);
   const submitGrade = () => {
     axios
-      .get("/lti-service/putGradesStudentView", {
+      .post("/lti-service/putGradeStudentView", {
         params: {
-          grade: 81
+          scoreGiven: 81,
+          comment: "Instructor comment on the student performance",
+          activityProgress: "Completed",
+          gradingProgress: "FullyGraded"
         }
       })
       .then((results) => {

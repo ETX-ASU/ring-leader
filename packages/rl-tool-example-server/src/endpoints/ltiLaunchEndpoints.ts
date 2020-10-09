@@ -136,17 +136,21 @@ const ltiLaunchEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
+    const reqQueryString = req.query;
+    const reqBody = req.body;
     console.log(
-      "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(req.query)
+      "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(reqQueryString)
     );
     const sessionObject = req.session;
-    const assignmentBody = req.body;
     if (!req.body.id_token) {
+      ///if id_tokne is not present then it means that the platform SSO was not performed.
+      //we will redirect user to external tool url that will start SSO process internally
+      //and we will get id_token
+      //Note:- if a deep link assignment is launch then this code section will not be executed.
       req.session.redirectUrl = req.url;
-      req.session.title = assignmentBody.resource_link_title;
-      req.session.resourceId = assignmentBody.resourceId;
+      req.session.title = reqBody.resource_link_title;
+      req.session.resourceId = reqBody.resourceId;
 
-      console.log(sessionObject);
       res.redirect(
         url.format({
           pathname:
@@ -170,17 +174,16 @@ const ltiLaunchEndpoints = (app: Express): void => {
     );
 
     sessionObject.platform = rlPlatform;
-    sessionObject.assignmentId = req.query.resourceId;
-    console.log("sessionObject- " + JSON.stringify(sessionObject));
+    sessionObject.assignmentId = reqQueryString.resourceId;
     await req.session.save(() => {
       console.log("req.session- " + JSON.stringify(req.session));
     });
     res.redirect(
       LTI_ASSIGNMENT_REDIRECT +
         "?resource_link_id=" +
-        req.body.resource_link_id +
+        reqBody.resource_link_id +
         "&resourceId=" +
-        req.query.resourceId
+        reqQueryString.resourceId
     );
   });
 
