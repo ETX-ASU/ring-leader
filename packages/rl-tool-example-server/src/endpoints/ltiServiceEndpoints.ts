@@ -125,14 +125,6 @@ const ltiServiceEndpoints = (app: Express): void => {
       const score = req.body.params;
       score.userId = platform.userId; //logged-in user Id
 
-      const options = {
-        id: platform.lineitem,
-        userId: score.userId,
-        title: platform.lineitem || sessionObject.title || null
-        //if platform.lineitem is null then it means that the SSO was not performed hence we
-        //will fetch line item id by matching the assignment title.
-      };
-
       const results = await putGrade(
         platform,
         {
@@ -141,9 +133,15 @@ const ltiServiceEndpoints = (app: Express): void => {
           comment: score.comment,
           activityProgress: score.activityProgress,
           gradingProgress: score.gradingProgress,
-          userId: score.userId
+          userId: platform.userId
         },
-        options
+        {
+          id: platform.lineitem,
+          userId: platform.userId,
+          title: platform.lineitem || sessionObject.title || null
+          //if platform.lineitem is null then it means that the SSO was not performed hence we
+          //will fetch line item id by matching the assignment title.
+        }
       );
 
       res.send(results);
@@ -199,10 +197,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       }
       const platform: any = req.session.platform;
       const score = req.body.params;
-      const options = {
-        id: score.assignmentId,
-        userId: score.userId
-      };
+
       const results = await putGrade(
         platform,
         {
@@ -212,7 +207,10 @@ const ltiServiceEndpoints = (app: Express): void => {
           activityProgress: score.activityProgress,
           gradingProgress: score.gradingProgress
         },
-        options
+        {
+          id: score.assignmentId,
+          userId: score.userId
+        }
       );
 
       res.send(results);

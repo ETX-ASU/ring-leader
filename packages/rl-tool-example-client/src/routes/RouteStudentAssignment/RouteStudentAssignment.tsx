@@ -15,7 +15,7 @@ const RouteStudentAssignment: React.FC = () => {
     axios
       .post("/lti-service/putGradeStudentView", {
         params: {
-          scoreGiven: 81,
+          grade: 81,
           comment: "Instructor comment on the student performance",
           activityProgress: "Completed",
           gradingProgress: "FullyGraded"
