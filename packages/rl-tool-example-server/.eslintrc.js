@@ -31,6 +31,7 @@ module.exports = {
     "@typescript-eslint/no-this-alias": 0,
     "node/no-unpublished-import": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
+    "@typescript-eslint/camelcase": 0,
     trailingComma: 0
   },
   overrides: [

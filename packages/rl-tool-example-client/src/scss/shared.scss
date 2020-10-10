@@ -1,0 +1,24 @@
+/*============ PLATFORM VARIABLE ============*/
+
+// https://thecollege.asu.edu/resources/marketing/identity#:~:text=ASU's%20primary%20font%20in%20print%20communications%20is%20Berthold%20Akzidenz%2DGrotesk.&text=The%20primary%20website%20font%20is,Helvetica%20and%20Arial%20are%20acceptable.
+
+$asuMaroon: #8C1D40;
+$asuGold: #FFC627;
+$asuGreen: #78BE20;
+$asuBlue: #00A3E0;
+$asuOrange: #FF7F32;
+$asuGrey: #5C6670;
+
+/*============ BOOTSTRAP FUNCTIONS / VARIABLES / MIXINS ============*/
+
+$primary: $asuMaroon;
+$secondary: $asuGold;
+$text-default: darken($asuGrey, 20%);
+
+$font-family-sans-serif:      'Roboto', sans-serif;
+$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:            $font-family-sans-serif !default;
+
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
