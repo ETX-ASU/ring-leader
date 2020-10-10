@@ -91,7 +91,7 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
     throw new Error("no session detected, something is wrong");
   }
   const processedRequest = await processRequest(request);
-  if(!processedRequest) {
+  if (!processedRequest) {
     throw new Error("Unable to process request");
   }
 
@@ -100,7 +100,7 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   await request.session.save(() => {
     console.log("session data saved");
   });
-  
+
   if (processedRequest.session.redirectUrl) {
     // This means that student/instrucot click on assignmnet and platform SSO was not performed
     // it's a work around to get the SSO flow start so that we can get id_token
@@ -127,6 +127,10 @@ const assignmentRedirectPost = async (req: any, request: any): Promise<void> => 
     "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(reqQueryString)
   );
 
+  console.log(
+    "LTI_ASSIGNMENT_REDIRECT -  req.body" + JSON.stringify(reqBody)
+  );
+
   if (!req.body.id_token) {
     ///if id_token is not present then it means that the platform SSO was not performed.
     //we will redirect user to external tool url that will start SSO process internally
@@ -148,9 +152,9 @@ const assignmentRedirectPost = async (req: any, request: any): Promise<void> => 
   } else {
     req.session.redirectUrl = null;
   }
-  
+
   const processedRequest = await processRequest(request);
-  if(!processedRequest) {
+  if (!processedRequest) {
     throw new Error("Unable to process request");
   }
   processedRequest.session.platform = processedRequest.rlPlatform;
@@ -160,10 +164,10 @@ const assignmentRedirectPost = async (req: any, request: any): Promise<void> => 
   });
   request.redirect(
     LTI_ASSIGNMENT_REDIRECT +
-      "?resource_link_id=" +
-      reqBody.resource_link_id +
-      "&resourceId=" +
-      reqQueryString.resourceId
+    "?resource_link_id=" +
+    reqBody.resource_link_id +
+    "&resourceId=" +
+    reqQueryString.resourceId
   );
 };
 
@@ -173,7 +177,7 @@ const deepLinkRedirect = async (req: any, request: any): Promise<void> => {
   }
   console.log("req.session-LTI_DEEPLINK_REDIRECT");
   const processedRequest = await processRequest(request);
-  if(!processedRequest) {
+  if (!processedRequest) {
     throw new Error("Unable to process request");
   }
 
