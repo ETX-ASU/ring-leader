@@ -8,7 +8,7 @@ import { RlPlatform } from "../util/rlPlatform";
 import { getToolConsumer } from "../services/ToolConsumerService";
 
 
-const processRequest = async (request: any)  => {
+const processRequest = async (request: any) => {
   if (!request.session) {
     throw new Error("no session detected, something is wrong");
   }
@@ -24,7 +24,7 @@ const processRequest = async (request: any)  => {
   }
 
   const rlPlatform = RlPlatform(
-    platformDetails.public_key,
+    platformDetails.private_key,
     platformDetails.platformOIDCAuthEndPoint,
     platformDetails.platformAccessTokenEndpoint,
     platformDetails.keyid,
@@ -32,7 +32,7 @@ const processRequest = async (request: any)  => {
     request.body.id_token
   );
 
-  return {rlPlatform: rlPlatform, session: session}
+  return { rlPlatform: rlPlatform, session: session }
 }
 
 export default processRequest;
