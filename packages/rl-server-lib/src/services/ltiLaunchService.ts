@@ -146,40 +146,42 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
 };
 
 const assignmentRedirectPost = async (
-  req: any,
-  request: any
+  request: any,
+  response: any
 ): Promise<void> => {
-  if (!req.session) {
+ /* if (!request.session) {
     throw new Error("no session detected, something is wrong");
-  }
-  const reqQueryString = req.query;
-  const reqBody = req.body;
+  }*/
+  const reqQueryString = request.query;
+  const reqBody = request.body;
   console.log(
     "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(reqQueryString)
   );
 
   console.log("LTI_ASSIGNMENT_REDIRECT -  req.body" + JSON.stringify(reqBody));
 
-  if (!req.body.id_token) {
+  console.log("LTI_ASSIGNMENT_REDIRECT -  req.session" + JSON.stringify(request.session));
+
+  if (!request.body.id_token) {
     ///if id_token is not present then it means that the platform SSO was not performed.
     //we will redirect user to external tool url that will start SSO process internally
     //user will automatically redirected to the assignment
     //and we will get id_token
     //Note:- if a deep link assignment is launch then this code section will not be executed.
-    req.session.redirectUrl = req.url;
-    req.session.title = reqBody.resource_link_title;
-    req.session.resourceId = reqBody.resourceId;
+    request.session.redirectUrl = request.url;
+    request.session.title = reqBody.resource_link_title;
+    request.session.resourceId = reqBody.resourceId;
 
     request.redirect(
       url.format({
         pathname:
           "https://unicon.instructure.com/courses/718/external_tools/412",
-        query: { assignmenturl: req.url }
+        query: { assignmenturl: request.url }
       })
     );
     return;
   } else {
-    req.session.redirectUrl = null;
+    request.session.redirectUrl = null;
   }
 
   const processedRequest = await processRequest(request);
@@ -188,10 +190,10 @@ const assignmentRedirectPost = async (
   }
   processedRequest.session.platform = processedRequest.rlPlatform;
   processedRequest.session.assignmentId = reqQueryString.resourceId;
-  await req.session.save(() => {
+  await request.session.save(() => {
     console.log("req.session- " + JSON.stringify(req.session));
   });
-  request.redirect(
+  response.redirect(
     LTI_ASSIGNMENT_REDIRECT +
       "?resource_link_id=" +
       reqBody.resource_link_id +
