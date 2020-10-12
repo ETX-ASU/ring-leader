@@ -42,9 +42,6 @@ const getToolConsumer = async (
   const connection = await getConnection();
   const toolConsumerRepository = connection.getRepository(ToolConsumer);
   console.log(
-    `toolConsumerRepository -: ${JSON.stringify(toolConsumerRepository)} )}`
-  );
-  console.log(
     `toolConsumerRepository -request : ${JSON.stringify(request)} )}`
   );
   const toolConsumer:
@@ -56,6 +53,7 @@ const getToolConsumer = async (
       deployment_id: "0"
     }
   });
+  console.log(`toolConsumerRepository -toolConsumer : ${toolConsumer} )}`);
   console.log(
     `toolConsumerRepository -toolConsumer : ${JSON.stringify(toolConsumer)} )}`
   );
