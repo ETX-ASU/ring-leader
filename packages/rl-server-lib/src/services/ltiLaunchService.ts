@@ -149,9 +149,9 @@ const assignmentRedirectPost = async (
   req: any,
   request: any
 ): Promise<void> => {
-  /*if (!req.session) {
+  if (!req.session) {
     throw new Error("no session detected, something is wrong");
-  }*/
+  }
   const reqQueryString = req.query;
   const reqBody = req.body;
   console.log(
@@ -200,7 +200,7 @@ const assignmentRedirectPost = async (
   );
 };
 
-const deepLinkRedirect = async (req: any, request: any): Promise<void> => {
+const deepLinkRedirect = async (request: any, response: any): Promise<void> => {
   if (!request.session) {
     throw new Error("no session detected, something is wrong");
   }
@@ -214,10 +214,10 @@ const deepLinkRedirect = async (req: any, request: any): Promise<void> => {
   console.log(
     "req.session.platform - " + JSON.stringify(processedRequest.rlPlatform)
   );
-  await req.session.save(() => {
+  await request.session.save(() => {
     console.log("session data saved");
   });
-  request.redirect(LTI_DEEPLINK_REDIRECT);
+  response.redirect(LTI_DEEPLINK_REDIRECT);
 };
 
 const toolInfoGet = async (

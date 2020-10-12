@@ -1,7 +1,7 @@
 import { Express } from "express";
 
 
-import { initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost } from "../services/ltiLaunchService";
+import { initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost, deepLinkRedirect } from "../services/ltiLaunchService";
 import requestLogger from "../middleware/requestLogger";
 import {
   OIDC_LOGIN_INIT_ROUTE,
@@ -41,7 +41,7 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
   // post to accept the LMS launch with idToken
   app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
     console.log(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
-    assignmentRedirectPost(req, res);
+    deepLinkRedirect(req, res);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
