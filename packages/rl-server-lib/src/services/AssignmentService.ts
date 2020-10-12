@@ -9,17 +9,17 @@ const createAssignment = async (consumer: Assignment): Promise<Assignment> => {
   return assignmentRepository.save(consumer);
 };
 
-const getAssignmentsByClientId = async (
-  name: string
+const getAssignmentsByResourceId = async (
+  resource_id: string
 ): Promise<Assignment[]> => {
   const connection = await getConnection();
   const assignmentRepository = connection.getRepository(Assignment);
   const assignments = await assignmentRepository.find({
     where: {
-      name: name
+      resource_id: resource_id
     }
   });
   return assignments;
 };
 
-export { createAssignment, getAssignmentsByClientId };
+export { createAssignment, getAssignmentsByResourceId };

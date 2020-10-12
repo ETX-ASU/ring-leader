@@ -1,5 +1,5 @@
 import { RlPlatform } from "./rlPlatform";
-import { getAssignmentsByClientId } from "../services/AssignmentService";
+import { getAssignmentsByResourceId } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
 import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "../util/environment";
 const getDeepLinkItems = async (
@@ -13,7 +13,8 @@ const getDeepLinkItems = async (
 };
 
 const getDeepLinkAssignments = async (platform: any | undefined) => {
-  const assignments: Assignment[] = await getAssignmentsByClientId(
+  console.log(`getDeepLintAssnments: platform:${platform}`);
+  const assignments: Assignment[] = await getAssignmentsByResourceId(
     platform.aud
   );
   const items = [];
