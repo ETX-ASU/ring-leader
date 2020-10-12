@@ -83,7 +83,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       assignment.type = "ltiResourceLink";
       const results = createAssignment(assignment);
       console.log(
-        "Create Assignment - assignment" + JSON.stringify(assignment)
+        "Create Assignment - assignment-" + JSON.stringify(assignment)
       );
       res.send(results);
     }
