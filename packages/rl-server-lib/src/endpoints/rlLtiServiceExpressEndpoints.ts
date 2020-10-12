@@ -12,6 +12,7 @@ import Assignment from "../database/entities/Assignment";
 import {
   APPLICATION_URL,
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
+  DEEP_LINK_RESOURCELINKS_ENDPOINT,
   ROSTER_ENDPOINT,
   CREATE_ASSIGNMENT_ENDPOINT,
   GET_ASSIGNMENT_ENDPOINT,
@@ -163,20 +164,34 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(results);
   });
 
-  app.get(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
+  app.get(DEEP_LINK_RESOURCELINKS_ENDPOINT, requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error(
+        `${DEEP_LINK_RESOURCELINKS_ENDPOINT}: no session detected, something is wrong`
+      );
+    }
+    const platform: any = req.session.platform;
+    const items = getDeepLinkItems(DEEP_LINK_RESOURCELINKS_ENDPOINT, platform);
+    console.log("deeplink - resource-link-items - " + JSON.stringify(items));
+
+    return res.send(items);
+  });
+
+  app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error(
         `${DEEP_LINK_ASSIGNMENT_ENDPOINT}: no session detected, something is wrong`
       );
     }
     const platform: any = req.session.platform;
-    const items = getDeepLinkItems(DEEP_LINK_ASSIGNMENT_ENDPOINT, platform);
+    const contentItems = req.body.contentItems;
     console.log("deeplink - platform - " + JSON.stringify(platform));
+    console.log("deeplink - contentItems - " + JSON.stringify(contentItems));
 
     // Creates the deep linking request form
     const form = await new DeepLinking().createDeepLinkingForm(
       platform,
-      items,
+      contentItems,
       {
         message: "Successfully registered resource!"
       }

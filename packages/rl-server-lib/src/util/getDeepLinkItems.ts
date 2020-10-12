@@ -1,12 +1,12 @@
 import { RlPlatform } from "./rlPlatform";
 import { getAssignmentsByClientId } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
-import { DEEP_LINK_ASSIGNMENT_ENDPOINT } from "../util/environment";
+import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "../util/environment";
 const getDeepLinkItems = async (
   endpoint: String,
   platform: any | undefined
 ) => {
-  if (endpoint == DEEP_LINK_ASSIGNMENT_ENDPOINT) {
+  if (endpoint == DEEP_LINK_RESOURCELINKS_ENDPOINT) {
     return getDeepLinkAssignments(platform);
   }
   return [];
