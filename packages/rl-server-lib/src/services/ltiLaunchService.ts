@@ -2,10 +2,8 @@ import path from "path";
 import { Express } from "express";
 import url from "url";
 
-import { inspect } from 'util';
-import {
-  rlProcessOIDCRequest,
-} from "../util/auth";
+import { inspect } from "util";
+import { rlProcessOIDCRequest } from "../util/auth";
 
 import { getConnection } from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
@@ -32,14 +30,24 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
   const state = generateUniqueString(30, false);
   //This resposne will be save in session or DB and will be used in validating the nonce and other properties
   const response: any = rlProcessOIDCRequest(req, state, nonce);
-  const platformDetails = await getToolConsumer({ name: "", client_id: response.client_id, iss: response.iss, deployment_id: "" });
+
+  const platformDetails = await getToolConsumer({
+    name: "",
+    client_id: response.client_id,
+    iss: response.iss,
+    deployment_id: ""
+  });
   if (platformDetails == undefined) {
     return;
   }
   if (req.session) {
     req.session.nonce = nonce;
     req.session.state = state;
-    console.log(`request for GET OIDC_LOGIN_INIT_ROUTE{ ${OIDC_LOGIN_INIT_ROUTE} : ${inspect(req)}`);
+    console.log(
+      `request for GET OIDC_LOGIN_INIT_ROUTE{ ${OIDC_LOGIN_INIT_ROUTE} : ${inspect(
+        req
+      )}`
+    );
     await req.session.save(() => {
       console.log("session data saved");
     });
@@ -53,7 +61,7 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
       query: response
     })
   );
-}
+};
 
 const initOidcPost = async (req: any, res: any): Promise<void> => {
   // OIDC POST initiation
@@ -61,12 +69,26 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
   const state = generateUniqueString(30, false);
   const response: any = rlProcessOIDCRequest(req, state, nonce);
-  console.log(`request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${inspect(req.body)}`);
-  const platformDetails = await getToolConsumer({ name: "", client_id: response.client_id, iss: response.iss, deployment_id: "" });
+  console.log(
+    `request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${inspect(
+      req.body
+    )}`
+  );
+
+  const platformDetails = await getToolConsumer({
+    name: "",
+    client_id: response.client_id,
+    iss: response.iss,
+    deployment_id: ""
+  });
+  console.log(
+    "initOidcPost - platformDetails-" + JSON.stringify(platformDetails)
+  );
+
   if (platformDetails == undefined) {
     return;
   }
-
+  console.log("initOidcPost - req.session-" + JSON.stringify(req.session));
   if (req.session) {
     req.session.nonce = nonce;
     req.session.state = state;
@@ -77,7 +99,11 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
   } else {
     throw new Error("no session detected, something is wrong");
   }
-  console.log(`Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${platformDetails.platformOIDCAuthEndPoint} with platform details: ${JSON.stringify(platformDetails)}`);
+  console.log(
+    `Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${
+      platformDetails.platformOIDCAuthEndPoint
+    } with platform details: ${JSON.stringify(platformDetails)}`
+  );
 
   res.redirect(
     url.format({
@@ -85,7 +111,7 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
       query: response
     })
   );
-}
+};
 const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   if (!request.session) {
     throw new Error("no session detected, something is wrong");
@@ -115,9 +141,12 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   await request.session.save(() => {
     console.log("session data saved");
   });
-}
+};
 
-const assignmentRedirectPost = async (req: any, request: any): Promise<void> => {
+const assignmentRedirectPost = async (
+  req: any,
+  request: any
+): Promise<void> => {
   if (!req.session) {
     throw new Error("no session detected, something is wrong");
   }
@@ -127,9 +156,7 @@ const assignmentRedirectPost = async (req: any, request: any): Promise<void> => 
     "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(reqQueryString)
   );
 
-  console.log(
-    "LTI_ASSIGNMENT_REDIRECT -  req.body" + JSON.stringify(reqBody)
-  );
+  console.log("LTI_ASSIGNMENT_REDIRECT -  req.body" + JSON.stringify(reqBody));
 
   if (!req.body.id_token) {
     ///if id_token is not present then it means that the platform SSO was not performed.
@@ -164,10 +191,10 @@ const assignmentRedirectPost = async (req: any, request: any): Promise<void> => 
   });
   request.redirect(
     LTI_ASSIGNMENT_REDIRECT +
-    "?resource_link_id=" +
-    reqBody.resource_link_id +
-    "&resourceId=" +
-    reqQueryString.resourceId
+      "?resource_link_id=" +
+      reqBody.resource_link_id +
+      "&resourceId=" +
+      reqQueryString.resourceId
   );
 };
 
@@ -182,25 +209,29 @@ const deepLinkRedirect = async (req: any, request: any): Promise<void> => {
   }
 
   request.session.platform = processedRequest.rlPlatform;
-  console.log("req.session.platform - " + JSON.stringify(processedRequest.rlPlatform));
+  console.log(
+    "req.session.platform - " + JSON.stringify(processedRequest.rlPlatform)
+  );
   await req.session.save(() => {
     console.log("session data saved");
   });
   request.redirect(LTI_DEEPLINK_REDIRECT);
-}
+};
 
-const toolInfoGet = async (req: any, res: any, applicationURL: any): Promise<void> => {
+const toolInfoGet = async (
+  req: any,
+  res: any,
+  applicationURL: any
+): Promise<void> => {
   const integrationInfo = {
     "OpenID Connect Initiation Url": `${path.join(
       applicationURL,
       OIDC_LOGIN_INIT_ROUTE
-    )
-      } `,
+    )} `,
     "Target Link URI": `${path.join(
       applicationURL,
       LTI_ADVANTAGE_LAUNCH_ROUTE
-    )
-      } `,
+    )} `,
     "Redirect URIS:": [
       `${path.join(applicationURL, LTI_INSTRUCTOR_REDIRECT)} `,
       `${path.join(applicationURL, LTI_STUDENT_REDIRECT)} `
@@ -230,4 +261,11 @@ const toolInfoGet = async (req: any, res: any, applicationURL: any): Promise<voi
   res.send(`< pre > ${data} </pre>`);
 };
 
-export { initOidcGet, initOidcPost, toolInfoGet, assignmentRedirectPost, ltiLaunchPost, deepLinkRedirect };
+export {
+  initOidcGet,
+  initOidcPost,
+  toolInfoGet,
+  assignmentRedirectPost,
+  ltiLaunchPost,
+  deepLinkRedirect
+};
