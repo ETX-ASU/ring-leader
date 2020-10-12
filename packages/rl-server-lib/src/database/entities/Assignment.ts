@@ -33,7 +33,7 @@ class Assignment {
   lineitems = "";
 
   @Column("varchar", { length: 256 })
-  context = "";
+  context_id = "";
 }
 
 export default Assignment;

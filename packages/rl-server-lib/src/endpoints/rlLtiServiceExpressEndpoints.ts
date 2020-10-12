@@ -86,7 +86,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       assignment.lineitem_score_maximum = reqQueryString.scoreMaximum;
       assignment.type = "ltiResourceLink";
       assignment.lineitems = platform.lineitems;
-      assignment.context = platform.context;
+      assignment.context_id = platform.context.id;
       const results = createAssignment(assignment);
       console.log(
         "Create Assignment - assignment-" + JSON.stringify(assignment)

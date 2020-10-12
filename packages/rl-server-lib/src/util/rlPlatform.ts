@@ -95,7 +95,7 @@ const RlPlatform = (
     iat: tokenData.iat,
     sub: tokenData.sub,
     exp: tokenData.exp,
-    context: tokenData.context,
+    context_id: tokenData.context.id,
     clientId: tokenData.clientId,
     lineitems: tokenData.lineitems,
     lineitem: tokenData.lineitem,

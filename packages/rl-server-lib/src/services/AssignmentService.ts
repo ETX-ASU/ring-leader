@@ -10,13 +10,13 @@ const createAssignment = async (consumer: Assignment): Promise<Assignment> => {
 };
 
 const getAssignmentsByContext = async (
-  context: string
+  context_id: string
 ): Promise<Assignment[]> => {
   const connection = await getConnection();
   const assignmentRepository = connection.getRepository(Assignment);
   const assignments = await assignmentRepository.find({
     where: {
-      context: context
+      context_id: context_id
     }
   });
   return assignments;
