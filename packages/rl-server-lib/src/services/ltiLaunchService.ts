@@ -149,9 +149,9 @@ const assignmentRedirectPost = async (
   req: any,
   request: any
 ): Promise<void> => {
-  if (!req.session) {
+  /*if (!req.session) {
     throw new Error("no session detected, something is wrong");
-  }
+  }*/
   const reqQueryString = req.query;
   const reqBody = req.body;
   console.log(
