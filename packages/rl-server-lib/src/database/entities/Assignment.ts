@@ -30,7 +30,10 @@ class Assignment {
   lineitem_tag = "";
 
   @Column("varchar", { length: 256 })
-  group = "";
+  linetimes = "";
+
+  @Column("varchar", { length: 256 })
+  context = "";
 }
 
 export default Assignment;

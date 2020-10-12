@@ -49,7 +49,7 @@ const setDefaultValues = (token: any): any => {
     roles: memberRoles,
     isInstructorUser: isInstructorUser,
     isStudentUser: isStudentUser,
-
+    context: token["https://purl.imsglobal.org/spec/lti/claim/context"],
     lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
           .lineitems
@@ -95,6 +95,7 @@ const RlPlatform = (
     iat: tokenData.iat,
     sub: tokenData.sub,
     exp: tokenData.exp,
+    context: tokenData.context,
     clientId: tokenData.clientId,
     lineitems: tokenData.lineitems,
     lineitem: tokenData.lineitem,

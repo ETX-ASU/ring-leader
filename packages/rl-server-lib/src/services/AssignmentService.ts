@@ -9,17 +9,17 @@ const createAssignment = async (consumer: Assignment): Promise<Assignment> => {
   return assignmentRepository.save(consumer);
 };
 
-const getAssignmentsByGroup = async (
-  group: string
+const getAssignmentsByContext = async (
+  context: string
 ): Promise<Assignment[]> => {
   const connection = await getConnection();
   const assignmentRepository = connection.getRepository(Assignment);
   const assignments = await assignmentRepository.find({
     where: {
-      group: group
+      context: context
     }
   });
   return assignments;
 };
 
-export { createAssignment, getAssignmentsByGroup };
+export { createAssignment, getAssignmentsByContext };
