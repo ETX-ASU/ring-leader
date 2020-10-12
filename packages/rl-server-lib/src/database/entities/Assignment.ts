@@ -28,6 +28,9 @@ class Assignment {
 
   @Column("varchar", { length: 128 })
   lineitem_tag = "";
+
+  @Column("varchar", { length: 256 })
+  group = "";
 }
 
 export default Assignment;
