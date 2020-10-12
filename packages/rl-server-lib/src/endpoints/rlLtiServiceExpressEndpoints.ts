@@ -50,6 +50,8 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     console.log(
       "CREATE_ASSIGNMENT_ENDPOINT" + JSON.stringify(CREATE_ASSIGNMENT_ENDPOINT)
     );
+
+    console.log(`CREATE_ASSIGNMENT_ENDPOINT session: ${JSON.stringify(req.session)}`);
     const platform: any = req.session.platform;
     const reqQueryString = req.body.params;
 
