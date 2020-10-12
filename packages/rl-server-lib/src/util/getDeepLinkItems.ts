@@ -7,18 +7,18 @@ const getDeepLinkItems = async (
   platform: any | undefined
 ) => {
   if (endpoint == DEEP_LINK_RESOURCELINKS_ENDPOINT) {
-    return getDeepLinkAssignments(platform);
+    return await getDeepLinkAssignments(platform);
   }
   return [];
 };
 
 const getDeepLinkAssignments = async (platform: any | undefined) => {
-  console.log(`getDeepLintAssnments: platform:${JSON.stringify(platform)}`);
+ 
   const assignments: Assignment[] = await getAssignmentsByContext(
     platform.context_id
   );
   const items = [];
-
+  console.log(`getDeepLintAssnments: platform:${JSON.stringify(platform)}`);
   for (const assignment of assignments) {
     items.push({
       type: assignment.type,
@@ -33,6 +33,7 @@ const getDeepLinkAssignments = async (platform: any | undefined) => {
       }
     });
   }
+  return items;
 };
 
 export default getDeepLinkItems;
