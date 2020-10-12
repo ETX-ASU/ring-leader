@@ -30,7 +30,7 @@ class Assignment {
   lineitem_tag = "";
 
   @Column("varchar", { length: 256 })
-  linetimes = "";
+  lineitems = "";
 
   @Column("varchar", { length: 256 })
   context = "";
