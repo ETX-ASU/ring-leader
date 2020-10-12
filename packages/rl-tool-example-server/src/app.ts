@@ -93,7 +93,9 @@ async function start(): Promise<any> {
 
   // Make sure we have our test activities
   await dbInit(TOOL_CONSUMERS, null);
+  console.log("TOOL_CONSUMERS", `${TOOL_CONSUMERS}`);
 
+  console.log("TOOL_CONSUMERS", `${JSON.stringify(TOOL_CONSUMERS)}`);
   // Start the app
   app.listen(PORT, "0.0.0.0", () => {
     console.log("App is running at", `0.0.0.0:${PORT}`);
