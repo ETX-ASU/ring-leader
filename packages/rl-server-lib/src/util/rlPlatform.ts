@@ -85,10 +85,9 @@ const RlPlatform = (
   alg: string,
   idToken: string
 ): any => {
-  console.log(`RlPlatform - received - idToken: ${idToken}`);
   const token = jwt.decode(idToken);
+  console.log(`RlPlatform - received - idToken: ${token}`);
   const tokenData = setDefaultValues(token);
-  console.log("RlPlatform - tokenData - " + JSON.stringify(tokenData));
   const platform = {
     jti: tokenData.jti,
     iss: tokenData.iss,
