@@ -46,8 +46,11 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
+    console.log(
+      "CREATE_ASSIGNMENT_ENDPOINT" + JSON.stringify(CREATE_ASSIGNMENT_ENDPOINT)
+    );
     const platform: any = req.session.platform;
-    const reqQueryString = req.body;
+    const reqQueryString = req.body.params;
 
     const resourceId = (Math.floor(Math.random() * 100) + 1).toString();
 
