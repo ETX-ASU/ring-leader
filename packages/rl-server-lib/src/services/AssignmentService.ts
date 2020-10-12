@@ -2,7 +2,7 @@ import { getConnection } from "../database/db";
 import Assignment from "../database/entities/Assignment";
 
 const createAssignment = async (assignment: Assignment): Promise<Assignment> => {
-  console.log("Inside createAssignment service - " + JSON.stringify(consumer));
+  console.log("Inside createAssignment service - " + JSON.stringify(assignment));
 
   const connection = await getConnection();
   const assignmentRepository = connection.getRepository(Assignment);
