@@ -15,7 +15,7 @@ const getDeepLinkItems = async (
 const getDeepLinkAssignments = async (platform: any | undefined) => {
   console.log(`getDeepLintAssnments: platform:${JSON.stringify(platform)}`);
   const assignments: Assignment[] = await getAssignmentsByContext(
-    platform.context
+    platform.context_id
   );
   const items = [];
 
