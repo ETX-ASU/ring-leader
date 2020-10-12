@@ -68,6 +68,10 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     //const results = await new Grade().createLineItem(platform, lineItem);
 
     if (reqQueryString) {
+      console.log(
+        "Create Assignment - reqQueryString" + JSON.stringify(reqQueryString)
+      );
+
       const assignment: Assignment = new Assignment();
       assignment.url = `${APPLICATION_URL}/assignment?resourceId="${resourceId}`;
       assignment.title = reqQueryString.label;
@@ -78,7 +82,9 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       assignment.lineitem_score_maximum = reqQueryString.scoreMaximum;
       assignment.type = "ltiResourceLink";
       const results = createAssignment(assignment);
-
+      console.log(
+        "Create Assignment - assignment" + JSON.stringify(assignment)
+      );
       res.send(results);
     }
   });
