@@ -68,7 +68,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     // tag: reqQueryString.tag,
     // "https://canvas.instructure.com/lti/submission_type": {
     //   type: "external_tool",
-    //  external_tool_url: `${APPLICATION_URL}/assignment?resourceId="${resourceId}`
+    //  external_tool_url: `${APPLICATION_URL}/assignment?resourceId=${resourceId}`
     // }
     // };
     //const results = await new Grade().createLineItem(platform, lineItem);
@@ -79,7 +79,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       );
 
       const assignment: Assignment = new Assignment();
-      assignment.url = `${APPLICATION_URL}/assignment?resourceId="${resourceId}`;
+      assignment.url = `${APPLICATION_URL}/assignment?resourceId=${resourceId}`;
       assignment.title = reqQueryString.label;
       assignment.resource_id = resourceId;
       assignment.lineitem_label = reqQueryString.label;
