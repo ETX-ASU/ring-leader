@@ -19,6 +19,7 @@ const getAssignmentsByContext = async (
       context_id: context_id
     }
   });
+  console.log(`found assignments: ${JSON.stringify(assignments)}`);
   return assignments;
 };
 

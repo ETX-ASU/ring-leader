@@ -175,7 +175,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       );
     }
     const platform: any = req.session.platform;
-    const items = getDeepLinkItems(DEEP_LINK_RESOURCELINKS_ENDPOINT, platform);
+    const items = await getDeepLinkItems(DEEP_LINK_RESOURCELINKS_ENDPOINT, platform);
     console.log("deeplink - resource-link-items - " + JSON.stringify(items));
 
     return res.send(items);
