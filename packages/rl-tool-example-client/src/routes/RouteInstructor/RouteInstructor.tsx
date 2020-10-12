@@ -52,7 +52,7 @@ const RouteInstructor: React.FC = () => {
   };
   const createAssignment = () => {
     axios
-      .get("/lti-service/createassignment", {
+      .post("/lti-service/createassignment", {
         params: {
           scoreMaximum: maxScore,
           label: title,

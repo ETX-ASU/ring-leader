@@ -22,7 +22,7 @@ import {
   PUT_STUDENT_GRADE,
   DELETE_LINE_ITEM,
   GET_GRADES
-} from "./util/environment"
+} from "./util/environment";
 
 import {
   rlValidateToken,

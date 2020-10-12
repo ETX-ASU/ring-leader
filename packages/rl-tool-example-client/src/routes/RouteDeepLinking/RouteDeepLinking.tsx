@@ -11,18 +11,34 @@ const RouteDeepLinking: React.FC = () => {
   };
   const submitGrade = () => {
     axios
-      .get("/lti-service/deeplink", {
-        params: {
-          title: "Chapter 12 quiz",
-          url: "https://something.example.com/page.html",
-          resourceId: radioInputValue,
-          lineItem: {
-            scoreMaximum: 87,
-            label: "Chapter 12 quiz",
-            resourceId: "xyzpdq1234",
-            tag: "originality"
+      .post("/lti-service/deeplink", {
+        contentItems: [
+          {
+            type: "ltiResourceLink",
+            title: "Chapter 12 quiz",
+            url:
+              "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=" +
+              radioInputValue,
+            resourceId: radioInputValue,
+            lineItem: {
+              scoreMaximum: 100,
+              label: "Chapter 12 quiz",
+              resourceId: radioInputValue,
+              tag: "originality"
+            },
+            available: {
+              startDateTime: "2020-10-06T20:05:02Z",
+              endDateTime: "2020-10-30T20:05:02Z"
+            },
+            submission: {
+              endDateTime: "2020-10-30T20:05:02Z"
+            },
+            custom: {
+              quiz_id: "az-123",
+              duedate: "2020-10-30T20:05:02Z"
+            }
           }
-        }
+        ]
       })
       .then((result) => {
         console.log(result);
