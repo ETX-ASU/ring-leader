@@ -21,6 +21,8 @@ class Grade {
     options?: any,
     accessToken?: any
   ): Promise<any> {
+    console.log(`Access token to get line items - get new token ${accessToken}`);
+
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }

@@ -40,7 +40,8 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
 
   // post to accept the LMS launch with idToken
   app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
-
+    console.log(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
+    assignmentRedirectPost(req, res);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
