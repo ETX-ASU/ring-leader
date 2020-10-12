@@ -8,6 +8,30 @@ const setDefaultValues = (token: any): any => {
         "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
       ]
   );
+  const memberRoles = [];
+  let isStudentUser = false;
+  let isInstructorUser = false;
+  if (token["https://purl.imsglobal.org/spec/lti/claim/roles"]) {
+    if (
+      token["https://purl.imsglobal.org/spec/lti/claim/roles"] ==
+      "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+    ) {
+      memberRoles.push({
+        role: "Learner",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      });
+      isStudentUser = true;
+    } else if (
+      token["https://purl.imsglobal.org/spec/lti/claim/roles"] ==
+      "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+    ) {
+      memberRoles.push({
+        role: "Instructor",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      });
+      isInstructorUser = true;
+    }
+  }
 
   const tokenData = {
     jti: encodeURIComponent(
@@ -22,6 +46,10 @@ const setDefaultValues = (token: any): any => {
     exp: token.exp,
     clientId: token.aud,
     userId: token.sub,
+    roles: memberRoles,
+    isInstructorUser: isInstructorUser,
+    isStudentUser: isStudentUser,
+
     lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
           .lineitems
@@ -80,16 +108,9 @@ const RlPlatform = (
     alg: alg,
     deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.userId,
-    roles: [
-      {
-        role: "Instructor",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
-      },
-      {
-        role: "Learner",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
-      }
-    ]
+    roles: tokenData.roles,
+    isInstructorUser: tokenData.isInstructorUser,
+    isStudentUser: tokenData.isStudentUser
   };
   console.log("RlPlatformplatform - " + JSON.stringify(platform));
 

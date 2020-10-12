@@ -5,6 +5,7 @@ import RouteInstructor from "./routes/RouteInstructor/RouteInstructor";
 import RouteStudentAssignment from "./routes/RouteStudentAssignment/RouteStudentAssignment";
 import "./App.scss";
 import RouteDeepLinking from "./routes/RouteDeepLinking/RouteDeepLinking";
+import RouteStudent from "./routes/RouteStudent/RouteStudent";
 const App: React.FC = () => {
   return (
     <div className="app">
@@ -12,6 +13,9 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path="/instructor">
             <RouteInstructor />
+          </Route>
+          <Route exact path="/RouteStudent">
+            <RouteStudent />
           </Route>
           <Route path="/assignment">
             <RouteStudentAssignment />

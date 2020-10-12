@@ -71,6 +71,11 @@ app.route("/instructor").get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
+// Student
+app.route("/student").get(async (req, res) => {
+  res.sendFile(USER_INTERFACE_PLAYER_PAGE);
+});
+
 // Student Assignment
 app.route("/assignment").get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
@@ -85,7 +90,6 @@ app.route("/deeplink").get(async (req, res) => {
 
 async function start(): Promise<any> {
   console.log("Starting server...");
-
 
   // Make sure we have our test activities
   await dbInit(TOOL_CONSUMERS, null);
