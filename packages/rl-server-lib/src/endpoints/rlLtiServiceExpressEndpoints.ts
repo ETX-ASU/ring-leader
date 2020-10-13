@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-extraneous-import
 import { Express } from "express";
 import { NamesAndRoles } from "../services/namesAndRolesService";
 import { Grade } from "../services/assignmentAndGradeService";

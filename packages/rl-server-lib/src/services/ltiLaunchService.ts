@@ -1,5 +1,4 @@
 import path from "path";
-import { Express } from "express";
 import url from "url";
 
 import { inspect } from "util";
@@ -126,19 +125,9 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   await request.session.save(() => {
     console.log("session data saved");
   });
-
-  if (processedRequest.session.redirectUrl) {
-    // This means that student/instrucot click on assignmnet and platform SSO was not performed
-    // it's a work around to get the SSO flow start so that we can get id_token
-    //Note:- this code will not execute when external tool is accessed from course navigation or deep linking
-    request.session.redirectUrl = null;
-    response.redirect(processedRequest.session.redirectUrl);
-    return;
-  } else {
-    if (processedRequest.rlPlatform.isStudentUser)
-      response.redirect(LTI_STUDENT_REDIRECT);
-    else response.redirect(LTI_INSTRUCTOR_REDIRECT);
-  }
+  if (processedRequest.rlPlatform.isStudentUser)
+    response.redirect(LTI_STUDENT_REDIRECT);
+  else response.redirect(LTI_INSTRUCTOR_REDIRECT);
 
   await request.session.save(() => {
     console.log("session data saved");
@@ -164,28 +153,6 @@ const assignmentRedirectPost = async (
     "LTI_ASSIGNMENT_REDIRECT -  req.session" + JSON.stringify(request.session)
   );
 
-  if (!request.body.id_token) {
-    ///if id_token is not present then it means that the platform SSO was not performed.
-    //we will redirect user to external tool url that will start SSO process internally
-    //user will automatically redirected to the assignment
-    //and we will get id_token
-    //Note:- if a deep link assignment is launch then this code section will not be executed.
-    request.session.redirectUrl = request.url;
-    request.session.title = reqBody.resource_link_title;
-    request.session.resourceId = reqBody.resourceId;
-
-    request.redirect(
-      url.format({
-        pathname:
-          "https://unicon.instructure.com/courses/718/external_tools/412",
-        query: { assignmenturl: request.url }
-      })
-    );
-    return;
-  } else {
-    request.session.redirectUrl = null;
-  }
-
   const processedRequest = await processRequest(request);
   if (!processedRequest) {
     throw new Error("Unable to process request");
@@ -195,11 +162,7 @@ const assignmentRedirectPost = async (
     console.log("req.session- " + JSON.stringify(request.session));
   });
   response.redirect(
-    LTI_ASSIGNMENT_REDIRECT +
-      "?resource_link_id=" +
-      reqBody.resource_link_id +
-      "&resourceId=" +
-      reqQueryString.resourceId
+    LTI_ASSIGNMENT_REDIRECT + "&resourceId=" + reqQueryString.resourceId
   );
 };
 
