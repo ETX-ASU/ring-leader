@@ -17,7 +17,7 @@ const RouteDeepLinking: React.FC = () => {
       setAssignments(results.data);
     });
   };
-  const submitGrade = () => {
+  const submitResourceSelection = () => {
     axios
       .post("/lti-service/deeplink", {
         contentItems: [resourceLink]
@@ -50,7 +50,7 @@ const RouteDeepLinking: React.FC = () => {
             );
           })}
 
-          <button className="btn btn-primary" onClick={submitGrade}>
+          <button className="btn btn-primary" onClick={submitResourceSelection}>
             Confirm Selection
           </button>
         </div>

@@ -12,9 +12,17 @@ const setDefaultValues = (token: any): any => {
   let isStudentUser = false;
   let isInstructorUser = false;
   if (token["https://purl.imsglobal.org/spec/lti/claim/roles"]) {
+    console.log(
+      "roles - " +
+        token["https://purl.imsglobal.org/spec/lti/claim/roles"][
+          "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+        ]
+    );
+
     if (
-      token["https://purl.imsglobal.org/spec/lti/claim/roles"] ==
-      "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      token["https://purl.imsglobal.org/spec/lti/claim/roles"][
+        "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      ]
     ) {
       memberRoles.push({
         role: "Learner",
@@ -22,8 +30,9 @@ const setDefaultValues = (token: any): any => {
       });
       isStudentUser = true;
     } else if (
-      token["https://purl.imsglobal.org/spec/lti/claim/roles"] ==
-      "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      token["https://purl.imsglobal.org/spec/lti/claim/roles"][
+        "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      ]
     ) {
       memberRoles.push({
         role: "Instructor",
@@ -86,7 +95,9 @@ const RlPlatform = (
   idToken: string
 ): any => {
   const token = jwt.decode(idToken);
-  console.log(`RlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`);
+  console.log(
+    `RlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
+  );
   const tokenData = setDefaultValues(token);
   const platform = {
     jti: tokenData.jti,

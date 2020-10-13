@@ -51,7 +51,9 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       "CREATE_ASSIGNMENT_ENDPOINT" + JSON.stringify(CREATE_ASSIGNMENT_ENDPOINT)
     );
 
-    console.log(`CREATE_ASSIGNMENT_ENDPOINT session: ${JSON.stringify(req.session)}`);
+    console.log(
+      `CREATE_ASSIGNMENT_ENDPOINT session: ${JSON.stringify(req.session)}`
+    );
     const platform: any = req.session.platform;
     const reqQueryString = req.body.params;
 
@@ -61,17 +63,6 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     //clicks on the assignment.
     //resourceId - this id is passed from platform to the tool so that the tool can
     //identify the correct content that needs to be displayed
-    // const lineItem = {
-    // scoreMaximum: reqQueryString.scoreMaximum,
-    // label: reqQueryString.label,
-    // resourceId: resourceId,
-    // tag: reqQueryString.tag,
-    // "https://canvas.instructure.com/lti/submission_type": {
-    //   type: "external_tool",
-    //  external_tool_url: `${APPLICATION_URL}/assignment?resourceId=${resourceId}`
-    // }
-    // };
-    //const results = await new Grade().createLineItem(platform, lineItem);
 
     if (reqQueryString) {
       console.log(
@@ -79,7 +70,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       );
 
       const assignment: Assignment = new Assignment();
-      assignment.url = `${APPLICATION_URL}/assignment?resourceId=${resourceId}`;
+      assignment.url = `${APPLICATION_URL}assignment?resourceId=${resourceId}`;
       assignment.title = reqQueryString.label;
       assignment.resource_id = resourceId;
       assignment.lineitem_label = reqQueryString.label;
@@ -175,7 +166,10 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       );
     }
     const platform: any = req.session.platform;
-    const items = await getDeepLinkItems(DEEP_LINK_RESOURCELINKS_ENDPOINT, platform);
+    const items = await getDeepLinkItems(
+      DEEP_LINK_RESOURCELINKS_ENDPOINT,
+      platform
+    );
     console.log("deeplink - resource-link-items - " + JSON.stringify(items));
 
     return res.send(items);
