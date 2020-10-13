@@ -151,6 +151,7 @@ const RouteInstructor: React.FC = () => {
           </div>
         </div>
       </div>
+      <hr></hr>
       <div className="row">
         <div className="col">
           <div className="details">
@@ -183,7 +184,7 @@ const RouteInstructor: React.FC = () => {
                   <strong>Info!</strong> <strong>Resource Id -</strong>This will
                   be appended as query string parameter in URL during assignment
                   view. Tool can check this parameter and identify which content
-                  to show)!!!
+                  to show. e.g. quiz-id-101)
                 </div>
               </div>
               <div className="form-group">
