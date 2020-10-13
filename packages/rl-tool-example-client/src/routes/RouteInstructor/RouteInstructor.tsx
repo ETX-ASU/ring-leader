@@ -193,13 +193,19 @@ const RouteInstructor: React.FC = () => {
                 );
               })}{" "}
           </div>
-          {displayCreateResourceLinkAssignment && (
+
+          {displayCreateAssignment && (
             <div className=" container">
+              <div>
+                <div className="alert alert-info">
+                  <strong>Info!</strong> <strong>Resource Id -</strong>This will
+                  be appended as query string parameter in URL during assignment
+                  view. Tool can check this parameter and identify which content
+                  to show based on this parameter)!!!
+                </div>
+              </div>
               <div className="form-group">
-                <label className="control-label">
-                  Resource Id (This will be appended as query string parameter
-                  in URL during assignment view):
-                </label>
+                <label className="control-label">Resource Id :</label>
                 <input
                   value={resourceId}
                   onChange={(event) => {
@@ -212,53 +218,6 @@ const RouteInstructor: React.FC = () => {
                   name="Tag"
                 ></input>
               </div>
-              <div className="form-group">
-                <label className="control-label">Assignment Title:</label>
-                <input
-                  value={title}
-                  onChange={(event) => {
-                    setTitle(event.target.value);
-                  }}
-                  type="text"
-                  className="form-control"
-                  id="title"
-                  placeholder="Enter Assignment Title"
-                  name="title"
-                ></input>
-              </div>
-              <div className="form-group">
-                <label className="control-label">Maximum Score:</label>
-
-                <input
-                  value={maxScore}
-                  onChange={(event) => {
-                    setMaxScore(parseInt(event.target.value));
-                  }}
-                  type="number"
-                  className="form-control"
-                  id="MaximumScore"
-                  placeholder="Enter Maximum Score"
-                  name="MaximumScore"
-                ></input>
-              </div>
-              <div className="form-group">
-                <label className="control-label">Tag:</label>
-                <input
-                  value={tag}
-                  onChange={(event) => {
-                    setTag(event.target.value);
-                  }}
-                  type="text"
-                  className="form-control"
-                  id="Tag"
-                  placeholder="Enter Tag"
-                  name="Tag"
-                ></input>
-              </div>
-            </div>
-          )}
-          {displayCreateAssignment && (
-            <div className=" container">
               <div className="form-group">
                 <label className="control-label">Assignment Title:</label>
                 <input
