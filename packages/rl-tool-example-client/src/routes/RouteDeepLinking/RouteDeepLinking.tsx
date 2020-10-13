@@ -32,20 +32,27 @@ const RouteDeepLinking: React.FC = () => {
   return (
     <div className="route-assignment">
       <div className="card">
-        <div className="card-header">Assignment list</div>
         <div className="card-body">
           {assignments.map((assignment, index) => {
             return (
               <div className="radio">
-                <label>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <div className="input-group-text">
+                      <input
+                        onChange={() => handleCheck(assignment)}
+                        type="radio"
+                      ></input>
+                    </div>
+                  </div>
                   <input
-                    onChange={() => handleCheck(assignment)}
-                    type="radio"
-                    value="Learner"
+                    type="text"
+                    className="form-control"
+                    disabled
                     name="optradio"
+                    placeholder={assignment.title}
                   ></input>
-                  {assignment.title}
-                </label>
+                </div>
               </div>
             );
           })}
