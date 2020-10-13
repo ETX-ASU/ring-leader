@@ -10,7 +10,9 @@ const RouteDeepLinking: React.FC = () => {
   const handleCheck = (resourceLinkData: any): any => {
     setResourceLink(resourceLinkData);
   };
-
+  useEffect(() => {
+    getDeepLinkResourceLinks();
+  });
   const getDeepLinkResourceLinks = () => {
     axios.get("/lti-service/getDeepLinkAssignments").then((results) => {
       console.log(JSON.stringify(results.data));
@@ -28,7 +30,6 @@ const RouteDeepLinking: React.FC = () => {
         $("body").append(result.data);
       });
   };
-  getDeepLinkResourceLinks();
   return (
     <div className="route-assignment">
       <div className="card">
