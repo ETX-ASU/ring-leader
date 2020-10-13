@@ -246,15 +246,13 @@ const RouteInstructor: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <div className="col-sm-offset-2 col-sm-10">
-                  <button
-                    type="submit"
-                    onClick={createAssignment}
-                    className="btn btn-primary"
-                  >
-                    Submit
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  onClick={createAssignment}
+                  className="btn btn-primary"
+                >
+                  Save
+                </button>
               </div>
             </div>
           )}
