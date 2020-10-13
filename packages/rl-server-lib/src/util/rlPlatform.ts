@@ -8,36 +8,20 @@ const setDefaultValues = (token: any): any => {
         "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
       ]
   );
-  const memberRoles = [];
   let isStudentUser = false;
   let isInstructorUser = false;
   if (token["https://purl.imsglobal.org/spec/lti/claim/roles"]) {
-    console.log(
-      "roles - " +
-        token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
-          "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
-        )
-    );
-
     if (
       token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
         "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
       )
     ) {
-      memberRoles.push({
-        role: "Learner",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
-      });
       isStudentUser = true;
     } else if (
       token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
         "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
       )
     ) {
-      memberRoles.push({
-        role: "Instructor",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
-      });
       isInstructorUser = true;
     }
   }
@@ -55,7 +39,16 @@ const setDefaultValues = (token: any): any => {
     exp: token.exp,
     clientId: token.aud,
     userId: token.sub,
-    roles: memberRoles,
+    roles: [
+      {
+        role: "Learner",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      },
+      {
+        role: "Instructor",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      }
+    ],
     isInstructorUser: isInstructorUser,
     isStudentUser: isStudentUser,
     context: token["https://purl.imsglobal.org/spec/lti/claim/context"],
