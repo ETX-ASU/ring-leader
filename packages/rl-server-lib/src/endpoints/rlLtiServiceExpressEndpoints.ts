@@ -216,7 +216,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
         gradingProgress: score.gradingProgress
       },
       {
-        id: score.assignmentId || null,
+        id: score.lineItemId || platform.lineitem,
         userId: score.userId,
         title: platform.lineitem || sessionObject.title || null
         //if platform.lineitem is null then it means that the SSO was not performed hence we

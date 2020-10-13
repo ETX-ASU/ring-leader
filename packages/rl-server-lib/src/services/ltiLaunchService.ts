@@ -149,7 +149,7 @@ const assignmentRedirectPost = async (
   request: any,
   response: any
 ): Promise<void> => {
- /* if (!request.session) {
+  /* if (!request.session) {
     throw new Error("no session detected, something is wrong");
   }*/
   const reqQueryString = request.query;
@@ -160,7 +160,9 @@ const assignmentRedirectPost = async (
 
   console.log("LTI_ASSIGNMENT_REDIRECT -  req.body" + JSON.stringify(reqBody));
 
-  console.log("LTI_ASSIGNMENT_REDIRECT -  req.session" + JSON.stringify(request.session));
+  console.log(
+    "LTI_ASSIGNMENT_REDIRECT -  req.session" + JSON.stringify(request.session)
+  );
 
   if (!request.body.id_token) {
     ///if id_token is not present then it means that the platform SSO was not performed.
@@ -189,7 +191,6 @@ const assignmentRedirectPost = async (
     throw new Error("Unable to process request");
   }
   processedRequest.session.platform = processedRequest.rlPlatform;
-  processedRequest.session.assignmentId = reqQueryString.resourceId;
   await request.session.save(() => {
     console.log("req.session- " + JSON.stringify(request.session));
   });
