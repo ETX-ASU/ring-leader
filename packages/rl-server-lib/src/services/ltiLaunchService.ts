@@ -191,7 +191,7 @@ const assignmentRedirectPost = async (
   processedRequest.session.platform = processedRequest.rlPlatform;
   processedRequest.session.assignmentId = reqQueryString.resourceId;
   await request.session.save(() => {
-    console.log("req.session- " + JSON.stringify(req.session));
+    console.log("req.session- " + JSON.stringify(request.session));
   });
   response.redirect(
     LTI_ASSIGNMENT_REDIRECT +
