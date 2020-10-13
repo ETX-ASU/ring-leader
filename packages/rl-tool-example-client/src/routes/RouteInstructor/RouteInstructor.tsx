@@ -30,6 +30,7 @@ const RouteInstructor: React.FC = () => {
 
   const [title, setTitle] = useState<string>("");
   const [tag, setTag] = useState<string>("");
+  const [resourceId, setResourceId] = useState<string>("");
   const [maxScore, setMaxScore] = useState<number>();
 
   const [courses, setCourses] = useState<any>({});
@@ -56,7 +57,8 @@ const RouteInstructor: React.FC = () => {
         params: {
           scoreMaximum: maxScore,
           label: title,
-          tag: tag
+          tag: tag,
+          resourceId: resourceId
         }
       })
       .then((results) => {
@@ -193,6 +195,23 @@ const RouteInstructor: React.FC = () => {
           </div>
           {displayCreateResourceLinkAssignment && (
             <div className=" container">
+              <div className="form-group">
+                <label className="control-label">
+                  Resource Id (This will be appended as query string parameter
+                  in URL during assignment view):
+                </label>
+                <input
+                  value={resourceId}
+                  onChange={(event) => {
+                    setResourceId(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="Tag"
+                  placeholder="Enter Resource Id"
+                  name="Tag"
+                ></input>
+              </div>
               <div className="form-group">
                 <label className="control-label">Assignment Title:</label>
                 <input

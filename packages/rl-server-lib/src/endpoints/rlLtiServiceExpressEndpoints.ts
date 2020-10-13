@@ -58,8 +58,6 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     const reqQueryString = req.body.params;
 
-    const resourceId = (Math.floor(Math.random() * 100) + 1).toString();
-
     //external_tool_url - Tool needs to pass this URL that will be launched when student
     //clicks on the assignment.
     //resourceId - this id is passed from platform to the tool so that the tool can
@@ -73,11 +71,11 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       const assignment: Assignment = new Assignment();
       assignment.url = `${APPLICATION_URL}${LTI_ASSIGNMENT_REDIRECT.substring(
         1
-      )}?resourceId=${resourceId}`;
+      )}?resourceId=${reqQueryString.resourceId}`;
       assignment.title = reqQueryString.label;
-      assignment.resource_id = resourceId;
+      assignment.resource_id = reqQueryString.resourceId;
       assignment.lineitem_label = reqQueryString.label;
-      assignment.lineitem_resource_id = resourceId;
+      assignment.lineitem_resource_id = reqQueryString.resourceId;
       assignment.lineitem_tag = reqQueryString.tag;
       assignment.lineitem_score_maximum = reqQueryString.scoreMaximum;
       assignment.type = "ltiResourceLink";
