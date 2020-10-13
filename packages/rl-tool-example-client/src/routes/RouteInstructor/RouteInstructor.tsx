@@ -102,14 +102,6 @@ const RouteInstructor: React.FC = () => {
     setDisplayNoAssignment(false);
   };
 
-  const handleCreateResourceLink = (event: any): any => {
-    setDisplayDiv(false);
-    setDisplayCreateAssignment(false);
-    setdisplayAssignment(false);
-    setDisplayCreateAssignmentSuccess(false);
-    setDisplayNoAssignment(false);
-    setDisplayCreateResourceLinkAssignment(true);
-  };
   return (
     <div className="route-instructor">
       <h3>
@@ -161,12 +153,6 @@ const RouteInstructor: React.FC = () => {
           <button className="btn btn-primary" onClick={handleCreateAssigment}>
             Create Assignment
           </button>
-          <button
-            className="btn btn-primary"
-            onClick={handleCreateResourceLink}
-          >
-            Create Resource Linked Assignment
-          </button>
         </div>
       </div>
       <div className="row">
@@ -201,7 +187,7 @@ const RouteInstructor: React.FC = () => {
                   <strong>Info!</strong> <strong>Resource Id -</strong>This will
                   be appended as query string parameter in URL during assignment
                   view. Tool can check this parameter and identify which content
-                  to show based on this parameter)!!!
+                  to show)!!!
                 </div>
               </div>
               <div className="form-group">
