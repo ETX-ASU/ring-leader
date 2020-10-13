@@ -53,7 +53,7 @@ const getToolConsumer = async (
       deployment_id: "0"
     }
   });
-  console.log(`toolConsumerRepository -toolConsumer : ${toolConsumer} )}`);
+
   console.log(
     `toolConsumerRepository -toolConsumer : ${JSON.stringify(toolConsumer)} )}`
   );
