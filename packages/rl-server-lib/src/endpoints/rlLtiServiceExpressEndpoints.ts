@@ -20,7 +20,8 @@ import {
   PUT_STUDENT_GRADE_VIEW,
   PUT_STUDENT_GRADE,
   DELETE_LINE_ITEM,
-  GET_GRADES
+  GET_GRADES,
+  LTI_ASSIGNMENT_REDIRECT
 } from "../util/environment";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
@@ -70,7 +71,9 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       );
 
       const assignment: Assignment = new Assignment();
-      assignment.url = `${APPLICATION_URL}assignment?resourceId=${resourceId}`;
+      assignment.url = `${APPLICATION_URL}${LTI_ASSIGNMENT_REDIRECT.substring(
+        1
+      )}?resourceId=${resourceId}`;
       assignment.title = reqQueryString.label;
       assignment.resource_id = resourceId;
       assignment.lineitem_label = reqQueryString.label;

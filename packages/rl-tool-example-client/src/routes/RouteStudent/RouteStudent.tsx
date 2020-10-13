@@ -18,7 +18,6 @@ const RouteStudent: React.FC = () => {
           </p>
         </div>
       </div>
-      <hr></hr>
     </div>
   );
 };
