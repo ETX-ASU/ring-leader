@@ -256,7 +256,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
     const members = await new NamesAndRoles().getMembers(platform, {
-      role: req.query.role
+      role: "Learner"
     });
     console.log("Get Grades - members - " + JSON.stringify(members));
 
