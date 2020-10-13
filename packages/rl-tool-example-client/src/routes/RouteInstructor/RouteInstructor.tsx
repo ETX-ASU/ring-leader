@@ -142,17 +142,13 @@ const RouteInstructor: React.FC = () => {
             <button className="btn btn-primary" onClick={getUsers}>
               Get Member Details
             </button>
+            <button className="btn btn-primary" onClick={getAssignment}>
+              Get Assignments
+            </button>
+            <button className="btn btn-primary" onClick={handleCreateAssigment}>
+              Create Assignment
+            </button>
           </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <button className="btn btn-primary" onClick={getAssignment}>
-            Get Assignments
-          </button>
-          <button className="btn btn-primary" onClick={handleCreateAssigment}>
-            Create Assignment
-          </button>
         </div>
       </div>
       <div className="row">

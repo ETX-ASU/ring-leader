@@ -255,10 +255,10 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const scoreData = [];
     console.log(" results[0].results - " + JSON.stringify(results[0].results));
 
-    const members = await new NamesAndRoles().getMembers(platform, {
+    const membersCollection = await new NamesAndRoles().getMembers(platform, {
       role: "Learner"
     });
-    console.log("Get Grades - members - " + JSON.stringify(members));
+    console.log("Get Grades - members - " + JSON.stringify(membersCollection));
 
     for (const key in results[0].results) {
       const score = results[0].results[key];
@@ -266,7 +266,9 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       //so for this demo, we are retrieving the user info from the session
       //so that we can display name of the student
       //In production env, we can call the Name and Role service and get the user details from there
-      const tooltipsData = members.filter(function (member: any) {
+      const tooltipsData = membersCollection.members.filter(function (
+        member: any
+      ) {
         return member.user_id == score.userId;
       });
 
