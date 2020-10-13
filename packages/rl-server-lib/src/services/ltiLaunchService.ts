@@ -162,7 +162,7 @@ const assignmentRedirectPost = async (
     console.log("req.session- " + JSON.stringify(request.session));
   });
   response.redirect(
-    LTI_ASSIGNMENT_REDIRECT + "&resourceId=" + reqQueryString.resourceId
+    LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + reqQueryString.resourceId
   );
 };
 
