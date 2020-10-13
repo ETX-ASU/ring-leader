@@ -14,7 +14,7 @@ const App: React.FC = () => {
           <Route exact path="/instructor">
             <RouteInstructor />
           </Route>
-          <Route exact path="/RouteStudent">
+          <Route exact path="/student">
             <RouteStudent />
           </Route>
           <Route path="/assignment">
