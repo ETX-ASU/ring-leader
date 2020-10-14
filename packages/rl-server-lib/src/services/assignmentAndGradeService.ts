@@ -1,9 +1,10 @@
 // eslint-disable-next-line node/no-extraneous-import
 import got from "got";
 import { URLSearchParams } from "url";
-import { Score, ScoreOptions } from "../util/interface/grade";
-import { Platform } from "../util/interface/platform";
+import { Score } from "../util/interface/Score";
+import { Platform } from "../util/interface/Platform";
 import { getAccessToken } from "../util/auth";
+import { Options } from "../util/interface/Options";
 class Grade {
   /**
    * @description Gets lineitems from a given platform
@@ -19,7 +20,7 @@ class Grade {
 
   async getLineItems(
     platform: Platform,
-    options?: any,
+    options?: Options,
     accessToken?: any
   ): Promise<any> {
     console.log(
@@ -177,7 +178,7 @@ class Grade {
   async putGrade(
     platform: Platform,
     score: Score,
-    options?: ScoreOptions
+    options?: Options
   ): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
@@ -291,7 +292,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async getGrades(platform: Platform, options?: ScoreOptions): Promise<any> {
+  async getGrades(platform: Platform, options?: Options): Promise<any> {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
@@ -374,11 +375,7 @@ class Grade {
    * @param {Object} idtoken - Idtoken for the user
    * @param {Object} [options] - Options object
    * @param {Boolean} [options.resourceLinkId = false] - Filters line items based on the resourceLinkId of the resource that originated the request
-   * @param {String} [options.resourceId = false] - Filters line items based on the resourceId
-   * @param {String} [options.tag = false] - Filters line items based on the tag
-   * @param {Number} [options.limit = false] - Sets a maximum number of line items to be deleted
    * @param {String} [options.id = false] - Filters line items based on the id
-   * @param {String} [options.label = false] - Filters line items based on the label
    */
 
   async deleteLineItems(platform: Platform, options?: any): Promise<any> {

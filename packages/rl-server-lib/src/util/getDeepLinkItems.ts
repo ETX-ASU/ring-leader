@@ -1,4 +1,4 @@
-import { Platform } from "./interface/platform";
+import { Platform } from "./interface/Platform";
 import { getAssignmentsByContext } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
 import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "../util/environment";

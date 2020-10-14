@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import got from "got";
-import { Platform } from "./interface/platform";
+import { Platform } from "./interface/Platform";
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
     throw new Error("ISSUER_MISSING_IN_OIDC_REQUEST");

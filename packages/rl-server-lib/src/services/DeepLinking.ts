@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Platform } from "../util/interface/platform";
+import { Platform } from "../util/interface/Platform";
 class DeepLinking {
   /**
    * @description Creates an auto submitting form containing the DeepLinking Message.
