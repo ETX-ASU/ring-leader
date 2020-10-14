@@ -134,13 +134,6 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary"
-            onClick={() => deleteAssignment(assignmentData.id)}
-          >
-            Delete Assignment
-          </button>
-          <button
-            assignment-id={assignmentData.id}
-            className="btn btn-primary"
             onClick={() => getUnAssignedStudets(assignmentData.id)}
           >
             Get Students not assigned to this Assignment
