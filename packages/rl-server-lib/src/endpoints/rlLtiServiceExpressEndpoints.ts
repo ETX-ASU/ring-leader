@@ -110,23 +110,27 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     //we get list of all the students associated to the course and try to find out all the students who are not graded.
     // we assume that if a student is not graded then he was assigned that assignment
     const scoreData = [];
-    const platform: any = req.session.platform;
-    const results: any = ([] = await new Grade().getGrades(platform, {
-      id: req.query.assignmentId,
-      resourceLinkId: false
-    }));
-    const members = req.session.members;
-    for (const key in members) {
-      const score = members[key];
+    const reqQueryString: any = req.query;
+    if (reqQueryString && reqQueryString.lineItemId) {
+      const platform: any = req.session.platform;
+      const results: any = ([] = await new Grade().getGrades(platform, {
+        id: reqQueryString.lineItemId,
+        resourceLinkId: false
+      }));
 
-      const tooltipsData = results[0].results.filter(function (member: any) {
-        return member.userId == score.user_id;
-      });
-      if (tooltipsData.length <= 0)
-        scoreData.push({
-          userId: score.userId,
-          StudenName: score.name
+      const members = req.session.members;
+      for (const key in members) {
+        const score = members[key];
+
+        const tooltipsData = results[0].results.filter(function (member: any) {
+          return member.userId == score.user_id;
         });
+        if (tooltipsData.length <= 0)
+          scoreData.push({
+            userId: score.userId,
+            StudenName: score.name
+          });
+      }
     }
     res.send(scoreData);
   });
@@ -248,40 +252,47 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    const platform: any = req.session.platform;
-    const results: any = ([] = await new Grade().getGrades(platform, {
-      id: req.query.assignmentId,
-      resourceLinkId: false
-    }));
+
     const scoreData = [];
-    console.log(" results[0].results - " + JSON.stringify(results[0].results));
+    const platform: any = req.session.platform;
+    const reqQueryString: any = req.query;
+    if (reqQueryString && reqQueryString.lineItemId) {
+      const results: any = ([] = await new Grade().getGrades(platform, {
+        id: reqQueryString.lineItemId,
+        resourceLinkId: false
+      }));
+      console.log(
+        " results[0].results - " + JSON.stringify(results[0].results)
+      );
 
-    const membersCollection = await new NamesAndRoles().getMembers(platform, {
-      role: "Learner"
-    });
-    console.log("Get Grades - members - " + JSON.stringify(membersCollection));
-
-    for (const key in results[0].results) {
-      const score = results[0].results[key];
-      //Grades service call will only return user Id along with the score
-      //so for this demo, we are retrieving the user info from the session
-      //so that we can display name of the student
-      //In production env, we can call the Name and Role service and get the user details from there
-      const tooltipsData = membersCollection.members.filter(function (
-        member: any
-      ) {
-        return member.user_id == score.userId;
+      const membersCollection = await new NamesAndRoles().getMembers(platform, {
+        role: "Learner"
       });
+      console.log(
+        "Get Grades - members - " + JSON.stringify(membersCollection)
+      );
 
-      scoreData.push({
-        userId: score.userId,
-        StudenName: tooltipsData[0].name,
-        score: score.resultScore,
-        comment: score.comment
-      });
+      for (const key in results[0].results) {
+        const score = results[0].results[key];
+        //Grades service call will only return user Id along with the score
+        //so for this demo, we are retrieving the user info from the session
+        //so that we can display name of the student
+        //In production env, we can call the Name and Role service and get the user details from there
+        const tooltipsData = membersCollection.members.filter(function (
+          member: any
+        ) {
+          return member.user_id == score.userId;
+        });
+
+        scoreData.push({
+          userId: score.userId,
+          StudenName: tooltipsData[0].name,
+          score: score.resultScore,
+          comment: score.comment
+        });
+      }
+      console.log("scoreData - " + scoreData);
     }
-    console.log("scoreData - " + scoreData);
-
     res.send(scoreData);
   });
 };

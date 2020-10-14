@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Platform } from "./platform";
+import { Platform } from "./interface/platform";
 const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
   console.log(

@@ -93,7 +93,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     axios
       .get("/lti-service/grades", {
         params: {
-          assignmentId: assignmentId
+          lineItemId: assignmentId
         }
       })
       .then((results) => {

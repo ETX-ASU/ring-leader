@@ -3,7 +3,7 @@ import parseLink from "parse-link";
 import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
-import { Platform } from "../util/platform";
+import { Platform } from "../util/interface/platform";
 class NamesAndRoles {
   /**
    * @description Retrieves members from platform.

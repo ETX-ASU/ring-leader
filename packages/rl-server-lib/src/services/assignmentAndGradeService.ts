@@ -1,8 +1,8 @@
 // eslint-disable-next-line node/no-extraneous-import
 import got from "got";
 import { URLSearchParams } from "url";
-import Assignment from "../database/entities/Assignment";
-import { Platform } from "../util/platform";
+import { Score, ScoreOptions } from "../util/interface/grade";
+import { Platform } from "../util/interface/platform";
 import { getAccessToken } from "../util/auth";
 class Grade {
   /**
@@ -174,7 +174,11 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async putGrade(platform: Platform, score: any, options?: any): Promise<any> {
+  async putGrade(
+    platform: Platform,
+    score: Score,
+    options?: ScoreOptions
+  ): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
@@ -287,7 +291,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async getGrades(platform: Platform, options?: any): Promise<any> {
+  async getGrades(platform: Platform, options?: ScoreOptions): Promise<any> {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
@@ -297,7 +301,7 @@ class Grade {
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly"
     );
 
-    let limit = false;
+    let limit: any = false;
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
