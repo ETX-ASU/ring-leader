@@ -114,7 +114,7 @@ const RlPlatform = (
     kid: kid,
     platformPrivateKey: platformPrivateKey,
     idToken: idToken,
-    alg: [alg],
+    alg: alg,
     deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.userId,
     roles: tokenData.roles,
