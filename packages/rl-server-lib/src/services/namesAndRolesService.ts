@@ -3,7 +3,7 @@ import parseLink from "parse-link";
 import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
-
+import { Platform } from "../util/platform";
 class NamesAndRoles {
   /**
    * @description Retrieves members from platform.
@@ -15,7 +15,7 @@ class NamesAndRoles {
    * @param {String} [options.url] - Specifies the initial members endpoint, usually retrieved from a previous incomplete request.
    */
 
-  async getMembers(platform: any, options?: any): Promise<any> {
+  async getMembers(platform: Platform, options?: any): Promise<any> {
     if (!platform) {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");

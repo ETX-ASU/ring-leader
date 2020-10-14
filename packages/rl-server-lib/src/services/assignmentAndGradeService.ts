@@ -2,6 +2,7 @@
 import got from "got";
 import { URLSearchParams } from "url";
 import Assignment from "../database/entities/Assignment";
+import { Platform } from "../util/platform";
 import { getAccessToken } from "../util/auth";
 class Grade {
   /**
@@ -17,11 +18,13 @@ class Grade {
    */
 
   async getLineItems(
-    platform: any,
+    platform: Platform,
     options?: any,
     accessToken?: any
   ): Promise<any> {
-    console.log(`Access token to get line items - get new token ${accessToken}`);
+    console.log(
+      `Access token to get line items - get new token ${accessToken}`
+    );
 
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
@@ -105,7 +108,7 @@ class Grade {
    */
 
   async createLineItem(
-    platform: any,
+    platform: Platform,
     lineItem: any,
     options?: any,
     accessToken?: any
@@ -143,7 +146,7 @@ class Grade {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
             "Content-Type": "application/vnd.ims.lis.v2.lineitem+json",
-            "Accept": "application/vnd.ims.lis.v2.lineitem+json"
+            Accept: "application/vnd.ims.lis.v2.lineitem+json"
           },
           json: lineItem
         })
@@ -171,7 +174,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async putGrade(platform: any, score: any, options?: any): Promise<any> {
+  async putGrade(platform: Platform, score: any, options?: any): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
@@ -284,7 +287,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async getGrades(platform: any, options?: any): Promise<any> {
+  async getGrades(platform: Platform, options?: any): Promise<any> {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
@@ -374,7 +377,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async deleteLineItems(platform: any, options?: any): Promise<any> {
+  async deleteLineItems(platform: Platform, options?: any): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }

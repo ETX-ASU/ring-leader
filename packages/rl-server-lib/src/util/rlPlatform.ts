@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-
+import { Platform } from "./platform";
 const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
   console.log(
@@ -8,21 +8,21 @@ const setDefaultValues = (token: any): any => {
         "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
       ]
   );
-  let isStudentUser = false;
-  let isInstructorUser = false;
+  let IsStudent = false;
+  let IsInstructor = false;
   if (token["https://purl.imsglobal.org/spec/lti/claim/roles"]) {
     if (
       token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
         "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
       )
     ) {
-      isStudentUser = true;
+      IsStudent = true;
     } else if (
       token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
         "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
       )
     ) {
-      isInstructorUser = true;
+      IsInstructor = true;
     }
   }
 
@@ -37,8 +37,11 @@ const setDefaultValues = (token: any): any => {
     iat: token.iat,
     sub: token.sub,
     exp: token.exp,
+    nonce: token.nonce,
     clientId: token.aud,
     userId: token.sub,
+    deploymentId:
+      token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] || null,
     roles: [
       {
         role: "Learner",
@@ -49,8 +52,8 @@ const setDefaultValues = (token: any): any => {
         claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
       }
     ],
-    isInstructorUser: isInstructorUser,
-    isStudentUser: isStudentUser,
+    IsStudent: IsStudent,
+    IsInstructor: IsInstructor,
     context: token["https://purl.imsglobal.org/spec/lti/claim/context"],
     lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
@@ -86,19 +89,21 @@ const RlPlatform = (
   kid: string,
   alg: string,
   idToken: string
-): any => {
+): Platform => {
   const token = jwt.decode(idToken);
   console.log(
     `RlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
   );
   const tokenData = setDefaultValues(token);
-  const platform = {
+  const platform: Platform = {
     jti: tokenData.jti,
     iss: tokenData.iss,
     aud: tokenData.aud,
     iat: tokenData.iat,
     sub: tokenData.sub,
     exp: tokenData.exp,
+    state: tokenData.exp || null,
+    nonce: tokenData.nonce,
     context_id: tokenData.context.id,
     clientId: tokenData.clientId,
     lineitems: tokenData.lineitems,
@@ -109,12 +114,13 @@ const RlPlatform = (
     kid: kid,
     platformPrivateKey: platformPrivateKey,
     idToken: idToken,
-    alg: alg,
+    alg: [alg],
     deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.userId,
     roles: tokenData.roles,
-    isInstructorUser: tokenData.isInstructorUser,
-    isStudentUser: tokenData.isStudentUser
+    IsInstructor: tokenData.IsInstructor,
+    IsStudent: tokenData.IsStudent,
+    deploymentId: tokenData.deploymentId
   };
   console.log("RlPlatformplatform - " + JSON.stringify(platform));
 
