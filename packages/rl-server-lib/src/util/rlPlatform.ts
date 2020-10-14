@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Platform } from "./interface/Platform";
+import { IPlatform } from "./IPlatform";
 const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
   console.log(
@@ -29,6 +29,7 @@ const setDefaultValues = (token: any): any => {
   const tokenData = {
     jti: encodeURIComponent(
       [...Array(25)]
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map((_) => ((Math.random() * 36) | 0).toString(36))
         .join("-")
     ),
@@ -89,13 +90,13 @@ const RlPlatform = (
   kid: string,
   alg: string,
   idToken: string
-): Platform => {
+): IPlatform => {
   const token = jwt.decode(idToken);
   console.log(
     `RlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
   );
   const tokenData = setDefaultValues(token);
-  const platform: Platform = {
+  const platform: IPlatform = {
     jti: tokenData.jti,
     iss: tokenData.iss,
     aud: tokenData.aud,

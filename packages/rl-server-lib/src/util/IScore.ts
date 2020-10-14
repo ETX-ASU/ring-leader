@@ -1,4 +1,4 @@
-export interface Score {
+export interface IScore {
   scoreGiven: number;
   timestamp: string;
   comment: string;

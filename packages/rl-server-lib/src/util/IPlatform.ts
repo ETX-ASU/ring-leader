@@ -1,4 +1,4 @@
-export interface Platform {
+export interface IPlatform {
   jti: string;
   iss: string;
   aud: string;
