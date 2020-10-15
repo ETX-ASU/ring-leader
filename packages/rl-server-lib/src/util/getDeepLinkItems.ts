@@ -1,19 +1,9 @@
-import { RlPlatform } from "./rlPlatform";
+import { IPlatform } from "./IPlatform";
 import { getAssignmentsByContext } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
 import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "../util/environment";
-const getDeepLinkItems = async (
-  endpoint: String,
-  platform: any | undefined
-) => {
-  if (endpoint == DEEP_LINK_RESOURCELINKS_ENDPOINT) {
-    return await getDeepLinkAssignments(platform);
-  }
-  return [];
-};
 
-const getDeepLinkAssignments = async (platform: any | undefined) => {
- 
+const getDeepLinkAssignments = async (platform: IPlatform): Promise<any> => {
   const assignments: Assignment[] = await getAssignmentsByContext(
     platform.context_id
   );
@@ -34,6 +24,15 @@ const getDeepLinkAssignments = async (platform: any | undefined) => {
     });
   }
   return items;
+};
+const getDeepLinkItems = async (
+  endpoint: string,
+  platform: IPlatform
+): Promise<any> => {
+  if (endpoint == DEEP_LINK_RESOURCELINKS_ENDPOINT) {
+    return await getDeepLinkAssignments(platform);
+  }
+  return [];
 };
 
 export default getDeepLinkItems;

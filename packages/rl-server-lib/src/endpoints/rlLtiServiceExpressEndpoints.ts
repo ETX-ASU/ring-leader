@@ -106,29 +106,46 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    //The idea here is that once all the students are graded
-    //we get list of all the students associated to the course and try to find out all the students who are not graded.
-    // we assume that if a student is not graded then he was assigned that assignment
-    const scoreData = [];
-    const platform: any = req.session.platform;
-    const results: any = ([] = await new Grade().getGrades(platform, {
-      id: req.query.assignmentId,
-      resourceLinkId: false
-    }));
-    const members = req.session.members;
-    for (const key in members) {
-      const score = members[key];
+    const studentsNotAssignedToThisAssignments = [];
+    const reqQueryString: any = req.query;
+    if (reqQueryString && reqQueryString.lineItemId) {
+      const platform: any = req.session.platform;
 
-      const tooltipsData = results[0].results.filter(function (member: any) {
-        return member.userId == score.user_id;
-      });
-      if (tooltipsData.length <= 0)
-        scoreData.push({
-          userId: score.userId,
-          StudenName: score.name
+      const courseMembersCollection = await new NamesAndRoles().getMembers(
+        platform,
+        {
+          role: "Learner"
+        }
+      );
+
+      const members = courseMembersCollection.members;
+
+      const assignmentMembersCollection = await new NamesAndRoles().getMembers(
+        platform,
+        {
+          role: "Learner",
+          resourceLinkId: reqQueryString.resourceLinkId
+        }
+      );
+      const assignmentMembers = assignmentMembersCollection.members;
+
+      for (const key in members) {
+        const courseMember = members[key];
+        console.log("courseMember -" + JSON.stringify(courseMember));
+        console.log("assignmentMembers -" + JSON.stringify(assignmentMembers));
+        const filteredData = assignmentMembers.filter(function (member: any) {
+          console.log("member -" + JSON.stringify(member));
+          return member.user_id == courseMember.user_id;
         });
+        console.log("filteredData -" + JSON.stringify(filteredData));
+        if (filteredData.length <= 0)
+          studentsNotAssignedToThisAssignments.push({
+            userId: courseMember.userId,
+            StudenName: courseMember.name
+          });
+      }
     }
-    res.send(scoreData);
+    res.send(studentsNotAssignedToThisAssignments);
   });
 
   app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req, res) => {
@@ -142,12 +159,10 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const results = await new Grade().putGrade(
       platform,
       {
-        timestamp: new Date().toISOString(),
         scoreGiven: score.grade,
         comment: score.comment,
         activityProgress: score.activityProgress,
-        gradingProgress: score.gradingProgress,
-        userId: platform.userId
+        gradingProgress: score.gradingProgress
       },
       {
         id: platform.lineitem,
@@ -234,54 +249,61 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    const options = {
-      id: req.query.assignmentId
-    };
-    console.log("delete line item options -" + JSON.stringify(options));
+    const lineItemId: any = req.query.lineItemId;
+    if (lineItemId) {
+      const results = await new Grade().deleteLineItems(platform, {
+        id: lineItemId
+      });
 
-    const results = await new Grade().deleteLineItems(platform, options);
-
-    res.send(results);
+      res.send(results);
+    }
   });
 
   app.get(GET_GRADES, requestLogger, async (req, res) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    const platform: any = req.session.platform;
-    const results: any = ([] = await new Grade().getGrades(platform, {
-      id: req.query.assignmentId,
-      resourceLinkId: false
-    }));
+
     const scoreData = [];
-    console.log(" results[0].results - " + JSON.stringify(results[0].results));
+    const platform: any = req.session.platform;
+    const reqQueryString: any = req.query;
+    if (reqQueryString && reqQueryString.lineItemId) {
+      const results: any = ([] = await new Grade().getGrades(platform, {
+        id: reqQueryString.lineItemId,
+        resourceLinkId: false
+      }));
+      console.log(
+        " results[0].results - " + JSON.stringify(results[0].results)
+      );
 
-    const membersCollection = await new NamesAndRoles().getMembers(platform, {
-      role: "Learner"
-    });
-    console.log("Get Grades - members - " + JSON.stringify(membersCollection));
-
-    for (const key in results[0].results) {
-      const score = results[0].results[key];
-      //Grades service call will only return user Id along with the score
-      //so for this demo, we are retrieving the user info from the session
-      //so that we can display name of the student
-      //In production env, we can call the Name and Role service and get the user details from there
-      const tooltipsData = membersCollection.members.filter(function (
-        member: any
-      ) {
-        return member.user_id == score.userId;
+      const membersCollection = await new NamesAndRoles().getMembers(platform, {
+        role: "Learner"
       });
+      console.log(
+        "Get Grades - members - " + JSON.stringify(membersCollection)
+      );
+      if (results.length <= 0) return res.send([]);
+      for (const key in results[0].results) {
+        const score = results[0].results[key];
+        //Grades service call will only return user Id along with the score
+        //so for this demo, we are retrieving the user info from the session
+        //so that we can display name of the student
+        //In production env, we can call the Name and Role service and get the user details from there
+        const tooltipsData = membersCollection.members.filter(function (
+          member: any
+        ) {
+          return member.user_id == score.userId;
+        });
 
-      scoreData.push({
-        userId: score.userId,
-        StudenName: tooltipsData[0].name,
-        score: score.resultScore,
-        comment: score.comment
-      });
+        scoreData.push({
+          userId: score.userId,
+          StudenName: tooltipsData[0].name,
+          score: score.resultScore,
+          comment: score.comment
+        });
+      }
+      console.log("scoreData - " + scoreData);
     }
-    console.log("scoreData - " + scoreData);
-
     res.send(scoreData);
   });
 };

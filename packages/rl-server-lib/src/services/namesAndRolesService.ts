@@ -3,7 +3,7 @@ import parseLink from "parse-link";
 import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
-
+import { IPlatform } from "../util/IPlatform";
 class NamesAndRoles {
   /**
    * @description Retrieves members from platform.
@@ -13,9 +13,10 @@ class NamesAndRoles {
    * @param {Number} [options.limit] - Specifies maximum number of members per page.
    * @param {Number} [options.pages] - Specifies maximum number of pages returned.
    * @param {String} [options.url] - Specifies the initial members endpoint, usually retrieved from a previous incomplete request.
+   * @param {String} [options.resourceLinkId] - If set to true, retrieves resource Link level memberships.
    */
 
-  async getMembers(platform: any, options?: any): Promise<any> {
+  async getMembers(platform: IPlatform, options?: any): Promise<any> {
     if (!platform) {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");
@@ -48,7 +49,9 @@ class NamesAndRoles {
 
       if (platformRole) query.push(["role", platformRole.claim]);
     }
-
+    if (options && options.resourceLinkId) {
+      query.push(["rlid", options.resourceLinkId]);
+    }
     if (options && options.limit) {
       console.log("Adding limit parameter with value: " + options.limit);
       query.push(["limit", options.limit]);

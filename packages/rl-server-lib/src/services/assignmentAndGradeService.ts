@@ -1,8 +1,10 @@
 // eslint-disable-next-line node/no-extraneous-import
 import got from "got";
 import { URLSearchParams } from "url";
-import Assignment from "../database/entities/Assignment";
+import { IScore } from "../util/IScore";
+import { IPlatform } from "../util/IPlatform";
 import { getAccessToken } from "../util/auth";
+import { IOptions } from "../util/IOptions";
 class Grade {
   /**
    * @description Gets lineitems from a given platform
@@ -17,11 +19,13 @@ class Grade {
    */
 
   async getLineItems(
-    platform: any,
-    options?: any,
+    platform: IPlatform,
+    options?: IOptions,
     accessToken?: any
   ): Promise<any> {
-    console.log(`Access token to get line items - get new token ${accessToken}`);
+    console.log(
+      `Access token to get line items - get new token ${accessToken}`
+    );
 
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
@@ -105,7 +109,7 @@ class Grade {
    */
 
   async createLineItem(
-    platform: any,
+    platform: IPlatform,
     lineItem: any,
     options?: any,
     accessToken?: any
@@ -143,7 +147,7 @@ class Grade {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
             "Content-Type": "application/vnd.ims.lis.v2.lineitem+json",
-            "Accept": "application/vnd.ims.lis.v2.lineitem+json"
+            Accept: "application/vnd.ims.lis.v2.lineitem+json"
           },
           json: lineItem
         })
@@ -171,7 +175,11 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async putGrade(platform: any, score: any, options?: any): Promise<any> {
+  async putGrade(
+    platform: IPlatform,
+    score: IScore,
+    options?: IOptions
+  ): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
@@ -284,7 +292,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async getGrades(platform: any, options?: any): Promise<any> {
+  async getGrades(platform: IPlatform, options?: IOptions): Promise<any> {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
@@ -294,7 +302,7 @@ class Grade {
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly"
     );
 
-    let limit = false;
+    let limit: any = false;
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
@@ -367,14 +375,10 @@ class Grade {
    * @param {Object} idtoken - Idtoken for the user
    * @param {Object} [options] - Options object
    * @param {Boolean} [options.resourceLinkId = false] - Filters line items based on the resourceLinkId of the resource that originated the request
-   * @param {String} [options.resourceId = false] - Filters line items based on the resourceId
-   * @param {String} [options.tag = false] - Filters line items based on the tag
-   * @param {Number} [options.limit = false] - Sets a maximum number of line items to be deleted
    * @param {String} [options.id = false] - Filters line items based on the id
-   * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async deleteLineItems(platform: any, options?: any): Promise<any> {
+  async deleteLineItems(platform: IPlatform, options?: IOptions): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
