@@ -106,52 +106,43 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    //The idea here is that once all the students are graded
-    //we get list of all the students associated to the course and try to find out all the students who are not graded.
-    // we assume that if a student is not graded then he was assigned that assignment
-    const scoreData = [];
+    const studentsNotAssignedToThisAssignments = [];
     const reqQueryString: any = req.query;
     if (reqQueryString && reqQueryString.lineItemId) {
       const platform: any = req.session.platform;
-      const results: any = ([] = await new Grade().getGrades(platform, {
-        id: reqQueryString.lineItemId
-      }));
-      const membersCollection = await new NamesAndRoles().getMembers(platform, {
-        role: "Learner"
-      });
 
-      const members = membersCollection.members;
-      try {
-        const rlmembersCollection = await new NamesAndRoles().getMembers(
-          platform,
-          {
-            role: "Learner",
+      const courseMembersCollection = await new NamesAndRoles().getMembers(
+        platform,
+        {
+          role: "Learner"
+        }
+      );
 
-            resourceLinkId: reqQueryString.resourceLinkId
-          }
-        );
-        console.log(
-          "rlmembersCollection" + JSON.stringify(rlmembersCollection)
-        );
-        const rlmembers = rlmembersCollection.members;
-        console.log("rlmembers" + JSON.stringify(rlmembers));
-      } catch (err) {
-        console.log(err);
-      }
+      const members = courseMembersCollection.members;
+
+      const assignmentMembersCollection = await new NamesAndRoles().getMembers(
+        platform,
+        {
+          role: "Learner",
+          resourceLinkId: reqQueryString.resourceLinkId
+        }
+      );
+      const assignmentMembers = assignmentMembersCollection.members;
+
       for (const key in members) {
-        const score = members[key];
+        const courseMember = members[key];
 
-        const tooltipsData = results[0].results.filter(function (member: any) {
-          return member.userId == score.user_id;
+        const filteredData = assignmentMembers.filter(function (member: any) {
+          return member.userId == courseMember.userId;
         });
-        if (tooltipsData.length <= 0)
-          scoreData.push({
-            userId: score.userId,
-            StudenName: score.name
+        if (filteredData.length <= 0)
+          studentsNotAssignedToThisAssignments.push({
+            userId: courseMember.userId,
+            StudenName: courseMember.name
           });
       }
     }
-    res.send(scoreData);
+    res.send(studentsNotAssignedToThisAssignments);
   });
 
   app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req, res) => {
