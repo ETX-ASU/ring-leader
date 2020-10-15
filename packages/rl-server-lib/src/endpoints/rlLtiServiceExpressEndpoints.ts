@@ -1,3 +1,4 @@
+import { logger } from "@asu-etx/rl-server-lib";
 // eslint-disable-next-line node/no-extraneous-import
 import { Express } from "express";
 import { NamesAndRoles } from "../services/namesAndRolesService";
@@ -131,10 +132,13 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
 
       for (const key in members) {
         const courseMember = members[key];
-
+        console.log("courseMember -" + JSON.stringify(courseMember));
+        console.log("assignmentMembers -" + JSON.stringify(assignmentMembers));
         const filteredData = assignmentMembers.filter(function (member: any) {
+          console.log("member -" + JSON.stringify(member));
           return member.userId == courseMember.userId;
         });
+        console.log("filteredData -" + JSON.stringify(filteredData));
         if (filteredData.length <= 0)
           studentsNotAssignedToThisAssignments.push({
             userId: courseMember.userId,
@@ -279,7 +283,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       console.log(
         "Get Grades - members - " + JSON.stringify(membersCollection)
       );
-
+      if (results.length <= 0) return res.send([]);
       for (const key in results[0].results) {
         const score = results[0].results[key];
         //Grades service call will only return user Id along with the score
