@@ -114,15 +114,30 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     if (reqQueryString && reqQueryString.lineItemId) {
       const platform: any = req.session.platform;
       const results: any = ([] = await new Grade().getGrades(platform, {
-        id: reqQueryString.lineItemId,
-        resourceLinkId: reqQueryString.resourceLinkId
+        id: reqQueryString.lineItemId
       }));
       const membersCollection = await new NamesAndRoles().getMembers(platform, {
         role: "Learner"
       });
 
       const members = membersCollection.members;
+      try {
+        const rlmembersCollection = await new NamesAndRoles().getMembers(
+          platform,
+          {
+            role: "Learner",
 
+            resourceLinkId: reqQueryString.resourceLinkId
+          }
+        );
+        console.log(
+          "rlmembersCollection" + JSON.stringify(rlmembersCollection)
+        );
+        const rlmembers = rlmembersCollection.members;
+        console.log("rlmembers" + JSON.stringify(rlmembers));
+      } catch (err) {
+        console.log(err);
+      }
       for (const key in members) {
         const score = members[key];
 
