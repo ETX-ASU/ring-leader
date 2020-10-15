@@ -135,7 +135,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
         console.log("assignmentMembers -" + JSON.stringify(assignmentMembers));
         const filteredData = assignmentMembers.filter(function (member: any) {
           console.log("member -" + JSON.stringify(member));
-          return member.userId == courseMember.userId;
+          return member.user_id == courseMember.user_id;
         });
         console.log("filteredData -" + JSON.stringify(filteredData));
         if (filteredData.length <= 0)
