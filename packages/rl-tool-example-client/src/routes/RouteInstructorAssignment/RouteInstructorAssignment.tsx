@@ -77,7 +77,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     resourceLinkId: string
   ) => {
     axios
-      .get("/lti-service/getunassignedstudets", {
+      .get("/lti-service/getunassignedstudents", {
         params: {
           lineItemId: assignmentId,
           resourceLinkId: resourceLinkId
