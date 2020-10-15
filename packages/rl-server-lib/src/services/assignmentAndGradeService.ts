@@ -378,7 +378,7 @@ class Grade {
    * @param {String} [options.id = false] - Filters line items based on the id
    */
 
-  async deleteLineItems(platform: IPlatform, options?: any): Promise<any> {
+  async deleteLineItems(platform: IPlatform, options?: IOptions): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }

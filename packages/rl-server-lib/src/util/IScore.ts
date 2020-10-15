@@ -1,6 +1,6 @@
 export interface IScore {
   scoreGiven: number;
-  timestamp: string;
+  timestamp?: string;
   comment: string;
   activityProgress: string;
   gradingProgress: string;

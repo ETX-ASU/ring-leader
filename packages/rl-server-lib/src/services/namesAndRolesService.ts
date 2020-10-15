@@ -13,6 +13,7 @@ class NamesAndRoles {
    * @param {Number} [options.limit] - Specifies maximum number of members per page.
    * @param {Number} [options.pages] - Specifies maximum number of pages returned.
    * @param {String} [options.url] - Specifies the initial members endpoint, usually retrieved from a previous incomplete request.
+   * @param {String} [options.resourceLinkId] - If set to true, retrieves resource Link level memberships.
    */
 
   async getMembers(platform: IPlatform, options?: any): Promise<any> {
@@ -48,7 +49,9 @@ class NamesAndRoles {
 
       if (platformRole) query.push(["role", platformRole.claim]);
     }
-
+    if (options && options.resourceLinkId) {
+      query.push(["rlid", platform.resourceLinkId]);
+    }
     if (options && options.limit) {
       console.log("Adding limit parameter with value: " + options.limit);
       query.push(["limit", options.limit]);

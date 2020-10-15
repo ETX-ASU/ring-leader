@@ -37,7 +37,8 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const results = await new NamesAndRoles().getMembers(platform, {
-      role: req.query.role
+      role: req.query.role,
+      resourceLinkId: true
     });
     await req.session.save(() => {
       console.log("session data saved");
@@ -146,12 +147,10 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const results = await new Grade().putGrade(
       platform,
       {
-        timestamp: new Date().toISOString(),
         scoreGiven: score.grade,
         comment: score.comment,
         activityProgress: score.activityProgress,
-        gradingProgress: score.gradingProgress,
-        userId: platform.userId
+        gradingProgress: score.gradingProgress
       },
       {
         id: platform.lineitem,
@@ -238,14 +237,14 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    const options = {
-      id: req.query.assignmentId
-    };
-    console.log("delete line item options -" + JSON.stringify(options));
+    const lineItemId: any = req.query.lineItemId;
+    if (lineItemId) {
+      const results = await new Grade().deleteLineItems(platform, {
+        id: lineItemId
+      });
 
-    const results = await new Grade().deleteLineItems(platform, options);
-
-    res.send(results);
+      res.send(results);
+    }
   });
 
   app.get(GET_GRADES, requestLogger, async (req, res) => {
