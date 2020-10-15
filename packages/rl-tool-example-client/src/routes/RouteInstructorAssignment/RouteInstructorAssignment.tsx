@@ -72,11 +72,15 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         setDisplayCreateScoreSuccess(false);
       });
   };
-  const getUnAssignedStudets = (assignmentId: string) => {
+  const getUnAssignedStudets = (
+    assignmentId: string,
+    resourceLinkId: string
+  ) => {
     axios
       .get("/lti-service/getunassignedstudets", {
         params: {
-          assignmentId: assignmentId
+          lineItemId: assignmentId,
+          resourceLinkId: resourceLinkId
         }
       })
       .then((results) => {
@@ -134,7 +138,12 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary"
-            onClick={() => getUnAssignedStudets(assignmentData.id)}
+            onClick={() =>
+              getUnAssignedStudets(
+                assignmentData.id,
+                assignmentData.resourceLinkId
+              )
+            }
           >
             Get Students not assigned to this Assignment
           </button>

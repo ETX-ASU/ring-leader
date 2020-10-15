@@ -37,8 +37,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     // pass the token from the session to the rl-client-lib to make the call to Canvas
     const results = await new NamesAndRoles().getMembers(platform, {
-      role: req.query.role,
-      resourceLinkId: true
+      role: req.query.role
     });
     await req.session.save(() => {
       console.log("session data saved");
@@ -116,10 +115,14 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       const platform: any = req.session.platform;
       const results: any = ([] = await new Grade().getGrades(platform, {
         id: reqQueryString.lineItemId,
-        resourceLinkId: false
+        resourceLinkId: reqQueryString.resourceLinkId
       }));
+      const membersCollection = await new NamesAndRoles().getMembers(platform, {
+        role: "Learner"
+      });
 
-      const members = req.session.members;
+      const members = membersCollection.members;
+
       for (const key in members) {
         const score = members[key];
 

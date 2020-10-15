@@ -50,7 +50,7 @@ class NamesAndRoles {
       if (platformRole) query.push(["role", platformRole.claim]);
     }
     if (options && options.resourceLinkId) {
-      query.push(["rlid", platform.resourceLinkId]);
+      query.push(["rlid", options.resourceLinkId]);
     }
     if (options && options.limit) {
       console.log("Adding limit parameter with value: " + options.limit);
