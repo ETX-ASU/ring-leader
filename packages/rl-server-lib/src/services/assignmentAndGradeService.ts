@@ -341,7 +341,7 @@ class Grade {
         let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
         console.log(
-          "Inside GetGrades - searchParams - " + JSON.stringify(searchParams)
+          `Inside GetGrades - searchParams, url -  ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
         );
 
         const results = await got
