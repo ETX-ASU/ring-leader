@@ -3,7 +3,7 @@ import parseLink from "parse-link";
 import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
-import { IPlatform } from "../util/IPlatform";
+import { Platform } from "../util/Platform";
 class NamesAndRoles {
   /**
    * @description Retrieves members from platform.
@@ -16,7 +16,7 @@ class NamesAndRoles {
    * @param {String} [options.resourceLinkId] - If set to true, retrieves resource Link level memberships.
    */
 
-  async getMembers(platform: IPlatform, options?: any): Promise<any> {
+  async getMembers(platform: Platform, options?: any): Promise<any> {
     if (!platform) {
       console.log("Token object missing.");
       throw new Error("MISSING_TOKEN");

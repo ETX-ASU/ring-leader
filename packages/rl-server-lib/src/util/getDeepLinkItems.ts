@@ -1,9 +1,9 @@
-import { IPlatform } from "./IPlatform";
+import { Platform } from "./Platform";
 import { getAssignmentsByContext } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
 import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "../util/environment";
 
-const getDeepLinkAssignments = async (platform: IPlatform): Promise<any> => {
+const getDeepLinkAssignments = async (platform: Platform): Promise<any> => {
   const assignments: Assignment[] = await getAssignmentsByContext(
     platform.context_id
   );
@@ -27,7 +27,7 @@ const getDeepLinkAssignments = async (platform: IPlatform): Promise<any> => {
 };
 const getDeepLinkItems = async (
   endpoint: string,
-  platform: IPlatform
+  platform: Platform
 ): Promise<any> => {
   if (endpoint == DEEP_LINK_RESOURCELINKS_ENDPOINT) {
     return await getDeepLinkAssignments(platform);

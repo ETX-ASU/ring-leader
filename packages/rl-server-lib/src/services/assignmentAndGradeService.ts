@@ -1,10 +1,10 @@
 // eslint-disable-next-line node/no-extraneous-import
 import got from "got";
 import { URLSearchParams } from "url";
-import { IScore } from "../util/IScore";
-import { IPlatform } from "../util/IPlatform";
+import { Score } from "../util/Score";
+import { Platform } from "../util/Platform";
 import { getAccessToken } from "../util/auth";
-import { IOptions } from "../util/IOptions";
+import { Options } from "../util/Options";
 class Grade {
   /**
    * @description Gets lineitems from a given platform
@@ -19,8 +19,8 @@ class Grade {
    */
 
   async getLineItems(
-    platform: IPlatform,
-    options?: IOptions,
+    platform: Platform,
+    options?: Options,
     accessToken?: any
   ): Promise<any> {
     console.log(
@@ -109,7 +109,7 @@ class Grade {
    */
 
   async createLineItem(
-    platform: IPlatform,
+    platform: Platform,
     lineItem: any,
     options?: any,
     accessToken?: any
@@ -176,9 +176,9 @@ class Grade {
    */
 
   async putGrade(
-    platform: IPlatform,
-    score: IScore,
-    options?: IOptions
+    platform: Platform,
+    score: Score,
+    options?: Options
   ): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
@@ -292,7 +292,7 @@ class Grade {
    * @param {String} [options.label = false] - Filters line items based on the label
    */
 
-  async getGrades(platform: IPlatform, options?: IOptions): Promise<any> {
+  async getGrades(platform: Platform, options?: Options): Promise<any> {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
@@ -378,7 +378,7 @@ class Grade {
    * @param {String} [options.id = false] - Filters line items based on the id
    */
 
-  async deleteLineItems(platform: IPlatform, options?: IOptions): Promise<any> {
+  async deleteLineItems(platform: Platform, options?: Options): Promise<any> {
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }

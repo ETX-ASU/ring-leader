@@ -1,4 +1,4 @@
-export interface IOptions {
+export interface Options {
   resourceLinkId?: string | boolean;
   resourceId?: string;
   tag?: string;

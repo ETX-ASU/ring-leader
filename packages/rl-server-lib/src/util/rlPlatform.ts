@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { IPlatform } from "./IPlatform";
+import { Platform } from "./Platform";
 const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
   console.log(
@@ -8,21 +8,21 @@ const setDefaultValues = (token: any): any => {
         "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
       ]
   );
-  let IsStudent = false;
-  let IsInstructor = false;
+  let isStudent = false;
+  let isInstructor = false;
   if (token["https://purl.imsglobal.org/spec/lti/claim/roles"]) {
     if (
       token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
         "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
       )
     ) {
-      IsStudent = true;
+      isStudent = true;
     } else if (
       token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
         "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
       )
     ) {
-      IsInstructor = true;
+      isInstructor = true;
     }
   }
 
@@ -53,8 +53,8 @@ const setDefaultValues = (token: any): any => {
         claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
       }
     ],
-    IsStudent: IsStudent,
-    IsInstructor: IsInstructor,
+    isStudent: isStudent,
+    isInstructor: isInstructor,
     context: token["https://purl.imsglobal.org/spec/lti/claim/context"],
     lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
@@ -83,20 +83,20 @@ const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
 };
-const RlPlatform = (
+const rlPlatform = (
   platformPrivateKey: string,
   authenticationEndpoint: string,
   accesstokenEndpoint: string,
   kid: string,
   alg: string,
   idToken: string
-): IPlatform => {
+): Platform => {
   const token = jwt.decode(idToken);
   console.log(
-    `RlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
+    `rlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
   );
   const tokenData = setDefaultValues(token);
-  const platform: IPlatform = {
+  const platform: Platform = {
     jti: tokenData.jti,
     iss: tokenData.iss,
     aud: tokenData.aud,
@@ -119,12 +119,12 @@ const RlPlatform = (
     deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.userId,
     roles: tokenData.roles,
-    IsInstructor: tokenData.IsInstructor,
-    IsStudent: tokenData.IsStudent,
+    isInstructor: tokenData.isInstructor,
+    isStudent: tokenData.isStudent,
     deploymentId: tokenData.deploymentId
   };
-  console.log("RlPlatformplatform - " + JSON.stringify(platform));
+  console.log("rlPlatformplatform - " + JSON.stringify(platform));
 
   return platform;
 };
-export { RlPlatform };
+export { rlPlatform };
