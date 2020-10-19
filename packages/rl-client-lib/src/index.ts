@@ -1,6 +1,6 @@
 import {
   NamesAndRoles,
-  RlPlatform,
+  rlPlatform,
   Grade,
   DeepLinking
 } from "@asu-etx/rl-server-lib";
@@ -53,7 +53,7 @@ const deleteLineItems = (platform: any, options?: any): any => {
 };
 export {
   getUsers,
-  RlPlatform,
+  rlPlatform,
   getGrades,
   putGrade,
   createLineItem,

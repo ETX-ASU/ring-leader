@@ -1,7 +1,7 @@
 import { Grade } from "./services/assignmentAndGradeService";
 import { DeepLinking } from "./services/DeepLinking";
 import { NamesAndRoles } from "./services/namesAndRolesService";
-import { RlPlatform } from "./util/rlPlatform";
+import { rlPlatform } from "./util/rlPlatform";
 import { dbInit } from "./database/init";
 import requestLogger from "./middleware/requestLogger";
 
@@ -50,7 +50,7 @@ export {
   Grade,
   DeepLinking,
   NamesAndRoles,
-  RlPlatform,
+  rlPlatform,
   initOidcGet,
   initOidcPost,
   toolInfoGet,

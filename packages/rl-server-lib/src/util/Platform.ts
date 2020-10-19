@@ -1,4 +1,4 @@
-export interface IPlatform {
+export interface Platform {
   jti: string;
   iss: string;
   aud: string;
@@ -20,8 +20,8 @@ export interface IPlatform {
   deepLinkingSettings: DeeplinkSettings;
   userId: string;
   roles: Roles[];
-  IsInstructor: boolean;
-  IsStudent: boolean;
+  isInstructor: boolean;
+  isStudent: boolean;
   deploymentId: string;
   nonce: string;
 }

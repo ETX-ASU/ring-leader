@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import got from "got";
-import { IPlatform } from "./IPlatform";
+import { Platform } from "./Platform";
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
     throw new Error("ISSUER_MISSING_IN_OIDC_REQUEST");
@@ -20,7 +20,7 @@ const isValidOIDCRequest = (oidcData: any): boolean => {
  * @param {Platform} platform - Platform object.
  */
 
-const validateAud = (token: any, platform: IPlatform): boolean => {
+const validateAud = (token: any, platform: Platform): boolean => {
   console.log(
     "Validating if aud (Audience) claim matches the value of the tool's clientId given by the platform"
   );
@@ -40,7 +40,7 @@ const validateAud = (token: any, platform: IPlatform): boolean => {
  * @param {Object} token - Id token you wish to validate.
  */
 
-const validateNonce = (token: any, platform: any): boolean => {
+const validateNonce = (token: any, platform: Platform): boolean => {
   console.log("Validating nonce");
   console.log("Token Nonce: " + token.nonce);
   if (token.nonce == platform.nonce) return true;
@@ -100,7 +100,7 @@ const claimValidation = (token: any): any => {
  * @param {Platform} platform - Platform object.
  */
 
-const oidcValidation = (token: any, platform: IPlatform): any => {
+const oidcValidation = (token: any, platform: Platform): any => {
   console.log("Token signature verified");
   console.log("Initiating OIDC aditional validation steps");
   const aud: boolean = validateAud(token, platform);
@@ -118,7 +118,7 @@ const rlDecodeIdToken = (idToken: any): any => {
   if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
   return decodedToken;
 };
-const rlValidateToken = (idToken: any, platform: IPlatform): any => {
+const rlValidateToken = (idToken: any, platform: Platform): any => {
   const decodedToken = rlDecodeIdToken(idToken);
   console.log("platform.nonce-" + platform.nonce);
   console.log("platform.state-" + platform.state);
@@ -131,10 +131,7 @@ const rlValidateToken = (idToken: any, platform: IPlatform): any => {
   return idToken;
 };
 
-const rlValidateDecodedToken = (
-  decodedToken: any,
-  platform: IPlatform
-): any => {
+const rlValidateDecodedToken = (decodedToken: any, platform: Platform): any => {
   console.log("platform.nonce-" + platform.nonce);
   console.log("platform.state-" + platform.state);
   console.log("platform.client_id-" + platform.clientId);
@@ -187,7 +184,7 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   }
 };
 const getAccessToken = async (
-  platform: IPlatform,
+  platform: Platform,
   scopes: any
 ): Promise<any> => {
   console.log("Inside getAccessToken-" + JSON.stringify(platform));
