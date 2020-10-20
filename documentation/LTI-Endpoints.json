@@ -1,0 +1,128 @@
+[{
+		"endpoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/roster?role=Learner,Instructor",
+		"method": "GET",
+		"IS_LTI": "YES",
+		"response": {
+			"id": "https://unicon.instructure.com/api/lti/courses/786/names_and_roles?role=http%3A%2F%2Fpurl.imsglobal.org%2Fvocab%2Flis%2Fv2%2Fmembership%23Learner",
+			"context": {
+				"id": "dfc56043706f1db369a8b8b7c7ae4c7e6676d45b",
+				"label": "RL",
+				"title": "RL Test Course"
+			},
+			"members": [{
+				"status": "Active",
+				"name": "Devesh Tiwari Student A",
+				"picture": "https://canvas.instructure.com/images/messages/avatar-50.png",
+				"given_name": "Devesh Tiwari Student",
+				"family_name": "A",
+				"email": "devesh@ats360.com",
+				"user_id": "fa8fde11-43df-4328-9939-58b56309d20d",
+				"lti11_legacy_user_id": "f25bad78fee7b4585be9153faa3afe94cf8374f3",
+				"roles": ["http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"]
+			}, {
+				"status": "Active",
+				"name": "Devesh Tiwari Student B",
+				"picture": "https://canvas.instructure.com/images/messages/avatar-50.png",
+				"given_name": "Devesh Tiwari Student",
+				"family_name": "B",
+				"email": "dtiwari@avistais.com",
+				"user_id": "50681b1d-72ce-4102-94d6-dc586f9ba43f",
+				"lti11_legacy_user_id": "6e3ffd424baf7c6a22139b6efcc586960976aa2b",
+				"roles": ["http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"]
+			}]
+		}
+	},
+	{
+		"endpoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/getassignment",
+		"method": "GET",
+		"IS_LTI": "YES",
+		"response": [{
+			"id": "https://unicon.instructure.com/api/lti/courses/786/line_items/280",
+			"scoreMaximum": 100,
+			"label": "Math Assignment",
+			"resourceLinkId": "6fed5651-0171-4d45-afb4-0b262dd801e5"
+		}, {
+			"id": "https://unicon.instructure.com/api/lti/courses/786/line_items/281",
+			"scoreMaximum": 100,
+			"label": "Title",
+			"resourceLinkId": "eaa788a7-9051-4ef4-a386-cbbaad0e9c1e"
+		}]
+	},
+	{
+		"endpoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/createassignment",
+		"method": "POST",
+		"IS_LTI": "NO",
+		"body": {
+			"params": {
+				"scoreMaximum": 100,
+				"label": "Title",
+				"tag": "etag",
+				"resourceId": "resource+id"
+			},
+			"response": {}
+		}
+	}, {
+		"endpoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/getDeepLinkAssignments",
+		"method": "GET",
+        "IS_LTI": "NO",
+	},
+	{
+		"endoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/deeplink",
+		"IS_LTI": "YES",
+		"method": "POST",
+		"body": {
+			"contentItems": [{
+				"type": "ltiResourceLink",
+				"title": "Title",
+				"url": "https://ring-leader-james-stanley.herokuapp.com/assignment?resourceId=resource+id",
+				"resourceId": "resource+id",
+				"lineItem": {
+					"scoreMaximum": "100",
+					"label": "Title",
+					"resourceId": "resource+id",
+					"tag": "etag"
+				}
+			}]
+		}
+	},
+	{
+		"endpoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/putGrade",
+		"method": "POST",
+		"IS_LTI": "YES",
+		"body": {
+			"params": {
+				"grade": 81,
+				"comment": "Instructor comment on the student performance",
+				"activityProgress": "Completed",
+				"gradingProgress": "FullyGraded"
+			}
+		}
+	},
+	{
+		"endpoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/grades?lineItemId=https:%2F%2Funicon.instructure.com%2Fapi%2Flti%2Fcourses%2F786%2Fline_items%2F280",
+		"method": "GET",
+		"IS_LTI": "YES",
+		"response": [{
+			"userId": "fa8fde11-43df-4328-9939-58b56309d20d",
+			"StudenName": "Devesh Tiwari Student A",
+			"score": 100,
+			"comment": "Instructor comment on the student performance"
+		}]
+	},
+
+	{
+		"endpoint": "https://ring-leader-james-stanley.herokuapp.com/lti-service/putGrade",
+		"method": "POST",
+		"IS_LTI": "YES",
+		"body": {
+			"params": {
+				"lineItemId": "https://unicon.instructure.com/api/lti/courses/786/line_items/280",
+				"grade": 100,
+				"userId": "fa8fde11-43df-4328-9939-58b56309d20d",
+				"comment": "Instructor comment on the student performance",
+				"activityProgress": "Completed",
+				"gradingProgress": "FullyGraded"
+			}
+		}
+	}
+]
