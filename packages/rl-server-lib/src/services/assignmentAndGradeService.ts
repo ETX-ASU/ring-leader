@@ -256,7 +256,6 @@ class Grade {
           },
           json: score
         });
-        console.log("res -" + res);
 
         console.log("Score successfully sent");
         result.success.push({
