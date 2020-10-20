@@ -5,24 +5,24 @@ import "./RouteDeepLinking.scss";
 import $ from "jquery";
 
 const RouteDeepLinking: React.FC = () => {
-  const [radioInputValue, setRadioInputValue] = useState<string>("");
-  const handleCheck = (event: any): any => {
-    setRadioInputValue(event.target.value);
+  const [resourceLink, setResourceLink] = useState<{}>({});
+  const [assignments, setAssignments] = useState<any[]>([]);
+  const handleCheck = (resourceLinkData: any): any => {
+    setResourceLink(resourceLinkData);
   };
-  const submitGrade = () => {
+  useEffect(() => {
+    getDeepLinkResourceLinks();
+  });
+  const getDeepLinkResourceLinks = () => {
+    axios.get("/lti-service/getDeepLinkAssignments").then((results) => {
+      console.log(JSON.stringify(results.data));
+      setAssignments(results.data);
+    });
+  };
+  const submitResourceSelection = () => {
     axios
-      .get("/lti-service/deeplink", {
-        params: {
-          title: "Chapter 12 quiz",
-          url: "https://something.example.com/page.html",
-          resourceId: radioInputValue,
-          lineItem: {
-            scoreMaximum: 87,
-            label: "Chapter 12 quiz",
-            resourceId: "xyzpdq1234",
-            tag: "originality"
-          }
-        }
+      .post("/lti-service/deeplink", {
+        contentItems: [resourceLink]
       })
       .then((result) => {
         console.log(result);
@@ -33,27 +33,33 @@ const RouteDeepLinking: React.FC = () => {
   return (
     <div className="route-assignment">
       <div className="card">
-        <div className="card-header">Assignment list</div>
         <div className="card-body">
-          <div className="radio">
-            <label>
-              <input
-                onChange={handleCheck}
-                type="radio"
-                value="Learner"
-                name="optradio"
-              ></input>
-              Math's Assignment - 1
-            </label>
-          </div>
-          <div className="radio">
-            <label>
-              <input type="radio" name="optradio" />
-              Math's Assignment - 2
-            </label>
-          </div>
-          <button className="btn btn-primary" onClick={submitGrade}>
-            Submit
+          {assignments.map((assignment, index) => {
+            return (
+              <div className="radio">
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <div className="input-group-text">
+                      <input
+                        onChange={() => handleCheck(assignment)}
+                        type="radio"
+                      ></input>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled
+                    name="optradio"
+                    placeholder={assignment.title}
+                  ></input>
+                </div>
+              </div>
+            );
+          })}
+
+          <button className="btn btn-primary" onClick={submitResourceSelection}>
+            Confirm Selection
           </button>
         </div>
       </div>

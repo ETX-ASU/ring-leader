@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import got from "got";
-
+import { Platform } from "./Platform";
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
     throw new Error("ISSUER_MISSING_IN_OIDC_REQUEST");
@@ -20,19 +20,19 @@ const isValidOIDCRequest = (oidcData: any): boolean => {
  * @param {Platform} platform - Platform object.
  */
 
-const validateAud = (token: any, platform: any): boolean => {
+const validateAud = (token: any, platform: Platform): boolean => {
   console.log(
     "Validating if aud (Audience) claim matches the value of the tool's clientId given by the platform"
   );
   console.log("Aud claim: " + token.aud);
-  console.log("Tool's clientId: " + platform.client_id);
-  console.log("platform: " + JSON.stringify(platform))
+  console.log("Tool's clientId: " + platform.clientId);
+  console.log("platform: " + JSON.stringify(platform));
 
   if (Array.isArray(token.aud)) {
     console.log("More than one aud listed, searching for azp claim");
-    if (token.azp && token.azp !== platform.client_id)
+    if (token.azp && token.azp !== platform.clientId)
       throw new Error("AZP_DOES_NOT_MATCH_CLIENTID");
-  } else if (token.aud == platform.client_id) return true;
+  } else if (token.aud == platform.clientId) return true;
   return true;
 };
 /**
@@ -40,7 +40,7 @@ const validateAud = (token: any, platform: any): boolean => {
  * @param {Object} token - Id token you wish to validate.
  */
 
-const validateNonce = (token: any, platform: any): boolean => {
+const validateNonce = (token: any, platform: Platform): boolean => {
   console.log("Validating nonce");
   console.log("Token Nonce: " + token.nonce);
   if (token.nonce == platform.nonce) return true;
@@ -57,9 +57,9 @@ const claimValidation = (token: any): any => {
   console.log("Checking Message type claim");
   if (
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-    "LtiResourceLinkRequest" &&
+      "LtiResourceLinkRequest" &&
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-    "LtiDeepLinkingRequest"
+      "LtiDeepLinkingRequest"
   )
     throw new Error("NO_MESSAGE_TYPE_CLAIM");
 
@@ -100,7 +100,7 @@ const claimValidation = (token: any): any => {
  * @param {Platform} platform - Platform object.
  */
 
-const oidcValidation = (token: any, platform: any): any => {
+const oidcValidation = (token: any, platform: Platform): any => {
   console.log("Token signature verified");
   console.log("Initiating OIDC aditional validation steps");
   const aud: boolean = validateAud(token, platform);
@@ -110,8 +110,15 @@ const oidcValidation = (token: any, platform: any): any => {
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
-const rlValidateToken = (idToken: any, platform: any): any => {
-
+const rlDecodeIdToken = (idToken: any): any => {
+  console.log("idToken:" + idToken);
+  const decodedToken = jwt.decode(idToken);
+  console.log("decodedtoken:");
+  console.log(JSON.stringify(decodedToken));
+  if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
+  return decodedToken;
+};
+const rlValidateToken = (idToken: any, platform: Platform): any => {
   const decodedToken = rlDecodeIdToken(idToken);
   console.log("platform.nonce-" + platform.nonce);
   console.log("platform.state-" + platform.state);
@@ -124,7 +131,7 @@ const rlValidateToken = (idToken: any, platform: any): any => {
   return idToken;
 };
 
-const rlValidateDecodedToken = (decodedToken: any, platform: any): any => {
+const rlValidateDecodedToken = (decodedToken: any, platform: Platform): any => {
   console.log("platform.nonce-" + platform.nonce);
   console.log("platform.state-" + platform.state);
   console.log("platform.client_id-" + platform.clientId);
@@ -135,15 +142,6 @@ const rlValidateDecodedToken = (decodedToken: any, platform: any): any => {
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
 };
 
-const rlDecodeIdToken = (idToken: any): any => {
-
-  console.log("idToken:" + idToken);
-  const decodedToken = jwt.decode(idToken);
-  console.log("decodedtoken:");
-  console.log(JSON.stringify(decodedToken));
-  if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
-  return decodedToken;
-}
 const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   let oidcData = req.query;
   console.log("req.method:" + req.method);
@@ -185,7 +183,10 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
     return response;
   }
 };
-const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
+const getAccessToken = async (
+  platform: Platform,
+  scopes: any
+): Promise<any> => {
   console.log("Inside getAccessToken-" + JSON.stringify(platform));
 
   const clientId = platform.aud;
@@ -200,7 +201,7 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
   };
   console.log("confjwt- " + JSON.stringify(confjwt));
 
-  const jwtToken = await jwt.sign(confjwt, platform.platformPrivateKey, {
+  const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
     algorithm: platform.alg,
     keyid: platform.kid
   });
@@ -216,9 +217,15 @@ const getAccessToken = async (platform: any, scopes: any): Promise<any> => {
       form: payload
     })
     .json();
-  console.log(`Access token received ${JSON.stringify(access)}`)
+  console.log(`Access token received ${JSON.stringify(access)}`);
   console.log("Access token for the scopes - " + scopes);
 
   return access;
 };
-export { rlProcessOIDCRequest, rlValidateToken, getAccessToken, rlValidateDecodedToken, rlDecodeIdToken };
+export {
+  rlProcessOIDCRequest,
+  rlValidateToken,
+  getAccessToken,
+  rlValidateDecodedToken,
+  rlDecodeIdToken
+};

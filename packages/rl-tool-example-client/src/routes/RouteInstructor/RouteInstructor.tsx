@@ -30,6 +30,7 @@ const RouteInstructor: React.FC = () => {
 
   const [title, setTitle] = useState<string>("");
   const [tag, setTag] = useState<string>("");
+  const [resourceId, setResourceId] = useState<string>("");
   const [maxScore, setMaxScore] = useState<number>();
 
   const [courses, setCourses] = useState<any>({});
@@ -52,11 +53,12 @@ const RouteInstructor: React.FC = () => {
   };
   const createAssignment = () => {
     axios
-      .get("/lti-service/createassignment", {
+      .post("/lti-service/createassignment", {
         params: {
           scoreMaximum: maxScore,
           label: title,
-          tag: tag
+          tag: tag,
+          resourceId: resourceId
         }
       })
       .then((results) => {
@@ -100,14 +102,6 @@ const RouteInstructor: React.FC = () => {
     setDisplayNoAssignment(false);
   };
 
-  const handleCreateResourceLink = (event: any): any => {
-    setDisplayDiv(false);
-    setDisplayCreateAssignment(false);
-    setdisplayAssignment(false);
-    setDisplayCreateAssignmentSuccess(false);
-    setDisplayNoAssignment(false);
-    setDisplayCreateResourceLinkAssignment(true);
-  };
   return (
     <div className="route-instructor">
       <h3>
@@ -148,25 +142,16 @@ const RouteInstructor: React.FC = () => {
             <button className="btn btn-primary" onClick={getUsers}>
               Get Member Details
             </button>
+            <button className="btn btn-primary" onClick={getAssignment}>
+              Get Assignments
+            </button>
+            <button className="btn btn-primary" onClick={handleCreateAssigment}>
+              Create Assignment
+            </button>
           </div>
         </div>
       </div>
-      <div className="row">
-        <div className="col">
-          <button className="btn btn-primary" onClick={getAssignment}>
-            Get Assignments
-          </button>
-          <button className="btn btn-primary" onClick={handleCreateAssigment}>
-            Create Assignment
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={handleCreateResourceLink}
-          >
-            Create Resource Linked Assignment
-          </button>
-        </div>
-      </div>
+      <hr></hr>
       <div className="row">
         <div className="col">
           <div className="details">
@@ -191,55 +176,31 @@ const RouteInstructor: React.FC = () => {
                 );
               })}{" "}
           </div>
-          {displayCreateResourceLinkAssignment && (
-            <div className=" container">
-              <div className="form-group">
-                <label className="control-label">Assignment Title:</label>
-                <input
-                  value={title}
-                  onChange={(event) => {
-                    setTitle(event.target.value);
-                  }}
-                  type="text"
-                  className="form-control"
-                  id="title"
-                  placeholder="Enter Assignment Title"
-                  name="title"
-                ></input>
-              </div>
-              <div className="form-group">
-                <label className="control-label">Maximum Score:</label>
 
-                <input
-                  value={maxScore}
-                  onChange={(event) => {
-                    setMaxScore(parseInt(event.target.value));
-                  }}
-                  type="number"
-                  className="form-control"
-                  id="MaximumScore"
-                  placeholder="Enter Maximum Score"
-                  name="MaximumScore"
-                ></input>
-              </div>
-              <div className="form-group">
-                <label className="control-label">Tag:</label>
-                <input
-                  value={tag}
-                  onChange={(event) => {
-                    setTag(event.target.value);
-                  }}
-                  type="text"
-                  className="form-control"
-                  id="Tag"
-                  placeholder="Enter Tag"
-                  name="Tag"
-                ></input>
-              </div>
-            </div>
-          )}
           {displayCreateAssignment && (
             <div className=" container">
+              <div>
+                <div className="alert alert-info">
+                  <strong>Info!</strong> <strong>Resource Id -</strong>This will
+                  be appended as query string parameter in URL during assignment
+                  view. Tool can check this parameter and identify which content
+                  to show. e.g. quiz-id-101)
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="control-label">Resource Id :</label>
+                <input
+                  value={resourceId}
+                  onChange={(event) => {
+                    setResourceId(event.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="Tag"
+                  placeholder="Enter Resource Id"
+                  name="Tag"
+                ></input>
+              </div>
               <div className="form-group">
                 <label className="control-label">Assignment Title:</label>
                 <input
@@ -285,15 +246,13 @@ const RouteInstructor: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <div className="col-sm-offset-2 col-sm-10">
-                  <button
-                    type="submit"
-                    onClick={createAssignment}
-                    className="btn btn-primary"
-                  >
-                    Submit
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  onClick={createAssignment}
+                  className="btn btn-primary"
+                >
+                  Save
+                </button>
               </div>
             </div>
           )}

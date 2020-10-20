@@ -1,7 +1,7 @@
 import { Grade } from "./services/assignmentAndGradeService";
 import { DeepLinking } from "./services/DeepLinking";
 import { NamesAndRoles } from "./services/namesAndRolesService";
-import { RlPlatform } from "./util/rlPlatform";
+import { rlPlatform } from "./util/rlPlatform";
 import { dbInit } from "./database/init";
 import requestLogger from "./middleware/requestLogger";
 
@@ -14,6 +14,7 @@ import getDeepLinkItems from "./util/getDeepLinkItems";
 import Assignment from "./database/entities/Assignment";
 import {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
+  DEEP_LINK_RESOURCELINKS_ENDPOINT,
   ROSTER_ENDPOINT,
   CREATE_ASSIGNMENT_ENDPOINT,
   GET_ASSIGNMENT_ENDPOINT,
@@ -22,7 +23,7 @@ import {
   PUT_STUDENT_GRADE,
   DELETE_LINE_ITEM,
   GET_GRADES
-} from "./util/environment"
+} from "./util/environment";
 
 import {
   rlValidateToken,
@@ -49,7 +50,7 @@ export {
   Grade,
   DeepLinking,
   NamesAndRoles,
-  RlPlatform,
+  rlPlatform,
   initOidcGet,
   initOidcPost,
   toolInfoGet,
@@ -65,6 +66,7 @@ export {
   Assignment,
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
   ROSTER_ENDPOINT,
+  DEEP_LINK_RESOURCELINKS_ENDPOINT,
   CREATE_ASSIGNMENT_ENDPOINT,
   GET_ASSIGNMENT_ENDPOINT,
   GET_UNASSIGNED_STUDENTS_ENDPOINT,

@@ -1,0 +1,38 @@
+[
+  {
+    "type": "ltiResourceLink",
+    "title": "Addition & Subtraction Pt1",
+    "url": "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=quiz-id-101",
+    "resourceId": "quiz-id-101",
+    "lineItem": {
+      "scoreMaximum": "100",
+      "label": "Addition & Subtraction Pt1",
+      "resourceId": "quiz-id-101",
+      "tag": "Math"
+    }
+  },
+  {
+    "type": "ltiResourceLink",
+    "title": "Multiple Table Test",
+    "url": "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=quiz-id-102",
+    "resourceId": "quiz-id-102",
+    "lineItem": {
+      "scoreMaximum": "100",
+      "label": "Multiple Table Test",
+      "resourceId": "quiz-id-102",
+      "tag": "Math"
+    }
+  },
+  {
+    "type": "ltiResourceLink",
+    "title": "Pronounds vs Nouns\t",
+    "url": "https://ring-leader-devesh-tiwari.herokuapp.com/assignment?resourceId=quiz-id-103",
+    "resourceId": "quiz-id-103",
+    "lineItem": {
+      "scoreMaximum": "100",
+      "label": "Pronounds vs Nouns\t",
+      "resourceId": "quiz-id-103",
+      "tag": "English"
+    }
+  }
+]

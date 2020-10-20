@@ -40,7 +40,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     axios
       .post("/lti-service/putGrade", {
         params: {
-          assignmentId: assignmentId,
+          lineItemId: assignmentId,
           grade: grade,
           userId: selectValue,
           comment: "Instructor comment on the student performance",
@@ -61,7 +61,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     axios
       .delete("/lti-service/deleteLineItem", {
         params: {
-          assignmentId: assignmentId
+          lineItemId: assignmentId
         }
       })
       .then((results) => {
@@ -72,11 +72,15 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         setDisplayCreateScoreSuccess(false);
       });
   };
-  const getUnAssignedStudets = (assignmentId: string) => {
+  const getUnAssignedStudets = (
+    assignmentId: string,
+    resourceLinkId: string
+  ) => {
     axios
-      .get("/lti-service/getunassignedstudets", {
+      .get("/lti-service/getunassignedstudents", {
         params: {
-          assignmentId: assignmentId
+          lineItemId: assignmentId,
+          resourceLinkId: resourceLinkId
         }
       })
       .then((results) => {
@@ -93,7 +97,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     axios
       .get("/lti-service/grades", {
         params: {
-          assignmentId: assignmentId
+          lineItemId: assignmentId
         }
       })
       .then((results) => {
@@ -134,14 +138,12 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary"
-            onClick={() => deleteAssignment(assignmentData.id)}
-          >
-            Delete Assignment
-          </button>
-          <button
-            assignment-id={assignmentData.id}
-            className="btn btn-primary"
-            onClick={() => getUnAssignedStudets(assignmentData.id)}
+            onClick={() =>
+              getUnAssignedStudets(
+                assignmentData.id,
+                assignmentData.resourceLinkId
+              )
+            }
           >
             Get Students not assigned to this Assignment
           </button>

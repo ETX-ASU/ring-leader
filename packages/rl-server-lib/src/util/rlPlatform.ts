@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-
+import { Platform } from "./Platform";
 const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - " + JSON.stringify(token));
   console.log(
@@ -8,10 +8,28 @@ const setDefaultValues = (token: any): any => {
         "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
       ]
   );
+  let isStudent = false;
+  let isInstructor = false;
+  if (token["https://purl.imsglobal.org/spec/lti/claim/roles"]) {
+    if (
+      token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
+        "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      )
+    ) {
+      isStudent = true;
+    } else if (
+      token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
+        "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      )
+    ) {
+      isInstructor = true;
+    }
+  }
 
   const tokenData = {
     jti: encodeURIComponent(
       [...Array(25)]
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map((_) => ((Math.random() * 36) | 0).toString(36))
         .join("-")
     ),
@@ -20,8 +38,24 @@ const setDefaultValues = (token: any): any => {
     iat: token.iat,
     sub: token.sub,
     exp: token.exp,
+    nonce: token.nonce,
     clientId: token.aud,
     userId: token.sub,
+    deploymentId:
+      token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] || null,
+    roles: [
+      {
+        role: "Learner",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      },
+      {
+        role: "Instructor",
+        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      }
+    ],
+    isStudent: isStudent,
+    isInstructor: isInstructor,
+    context: token["https://purl.imsglobal.org/spec/lti/claim/context"],
     lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
       ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
           .lineitems
@@ -49,25 +83,29 @@ const setDefaultValues = (token: any): any => {
   console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
 };
-const RlPlatform = (
+const rlPlatform = (
   platformPrivateKey: string,
   authenticationEndpoint: string,
   accesstokenEndpoint: string,
   kid: string,
   alg: string,
   idToken: string
-): any => {
-  console.log(`RlPlatform - received - idToken: ${idToken}`);
+): Platform => {
   const token = jwt.decode(idToken);
+  console.log(
+    `rlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
+  );
   const tokenData = setDefaultValues(token);
-  console.log("RlPlatform - tokenData - " + JSON.stringify(tokenData));
-  const platform = {
+  const platform: Platform = {
     jti: tokenData.jti,
     iss: tokenData.iss,
     aud: tokenData.aud,
     iat: tokenData.iat,
     sub: tokenData.sub,
     exp: tokenData.exp,
+    state: tokenData.exp || null,
+    nonce: tokenData.nonce,
+    context_id: tokenData.context.id,
     clientId: tokenData.clientId,
     lineitems: tokenData.lineitems,
     lineitem: tokenData.lineitem,
@@ -80,19 +118,13 @@ const RlPlatform = (
     alg: alg,
     deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.userId,
-    roles: [
-      {
-        role: "Instructor",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
-      },
-      {
-        role: "Learner",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
-      }
-    ]
+    roles: tokenData.roles,
+    isInstructor: tokenData.isInstructor,
+    isStudent: tokenData.isStudent,
+    deploymentId: tokenData.deploymentId
   };
-  console.log("RlPlatformplatform - " + JSON.stringify(platform));
+  console.log("rlPlatformplatform - " + JSON.stringify(platform));
 
   return platform;
 };
-export { RlPlatform };
+export { rlPlatform };

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-
+import { Platform } from "../util/Platform";
 class DeepLinking {
   /**
    * @description Creates an auto submitting form containing the DeepLinking Message.
@@ -12,7 +12,7 @@ class DeepLinking {
    * @param {String} options.errlog - Message the platform may log in it's system upon return to the platform if some error has occurred.
    */
   async createDeepLinkingForm(
-    platform: any,
+    platform: Platform,
     contentItems: any,
     options: any
   ): Promise<any> {
@@ -50,7 +50,7 @@ class DeepLinking {
    * @param {String} options.errlog - Message the platform may log in it's system upon return to the platform if some error has occurred.
    */
   async createDeepLinkingMessage(
-    platform: any,
+    platform: Platform,
     contentItems: any,
     options: any
   ): Promise<any> {
