@@ -74,12 +74,12 @@
 			"contentItems": [{
 				"type": "ltiResourceLink",
 				"title": "Title",
-				"url": "https://ring-leader-james-stanley.herokuapp.com/assignment?resourceId=resource+id",
-				"resourceId": "resource+id",
+				"url": "https://ring-leader-james-stanley.herokuapp.com/assignment?resourceId=tool-assignment-xyz",
+				"resourceId": "tool-assignment-xyz",
 				"lineItem": {
 					"scoreMaximum": "100",
 					"label": "Title",
-					"resourceId": "resource+id",
+					"resourceId": "tool-assignment-xyz",
 					"tag": "etag"
 				}
 			}]
