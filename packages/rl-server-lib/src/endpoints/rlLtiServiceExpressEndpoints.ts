@@ -84,7 +84,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       assignment.context_id = platform.context_id;
       const results = createAssignment(assignment);
       console.log(
-        "Create Assignment - assignment-" + JSON.stringify(assignment)
+        "Create Assignment - send results-" + JSON.stringify(results)
       );
       res.send(results);
     }
@@ -95,10 +95,10 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    console.log(`createassignment - platform - ${JSON.stringify(platform)}`);
+    console.log(`get assignments - platform - ${JSON.stringify(platform)}`);
 
     const results = await new Grade().getLineItems(platform);
-
+    console.log(`Get assignments - send results - ${JSON.stringify(results)}`);
     res.send(results);
   });
 

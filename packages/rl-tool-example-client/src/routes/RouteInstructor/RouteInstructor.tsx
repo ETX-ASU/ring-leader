@@ -4,9 +4,9 @@ import axios from "axios";
 import "./RouteInstructor.scss";
 import RouteInstructorAssignment from "../RouteInstructorAssignment/RouteInstructorAssignment";
 
-const RouteInstructor: React.FC = () => {
+const RouteInstructor: React.FC = (props: any) => {
   const {} = useParams();
-
+  console.log("useParams - " + JSON.stringify(useParams()));
   const [
     displayCreateAssignmentSuccess,
     setDisplayCreateAssignmentSuccess

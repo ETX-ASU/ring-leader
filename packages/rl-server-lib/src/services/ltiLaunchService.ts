@@ -9,6 +9,11 @@ import ToolConsumer from "../database/entities/ToolConsumer";
 import { getToolConsumer } from "../services/ToolConsumerService";
 import { generateUniqueString } from "../util/generateUniqueString";
 import processRequest from "../util/processRequest";
+import { OIDC_LOGIN_INIT_ROUTE,
+ LTI_ADVANTAGE_LAUNCH_ROUTE,
+ LTI_INSTRUCTOR_REDIRECT,
+ LTI_ASSIGNMENT_REDIRECT,
+ LTI_STUDENT_REDIRECT} from "../util/environment"
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {
   const connection = await getConnection();
@@ -16,13 +21,6 @@ const getToolConsumers = async (): Promise<ToolConsumer[]> => {
   const toolConsumers = await toolConsumerRepository.find();
   return toolConsumers;
 };
-
-const OIDC_LOGIN_INIT_ROUTE = "/init-oidc";
-const LTI_ADVANTAGE_LAUNCH_ROUTE = "/lti-advantage-launch";
-const LTI_INSTRUCTOR_REDIRECT = "/instructor";
-const LTI_ASSIGNMENT_REDIRECT = "/assignment";
-const LTI_STUDENT_REDIRECT = "/student";
-const LTI_DEEPLINK_REDIRECT = "/deeplink";
 
 const initOidcGet = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
