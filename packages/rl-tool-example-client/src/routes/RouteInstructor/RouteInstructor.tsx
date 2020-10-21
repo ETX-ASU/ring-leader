@@ -6,7 +6,7 @@ import RouteInstructorAssignment from "../RouteInstructorAssignment/RouteInstruc
 
 const RouteInstructor: React.FC = (props: any) => {
   const {} = useParams();
-  console.log("props - " + JSON.stringify(props));
+  console.log("useParams - " + JSON.stringify(useParams()));
   const [
     displayCreateAssignmentSuccess,
     setDisplayCreateAssignmentSuccess
