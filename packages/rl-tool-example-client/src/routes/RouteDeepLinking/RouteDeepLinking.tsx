@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./RouteDeepLinking.scss";
-import {DEEP_LINK_RESOURCELINKS_ENDPOINT} from "@asu-etx/rl-client-lib";
+import {DEEP_LINK_RESOURCELINKS_ENDPOINT} from "@asu-etx/rl-shared";
 import $ from "jquery";
 
 //const DEEP_LINK_RESOURCELINKS_ENDPOINT = "/lti-service/getDeepLinkAssignments";

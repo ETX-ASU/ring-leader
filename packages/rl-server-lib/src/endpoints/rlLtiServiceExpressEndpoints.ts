@@ -23,7 +23,7 @@ import {
   DELETE_LINE_ITEM,
   GET_GRADES,
   LTI_ASSIGNMENT_REDIRECT
-} from "../util/environment";
+} from "@asu-etx/rl-shared";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls

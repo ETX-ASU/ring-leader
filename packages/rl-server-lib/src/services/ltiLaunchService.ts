@@ -14,7 +14,7 @@ import { OIDC_LOGIN_INIT_ROUTE,
  LTI_DEEPLINK_REDIRECT,
  LTI_INSTRUCTOR_REDIRECT,
  LTI_ASSIGNMENT_REDIRECT,
- LTI_STUDENT_REDIRECT} from "../util/environment"
+ LTI_STUDENT_REDIRECT} from "@asu-etx/rl-shared"
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {
   const connection = await getConnection();

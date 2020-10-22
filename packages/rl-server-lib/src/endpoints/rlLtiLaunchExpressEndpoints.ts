@@ -16,7 +16,7 @@ import {
   LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
   APPLICATION_URL
-} from "../util/environment";
+}  from "@asu-etx/rl-shared";
 
 /**
  * @description Creates a set of endpoints to support LTI1.3 launch given an Express application.

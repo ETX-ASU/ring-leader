@@ -1,7 +1,7 @@
 import { Platform } from "./Platform";
 import { getAssignmentsByContext } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
-import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "../util/environment";
+import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "@asu-etx/rl-shared";
 
 const getDeepLinkAssignments = async (platform: Platform): Promise<any> => {
   const assignments: Assignment[] = await getAssignmentsByContext(
