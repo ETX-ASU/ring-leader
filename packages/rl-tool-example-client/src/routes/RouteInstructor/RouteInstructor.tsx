@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./RouteInstructor.scss";
 import RouteInstructorAssignment from "../RouteInstructorAssignment/RouteInstructorAssignment";
-//import {CREATE_ASSIGNMENT_ENDPOINT, ROSTER_ENDPOINT, GET_ASSIGNMENT_ENDPOINT} from "@asu-etx/rl-client-lib";
+import {ROSTER_ENDPOINT, GET_ASSIGNMENT_ENDPOINT} from "@asu-etx/rl-client-lib";
 
-
+console.log(`ROSTER_ENDPOINT ${ROSTER_ENDPOINT}`);
 const CREATE_ASSIGNMENT_ENDPOINT = "/lti-service/createassignment";
-const ROSTER_ENDPOINT = "/lti-service/roster";
-const GET_ASSIGNMENT_ENDPOINT = "/lti-service/getassignment";
+//const ROSTER_ENDPOINT = "/lti-service/roster";
+//const GET_ASSIGNMENT_ENDPOINT = "/lti-service/getassignment";
 
 const RouteInstructor: React.FC = (props: any) => {
   const {} = useParams();
