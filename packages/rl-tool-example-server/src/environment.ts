@@ -94,10 +94,11 @@ const ENV_VARS = {
   };
 
 */
-console.log(`environmental variables:${JSON.stringify(ENV_VARS)}`);
+
 
 // heroku
 const ENV_VARS = process.env;
+console.log(`environmental variables:${JSON.stringify(ENV_VARS)}`);
 
 export const PORT: number = parseInt(ENV_VARS.PORT ? ENV_VARS.PORT : "8080");
 

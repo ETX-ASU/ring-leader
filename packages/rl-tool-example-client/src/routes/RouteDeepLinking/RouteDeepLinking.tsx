@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./RouteDeepLinking.scss";
+import {DEEP_LINK_RESOURCELINKS_ENDPOINT, DEEP_LINK_ASSIGNMENT_ENDPOINT} from "@asu-etx/rl-client-lib";
 import $ from "jquery";
 
 const RouteDeepLinking: React.FC = () => {
@@ -14,14 +15,14 @@ const RouteDeepLinking: React.FC = () => {
     getDeepLinkResourceLinks();
   });
   const getDeepLinkResourceLinks = () => {
-    axios.get("/lti-service/getDeepLinkAssignments").then((results) => {
+    axios.get(DEEP_LINK_RESOURCELINKS_ENDPOINT).then((results) => {
       console.log(JSON.stringify(results.data));
       setAssignments(results.data);
     });
   };
   const submitResourceSelection = () => {
     axios
-      .post("/lti-service/deeplink", {
+      .post(DEEP_LINK_ASSIGNMENT_ENDPOINT, {
         contentItems: [resourceLink]
       })
       .then((result) => {

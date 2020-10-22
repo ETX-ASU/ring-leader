@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./RouteInstructor.scss";
 import RouteInstructorAssignment from "../RouteInstructorAssignment/RouteInstructorAssignment";
+import {CREATE_ASSIGNMENT_ENDPOINT, ROSTER_ENDPOINT, GET_ASSIGNMENT_ENDPOINT} from "@asu-etx/rl-client-lib";
+
+
 
 const RouteInstructor: React.FC = (props: any) => {
   const {} = useParams();
@@ -41,7 +44,7 @@ const RouteInstructor: React.FC = (props: any) => {
     setDisplayNoAssignment(false);
     setDisplayCreateResourceLinkAssignment(false);
     axios
-      .get("/lti-service/roster", { params: { role: radioInputValue } })
+      .get(ROSTER_ENDPOINT, { params: { role: radioInputValue } })
       .then((results) => {
         console.log(JSON.stringify(results));
         setUsers(results.data.members);
@@ -53,7 +56,7 @@ const RouteInstructor: React.FC = (props: any) => {
   };
   const createAssignment = () => {
     axios
-      .post("/lti-service/createassignment", {
+      .post(CREATE_ASSIGNMENT_ENDPOINT, {
         params: {
           scoreMaximum: maxScore,
           label: title,
@@ -75,7 +78,7 @@ const RouteInstructor: React.FC = (props: any) => {
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
 
-    axios.get("/lti-service/getassignment").then((results) => {
+    axios.get(GET_ASSIGNMENT_ENDPOINT).then((results) => {
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) {
         setDisplayNoAssignment(true);

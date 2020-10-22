@@ -11,6 +11,7 @@ import { generateUniqueString } from "../util/generateUniqueString";
 import processRequest from "../util/processRequest";
 import { OIDC_LOGIN_INIT_ROUTE,
  LTI_ADVANTAGE_LAUNCH_ROUTE,
+ LTI_DEEPLINK_REDIRECT,
  LTI_INSTRUCTOR_REDIRECT,
  LTI_ASSIGNMENT_REDIRECT,
  LTI_STUDENT_REDIRECT} from "../util/environment"
