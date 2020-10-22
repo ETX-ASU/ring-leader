@@ -15,12 +15,14 @@ const RouteDeepLinking: React.FC = () => {
     getDeepLinkResourceLinks();
   });
   const getDeepLinkResourceLinks = () => {
+    console.log(`hitting endpoint GET:${DEEP_LINK_RESOURCELINKS_ENDPOINT}`);
     axios.get(DEEP_LINK_RESOURCELINKS_ENDPOINT).then((results) => {
       console.log(JSON.stringify(results.data));
       setAssignments(results.data);
     });
   };
   const submitResourceSelection = () => {
+    console.log(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
     axios
       .post(DEEP_LINK_ASSIGNMENT_ENDPOINT, {
         contentItems: [resourceLink]

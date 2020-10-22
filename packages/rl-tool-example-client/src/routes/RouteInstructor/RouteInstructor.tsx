@@ -43,6 +43,7 @@ const RouteInstructor: React.FC = (props: any) => {
     setDisplayCreateAssignmentSuccess(false);
     setDisplayNoAssignment(false);
     setDisplayCreateResourceLinkAssignment(false);
+    console.log(`hitting endpoint GET:${ROSTER_ENDPOINT}`);
     axios
       .get(ROSTER_ENDPOINT, { params: { role: radioInputValue } })
       .then((results) => {
@@ -55,6 +56,7 @@ const RouteInstructor: React.FC = (props: any) => {
       });
   };
   const createAssignment = () => {
+    console.log(`hitting endpoint POST:${CREATE_ASSIGNMENT_ENDPOINT}`);
     axios
       .post(CREATE_ASSIGNMENT_ENDPOINT, {
         params: {
@@ -77,7 +79,7 @@ const RouteInstructor: React.FC = (props: any) => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
-
+    console.log(`hitting endpoint GET:${GET_ASSIGNMENT_ENDPOINT}`);
     axios.get(GET_ASSIGNMENT_ENDPOINT).then((results) => {
       console.log(JSON.stringify(results.data));
       if (results.data.length <= 0) {
