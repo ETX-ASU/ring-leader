@@ -19,12 +19,15 @@ import {
   LTI_INSTRUCTOR_REDIRECT
 } from "./util/environment";
 
-import 
- { logger }
- from "./util/LogService";
+import { logger }
+  from "./util/LogService";
 
+import SubmitGradeParams from "./model/SubmitGradeParams";
+import SubmitContentItem from "./model/SubmitContentItem";
+import SubmitLineItem from "./model/SubmitLineItem";
 
-export {  DEEP_LINK_ASSIGNMENT_ENDPOINT,
+export {
+  DEEP_LINK_ASSIGNMENT_ENDPOINT,
   LTI_ASSIGNMENT_REDIRECT,
   APPLICATION_URL,
   ROSTER_ENDPOINT,
@@ -42,5 +45,8 @@ export {  DEEP_LINK_ASSIGNMENT_ENDPOINT,
   LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
   LTI_INSTRUCTOR_REDIRECT,
-  logger
+  logger,
+  SubmitGradeParams,
+  SubmitContentItem,
+  SubmitLineItem
 };

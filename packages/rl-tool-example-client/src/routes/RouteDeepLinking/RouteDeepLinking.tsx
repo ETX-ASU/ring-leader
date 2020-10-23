@@ -5,10 +5,10 @@ import "./RouteDeepLinking.scss";
 import {DEEP_LINK_RESOURCELINKS_ENDPOINT, DEEP_LINK_ASSIGNMENT_ENDPOINT} from "@asu-etx/rl-shared";
 import {getDeepLinkResourceLinks as getLinks, submitResourceSelection as submitSelection} from "@asu-etx/rl-client-lib";
 import $ from "jquery";
-import { logger } from "@asu-etx/rl-shared";
+import { SubmitContentItem } from "@asu-etx/rl-shared";
 
 const RouteDeepLinking: React.FC = () => {
-  const [resourceLink, setResourceLink] = useState<{}>({});
+  const [resourceLink, setResourceLink] = useState<SubmitContentItem>(new SubmitContentItem());
   const [assignments, setAssignments] = useState<any[]>([]);
   const handleCheck = (resourceLinkData: any): any => {
     setResourceLink(resourceLinkData);
