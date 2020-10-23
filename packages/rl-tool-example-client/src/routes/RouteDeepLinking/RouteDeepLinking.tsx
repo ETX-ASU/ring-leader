@@ -2,12 +2,10 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./RouteDeepLinking.scss";
-import {DEEP_LINK_RESOURCELINKS_ENDPOINT} from "@asu-etx/rl-shared";
+import {DEEP_LINK_RESOURCELINKS_ENDPOINT, DEEP_LINK_ASSIGNMENT_ENDPOINT} from "@asu-etx/rl-shared";
+import {getDeepLinkResourceLinks as getLinks, submitResourceSelection as submitSelection} from "@asu-etx/rl-client-lib";
 import $ from "jquery";
 
-//const DEEP_LINK_RESOURCELINKS_ENDPOINT = "/lti-service/getDeepLinkAssignments";
-console.log(`deeplink ${DEEP_LINK_RESOURCELINKS_ENDPOINT}`);
-const DEEP_LINK_ASSIGNMENT_ENDPOINT = "/lti-service/deeplink";
 const RouteDeepLinking: React.FC = () => {
   const [resourceLink, setResourceLink] = useState<{}>({});
   const [assignments, setAssignments] = useState<any[]>([]);
@@ -17,15 +15,20 @@ const RouteDeepLinking: React.FC = () => {
   useEffect(() => {
     getDeepLinkResourceLinks();
   });
-  const getDeepLinkResourceLinks = () => {
-    console.log(`hitting endpoint GET:${DEEP_LINK_RESOURCELINKS_ENDPOINT}`);
+  const getDeepLinkResourceLinks = async () => {
+    const assignments = await getLinks();
+    setAssignments(assignments);
+    /*console.log(`hitting endpoint GET:${DEEP_LINK_RESOURCELINKS_ENDPOINT}`);
     axios.get(DEEP_LINK_RESOURCELINKS_ENDPOINT).then((results) => {
       console.log(JSON.stringify(results.data));
       setAssignments(results.data);
-    });
+    });*/
   };
-  const submitResourceSelection = () => {
-    console.log(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
+  const submitResourceSelection = async () => {
+    const data = await submitSelection(resourceLink);
+    $("body").append(data);
+    /*console.log(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
+
     axios
       .post(DEEP_LINK_ASSIGNMENT_ENDPOINT, {
         contentItems: [resourceLink]
@@ -34,7 +37,7 @@ const RouteDeepLinking: React.FC = () => {
         console.log(result);
 
         $("body").append(result.data);
-      });
+      });*/
   };
   return (
     <div className="route-assignment">
