@@ -20,7 +20,7 @@ import {
 } from "./util/environment";
 
 import 
-  logger
+ { logger }
  from "./util/LogService";
 
 
