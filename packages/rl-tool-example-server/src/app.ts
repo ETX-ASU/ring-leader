@@ -5,7 +5,8 @@ import expressSession from "express-session";
 import bodyParser from "body-parser";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import { dbInit, logger } from "@asu-etx/rl-server-lib";
+import { dbInit } from "@asu-etx/rl-server-lib";
+import { logger } from "@asu-etx/rl-shared";
 
 import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 
