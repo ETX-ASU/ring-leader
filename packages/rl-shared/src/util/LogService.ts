@@ -8,11 +8,7 @@ const MAXIMUM_LOG_FILE_SIZE = 1000000 * 10; // (10mb);
 const logger = winston.createLogger({
   level: LOGGING_LEVEL,
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({
-      filename: "server.log",
-      maxsize: MAXIMUM_LOG_FILE_SIZE
-    })
+    new winston.transports.Console()
   ]
 });
 
