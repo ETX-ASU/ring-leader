@@ -8,7 +8,7 @@ import { logger } from "@asu-etx/rl-shared";
 
 const RouteInstructor: React.FC = (props: any) => {
   const {} = useParams();
-  console.log("useParams - " + JSON.stringify(useParams()));
+  logger.debug("useParams - " + JSON.stringify(useParams()));
   const [
     displayCreateAssignmentSuccess,
     setDisplayCreateAssignmentSuccess
@@ -42,20 +42,20 @@ const RouteInstructor: React.FC = (props: any) => {
     setDisplayCreateAssignmentSuccess(false);
     setDisplayNoAssignment(false);
     setDisplayCreateResourceLinkAssignment(false);
-    console.log(`hitting endpoint GET:${ROSTER_ENDPOINT}`);
+    logger.debug(`hitting endpoint GET:${ROSTER_ENDPOINT}`);
     axios
       .get(ROSTER_ENDPOINT, { params: { role: radioInputValue } })
       .then((results) => {
-        console.log(JSON.stringify(results));
+        logger.debug(JSON.stringify(results));
         setUsers(results.data.members);
         setCourses(results.data.context);
-        console.log(JSON.stringify(users));
-        console.log(JSON.stringify(courses));
+        logger.debug(JSON.stringify(users));
+        logger.debug(JSON.stringify(courses));
         setDisplayDiv(true);
       });
   };
   const createAssignment = () => {
-    console.log(`hitting endpoint POST:${CREATE_ASSIGNMENT_ENDPOINT}`);
+    logger.debug(`hitting endpoint POST:${CREATE_ASSIGNMENT_ENDPOINT}`);
     axios
       .post(CREATE_ASSIGNMENT_ENDPOINT, {
         params: {
@@ -66,7 +66,7 @@ const RouteInstructor: React.FC = (props: any) => {
         }
       })
       .then((results) => {
-        console.log(JSON.stringify(results.data));
+        logger.debug(JSON.stringify(results.data));
         setDisplayDiv(false);
         setDisplayCreateAssignment(false);
         setdisplayAssignment(false);
@@ -78,9 +78,9 @@ const RouteInstructor: React.FC = (props: any) => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
-    console.log(`hitting endpoint GET:${GET_ASSIGNMENT_ENDPOINT}`);
+    logger.debug(`hitting endpoint GET:${GET_ASSIGNMENT_ENDPOINT}`);
     axios.get(GET_ASSIGNMENT_ENDPOINT).then((results) => {
-      console.log(JSON.stringify(results.data));
+      logger.debug(JSON.stringify(results.data));
       if (results.data.length <= 0) {
         setDisplayNoAssignment(true);
         return;

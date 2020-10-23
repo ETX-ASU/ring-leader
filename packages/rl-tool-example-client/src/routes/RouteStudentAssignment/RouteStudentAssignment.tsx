@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import "./RouteStudentAssignment.scss";
+import { logger } from "@asu-etx/rl-shared";
 
 const RouteStudentAssignment: React.FC = () => {
   const params = ({} = useParams());
@@ -23,7 +24,7 @@ const RouteStudentAssignment: React.FC = () => {
       })
       .then((results) => {
         setDisplaySubmitAssignmentSuccess(true);
-        console.log(JSON.stringify(results.data));
+        logger.debug(JSON.stringify(results.data));
       });
   };
   return (

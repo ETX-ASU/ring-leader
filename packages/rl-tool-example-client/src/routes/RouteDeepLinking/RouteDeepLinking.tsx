@@ -19,23 +19,23 @@ const RouteDeepLinking: React.FC = () => {
   const getDeepLinkResourceLinks = async () => {
     const assignments = await getLinks();
     setAssignments(assignments);
-    /*console.log(`hitting endpoint GET:${DEEP_LINK_RESOURCELINKS_ENDPOINT}`);
+    /*logger.debug(`hitting endpoint GET:${DEEP_LINK_RESOURCELINKS_ENDPOINT}`);
     axios.get(DEEP_LINK_RESOURCELINKS_ENDPOINT).then((results) => {
-      console.log(JSON.stringify(results.data));
+      logger.debug(JSON.stringify(results.data));
       setAssignments(results.data);
     });*/
   };
   const submitResourceSelection = async () => {
     const data = await submitSelection(resourceLink);
     $("body").append(data);
-    /*console.log(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
+    /*logger.debug(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
 
     axios
       .post(DEEP_LINK_ASSIGNMENT_ENDPOINT, {
         contentItems: [resourceLink]
       })
       .then((result) => {
-        console.log(result);
+        logger.debug(result);
 
         $("body").append(result.data);
       });*/

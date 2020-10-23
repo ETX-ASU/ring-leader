@@ -1,14 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./RouteInstructorAssignment.scss";
+import { logger } from "@asu-etx/rl-shared";
 
 const RouteInstructorAssignment: React.FC = (props: any) => {
-  console.log("props - " + JSON.stringify(props));
+  logger.debug("props - " + JSON.stringify(props));
   const assignmentData = props["data-assignmentData"];
-  console.log("assignmentData - json - " + JSON.stringify(assignmentData));
+  logger.debug("assignmentData - json - " + JSON.stringify(assignmentData));
   const index = props["data-index"];
-  console.log("assignmentData id- " + assignmentData.id);
-  console.log("index - " + index);
+  logger.debug("assignmentData id- " + assignmentData.id);
+  logger.debug("index - " + index);
   const [scores, setScores] = useState<any[]>([]);
   const [unAssignedStudents, setUnAssignedStudents] = useState<any[]>([]);
   const [grade, setGrade] = useState<number>();
@@ -50,7 +51,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
       })
       .then((results) => {
         setDisplayCreateScoreSuccess(true);
-        console.log(JSON.stringify(results.data));
+        logger.debug(JSON.stringify(results.data));
         setDisplayGrade(false);
         setDisplayCreateScore(false);
         setDisplayUnAssignedStudents(false);
@@ -65,7 +66,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         }
       })
       .then((results) => {
-        console.log(JSON.stringify(results.data));
+        logger.debug(JSON.stringify(results.data));
         setDisplayDeleteAssignmentSuccess(true);
         setDisplayUnAssignedStudents(false);
         setDisplayCreateScore(false);
@@ -84,7 +85,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         }
       })
       .then((results) => {
-        console.log("getUnAssignedStudets-" + JSON.stringify(results.data));
+        logger.debug("getUnAssignedStudets-" + JSON.stringify(results.data));
         setUnAssignedStudents(results.data);
         setDisplayUnAssignedStudents(true);
         setDisplayGrade(false);
@@ -101,7 +102,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
         }
       })
       .then((results) => {
-        console.log(JSON.stringify(results.data));
+        logger.debug(JSON.stringify(results.data));
         setScores(results.data);
         setDisplayGrade(true);
         setDisplayUnAssignedStudents(false);
