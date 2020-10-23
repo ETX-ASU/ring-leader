@@ -19,6 +19,10 @@ import {
   LTI_INSTRUCTOR_REDIRECT
 } from "./util/environment";
 
+import 
+  logger
+ from "./util/LogService";
+
 
 export {  DEEP_LINK_ASSIGNMENT_ENDPOINT,
   LTI_ASSIGNMENT_REDIRECT,
@@ -37,5 +41,6 @@ export {  DEEP_LINK_ASSIGNMENT_ENDPOINT,
   LTI_STUDENT_REDIRECT,
   LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
-  LTI_INSTRUCTOR_REDIRECT
+  LTI_INSTRUCTOR_REDIRECT,
+  logger
 };

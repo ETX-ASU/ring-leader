@@ -4,6 +4,7 @@ import axios from "axios";
 import "./RouteInstructor.scss";
 import RouteInstructorAssignment from "../RouteInstructorAssignment/RouteInstructorAssignment";
 import {ROSTER_ENDPOINT, GET_ASSIGNMENT_ENDPOINT, CREATE_ASSIGNMENT_ENDPOINT} from "@asu-etx/rl-shared";
+import { logger } from "@asu-etx/rl-shared";
 
 const RouteInstructor: React.FC = (props: any) => {
   const {} = useParams();

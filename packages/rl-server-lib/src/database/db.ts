@@ -1,5 +1,6 @@
 import ToolConsumer from "./entities/ToolConsumer";
 import Assignment from "./entities/Assignment";
+import { logger } from "@asu-etx/rl-shared";
 import {
   createConnection,
   getConnection as getTypeOrmConnection,
@@ -10,7 +11,7 @@ let connectionCreationPromise: any = false;
 
 const getConnection = async (): Promise<Connection> => {
   if (connectionCreationPromise === false) {
-    console.log("creating connection")
+    logger.debug("creating connection")
     connectionCreationPromise = createConnection({
       type: "sqlite",
       database: ":memory:",

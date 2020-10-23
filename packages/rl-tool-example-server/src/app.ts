@@ -89,16 +89,16 @@ app.route("/deeplink").get(async (req, res) => {
 /*========================== SERVER STARTUP ==========================*/
 
 async function start(): Promise<any> {
-  console.log("Starting server...");
+  logger.debug("Starting server...");
 
   // Make sure we have our test activities
   await dbInit(TOOL_CONSUMERS, null);
-  console.log("TOOL_CONSUMERS", `${TOOL_CONSUMERS}`);
+  logger.debug("TOOL_CONSUMERS", `${TOOL_CONSUMERS}`);
 
-  console.log("TOOL_CONSUMERS", `${JSON.stringify(TOOL_CONSUMERS)}`);
+  logger.debug("TOOL_CONSUMERS", `${JSON.stringify(TOOL_CONSUMERS)}`);
   // Start the app
   app.listen(PORT, "0.0.0.0", () => {
-    console.log("App is running at", `0.0.0.0:${PORT}`);
+    logger.debug("App is running at", `0.0.0.0:${PORT}`);
   });
 }
 

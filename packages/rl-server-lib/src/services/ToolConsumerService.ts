@@ -1,6 +1,7 @@
 import { getConnection } from "../database/db";
 import ToolConsumer from "../database/entities/ToolConsumer";
 import ToolConsumerRequest from "../database/entities/ToolConsumerRequest";
+import { logger } from "@asu-etx/rl-shared";
 
 const createToolConsumer = async (
   consumer: ToolConsumer
@@ -41,7 +42,7 @@ const getToolConsumer = async (
 ): Promise<ToolConsumer | undefined> => {
   const connection = await getConnection();
   const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  console.log(
+  logger.debug(
     `toolConsumerRepository -request : ${JSON.stringify(request)} )}`
   );
   const toolConsumer:
@@ -54,10 +55,10 @@ const getToolConsumer = async (
     }
   });
 
-  console.log(
+  logger.debug(
     `toolConsumerRepository -toolConsumer : ${JSON.stringify(toolConsumer)} )}`
   );
-  console.log(
+  logger.debug(
     `found tool consumer: ${request.name} : ${request.iss} : ${request.client_id} : ${request.client_id})}`
   );
   return toolConsumer;

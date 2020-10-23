@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import logger from "../services/LogService";
+import logger from "@asu-etx/rl-shared/src/util/LogService";
 
 const requestLogger = (
   req: Request,

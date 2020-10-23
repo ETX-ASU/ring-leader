@@ -8,7 +8,7 @@ import requestLogger from "./middleware/requestLogger";
 import rlLtiLaunchExpressEndpoints from "./endpoints/rlLtiLaunchExpressEndpoints";
 import rlLtiServiceExpressEndpoints from "./endpoints/rlLtiServiceExpressEndpoints";
 
-import logger from "./services/LogService";
+import logger from "@asu-etx/rl-shared/src/util/LogService";
 import ToolConsumer from "./database/entities/ToolConsumer";
 import getDeepLinkItems from "./util/getDeepLinkItems";
 import Assignment from "./database/entities/Assignment";

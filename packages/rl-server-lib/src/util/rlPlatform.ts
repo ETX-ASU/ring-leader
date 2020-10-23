@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
+import { logger } from "@asu-etx/rl-shared";
+
 const setDefaultValues = (token: any): any => {
-  console.log("setDefaultValues - " + JSON.stringify(token));
-  console.log(
+  logger.debug("setDefaultValues - " + JSON.stringify(token));
+  logger.debug(
     "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings" +
       token[
         "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
@@ -80,7 +82,7 @@ const setDefaultValues = (token: any): any => {
         }
       : null
   };
-  console.log("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
+  logger.debug("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
 };
 const rlPlatform = (
@@ -92,7 +94,7 @@ const rlPlatform = (
   idToken: string
 ): Platform => {
   const token = jwt.decode(idToken);
-  console.log(
+  logger.debug(
     `rlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
   );
   const tokenData = setDefaultValues(token);
@@ -123,7 +125,7 @@ const rlPlatform = (
     isStudent: tokenData.isStudent,
     deploymentId: tokenData.deploymentId
   };
-  console.log("rlPlatformplatform - " + JSON.stringify(platform));
+  logger.debug("rlPlatformplatform - " + JSON.stringify(platform));
 
   return platform;
 };

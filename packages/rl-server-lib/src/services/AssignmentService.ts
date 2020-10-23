@@ -1,10 +1,11 @@
 import { getConnection } from "../database/db";
 import Assignment from "../database/entities/Assignment";
+import { logger } from "@asu-etx/rl-shared";
 
 const createAssignment = async (
   assignment: Assignment
 ): Promise<Assignment> => {
-  console.log(
+  logger.debug(
     "Inside createAssignment service - " + JSON.stringify(assignment)
   );
 
@@ -23,7 +24,7 @@ const getAssignmentsByContext = async (
       context_id: context_id
     }
   });
-  console.log(`found assignments: ${JSON.stringify(assignments)}`);
+  logger.debug(`found assignments: ${JSON.stringify(assignments)}`);
   return assignments;
 };
 

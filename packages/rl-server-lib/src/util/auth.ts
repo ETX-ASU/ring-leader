@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import got from "got";
 import { Platform } from "./Platform";
+import { logger } from "@asu-etx/rl-shared";
+
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
     throw new Error("ISSUER_MISSING_IN_OIDC_REQUEST");
@@ -21,15 +23,15 @@ const isValidOIDCRequest = (oidcData: any): boolean => {
  */
 
 const validateAud = (token: any, platform: Platform): boolean => {
-  console.log(
+  logger.debug(
     "Validating if aud (Audience) claim matches the value of the tool's clientId given by the platform"
   );
-  console.log("Aud claim: " + token.aud);
-  console.log("Tool's clientId: " + platform.clientId);
-  console.log("platform: " + JSON.stringify(platform));
+  logger.debug("Aud claim: " + token.aud);
+  logger.debug("Tool's clientId: " + platform.clientId);
+  logger.debug("platform: " + JSON.stringify(platform));
 
   if (Array.isArray(token.aud)) {
-    console.log("More than one aud listed, searching for azp claim");
+    logger.debug("More than one aud listed, searching for azp claim");
     if (token.azp && token.azp !== platform.clientId)
       throw new Error("AZP_DOES_NOT_MATCH_CLIENTID");
   } else if (token.aud == platform.clientId) return true;
@@ -41,8 +43,8 @@ const validateAud = (token: any, platform: Platform): boolean => {
  */
 
 const validateNonce = (token: any, platform: Platform): boolean => {
-  console.log("Validating nonce");
-  console.log("Token Nonce: " + token.nonce);
+  logger.debug("Validating nonce");
+  logger.debug("Token Nonce: " + token.nonce);
   if (token.nonce == platform.nonce) return true;
   else return false;
 };
@@ -53,8 +55,8 @@ const validateNonce = (token: any, platform: Platform): boolean => {
  */
 
 const claimValidation = (token: any): any => {
-  console.log("Initiating LTI 1.3 core claims validation");
-  console.log("Checking Message type claim");
+  logger.debug("Initiating LTI 1.3 core claims validation");
+  logger.debug("Checking Message type claim");
   if (
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
       "LtiResourceLinkRequest" &&
@@ -67,10 +69,10 @@ const claimValidation = (token: any): any => {
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] ===
     "LtiResourceLinkRequest"
   ) {
-    console.log("Checking Target Link Uri claim");
+    logger.debug("Checking Target Link Uri claim");
     if (!token["https://purl.imsglobal.org/spec/lti/claim/target_link_uri"])
       throw new Error("NO_TARGET_LINK_URI_CLAIM");
-    console.log("Checking Resource Link Id claim");
+    logger.debug("Checking Resource Link Id claim");
     if (
       !token["https://purl.imsglobal.org/spec/lti/claim/resource_link"] ||
       !token["https://purl.imsglobal.org/spec/lti/claim/resource_link"].id
@@ -78,17 +80,17 @@ const claimValidation = (token: any): any => {
       throw new Error("NO_RESOURCE_LINK_ID_CLAIM");
   }
 
-  console.log("Checking LTI Version claim");
+  logger.debug("Checking LTI Version claim");
   if (!token["https://purl.imsglobal.org/spec/lti/claim/version"])
     throw new Error("NO_LTI_VERSION_CLAIM");
   if (token["https://purl.imsglobal.org/spec/lti/claim/version"] !== "1.3.0")
     throw new Error("WRONG_LTI_VERSION_CLAIM");
-  console.log("Checking Deployment Id claim");
+  logger.debug("Checking Deployment Id claim");
   if (!token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"])
     throw new Error("NO_DEPLOYMENT_ID_CLAIM");
-  console.log("Checking Sub claim");
+  logger.debug("Checking Sub claim");
   if (!token.sub) throw new Error("NO_SUB_CLAIM");
-  console.log("Checking Roles claim");
+  logger.debug("Checking Roles claim");
   if (!token["https://purl.imsglobal.org/spec/lti/claim/roles"])
     throw new Error("NO_ROLES_CLAIM");
 
@@ -101,8 +103,8 @@ const claimValidation = (token: any): any => {
  */
 
 const oidcValidation = (token: any, platform: Platform): any => {
-  console.log("Token signature verified");
-  console.log("Initiating OIDC aditional validation steps");
+  logger.debug("Token signature verified");
+  logger.debug("Initiating OIDC aditional validation steps");
   const aud: boolean = validateAud(token, platform);
   const nonce: boolean = validateNonce(token, platform);
   const claims: boolean = claimValidation(token);
@@ -111,18 +113,18 @@ const oidcValidation = (token: any, platform: Platform): any => {
 };
 
 const rlDecodeIdToken = (idToken: any): any => {
-  console.log("idToken:" + idToken);
+  logger.debug("idToken:" + idToken);
   const decodedToken = jwt.decode(idToken);
-  console.log("decodedtoken:");
-  console.log(JSON.stringify(decodedToken));
+  logger.debug("decodedtoken:");
+  logger.debug(JSON.stringify(decodedToken));
   if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
   return decodedToken;
 };
 const rlValidateToken = (idToken: any, platform: Platform): any => {
   const decodedToken = rlDecodeIdToken(idToken);
-  console.log("platform.nonce-" + platform.nonce);
-  console.log("platform.state-" + platform.state);
-  console.log("platform.client_id-" + platform.clientId);
+  logger.debug("platform.nonce-" + platform.nonce);
+  logger.debug("platform.state-" + platform.state);
+  logger.debug("platform.client_id-" + platform.clientId);
 
   const oidcVerified: any = oidcValidation(decodedToken, platform);
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
@@ -132,9 +134,9 @@ const rlValidateToken = (idToken: any, platform: Platform): any => {
 };
 
 const rlValidateDecodedToken = (decodedToken: any, platform: Platform): any => {
-  console.log("platform.nonce-" + platform.nonce);
-  console.log("platform.state-" + platform.state);
-  console.log("platform.client_id-" + platform.clientId);
+  logger.debug("platform.nonce-" + platform.nonce);
+  logger.debug("platform.state-" + platform.state);
+  logger.debug("platform.client_id-" + platform.clientId);
 
   const oidcVerified: any = oidcValidation(decodedToken, platform);
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
@@ -144,11 +146,11 @@ const rlValidateDecodedToken = (decodedToken: any, platform: Platform): any => {
 
 const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   let oidcData = req.query;
-  console.log("req.method:" + req.method);
+  logger.debug("req.method:" + req.method);
 
   if (req.method == "POST") oidcData = req.body;
-  console.log(`oidcData ${JSON.stringify(oidcData)}`);
-  console.log(`Get Request query: ${JSON.stringify(req.query)}`);
+  logger.debug(`oidcData ${JSON.stringify(oidcData)}`);
+  logger.debug(`Get Request query: ${JSON.stringify(req.query)}`);
 
   if (isValidOIDCRequest(oidcData)) {
     let response = {};
@@ -178,8 +180,8 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
         ...response,
         lti_deployment_id: oidcData.lti_deployment_id
       };
-    console.log("OIDC response object");
-    console.log(response);
+    logger.debug("OIDC response object");
+    logger.debug(response);
     return response;
   }
 };
@@ -187,7 +189,7 @@ const getAccessToken = async (
   platform: Platform,
   scopes: any
 ): Promise<any> => {
-  console.log("Inside getAccessToken-" + JSON.stringify(platform));
+  logger.debug("Inside getAccessToken-" + JSON.stringify(platform));
 
   const clientId = platform.aud;
 
@@ -199,7 +201,7 @@ const getAccessToken = async (
     exp: platform.exp || Date.now() / 1000 + 60,
     jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
-  console.log("confjwt- " + JSON.stringify(confjwt));
+  logger.debug("confjwt- " + JSON.stringify(confjwt));
 
   const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
     algorithm: platform.alg,
@@ -217,8 +219,8 @@ const getAccessToken = async (
       form: payload
     })
     .json();
-  console.log(`Access token received ${JSON.stringify(access)}`);
-  console.log("Access token for the scopes - " + scopes);
+  logger.debug(`Access token received ${JSON.stringify(access)}`);
+  logger.debug("Access token for the scopes - " + scopes);
 
   return access;
 };

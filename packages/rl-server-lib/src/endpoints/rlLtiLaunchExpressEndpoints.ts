@@ -1,5 +1,4 @@
 import { Express } from "express";
-
 import {
   initOidcGet,
   initOidcPost,
@@ -15,7 +14,8 @@ import {
   LTI_ASSIGNMENT_REDIRECT,
   LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
-  APPLICATION_URL
+  APPLICATION_URL,
+  logger
 }  from "@asu-etx/rl-shared";
 
 /**
@@ -45,7 +45,7 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
 
   // post to accept the LMS launch with idToken
   app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req, res) => {
-    console.log(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
+    logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
     deepLinkRedirect(req, res);
   });
 

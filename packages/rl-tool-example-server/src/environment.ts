@@ -1,6 +1,7 @@
 import path from "path";
 import { ToolConsumer } from "@asu-etx/rl-server-lib";
 
+
 // local dev
 //import dotenv from "dotenv";
 //let ENV_VARS = dotenv.config().parsed as any;
@@ -98,7 +99,6 @@ const ENV_VARS = {
 
 // heroku
 const ENV_VARS = process.env;
-console.log(`environmental variables:${JSON.stringify(ENV_VARS)}`);
 
 export const PORT: number = parseInt(ENV_VARS.PORT ? ENV_VARS.PORT : "8080");
 
@@ -109,11 +109,9 @@ export const USER_INTERFACE_ROOT: string = path.join(
   __dirname,
   "/../../rl-tool-example-client/build"
 );
-console.log("ENV_VARS.TOOL_CONSUMERS-" + ENV_VARS.TOOL_CONSUMERS);
 
 export const TOOL_CONSUMERS: ToolConsumer[] = (JSON.parse(
   ENV_VARS.TOOL_CONSUMERS?.replace(/\\"/g, '"') || "[]"
 ) as unknown) as ToolConsumer[];
-
 
 //export const TOOL_CONSUMERS: ToolConsumer[] = ENV_VARS.TOOL_CONSUMERS as unknown as ToolConsumer[];
