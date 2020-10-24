@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
 import { dbInit } from "@asu-etx/rl-server-lib";
-import { logger } from "@asu-etx/rl-shared";
+import { logger, LTI_STUDENT_REDIRECT, LTI_INSTRUCTOR_REDIRECT, LTI_ASSIGNMENT_REDIRECT, LTI_DEEPLINK_REDIRECT } from "@asu-etx/rl-shared";
 
 import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 
@@ -68,22 +68,23 @@ ltiServiceEndpoints(app);
 /*========================== UI ENDPOINTS ==========================*/
 
 // Instructor
-app.route("/instructor").get(async (req, res) => {
+app.route(LTI_INSTRUCTOR_REDIRECT).get(async (req: any, res: any) => {
+  logger.debug(`hitting instructor response:${JSON.stringify(res.session)}`);
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
 // Student
-app.route("/student").get(async (req, res) => {
+app.route(LTI_STUDENT_REDIRECT).get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
 // Student Assignment
-app.route("/assignment").get(async (req, res) => {
+app.route(LTI_ASSIGNMENT_REDIRECT).get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
 // Deep Link
-app.route("/deeplink").get(async (req, res) => {
+app.route(LTI_DEEPLINK_REDIRECT).get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 

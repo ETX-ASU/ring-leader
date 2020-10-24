@@ -24,7 +24,7 @@ const getConfigValue = (configValue) => {
 
 const allConfigPromises = Object.keys(configsFromEnvFile).map((configKey) => {
   const configValue = getConfigValue(configsFromEnvFile[configKey]);
-  console.log(configKey, configValue);
+  console.debug(configKey, configValue);
   return shellPromise(`heroku config:set ${configKey}=${configValue}`);
 });
 
@@ -42,7 +42,7 @@ allConfigPromises.push(setApplicationUrlPromise);
 
 Promise.all(allConfigPromises)
   .then(() => {
-    console.log("Heroku App Configs ( ENV Variables ) updated");
+    console.debug("Heroku App Configs ( ENV Variables ) updated");
   })
   .catch((err) => {
     console.error(

@@ -3,13 +3,19 @@ import {
   submitResourceSelection
 } from "./services/DeepLinkService";
 
-import {
-  submitGrade
-} from "./services/GradeService"
+import { submitGrade, submitInstructorGrade, getGrades } from "./services/GradeService";
 
+import { getUsers, getUnAssignedStudents } from "./services/UserService";
 
+import { getLineItems, deleteLineItem } from "./services/LineItemService";
 export {
   getDeepLinkResourceLinks,
   submitResourceSelection,
-  submitGrade
+  submitGrade,
+  submitInstructorGrade,
+  getGrades,
+  getUsers,
+  getUnAssignedStudents,
+  getLineItems,
+  deleteLineItem
 };

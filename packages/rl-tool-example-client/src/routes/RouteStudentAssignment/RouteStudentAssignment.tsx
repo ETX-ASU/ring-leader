@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -15,7 +14,7 @@ const RouteStudentAssignment: React.FC = () => {
     setDisplaySubmitAssignmentSuccess
   ] = useState<boolean>(false);
   const submitGrade = async () => {
-    const params: SubmitGradeParams = new SubmitGradeParams();
+    const params: SubmitGradeParams = new SubmitGradeParams(null);
     const gradeResult = await grade(params);
     if (gradeResult) {
       setDisplaySubmitAssignmentSuccess(true);

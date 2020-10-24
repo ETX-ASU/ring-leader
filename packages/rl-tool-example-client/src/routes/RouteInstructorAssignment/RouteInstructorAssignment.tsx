@@ -1,7 +1,7 @@
-import axios from "axios";
 import React, { useState } from "react";
 import "./RouteInstructorAssignment.scss";
-import { logger } from "@asu-etx/rl-shared";
+import {  logger, InstructorSubmitGradeParams } from "@asu-etx/rl-shared";
+import { submitInstructorGrade, deleteLineItem, getUnAssignedStudents, getGrades } from "@asu-etx/rl-client-lib";
 
 const RouteInstructorAssignment: React.FC = (props: any) => {
   logger.debug("props - " + JSON.stringify(props));
@@ -37,79 +37,61 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     setDisplayUnAssignedStudents(false);
   };
 
-  const putGrades = (assignmentId: string) => {
-    axios
-      .post("/lti-service/putGrade", {
-        params: {
-          lineItemId: assignmentId,
-          grade: grade,
-          userId: selectValue,
-          comment: "Instructor comment on the student performance",
-          activityProgress: "Completed",
-          gradingProgress: "FullyGraded"
-        }
-      })
-      .then((results) => {
-        setDisplayCreateScoreSuccess(true);
-        logger.debug(JSON.stringify(results.data));
-        setDisplayGrade(false);
-        setDisplayCreateScore(false);
-        setDisplayUnAssignedStudents(false);
-        setDisplayDeleteAssignmentSuccess(false);
-      });
+  const putGrades = async (assignmentId: string) => {
+
+    /* Example instructor submiting grade for student */
+    const results = submitInstructorGrade(new InstructorSubmitGradeParams({
+      lineItemId: assignmentId,
+      grade: grade,
+      userId: selectValue,
+      comment: "Instructor comment on the student performance",
+      activityProgress: "Completed",
+      gradingProgress: "FullyGraded"
+    }))
+
+    setDisplayCreateScoreSuccess(true);
+    setDisplayGrade(false);
+    setDisplayCreateScore(false);
+    setDisplayUnAssignedStudents(false);
+    setDisplayDeleteAssignmentSuccess(false);
+
   };
   const deleteAssignment = (assignmentId: string) => {
-    axios
-      .delete("/lti-service/deleteLineItem", {
-        params: {
-          lineItemId: assignmentId
-        }
-      })
-      .then((results) => {
-        logger.debug(JSON.stringify(results.data));
-        setDisplayDeleteAssignmentSuccess(true);
-        setDisplayUnAssignedStudents(false);
-        setDisplayCreateScore(false);
-        setDisplayCreateScoreSuccess(false);
-      });
+    /* Example deleting a line item */
+    deleteLineItem(assignmentId)
+    setDisplayDeleteAssignmentSuccess(true);
+    setDisplayUnAssignedStudents(false);
+    setDisplayCreateScore(false);
+    setDisplayCreateScoreSuccess(false);
   };
-  const getUnAssignedStudets = (
+  const getUnAssignedStudets = async (
     assignmentId: string,
     resourceLinkId: string
   ) => {
-    axios
-      .get("/lti-service/getunassignedstudents", {
-        params: {
-          lineItemId: assignmentId,
-          resourceLinkId: resourceLinkId
-        }
-      })
-      .then((results) => {
-        logger.debug("getUnAssignedStudets-" + JSON.stringify(results.data));
-        setUnAssignedStudents(results.data);
-        setDisplayUnAssignedStudents(true);
-        setDisplayGrade(false);
-        setDisplayCreateScore(false);
-        setDisplayDeleteAssignmentSuccess(false);
-        setDisplayCreateScoreSuccess(false);
-      });
+
+     /* Example getting unassigned students in for a particular assignment */
+    const students = await getUnAssignedStudents(assignmentId, resourceLinkId);
+
+    setUnAssignedStudents(students);
+    setDisplayUnAssignedStudents(true);
+    setDisplayGrade(false);
+    setDisplayCreateScore(false);
+    setDisplayDeleteAssignmentSuccess(false);
+    setDisplayCreateScoreSuccess(false);
+
   };
-  const grades = (assignmentId: string) => {
-    axios
-      .get("/lti-service/grades", {
-        params: {
-          lineItemId: assignmentId
-        }
-      })
-      .then((results) => {
-        logger.debug(JSON.stringify(results.data));
-        setScores(results.data);
-        setDisplayGrade(true);
-        setDisplayUnAssignedStudents(false);
-        setDisplayDeleteAssignmentSuccess(false);
-        setDisplayCreateScore(false);
-        setDisplayCreateScoreSuccess(false);
-      });
+  const grades = async (assignmentId: string) => {
+
+    /* Example getting grades for an assignment */
+    const grades = await getGrades(assignmentId);
+
+    setScores(grades);
+    setDisplayGrade(true);
+    setDisplayUnAssignedStudents(false);
+    setDisplayDeleteAssignmentSuccess(false);
+    setDisplayCreateScore(false);
+    setDisplayCreateScoreSuccess(false);
+
   };
   return (
     <div className="card assignment" assignment-id={assignmentData.id}>

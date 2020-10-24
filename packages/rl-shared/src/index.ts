@@ -25,6 +25,8 @@ import { logger }
 import SubmitGradeParams from "./model/SubmitGradeParams";
 import SubmitContentItem from "./model/SubmitContentItem";
 import SubmitLineItem from "./model/SubmitLineItem";
+import LineItem from "./model/LineItem";
+import InstructorSubmitGradeParams from "./model/InstructorSubmitGradeParams";
 
 export {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
@@ -48,5 +50,7 @@ export {
   logger,
   SubmitGradeParams,
   SubmitContentItem,
-  SubmitLineItem
+  SubmitLineItem,
+  LineItem,
+  InstructorSubmitGradeParams
 };
