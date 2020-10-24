@@ -70,6 +70,7 @@ ltiServiceEndpoints(app);
 // Instructor
 app.route(LTI_INSTRUCTOR_REDIRECT).get(async (req: any, res: any) => {
   logger.debug(`hitting instructor response:${JSON.stringify(res.session)}`);
+  logger.debug(`hitting instructor request:${JSON.stringify(req.session)}`);
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
