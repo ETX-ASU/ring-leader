@@ -40,8 +40,8 @@ const toolConsumerPromises = configsFromEnvFile.TOOL_CONSUMERS.map(
         );
       })
       .then(() => {
-        console.log("Public and Private Key Generated...");
-        console.log("JWK created...");
+        logger.debug("Public and Private Key Generated...");
+        logger.debug("JWK created...");
         const private_key_str = fs.readFileSync(
           keyFileNames.privateKeyFile,
           "ascii"
@@ -62,8 +62,8 @@ const toolConsumerPromises = configsFromEnvFile.TOOL_CONSUMERS.map(
         toolConsumer.public_key = public_key_str;
         toolConsumer.public_key_jwk = jwk;
 
-        console.log("Private Key Configured with Heroku");
-        console.log(
+        logger.debug("Private Key Configured with Heroku");
+        logger.debug(
           "The JWK needed to create a developer key in Canvas...",
           jwk
         );

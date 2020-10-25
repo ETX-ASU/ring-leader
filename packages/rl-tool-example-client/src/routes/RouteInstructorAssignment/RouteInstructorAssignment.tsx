@@ -1,14 +1,15 @@
-import axios from "axios";
 import React, { useState } from "react";
 import "./RouteInstructorAssignment.scss";
+import {  logger, InstructorSubmitGradeParams } from "@asu-etx/rl-shared";
+import { submitInstructorGrade, deleteLineItem, getUnAssignedStudents, getGrades } from "@asu-etx/rl-client-lib";
 
 const RouteInstructorAssignment: React.FC = (props: any) => {
-  console.log("props - " + JSON.stringify(props));
+  logger.debug("props - " + JSON.stringify(props));
   const assignmentData = props["data-assignmentData"];
-  console.log("assignmentData - json - " + JSON.stringify(assignmentData));
+  logger.debug("assignmentData - json - " + JSON.stringify(assignmentData));
   const index = props["data-index"];
-  console.log("assignmentData id- " + assignmentData.id);
-  console.log("index - " + index);
+  logger.debug("assignmentData id- " + assignmentData.id);
+  logger.debug("index - " + index);
   const [scores, setScores] = useState<any[]>([]);
   const [unAssignedStudents, setUnAssignedStudents] = useState<any[]>([]);
   const [grade, setGrade] = useState<number>();
@@ -36,79 +37,61 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     setDisplayUnAssignedStudents(false);
   };
 
-  const putGrades = (assignmentId: string) => {
-    axios
-      .post("/lti-service/putGrade", {
-        params: {
-          lineItemId: assignmentId,
-          grade: grade,
-          userId: selectValue,
-          comment: "Instructor comment on the student performance",
-          activityProgress: "Completed",
-          gradingProgress: "FullyGraded"
-        }
-      })
-      .then((results) => {
-        setDisplayCreateScoreSuccess(true);
-        console.log(JSON.stringify(results.data));
-        setDisplayGrade(false);
-        setDisplayCreateScore(false);
-        setDisplayUnAssignedStudents(false);
-        setDisplayDeleteAssignmentSuccess(false);
-      });
+  const putGrades = async (assignmentId: string) => {
+
+    /* Example instructor submiting grade for student */
+    const results = submitInstructorGrade(new InstructorSubmitGradeParams({
+      lineItemId: assignmentId,
+      grade: grade,
+      userId: selectValue,
+      comment: "Instructor comment on the student performance",
+      activityProgress: "Completed",
+      gradingProgress: "FullyGraded"
+    }))
+
+    setDisplayCreateScoreSuccess(true);
+    setDisplayGrade(false);
+    setDisplayCreateScore(false);
+    setDisplayUnAssignedStudents(false);
+    setDisplayDeleteAssignmentSuccess(false);
+
   };
   const deleteAssignment = (assignmentId: string) => {
-    axios
-      .delete("/lti-service/deleteLineItem", {
-        params: {
-          lineItemId: assignmentId
-        }
-      })
-      .then((results) => {
-        console.log(JSON.stringify(results.data));
-        setDisplayDeleteAssignmentSuccess(true);
-        setDisplayUnAssignedStudents(false);
-        setDisplayCreateScore(false);
-        setDisplayCreateScoreSuccess(false);
-      });
+    /* Example deleting a line item */
+    deleteLineItem(assignmentId)
+    setDisplayDeleteAssignmentSuccess(true);
+    setDisplayUnAssignedStudents(false);
+    setDisplayCreateScore(false);
+    setDisplayCreateScoreSuccess(false);
   };
-  const getUnAssignedStudets = (
+  const getUnAssignedStudets = async (
     assignmentId: string,
     resourceLinkId: string
   ) => {
-    axios
-      .get("/lti-service/getunassignedstudents", {
-        params: {
-          lineItemId: assignmentId,
-          resourceLinkId: resourceLinkId
-        }
-      })
-      .then((results) => {
-        console.log("getUnAssignedStudets-" + JSON.stringify(results.data));
-        setUnAssignedStudents(results.data);
-        setDisplayUnAssignedStudents(true);
-        setDisplayGrade(false);
-        setDisplayCreateScore(false);
-        setDisplayDeleteAssignmentSuccess(false);
-        setDisplayCreateScoreSuccess(false);
-      });
+
+     /* Example getting unassigned students in for a particular assignment */
+    const students = await getUnAssignedStudents(assignmentId, resourceLinkId);
+
+    setUnAssignedStudents(students);
+    setDisplayUnAssignedStudents(true);
+    setDisplayGrade(false);
+    setDisplayCreateScore(false);
+    setDisplayDeleteAssignmentSuccess(false);
+    setDisplayCreateScoreSuccess(false);
+
   };
-  const grades = (assignmentId: string) => {
-    axios
-      .get("/lti-service/grades", {
-        params: {
-          lineItemId: assignmentId
-        }
-      })
-      .then((results) => {
-        console.log(JSON.stringify(results.data));
-        setScores(results.data);
-        setDisplayGrade(true);
-        setDisplayUnAssignedStudents(false);
-        setDisplayDeleteAssignmentSuccess(false);
-        setDisplayCreateScore(false);
-        setDisplayCreateScoreSuccess(false);
-      });
+  const grades = async (assignmentId: string) => {
+
+    /* Example getting grades for an assignment */
+    const grades = await getGrades(assignmentId);
+
+    setScores(grades);
+    setDisplayGrade(true);
+    setDisplayUnAssignedStudents(false);
+    setDisplayDeleteAssignmentSuccess(false);
+    setDisplayCreateScore(false);
+    setDisplayCreateScoreSuccess(false);
+
   };
   return (
     <div className="card assignment" assignment-id={assignmentData.id}>

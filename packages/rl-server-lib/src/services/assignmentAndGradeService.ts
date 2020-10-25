@@ -5,6 +5,8 @@ import { Score } from "../util/Score";
 import { Platform } from "../util/Platform";
 import { getAccessToken } from "../util/auth";
 import { Options } from "../util/Options";
+import { logger } from "@asu-etx/rl-shared";
+
 class Grade {
   /**
    * @description Gets lineitems from a given platform
@@ -23,7 +25,7 @@ class Grade {
     options?: Options,
     accessToken?: any
   ): Promise<any> {
-    console.log(
+    logger.debug(
       `Access token to get line items - get new token ${accessToken}`
     );
 
@@ -31,7 +33,7 @@ class Grade {
       throw new Error("MISSING_ID_TOKEN");
     }
     if (!accessToken) {
-      console.log("Access token blank - get new token");
+      logger.debug("Access token blank - get new token");
 
       accessToken = await getAccessToken(
         platform,
@@ -50,7 +52,7 @@ class Grade {
       }
 
       let queryParams: any = [...query];
-      console.log("getLineItems -  options - " + JSON.stringify(options));
+      logger.debug("getLineItems -  options - " + JSON.stringify(options));
 
       if (options) {
         if (options.resourceLinkId)
@@ -63,8 +65,8 @@ class Grade {
       }
 
       queryParams = new URLSearchParams(queryParams);
-      console.log("getlines - queryParams-" + JSON.stringify(queryParams));
-      console.log("lineitemsEndpoint - " + lineitemsEndpoint);
+      logger.debug("getlines - queryParams-" + JSON.stringify(queryParams));
+      logger.debug("lineitemsEndpoint - " + lineitemsEndpoint);
 
       let lineItems: any = await got
         .get(lineitemsEndpoint, {
@@ -76,7 +78,7 @@ class Grade {
           }
         })
         .json(); // Applying special filters
-      console.log("lineItems retreived - " + JSON.stringify(lineItems));
+      logger.debug("lineItems retreived - " + JSON.stringify(lineItems));
 
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
@@ -114,7 +116,7 @@ class Grade {
     options?: any,
     accessToken?: any
   ): Promise<any> {
-    console.log("Inside createLineItem");
+    logger.debug("Inside createLineItem");
 
     // Validating lineItem
     if (!platform) {
@@ -130,16 +132,16 @@ class Grade {
         "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
       );
     }
-    console.log("access token retrived inside createLineItem");
-    console.log(JSON.stringify(options));
+    logger.debug("access token retrived inside createLineItem");
+    logger.debug(JSON.stringify(options));
 
     if (options && options.resourceLinkId)
       lineItem.resourceLinkId = platform.resourceLinkId;
 
     const lineitemsEndpoint = platform.lineitems;
 
-    console.log("lineitemsEndpoint - " + lineitemsEndpoint);
-    console.log("lineItem - " + JSON.stringify(lineItem));
+    logger.debug("lineitemsEndpoint - " + lineitemsEndpoint);
+    logger.debug("lineItem - " + JSON.stringify(lineItem));
     try {
       const newLineItem = await got
         .post(lineitemsEndpoint, {
@@ -152,12 +154,12 @@ class Grade {
           json: lineItem
         })
         .json();
-      console.log(`Line item successfully created: ${lineItem}`);
+      logger.debug(`Line item successfully created: ${lineItem}`);
       return newLineItem;
     } catch (err) {
-      console.log(err);
+      logger.debug(err);
     }
-    console.log("Line item creation was unsuccessful");
+    logger.debug("Line item creation was unsuccessful");
     return null;
   }
   /**
@@ -191,7 +193,7 @@ class Grade {
     if (!platform) {
       throw new Error("PLATFORM_NOT_FOUND");
     }
-    console.log("put grades - options - " + JSON.stringify(options));
+    logger.debug("put grades - options - " + JSON.stringify(options));
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
@@ -202,7 +204,7 @@ class Grade {
     );
     const lineItems: any = await this.getLineItems(platform, options);
 
-    console.log("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
+    logger.debug("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
     const result: any = {
       success: [],
       failure: []
@@ -225,7 +227,7 @@ class Grade {
 
     for (const lineitem of lineItems) {
       try {
-        console.log("lineitem - " + JSON.stringify(lineitem));
+        logger.debug("lineitem - " + JSON.stringify(lineitem));
 
         const lineitemUrl = lineitem.id;
         let scoreUrl = lineitemUrl + "/scores";
@@ -239,14 +241,14 @@ class Grade {
         if (options && options.userId) score.userId = options.userId;
         else score.userId = platform.userId;
 
-        console.log("score.userId - " + score.userId);
+        logger.debug("score.userId - " + score.userId);
 
         score.timestamp = new Date(Date.now()).toISOString();
         score.scoreMaximum = lineitem.scoreMaximum;
-        console.log(
+        logger.debug(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
         );
-        console.log("score - " + JSON.stringify(score));
+        logger.debug("score - " + JSON.stringify(score));
 
         const res = await got.post(scoreUrl, {
           headers: {
@@ -257,17 +259,17 @@ class Grade {
           json: score
         });
 
-        console.log("Score successfully sent");
+        logger.debug("Score successfully sent");
         result.success.push({
           lineitem: lineitemUrl
         });
-        console.log("Inside PutGrades - scoreUrl - " + JSON.stringify(result));
+        logger.debug("Inside PutGrades - scoreUrl - " + JSON.stringify(result));
       } catch (err) {
-        console.log(
+        logger.debug(
           "Inside PutGrades - err.message - " + JSON.stringify(err.message)
         );
 
-        console.log("Inside PutGrades - err - " + JSON.stringify(err));
+        logger.debug("Inside PutGrades - err - " + JSON.stringify(err));
         result.failure.push({
           lineitem: lineitem.id,
           error: err.message
@@ -314,7 +316,7 @@ class Grade {
     }
 
     const lineItems = await this.getLineItems(platform, options, accessToken);
-    console.log("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
+    logger.debug("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
 
     const queryParams = [];
 
@@ -339,7 +341,7 @@ class Grade {
 
         let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
-        console.log(
+        logger.debug(
           `Inside GetGrades - searchParams, url -  ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
         );
 
@@ -353,7 +355,7 @@ class Grade {
             }
           })
           .json();
-        console.log("Inside GetGrades - results - " + JSON.stringify(results));
+        logger.debug("Inside GetGrades - results - " + JSON.stringify(results));
         resultsArray.push({
           lineitem: lineitem.id,
           results: results
@@ -390,7 +392,7 @@ class Grade {
       "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
     );
     const lineItems = await this.getLineItems(platform, options, accessToken);
-    console.log("delete line item - lineItems" + JSON.stringify(lineItems));
+    logger.debug("delete line item - lineItems" + JSON.stringify(lineItems));
 
     const result: any = {
       success: [],
@@ -410,7 +412,7 @@ class Grade {
           lineitem: lineitemUrl
         });
       } catch (err) {
-        console.log(err);
+        logger.debug(err);
         result.failure.push({
           lineitem: lineitem.id,
           error: err.message

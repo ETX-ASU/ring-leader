@@ -1,11 +1,12 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./RouteDeepLinking.scss";
+import {getDeepLinkResourceLinks as getLinks, submitResourceSelection as submitSelection} from "@asu-etx/rl-client-lib";
 import $ from "jquery";
+import { SubmitContentItem } from "@asu-etx/rl-shared";
 
 const RouteDeepLinking: React.FC = () => {
-  const [resourceLink, setResourceLink] = useState<{}>({});
+  const [resourceLink, setResourceLink] = useState<SubmitContentItem>(new SubmitContentItem(null));
   const [assignments, setAssignments] = useState<any[]>([]);
   const handleCheck = (resourceLinkData: any): any => {
     setResourceLink(resourceLinkData);
@@ -13,22 +14,16 @@ const RouteDeepLinking: React.FC = () => {
   useEffect(() => {
     getDeepLinkResourceLinks();
   });
-  const getDeepLinkResourceLinks = () => {
-    axios.get("/lti-service/getDeepLinkAssignments").then((results) => {
-      console.log(JSON.stringify(results.data));
-      setAssignments(results.data);
-    });
+  const getDeepLinkResourceLinks = async () => {
+    /* EXAMPLE: how to get the set of deep links previously created in canvas */
+    const assignments = await getLinks();
+    setAssignments(assignments);
   };
-  const submitResourceSelection = () => {
-    axios
-      .post("/lti-service/deeplink", {
-        contentItems: [resourceLink]
-      })
-      .then((result) => {
-        console.log(result);
+  const submitResourceSelection = async () => {
 
-        $("body").append(result.data);
-      });
+    /* EXAMPLE: example how to create a deep link with a line item in canvas with a resource link */
+    const data = await submitSelection(resourceLink);
+    $("body").append(data);
   };
   return (
     <div className="route-assignment">

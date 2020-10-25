@@ -5,7 +5,8 @@ import expressSession from "express-session";
 import bodyParser from "body-parser";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import { dbInit, logger } from "@asu-etx/rl-server-lib";
+import { dbInit } from "@asu-etx/rl-server-lib";
+import { logger, LTI_STUDENT_REDIRECT, LTI_INSTRUCTOR_REDIRECT, LTI_ASSIGNMENT_REDIRECT, LTI_DEEPLINK_REDIRECT } from "@asu-etx/rl-shared";
 
 import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
 
@@ -67,38 +68,40 @@ ltiServiceEndpoints(app);
 /*========================== UI ENDPOINTS ==========================*/
 
 // Instructor
-app.route("/instructor").get(async (req, res) => {
+app.route(LTI_INSTRUCTOR_REDIRECT).get(async (req: any, res: any) => {
+  logger.debug(`hitting instructor response:${JSON.stringify(res.session)}`);
+  logger.debug(`hitting instructor request:${JSON.stringify(req.session)}`);
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
 // Student
-app.route("/student").get(async (req, res) => {
+app.route(LTI_STUDENT_REDIRECT).get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
 // Student Assignment
-app.route("/assignment").get(async (req, res) => {
+app.route(LTI_ASSIGNMENT_REDIRECT).get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
 // Deep Link
-app.route("/deeplink").get(async (req, res) => {
+app.route(LTI_DEEPLINK_REDIRECT).get(async (req, res) => {
   res.sendFile(USER_INTERFACE_PLAYER_PAGE);
 });
 
 /*========================== SERVER STARTUP ==========================*/
 
 async function start(): Promise<any> {
-  console.log("Starting server...");
+  logger.debug("Starting server...");
 
   // Make sure we have our test activities
   await dbInit(TOOL_CONSUMERS, null);
-  console.log("TOOL_CONSUMERS", `${TOOL_CONSUMERS}`);
+  logger.debug("TOOL_CONSUMERS", `${TOOL_CONSUMERS}`);
 
-  console.log("TOOL_CONSUMERS", `${JSON.stringify(TOOL_CONSUMERS)}`);
+  logger.debug("TOOL_CONSUMERS", `${JSON.stringify(TOOL_CONSUMERS)}`);
   // Start the app
   app.listen(PORT, "0.0.0.0", () => {
-    console.log("App is running at", `0.0.0.0:${PORT}`);
+    logger.debug("App is running at", `0.0.0.0:${PORT}`);
   });
 }
 

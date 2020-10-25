@@ -1,8 +1,10 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import "./RouteStudentAssignment.scss";
+import { SubmitGradeParams } from "@asu-etx/rl-shared";
+import { submitGrade as grade } from "@asu-etx/rl-client-lib";
+
 
 const RouteStudentAssignment: React.FC = () => {
   const params = ({} = useParams());
@@ -11,20 +13,14 @@ const RouteStudentAssignment: React.FC = () => {
     displaySubmitAssignmentSuccess,
     setDisplaySubmitAssignmentSuccess
   ] = useState<boolean>(false);
-  const submitGrade = () => {
-    axios
-      .post("/lti-service/putGrade", {
-        params: {
-          grade: 81,
-          comment: "Instructor comment on the student performance",
-          activityProgress: "Completed",
-          gradingProgress: "FullyGraded"
-        }
-      })
-      .then((results) => {
-        setDisplaySubmitAssignmentSuccess(true);
-        console.log(JSON.stringify(results.data));
-      });
+  const submitGrade = async () => {
+    const params: SubmitGradeParams = new SubmitGradeParams(null);
+    const gradeResult = await grade(params);
+    if (gradeResult) {
+      setDisplaySubmitAssignmentSuccess(true);
+    } else {
+      setDisplaySubmitAssignmentSuccess(false);
+    }
   };
   return (
     <div className="route-assignment">

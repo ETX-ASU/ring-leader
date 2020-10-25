@@ -112,13 +112,17 @@
       }
     },
     {
-      "endpoint-const": "GET_UNASSIGNED_STUDENTS_ENDPOINT",
-      "endpoint": "/lti-service/getunassignedstudents"
+      "endpoint-const": "DELETE_LINE_ITEM",
+      "endpoint": "/lti-service/deleteLineItem"
     },
     {
       "endpoint-const": "PUT_STUDENT_GRADE_VIEW",
       "endpoint": "/lti-service/putGradeStudentView"
     },
+    {
+      "endpoint-const": "GET_UNASSIGNED_STUDENTS_ENDPOINT",
+      "endpoint": "/lti-service/getunassignedstudents"
+    }
     {
       "endpoint-const": "PUT_STUDENT_GRADE",
       "endpoint": "/lti-service/putGrade",
@@ -135,7 +139,8 @@
     },
     {
       "endpoint-const": "GET_GRADES",
-      "endpoint": "/lti-service/grades?lineItemId=https:%2F%2Funicon.instructure.com%2Fapi%2Flti%2Fcourses%2F786%2Fline_items%2F280",
+      "endpoint": "/lti-service/grades",
+      "query-params": "lineItemId=https:%2F%2Funicon.instructure.com%2Fapi%2Flti%2Fcourses%2F786%2Fline_items%2F280",
       "method": "GET",
       "IS_LTI": "YES",
       "response": [
@@ -304,7 +309,7 @@
   },
   "lti-internal-endpoints": [
     {
-      "endpoint-const": "DELETE_LINE_ITEM",
+      "endpoint-const": "INIT_OIDC",
       "endpoint": "/init-oidc"
     },
     {

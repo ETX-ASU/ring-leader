@@ -1,14 +1,15 @@
 import { Platform } from "./Platform";
 import { getAssignmentsByContext } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
-import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "../util/environment";
+import { DEEP_LINK_RESOURCELINKS_ENDPOINT } from "@asu-etx/rl-shared";
+import { logger } from "@asu-etx/rl-shared";
 
 const getDeepLinkAssignments = async (platform: Platform): Promise<any> => {
   const assignments: Assignment[] = await getAssignmentsByContext(
     platform.context_id
   );
   const items = [];
-  console.log(`getDeepLintAssnments: platform:${JSON.stringify(platform)}`);
+  logger.debug(`getDeepLintAssnments: platform:${JSON.stringify(platform)}`);
   for (const assignment of assignments) {
     items.push({
       type: assignment.type,

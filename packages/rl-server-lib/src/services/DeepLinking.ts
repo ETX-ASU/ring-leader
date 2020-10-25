@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "../util/Platform";
+import { logger } from "@asu-etx/rl-shared";
+
 class DeepLinking {
   /**
    * @description Creates an auto submitting form containing the DeepLinking Message.
@@ -21,8 +23,8 @@ class DeepLinking {
       contentItems,
       options
     ); // Creating auto submitting form
-    console.log("message - " + message);
-    console.log(
+    logger.debug("message - " + message);
+    logger.debug(
       " platform.deepLinkingSettings.deep_link_return_url - " +
         platform.deepLinkingSettings.deep_link_return_url
     );
@@ -55,28 +57,28 @@ class DeepLinking {
     options: any
   ): Promise<any> {
     if (!platform) {
-      console.log("IdToken object missing.");
+      logger.debug("IdToken object missing.");
       throw new Error("MISSING_ID_TOKEN");
     }
 
     if (!platform.deepLinkingSettings) {
-      console.log("DeepLinkingSettings object missing.");
+      logger.debug("DeepLinkingSettings object missing.");
       throw new Error("MISSING_DEEP_LINK_SETTINGS");
     }
 
     if (!contentItems) {
-      console.log("No content item passed.");
+      logger.debug("No content item passed.");
       throw new Error("MISSING_CONTENT_ITEMS");
     } // If it's not an array, turns it into an array
 
     if (!Array.isArray(contentItems)) contentItems = [contentItems]; // Gets platform
 
     if (!platform) {
-      console.log("Platform not found");
+      logger.debug("Platform not found");
       throw new Error("PLATFORM_NOT_FOUND");
     }
 
-    console.log("Building basic JWT body"); // Builds basic jwt body
+    logger.debug("Building basic JWT body"); // Builds basic jwt body
 
     const jwtBody: any = {
       iss: platform.aud,
@@ -106,10 +108,10 @@ class DeepLinking {
     if (platform.deepLinkingSettings.data)
       jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/data"] =
         platform.deepLinkingSettings.data;
-    console.log(
+    logger.debug(
       "Sanitizing content item array based on the platform's requirements:"
     );
-    console.log("jwtBody-" + JSON.stringify(jwtBody));
+    logger.debug("jwtBody-" + JSON.stringify(jwtBody));
 
     const selectedContentItems = [];
     const acceptedTypes = platform.deepLinkingSettings.accept_types;
@@ -117,10 +119,10 @@ class DeepLinking {
       platform.deepLinkingSettings.accept_multiple === "false" ||
       platform.deepLinkingSettings.accept_multiple === false
     );
-    console.log("Accepted Types: " + acceptedTypes);
-    console.log("Accepts Mutiple: " + acceptMultiple);
-    console.log("Received content items: ");
-    console.log(contentItems);
+    logger.debug("Accepted Types: " + acceptedTypes);
+    logger.debug("Accepts Mutiple: " + acceptMultiple);
+    logger.debug("Received content items: ");
+    logger.debug(contentItems);
 
     for (const contentItem of contentItems) {
       if (!acceptedTypes.includes(contentItem.type)) continue;
@@ -128,8 +130,8 @@ class DeepLinking {
       if (!acceptMultiple) break;
     }
 
-    console.log("Content items to be sent: ");
-    console.log(selectedContentItems);
+    logger.debug("Content items to be sent: ");
+    logger.debug(selectedContentItems);
     jwtBody[
       "https://purl.imsglobal.org/spec/lti-dl/claim/content_items"
     ] = selectedContentItems;

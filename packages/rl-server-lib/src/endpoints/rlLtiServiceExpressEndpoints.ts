@@ -22,8 +22,9 @@ import {
   PUT_STUDENT_GRADE,
   DELETE_LINE_ITEM,
   GET_GRADES,
-  LTI_ASSIGNMENT_REDIRECT
-} from "../util/environment";
+  LTI_ASSIGNMENT_REDIRECT,
+  logger
+} from "@asu-etx/rl-shared";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls
@@ -40,7 +41,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       role: req.query.role
     });
     await req.session.save(() => {
-      console.log("session data saved");
+      logger.debug("session data saved");
     });
     res.send(results);
   });
@@ -49,11 +50,11 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
-    console.log(
+    logger.debug(
       "CREATE_ASSIGNMENT_ENDPOINT" + JSON.stringify(CREATE_ASSIGNMENT_ENDPOINT)
     );
 
-    console.log(
+    logger.debug(
       `CREATE_ASSIGNMENT_ENDPOINT session: ${JSON.stringify(req.session)}`
     );
     const platform: any = req.session.platform;
@@ -65,7 +66,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     //identify the correct content that needs to be displayed
 
     if (reqQueryString) {
-      console.log(
+      logger.debug(
         "Create Assignment - reqQueryString" + JSON.stringify(reqQueryString)
       );
 
@@ -83,7 +84,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       assignment.lineitems = platform.lineitems;
       assignment.context_id = platform.context_id;
       const results = createAssignment(assignment);
-      console.log(
+      logger.debug(
         "Create Assignment - send results-" + JSON.stringify(results)
       );
       res.send(results);
@@ -95,10 +96,10 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    console.log(`get assignments - platform - ${JSON.stringify(platform)}`);
+    logger.debug(`get assignments - platform - ${JSON.stringify(platform)}`);
 
     const results = await new Grade().getLineItems(platform);
-    console.log(`Get assignments - send results - ${JSON.stringify(results)}`);
+    logger.debug(`Get assignments - send results - ${JSON.stringify(results)}`);
     res.send(results);
   });
 
@@ -131,13 +132,13 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
 
       for (const key in members) {
         const courseMember = members[key];
-        console.log("courseMember -" + JSON.stringify(courseMember));
-        console.log("assignmentMembers -" + JSON.stringify(assignmentMembers));
+        logger.debug("courseMember -" + JSON.stringify(courseMember));
+        logger.debug("assignmentMembers -" + JSON.stringify(assignmentMembers));
         const filteredData = assignmentMembers.filter(function (member: any) {
-          console.log("member -" + JSON.stringify(member));
+          logger.debug("member -" + JSON.stringify(member));
           return member.user_id == courseMember.user_id;
         });
-        console.log("filteredData -" + JSON.stringify(filteredData));
+        logger.debug("filteredData -" + JSON.stringify(filteredData));
         if (filteredData.length <= 0)
           studentsNotAssignedToThisAssignments.push({
             userId: courseMember.userId,
@@ -187,7 +188,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       DEEP_LINK_RESOURCELINKS_ENDPOINT,
       platform
     );
-    console.log("deeplink - resource-link-items - " + JSON.stringify(items));
+    logger.debug("deeplink - resource-link-items - " + JSON.stringify(items));
 
     return res.send(items);
   });
@@ -200,8 +201,8 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     }
     const platform: any = req.session.platform;
     const contentItems = req.body.contentItems;
-    console.log("deeplink - platform - " + JSON.stringify(platform));
-    console.log("deeplink - contentItems - " + JSON.stringify(contentItems));
+    logger.debug("deeplink - platform - " + JSON.stringify(platform));
+    logger.debug("deeplink - contentItems - " + JSON.stringify(contentItems));
 
     // Creates the deep linking request form
     const form = await new DeepLinking().createDeepLinkingForm(
@@ -272,14 +273,14 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
         id: reqQueryString.lineItemId,
         resourceLinkId: false
       }));
-      console.log(
+      logger.debug(
         " results[0].results - " + JSON.stringify(results[0].results)
       );
 
       const membersCollection = await new NamesAndRoles().getMembers(platform, {
         role: "Learner"
       });
-      console.log(
+      logger.debug(
         "Get Grades - members - " + JSON.stringify(membersCollection)
       );
       if (results.length <= 0) return res.send([]);
@@ -302,7 +303,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
           comment: score.comment
         });
       }
-      console.log("scoreData - " + scoreData);
+      logger.debug("scoreData - " + scoreData);
     }
     res.send(scoreData);
   });

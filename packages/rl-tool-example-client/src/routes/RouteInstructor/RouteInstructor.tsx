@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import "./RouteInstructor.scss";
 import RouteInstructorAssignment from "../RouteInstructorAssignment/RouteInstructorAssignment";
+import { logger } from "@asu-etx/rl-shared";
+import { getUsers as retrieveUsers, getLineItems } from "@asu-etx/rl-client-lib";
+import SubmitAssignment from "../../model/SubmitAssignment";
+import { createAssignment as insertExampleAssignment } from "../../services/AssignmentService";
 
 const RouteInstructor: React.FC = (props: any) => {
-  const {} = useParams();
-  console.log("useParams - " + JSON.stringify(useParams()));
+  const { } = useParams();
+  logger.debug("useParams - " + JSON.stringify(useParams()));
   const [
     displayCreateAssignmentSuccess,
     setDisplayCreateAssignmentSuccess
@@ -34,56 +37,50 @@ const RouteInstructor: React.FC = (props: any) => {
   const [maxScore, setMaxScore] = useState<number>();
 
   const [courses, setCourses] = useState<any>({});
-  const getUsers = () => {
+  const getUsers = async () => {
     setDisplayCreateAssignment(false);
     setdisplayAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
     setDisplayNoAssignment(false);
     setDisplayCreateResourceLinkAssignment(false);
-    axios
-      .get("/lti-service/roster", { params: { role: radioInputValue } })
-      .then((results) => {
-        console.log(JSON.stringify(results));
-        setUsers(results.data.members);
-        setCourses(results.data.context);
-        console.log(JSON.stringify(users));
-        console.log(JSON.stringify(courses));
-        setDisplayDiv(true);
-      });
+
+    /* EXAMPLE: How to retrieve users */
+    const results = await retrieveUsers(radioInputValue);
+    setUsers(results.members);
+    setCourses(results.context);
+    setDisplayDiv(true);
   };
-  const createAssignment = () => {
-    axios
-      .post("/lti-service/createassignment", {
-        params: {
-          scoreMaximum: maxScore,
-          label: title,
-          tag: tag,
-          resourceId: resourceId
-        }
-      })
-      .then((results) => {
-        console.log(JSON.stringify(results.data));
-        setDisplayDiv(false);
-        setDisplayCreateAssignment(false);
-        setdisplayAssignment(false);
-        setDisplayNoAssignment(false);
-        setDisplayCreateAssignmentSuccess(true);
-      });
+  const createAssignment = async () => {
+    
+    /* EXAMPLE: example creating assignment only for this example client */
+    const results: any = await insertExampleAssignment(new SubmitAssignment({
+      scoreMaximum: maxScore,
+      label: title,
+      tag: tag,
+      resourceId: resourceId
+    }));
+    setDisplayDiv(false);
+    setDisplayCreateAssignment(false);
+    setdisplayAssignment(false);
+    setDisplayNoAssignment(false);
+    setDisplayCreateAssignmentSuccess(true);
+
   };
-  const getAssignment = () => {
+
+  const getAssignment = async () => {
     setDisplayDiv(false);
     setDisplayCreateAssignment(false);
     setDisplayCreateAssignmentSuccess(false);
+    
 
-    axios.get("/lti-service/getassignment").then((results) => {
-      console.log(JSON.stringify(results.data));
-      if (results.data.length <= 0) {
-        setDisplayNoAssignment(true);
-        return;
-      }
-      setAssignments(results.data);
-      setdisplayAssignment(true);
-    });
+    /* EXAMPLE: example how to retrieve line items */
+    const results: any[] = await getLineItems();
+    if (results.length <= 0) {
+      setDisplayNoAssignment(true);
+      return;
+    }
+    setAssignments(results);
+    setdisplayAssignment(true);
   };
   const handleCheck = (event: any): any => {
     setRadioInputValue(event.target.value);

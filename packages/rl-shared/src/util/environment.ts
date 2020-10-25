@@ -42,3 +42,5 @@ export const TOOL_INFO = ENV_VARS.TOOL_INFO || "/tool-info";
 export const LTI_STUDENT_REDIRECT = ENV_VARS.STUDENT_REDIRECT || "/student";
 export const LTI_INSTRUCTOR_REDIRECT =
   ENV_VARS.INSTRUCTOR_REDIRECT || "/instructor";
+
+ export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";

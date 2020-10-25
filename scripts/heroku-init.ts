@@ -16,12 +16,12 @@ const herokuAppName = configsFromEnvFile["HEROKU_APP_NAME"];
 
 exec(`heroku create ${herokuAppName}`, (error, stdout, stderr) => {
   if (error) {
-    console.log(`error: ${error.message}`);
+    logger.debug(`error: ${error.message}`);
     return;
   }
   if (stderr) {
-    console.log(`stderr: ${stderr}`);
+    logger.debug(`stderr: ${stderr}`);
     return;
   }
-  console.log(`stdout: ${stdout}`);
+  logger.debug(`stdout: ${stdout}`);
 });

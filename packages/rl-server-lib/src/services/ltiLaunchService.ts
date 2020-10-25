@@ -11,9 +11,10 @@ import { generateUniqueString } from "../util/generateUniqueString";
 import processRequest from "../util/processRequest";
 import { OIDC_LOGIN_INIT_ROUTE,
  LTI_ADVANTAGE_LAUNCH_ROUTE,
+ LTI_DEEPLINK_REDIRECT,
  LTI_INSTRUCTOR_REDIRECT,
  LTI_ASSIGNMENT_REDIRECT,
- LTI_STUDENT_REDIRECT} from "../util/environment"
+ LTI_STUDENT_REDIRECT, logger} from "@asu-etx/rl-shared"
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {
   const connection = await getConnection();
@@ -40,13 +41,13 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
   if (req.session) {
     req.session.nonce = nonce;
     req.session.state = state;
-    console.log(
+    logger.debug(
       `request for GET OIDC_LOGIN_INIT_ROUTE{ ${OIDC_LOGIN_INIT_ROUTE} : ${inspect(
         req
       )}`
     );
     await req.session.save(() => {
-      console.log("session data saved");
+      logger.debug("session data saved");
     });
   } else {
     throw new Error("no session detected, something is wrong");
@@ -66,7 +67,7 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
   const state = generateUniqueString(30, false);
   const response: any = rlProcessOIDCRequest(req, state, nonce);
-  console.log(
+  logger.debug(
     `request for POST OIDC_LOGIN_INIT_ROUTE:${OIDC_LOGIN_INIT_ROUTE} : ${inspect(
       req.body
     )}`
@@ -78,25 +79,25 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
     iss: response.iss,
     deployment_id: ""
   });
-  console.log(
+  logger.debug(
     "initOidcPost - platformDetails-" + JSON.stringify(platformDetails)
   );
 
   if (platformDetails == undefined) {
     return;
   }
-  console.log("initOidcPost - req.session-" + JSON.stringify(req.session));
+  logger.debug("initOidcPost - req.session-" + JSON.stringify(req.session));
   if (req.session) {
     req.session.nonce = nonce;
     req.session.state = state;
 
     await req.session.save(() => {
-      console.log("session data saved");
+      logger.debug("session data saved");
     });
   } else {
     throw new Error("no session detected, something is wrong");
   }
-  console.log(
+  logger.debug(
     `Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${
       platformDetails.platformOIDCAuthEndPoint
     } with platform details: ${JSON.stringify(platformDetails)}`
@@ -121,14 +122,14 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   request.session.platform = processedRequest.rlPlatform;
 
   await request.session.save(() => {
-    console.log("session data saved");
+    logger.debug("session data saved");
   });
   if (processedRequest.rlPlatform.isStudent)
     response.redirect(LTI_STUDENT_REDIRECT);
   else response.redirect(LTI_INSTRUCTOR_REDIRECT);
 
   await request.session.save(() => {
-    console.log("session data saved");
+    logger.debug("session data saved");
   });
 };
 
@@ -141,13 +142,13 @@ const assignmentRedirectPost = async (
   }*/
   const reqQueryString = request.query;
   const reqBody = request.body;
-  console.log(
+  logger.debug(
     "LTI_ASSIGNMENT_REDIRECT -  req.query" + JSON.stringify(reqQueryString)
   );
 
-  console.log("LTI_ASSIGNMENT_REDIRECT -  req.body" + JSON.stringify(reqBody));
+  logger.debug("LTI_ASSIGNMENT_REDIRECT -  req.body" + JSON.stringify(reqBody));
 
-  console.log(
+  logger.debug(
     "LTI_ASSIGNMENT_REDIRECT -  req.session" + JSON.stringify(request.session)
   );
 
@@ -157,7 +158,7 @@ const assignmentRedirectPost = async (
   }
   processedRequest.session.platform = processedRequest.rlPlatform;
   await request.session.save(() => {
-    console.log("req.session- " + JSON.stringify(request.session));
+    logger.debug("req.session- " + JSON.stringify(request.session));
   });
   response.redirect(
     LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + reqQueryString.resourceId
@@ -168,18 +169,18 @@ const deepLinkRedirect = async (request: any, response: any): Promise<void> => {
   if (!request.session) {
     throw new Error("no session detected, something is wrong");
   }
-  console.log("req.session-LTI_DEEPLINK_REDIRECT");
+  logger.debug("req.session-LTI_DEEPLINK_REDIRECT");
   const processedRequest = await processRequest(request);
   if (!processedRequest) {
     throw new Error("Unable to process request");
   }
 
   request.session.platform = processedRequest.rlPlatform;
-  console.log(
+  logger.debug(
     "req.session.platform - " + JSON.stringify(processedRequest.rlPlatform)
   );
   await request.session.save(() => {
-    console.log("session data saved");
+    logger.debug("session data saved");
   });
   response.redirect(LTI_DEEPLINK_REDIRECT);
 };

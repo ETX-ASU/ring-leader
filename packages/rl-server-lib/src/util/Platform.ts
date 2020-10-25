@@ -11,6 +11,7 @@ export interface Platform {
   lineitems: string;
   lineitem: string;
   resourceLinkId: string;
+  resource: any;
   accesstokenEndpoint: string;
   authOIDCRedirectEndpoint: string;
   kid: string;
