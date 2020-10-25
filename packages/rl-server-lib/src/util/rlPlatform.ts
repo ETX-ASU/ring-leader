@@ -2,31 +2,33 @@ import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
 import { logger } from "@asu-etx/rl-shared";
 
+const DEEP_LINKING_SETTINGS_CLAIM = "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings";
+const ROLES_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/roles";
+const INSTRUCTOR_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor";
+const LEARNER_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner";
+const DEPLOYMENT_ID_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/deployment_id";
+const CONTEXT_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/context";
+const ASSIGNMENT_GRADE_CLAIM = "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint";
+const RESOURCE_LINK_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/resource_link";
+
 const setDefaultValues = (token: any): any => {
   logger.debug("setDefaultValues - " + JSON.stringify(token));
   logger.debug(
-    "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings" +
-      token[
-        "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-      ]
+    DEEP_LINKING_SETTINGS_CLAIM + token[DEEP_LINKING_SETTINGS_CLAIM]
   );
   let isStudent = false;
   let isInstructor = false;
-  if (token["https://purl.imsglobal.org/spec/lti/claim/roles"]) {
-    if (
-      token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
-        "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
-      )
-    ) {
+  if (token[ROLES_CLAIM]) {
+    if (token[ROLES_CLAIM].includes(LEARNER_ROLE_CLAIM)) {
       isStudent = true;
-    } else if (
-      token["https://purl.imsglobal.org/spec/lti/claim/roles"].includes(
-        "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
-      )
-    ) {
+    } else if (token[ROLES_CLAIM].includes(INSTRUCTOR_ROLE_CLAIM)) {
       isInstructor = true;
     }
   }
+
+  const assignmentGradeClaim = token[ASSIGNMENT_GRADE_CLAIM];
+  const resourceLinkClaim = token[RESOURCE_LINK_CLAIM];
+  const deepLinkSettingsClaim = token[DEEP_LINKING_SETTINGS_CLAIM];
 
   const tokenData = {
     jti: encodeURIComponent(
@@ -43,43 +45,30 @@ const setDefaultValues = (token: any): any => {
     nonce: token.nonce,
     clientId: token.aud,
     userId: token.sub,
-    deploymentId:
-      token["https://purl.imsglobal.org/spec/lti/claim/deployment_id"] || null,
+    deploymentId: token[DEPLOYMENT_ID_CLAIM] || null,
     roles: [
       {
         role: "Learner",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+        claim: LEARNER_ROLE_CLAIM
       },
       {
         role: "Instructor",
-        claim: "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+        claim: INSTRUCTOR_ROLE_CLAIM
       }
     ],
     isStudent: isStudent,
     isInstructor: isInstructor,
-    context: token["https://purl.imsglobal.org/spec/lti/claim/context"],
-    lineitems: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
-      ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
-          .lineitems
-      : null,
-    lineitem: token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
-      ? token["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"].lineitem
-      : null,
-    resourceLinkId: token.resourceLinkId || null,
-    deepLinkingSettings: token[
-      "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-    ]
+    context: token[CONTEXT_CLAIM],
+    lineitems: assignmentGradeClaim ? assignmentGradeClaim.lineitems : null,
+    lineitem: assignmentGradeClaim ? assignmentGradeClaim.lineitem : null,
+    resourceLinkId: resourceLinkClaim ? resourceLinkClaim.id : null,
+    resource: resourceLinkClaim,
+    deepLinkingSettings: deepLinkSettingsClaim
       ? {
-          deep_link_return_url:
-            token[
-              "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-            ].deep_link_return_url || null,
-          data: token.data || null,
-          accept_types:
-            token[
-              "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"
-            ].accept_types
-        }
+        deep_link_return_url: deepLinkSettingsClaim.deep_link_return_url || null,
+        data: token.data || null,
+        accept_types: deepLinkSettingsClaim.accept_types
+      }
       : null
   };
   logger.debug("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
@@ -112,6 +101,7 @@ const rlPlatform = (
     lineitems: tokenData.lineitems,
     lineitem: tokenData.lineitem,
     resourceLinkId: tokenData.resourceLinkId,
+    resource: tokenData.resource,
     accesstokenEndpoint: accesstokenEndpoint,
     authOIDCRedirectEndpoint: authenticationEndpoint,
     kid: kid,
