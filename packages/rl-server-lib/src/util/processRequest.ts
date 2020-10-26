@@ -3,6 +3,7 @@ import { rlValidateDecodedToken, rlDecodeIdToken } from "./auth";
 
 import { rlPlatform } from "../util/rlPlatform";
 import { getToolConsumer } from "../services/ToolConsumerService";
+import { DEPLOYMENT_ID_CLAIM } from "@asu-etx/rl-shared";
 
 const processRequest = async (request: any) => {
   if (!request.session) {
@@ -18,7 +19,7 @@ const processRequest = async (request: any) => {
     client_id: decodedToken["aud"],
     iss: decodedToken["iss"],
     deployment_id:
-      decodedToken["https://purl.imsglobal.org/spec/lti/claim/deployment_id"]
+      decodedToken[DEPLOYMENT_ID_CLAIM]
   });
 
   if (platformDetails == undefined) {
