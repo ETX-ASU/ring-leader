@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./RouteInstructorAssignment.scss";
 import {  logger, InstructorSubmitGradeParams } from "@asu-etx/rl-shared";
-import { submitInstructorGrade, deleteLineItem, getUnAssignedStudents, getGrades } from "@asu-etx/rl-client-lib";
+import { submitInstructorGrade, deleteLineItem, getUnassignedStudents as retrieveUnassignedStudents
+  , getGrades as retrieveGrades, getAssignedStudents as retrieveAssignedStudents } from "@asu-etx/rl-client-lib";
 
 const RouteInstructorAssignment: React.FC = (props: any) => {
   logger.debug("props - " + JSON.stringify(props));
@@ -11,34 +12,23 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
   logger.debug("assignmentData id- " + assignmentData.id);
   logger.debug("index - " + index);
   const [scores, setScores] = useState<any[]>([]);
-  const [unAssignedStudents, setUnAssignedStudents] = useState<any[]>([]);
+  const [unassigned, setUnassigned] = useState<any[]>([]);
+  const [assigned, setAssigned] = useState<any[]>([]);
   const [grade, setGrade] = useState<number>();
-  const [displayCreateScoreSuccess, setDisplayCreateScoreSuccess] = useState<
-    boolean
-  >(false);
-
-  const [displayUnAssignedStudents, setDisplayUnAssignedStudents] = useState<
-    boolean
-  >(false);
+  const [displayCreateScoreSuccess, setDisplayCreateScoreSuccess] = useState<boolean>(false);
+  const [displayUnAssignedStudents, setDisplayUnAssignedStudents] = useState<boolean>(false);
   const [
     displayDeleteAssignmentSuccess,
     setDisplayDeleteAssignmentSuccess
   ] = useState<boolean>(false);
-  const [displayCreateScore, setDisplayCreateScore] = useState<boolean>(false);
+  const [displayCreateScore, setDisplayCreateScore] = useState<boolean>(false); // uses assignedStudents
   const [displayGrade, setDisplayGrade] = useState<boolean>(false);
   const [selectValue, setSelectValue] = useState<string>(
     "fa8fde11-43df-4328-9939-58b56309d20d"
   );
 
-  const showSubmitGrade = () => {
-    setDisplayGrade(false);
-    setDisplayCreateScore(true);
-    setDisplayCreateScoreSuccess(false);
-    setDisplayUnAssignedStudents(false);
-  };
 
   const putGrades = async (assignmentId: string) => {
-
     /* Example instructor submiting grade for student */
     const results = submitInstructorGrade(new InstructorSubmitGradeParams({
       lineItemId: assignmentId,
@@ -64,15 +54,15 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     setDisplayCreateScore(false);
     setDisplayCreateScoreSuccess(false);
   };
-  const getUnAssignedStudets = async (
+  const unassignedStudents = async (
     assignmentId: string,
     resourceLinkId: string
   ) => {
 
      /* Example getting unassigned students in for a particular assignment */
-    const students = await getUnAssignedStudents(assignmentId, resourceLinkId);
+    const unassignedStudents = await retrieveUnassignedStudents(assignmentId, resourceLinkId);
 
-    setUnAssignedStudents(students);
+    setUnassigned(unassignedStudents);
     setDisplayUnAssignedStudents(true);
     setDisplayGrade(false);
     setDisplayCreateScore(false);
@@ -83,7 +73,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
   const grades = async (assignmentId: string) => {
 
     /* Example getting grades for an assignment */
-    const grades = await getGrades(assignmentId);
+    const grades = await retrieveGrades(assignmentId);
 
     setScores(grades);
     setDisplayGrade(true);
@@ -93,6 +83,17 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
     setDisplayCreateScoreSuccess(false);
 
   };
+
+  const assignedStudents = async (assignmentId: string,
+    resourceLinkId: string) => {
+    const assigned = await retrieveAssignedStudents(assignmentId, resourceLinkId);
+    setAssigned(assigned)
+    setDisplayGrade(false);
+    setDisplayCreateScore(true);
+    setDisplayCreateScoreSuccess(false);
+    setDisplayUnAssignedStudents(false);
+  };
+
   return (
     <div className="card assignment" assignment-id={assignmentData.id}>
       <h5 className="card-header">Assignment - {index + 1}</h5>
@@ -107,7 +108,8 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
           <button
             assignment-id={assignmentData.id}
             className="btn btn-primary assignmentbutton"
-            onClick={showSubmitGrade}
+            onClick={() => assignedStudents(assignmentData.id,
+              assignmentData.resourceLinkId)}
           >
             Submit Grades
           </button>
@@ -122,7 +124,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
             assignment-id={assignmentData.id}
             className="btn btn-primary"
             onClick={() =>
-              getUnAssignedStudets(
+              unassignedStudents(
                 assignmentData.id,
                 assignmentData.resourceLinkId
               )
@@ -151,7 +153,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
             );
           })}
         {displayUnAssignedStudents &&
-          unAssignedStudents.map((student: any, index: number) => {
+          unassigned.map((student: any, index: number) => {
             return (
               <div className="form-group">
                 {index == 0 && (
@@ -168,7 +170,8 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
               </div>
             );
           })}
-        {displayCreateScore && (
+        {displayCreateScore && assigned.map((student:any, index: number) => {
+          return (
           <div className="card-footer">
             <div className="container">
               <div className="form-group">
@@ -183,11 +186,9 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
                   className="form-control"
                   id="sel"
                 >
-                  <option value="fa8fde11-43df-4328-9939-58b56309d20d">
-                    Devesh Tiwari Student A
-                  </option>
-                  <option value="50681b1d-72ce-4102-94d6-dc586f9ba43f">
-                    Devesh Tiwari Student B
+
+                  <option value="{student.id}">
+                    {student.name}
                   </option>
                 </select>
 
@@ -212,7 +213,8 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
               </div>
             </div>
           </div>
-        )}
+            );
+          })}
         {displayCreateScoreSuccess && (
           <div>
             <div className="alert alert-success">

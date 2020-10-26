@@ -20,7 +20,10 @@ export const GET_ASSIGNMENT_ENDPOINT: string =
   ENV_VARS.GET_ASSIGNMENT_ENDPOINT || "/lti-service/getassignment";
 export const GET_UNASSIGNED_STUDENTS_ENDPOINT: string =
   ENV_VARS.GET_UNASSIGNED_STUDENTS_ENDPOINT ||
-  "/lti-service/getunassignedstudents";
+  "/lti-service/unassignedstudents";
+export const GET_ASSIGNED_STUDENTS_ENDPOINT: string =
+  ENV_VARS.GET_ASSIGNED_STUDENTS_ENDPOINT ||
+  "/lti-service/assignedstudents";
 export const PUT_STUDENT_GRADE_VIEW: string =
   ENV_VARS.PUT_STUDENT_GRADE_VIEW || "/lti-service/putGradeStudentView";
 export const PUT_STUDENT_GRADE: string =
@@ -43,4 +46,4 @@ export const LTI_STUDENT_REDIRECT = ENV_VARS.STUDENT_REDIRECT || "/student";
 export const LTI_INSTRUCTOR_REDIRECT =
   ENV_VARS.INSTRUCTOR_REDIRECT || "/instructor";
 
- export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";
+export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";

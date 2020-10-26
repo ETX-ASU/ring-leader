@@ -18,8 +18,7 @@ const processRequest = async (request: any) => {
     name: "",
     client_id: decodedToken["aud"],
     iss: decodedToken["iss"],
-    deployment_id:
-      decodedToken[DEPLOYMENT_ID_CLAIM]
+    deployment_id: decodedToken[DEPLOYMENT_ID_CLAIM]
   });
 
   if (platformDetails == undefined) {

@@ -19,4 +19,4 @@ export const LOG_CLAIM = "https://purl.imsglobal.org/spec/lti-dl/claim/log";
 export const ERROR_LOG_CLAIM = "https://purl.imsglobal.org/spec/lti-dl/claim/errorlog";
 export const DATA_CLAIM = "https://purl.imsglobal.org/spec/lti-dl/claim/data";
 export const CONTEXT_MEMBERSHIP_READ_CLAIM = "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
-export const NAMES_ROLES_CLAIM = "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice",
+export const NAMES_ROLES_CLAIM = "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice";

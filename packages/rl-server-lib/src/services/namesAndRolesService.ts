@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
 import { Platform } from "../util/Platform";
-import { logger, CONTEXT_MEMBERSHIP_READ, NAMES_ROLES_CLAIM } from "@asu-etx/rl-shared";
+import { logger, CONTEXT_MEMBERSHIP_READ_CLAIM, NAMES_ROLES_CLAIM } from "@asu-etx/rl-shared";
 
 class NamesAndRoles {
   /**
@@ -31,7 +31,7 @@ class NamesAndRoles {
     logger.debug(
       "Attempting to retrieve platform access_token for [" + platform.iss + "]"
     );
-    const tokenRes = await getAccessToken(platform, CONTEXT_MEMBERSHIP_READ);
+    const tokenRes = await getAccessToken(platform, CONTEXT_MEMBERSHIP_READ_CLAIM);
     logger.debug("Access_token retrieved for [" + platform.iss + "]");
     logger.debug("Access token received -" + tokenRes);
 
@@ -60,7 +60,9 @@ class NamesAndRoles {
       logger.debug("Maximum number of pages retrieved: " + options.pages);
     if (query.length > 0) query = new URLSearchParams(query);
     else query = false;
-    let next = token[NAMES_ROLES_CLAIM].context_memberships_url;
+    let next =
+      token[NAMES_ROLES_CLAIM]
+        .context_memberships_url;
     logger.debug("next");
     logger.debug(next);
     if (options && options.url) {
