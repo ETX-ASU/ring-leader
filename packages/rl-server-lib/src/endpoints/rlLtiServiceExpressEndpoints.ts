@@ -142,7 +142,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
         logger.debug("filteredData -" + JSON.stringify(filteredData));
         if (filteredData.length <= 0)
           studentsNotAssignedToThisAssignments.push({
-            id: courseMember.userId,
+            id: courseMember.user_id,
             name: courseMember.name,
             status: courseMember.status,
             picture: courseMember.picture,
@@ -175,12 +175,12 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       for (const key in assignmentMembers) {
         const assignmentMember = assignmentMembers[key];
         assignedStudents.push({
-          id: assignmentMember.userId,
+          id: assignmentMember.user_id,
           name: assignmentMember.name,
           status: assignmentMember.status,
           picture: assignmentMember.picture,
           givenName: assignmentMember.given_name,
-          familyName: assignmentMember.familyName
+          familyName: assignmentMember.family_name
         });
       }
     }
