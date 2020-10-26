@@ -1,6 +1,14 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "../util/Platform";
-import { logger } from "@asu-etx/rl-shared";
+import {
+  logger,
+  MSG_CLAIM,
+  CONTENT_ITEMS_CLAIM,
+  ERROR_MSG_CLAIM,
+  LOG_CLAIM,
+  ERROR_LOG_CLAIM,
+  DATA_CLAIM
+} from "@asu-etx/rl-shared";
 
 class DeepLinking {
   /**
@@ -26,7 +34,7 @@ class DeepLinking {
     logger.debug("message - " + message);
     logger.debug(
       " platform.deepLinkingSettings.deep_link_return_url - " +
-        platform.deepLinkingSettings.deep_link_return_url
+      platform.deepLinkingSettings.deep_link_return_url
     );
     const form =
       '<form id="ltijs_submit" style="display: none;" action="' +
@@ -86,27 +94,18 @@ class DeepLinking {
       iat: Date.now() / 1000,
       exp: Date.now() / 1000 + 60,
       nonce: platform.nonce,
-      "https://purl.imsglobal.org/spec/lti/claim/deployment_id":
-        platform.deploymentId,
-      "https://purl.imsglobal.org/spec/lti/claim/message_type":
-        "LtiDeepLinkingResponse",
+      "https://purl.imsglobal.org/spec/lti/claim/deployment_id": platform.deploymentId,
+      "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiDeepLinkingResponse",
       "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0"
     }; // Adding messaging options
 
-    if (options.message)
-      jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/msg"] =
-        options.message;
-    if (options.errmessage)
-      jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/errormsg "] =
-        options.errmessage;
-    if (options.log)
-      jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/log"] = options.log;
-    if (options.errlog)
-      jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/errorlog"] =
-        options.errlog; // Adding Data claim if it exists in initial request
+    if (options.message) jwtBody[MSG_CLAIM] = options.message;
+    if (options.errmessage) jwtBody[ERROR_MSG_CLAIM] = options.errmessage;
+    if (options.log) jwtBody[LOG_CLAIM] = options.log;
+    if (options.errlog) jwtBody[ERROR_LOG_CLAIM] = options.errlog; // Adding Data claim if it exists in initial request
 
     if (platform.deepLinkingSettings.data)
-      jwtBody["https://purl.imsglobal.org/spec/lti-dl/claim/data"] =
+      jwtBody[DATA_CLAIM] =
         platform.deepLinkingSettings.data;
     logger.debug(
       "Sanitizing content item array based on the platform's requirements:"
@@ -132,9 +131,7 @@ class DeepLinking {
 
     logger.debug("Content items to be sent: ");
     logger.debug(selectedContentItems);
-    jwtBody[
-      "https://purl.imsglobal.org/spec/lti-dl/claim/content_items"
-    ] = selectedContentItems;
+    jwtBody[CONTENT_ITEMS_CLAIM] = selectedContentItems;
     const message = await jwt.sign(jwtBody, platform.platformPrivateKey, {
       algorithm: platform.alg,
       keyid: platform.kid

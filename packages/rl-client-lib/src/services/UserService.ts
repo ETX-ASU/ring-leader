@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ROSTER_ENDPOINT, GET_UNASSIGNED_STUDENTS_ENDPOINT, logger } from "@asu-etx/rl-shared";
+import { ROSTER_ENDPOINT, GET_UNASSIGNED_STUDENTS_ENDPOINT, GET_ASSIGNED_STUDENTS_ENDPOINT, logger, Student } from "@asu-etx/rl-shared";
 
 const getUsers = async (role: string): Promise<any> => {
   logger.debug(`hitting endpoint GET:${ROSTER_ENDPOINT}`);
@@ -12,10 +12,10 @@ const getUsers = async (role: string): Promise<any> => {
   return results;
 };
 
-const getUnAssignedStudents = (
+const getUnassignedStudents = (
   assignmentId: string,
   resourceLinkId: string
-): Promise<any> => {
+): Promise<Student[]> => {
   const results = axios
     .get(GET_UNASSIGNED_STUDENTS_ENDPOINT, {
       params: {
@@ -30,4 +30,22 @@ const getUnAssignedStudents = (
   return results;
 };
 
-export { getUsers, getUnAssignedStudents };
+const getAssignedStudents = (
+  assignmentId: string,
+  resourceLinkId: string
+): Promise<Student[]> => {
+  const results = axios
+    .get(GET_ASSIGNED_STUDENTS_ENDPOINT, {
+      params: {
+        lineItemId: assignmentId,
+        resourceLinkId: resourceLinkId
+      }
+    })
+    .then((results) => {
+      logger.debug("getAssignedStudets-" + JSON.stringify(results.data));
+      return results.data;
+    });
+  return results;
+};
+
+export { getUsers, getUnassignedStudents, getAssignedStudents };

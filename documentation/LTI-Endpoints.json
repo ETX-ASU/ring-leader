@@ -122,7 +122,11 @@
     {
       "endpoint-const": "GET_UNASSIGNED_STUDENTS_ENDPOINT",
       "endpoint": "/lti-service/getunassignedstudents"
-    }
+    },
+    {
+      "endpoint-const": "GET_ASSIGNED_STUDENTS_ENDPOINT",
+      "endpoint": "/lti-service/getunassignedstudents"
+    },
     {
       "endpoint-const": "PUT_STUDENT_GRADE",
       "endpoint": "/lti-service/putGrade",

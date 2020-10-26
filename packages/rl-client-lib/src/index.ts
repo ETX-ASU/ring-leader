@@ -5,7 +5,7 @@ import {
 
 import { submitGrade, submitInstructorGrade, getGrades } from "./services/GradeService";
 
-import { getUsers, getUnAssignedStudents } from "./services/UserService";
+import { getUsers, getUnassignedStudents, getAssignedStudents } from "./services/UserService";
 
 import { getLineItems, deleteLineItem } from "./services/LineItemService";
 export {
@@ -15,7 +15,8 @@ export {
   submitInstructorGrade,
   getGrades,
   getUsers,
-  getUnAssignedStudents,
+  getUnassignedStudents,
+  getAssignedStudents,
   getLineItems,
   deleteLineItem
 };

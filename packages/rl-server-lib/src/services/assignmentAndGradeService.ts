@@ -5,7 +5,13 @@ import { Score } from "../util/Score";
 import { Platform } from "../util/Platform";
 import { getAccessToken } from "../util/auth";
 import { Options } from "../util/Options";
-import { logger } from "@asu-etx/rl-shared";
+import {
+  logger,
+  SCORE_CLAIM,
+  LINE_ITEM_CLAIM,
+  LINE_ITEM_READ_ONLY_CLAIM,
+  RESULT_CLAIM
+} from "@asu-etx/rl-shared";
 
 class Grade {
   /**
@@ -35,10 +41,7 @@ class Grade {
     if (!accessToken) {
       logger.debug("Access token blank - get new token");
 
-      accessToken = await getAccessToken(
-        platform,
-        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly"
-      );
+      accessToken = await getAccessToken(platform, LINE_ITEM_READ_ONLY_CLAIM);
     }
     if (accessToken) {
       let lineitemsEndpoint = platform.lineitems;
@@ -127,10 +130,7 @@ class Grade {
       throw new Error("MISSING_LINE_ITEM");
     }
     if (!accessToken) {
-      accessToken = await getAccessToken(
-        platform,
-        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
-      );
+      accessToken = await getAccessToken(platform, LINE_ITEM_CLAIM);
     }
     logger.debug("access token retrived inside createLineItem");
     logger.debug(JSON.stringify(options));
@@ -200,7 +200,7 @@ class Grade {
     }
     const accessToken: any = await getAccessToken(
       platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/score"
+      `${LINE_ITEM_CLAIM} ${SCORE_CLAIM}`
     );
     const lineItems: any = await this.getLineItems(platform, options);
 
@@ -300,7 +300,7 @@ class Grade {
     //we will change this when go for actual implementation
     const accessToken = await getAccessToken(
       platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly"
+      `${LINE_ITEM_READ_ONLY_CLAIM} ${RESULT_CLAIM}`
     );
 
     let limit: any = false;
@@ -342,7 +342,7 @@ class Grade {
         let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
         logger.debug(
-          `Inside GetGrades - searchParams, url -  ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
+          `Inside GetGrades - searchParams, url - ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
         );
 
         const results = await got
@@ -387,10 +387,7 @@ class Grade {
       throw new Error("PLATFORM_NOT_FOUND");
     }
 
-    const accessToken = await getAccessToken(
-      platform,
-      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem"
-    );
+    const accessToken = await getAccessToken(platform, LINE_ITEM_CLAIM);
     const lineItems = await this.getLineItems(platform, options, accessToken);
     logger.debug("delete line item - lineItems" + JSON.stringify(lineItems));
 

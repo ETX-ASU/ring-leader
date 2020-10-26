@@ -18,6 +18,7 @@ import {
   CREATE_ASSIGNMENT_ENDPOINT,
   GET_ASSIGNMENT_ENDPOINT,
   GET_UNASSIGNED_STUDENTS_ENDPOINT,
+  GET_ASSIGNED_STUDENTS_ENDPOINT,
   PUT_STUDENT_GRADE_VIEW,
   PUT_STUDENT_GRADE,
   DELETE_LINE_ITEM,
@@ -141,12 +142,49 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
         logger.debug("filteredData -" + JSON.stringify(filteredData));
         if (filteredData.length <= 0)
           studentsNotAssignedToThisAssignments.push({
-            userId: courseMember.userId,
-            StudenName: courseMember.name
+            id: courseMember.user_id,
+            name: courseMember.name,
+            status: courseMember.status,
+            picture: courseMember.picture,
+            givenName: courseMember.given_name,
+            familyName: courseMember.family_name
           });
       }
     }
     res.send(studentsNotAssignedToThisAssignments);
+  });
+
+  app.get(GET_ASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req, res) => {
+    if (!req.session) {
+      throw new Error("no session detected, something is wrong");
+    }
+    const assignedStudents = [];
+    const reqQueryString: any = req.query;
+    if (reqQueryString && reqQueryString.lineItemId) {
+      const platform: any = req.session.platform;
+
+      const assignmentMembersCollection = await new NamesAndRoles().getMembers(
+        platform,
+        {
+          role: "Learner",
+          resourceLinkId: reqQueryString.resourceLinkId
+        }
+      );
+      const assignmentMembers: [any] = assignmentMembersCollection.members;
+
+      for (const key in assignmentMembers) {
+        const assignmentMember = assignmentMembers[key];
+        assignedStudents.push({
+          id: assignmentMember.user_id,
+          name: assignmentMember.name,
+          status: assignmentMember.status,
+          picture: assignmentMember.picture,
+          givenName: assignmentMember.given_name,
+          familyName: assignmentMember.family_name
+        });
+      }
+    }
+    res.send(assignedStudents);
   });
 
   app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req, res) => {
