@@ -1,6 +1,6 @@
 import React, { ReactFragment, useState } from "react";
 import "./RouteInstructorAssignment.scss";
-import {  logger, InstructorSubmitGradeParams } from "@asu-etx/rl-shared";
+import {  logger, InstructorSubmitGradeParams, Student } from "@asu-etx/rl-shared";
 import { submitInstructorGrade, deleteLineItem, getUnassignedStudents as retrieveUnassignedStudents
   , getGrades as retrieveGrades, getAssignedStudents as retrieveAssignedStudents } from "@asu-etx/rl-client-lib";
 
@@ -61,7 +61,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
   ) => {
 
      /* Example getting unassigned students in for a particular assignment */
-    const unassignedStudents = await retrieveUnassignedStudents(assignmentId, resourceLinkId);
+    const unassignedStudents : Student[] = await retrieveUnassignedStudents(assignmentId, resourceLinkId);
 
     setUnassigned(unassignedStudents);
     setDisplayUnAssignedStudents(true);
@@ -87,7 +87,8 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
 
   const assignedStudents = async (assignmentId: string,
     resourceLinkId: string) => {
-    const assigned = await retrieveAssignedStudents(assignmentId, resourceLinkId);
+    /* Example instructor getting students assigned to specific assignemnt */
+    const assigned : Student[] = await retrieveAssignedStudents(assignmentId, resourceLinkId);
     setAssigned(assigned)
     setDisplayGrade(false);
     setDisplayCreateScore(true);

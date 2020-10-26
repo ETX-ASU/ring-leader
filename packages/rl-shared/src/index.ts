@@ -51,6 +51,8 @@ import { logger }
 import SubmitGradeParams from "./model/SubmitGradeParams";
 import SubmitContentItem from "./model/SubmitContentItem";
 import SubmitLineItem from "./model/SubmitLineItem";
+import Student from "./model/Student";
+import User from "./model/User";
 import LineItem from "./model/LineItem";
 import InstructorSubmitGradeParams from "./model/InstructorSubmitGradeParams";
 
@@ -79,6 +81,8 @@ export {
   SubmitContentItem,
   SubmitLineItem,
   LineItem,
+  Student,
+  User,
   InstructorSubmitGradeParams,
   DEEP_LINKING_SETTINGS_CLAIM,
   ROLES_CLAIM,
