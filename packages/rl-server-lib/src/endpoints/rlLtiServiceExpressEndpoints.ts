@@ -142,8 +142,12 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
         logger.debug("filteredData -" + JSON.stringify(filteredData));
         if (filteredData.length <= 0)
           studentsNotAssignedToThisAssignments.push({
-            userId: courseMember.userId,
-            StudenName: courseMember.name
+            id: courseMember.userId,
+            name: courseMember.name,
+            status: courseMember.status,
+            picture: courseMember.picture,
+            givenName: courseMember.given_name,
+            familyName: courseMember.family_name
           });
       }
     }
@@ -171,8 +175,12 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       for (const key in assignmentMembers) {
         const assignmentMember = assignmentMembers[key];
         assignedStudents.push({
-          userId: assignmentMember.userId,
-          StudenName: assignmentMember.name
+          id: assignmentMember.userId,
+          name: assignmentMember.name,
+          status: assignmentMember.status,
+          picture: assignmentMember.picture,
+          givenName: assignmentMember.given_name,
+          familyName: assignmentMember.familyName
         });
       }
     }

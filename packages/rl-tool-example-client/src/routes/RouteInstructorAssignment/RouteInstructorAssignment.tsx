@@ -164,7 +164,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
                     href="#"
                     className="list-group-item list-group-item-action"
                   >
-                    {student.StudenName}
+                    {student.name}
                   </a>
                 </div>
               </div>
@@ -187,7 +187,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
                   id="sel"
                 >
 
-                  <option value="{student.id}">
+                  <option value={student.id}>
                     {student.name}
                   </option>
                 </select>
