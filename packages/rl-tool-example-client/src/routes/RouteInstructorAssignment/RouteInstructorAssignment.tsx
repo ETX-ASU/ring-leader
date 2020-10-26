@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { ReactFragment, useState } from "react";
 import "./RouteInstructorAssignment.scss";
 import {  logger, InstructorSubmitGradeParams } from "@asu-etx/rl-shared";
 import { submitInstructorGrade, deleteLineItem, getUnassignedStudents as retrieveUnassignedStudents
   , getGrades as retrieveGrades, getAssignedStudents as retrieveAssignedStudents } from "@asu-etx/rl-client-lib";
+
 
 const RouteInstructorAssignment: React.FC = (props: any) => {
   logger.debug("props - " + JSON.stringify(props));
@@ -170,8 +171,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
               </div>
             );
           })}
-        {displayCreateScore && assigned.map((student:any, index: number) => {
-          return (
+        {displayCreateScore &&  (
           <div className="card-footer">
             <div className="container">
               <div className="form-group">
@@ -186,10 +186,15 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
                   className="form-control"
                   id="sel"
                 >
-
-                  <option value={student.id}>
-                    {student.name}
-                  </option>
+                  {
+                     assigned.map((student:any, index: number) => {
+                      return (
+                              <option value={student.id}>
+                                {student.name}
+                              </option>
+                      )})
+                  }
+                 
                 </select>
 
                 <input
@@ -213,8 +218,7 @@ const RouteInstructorAssignment: React.FC = (props: any) => {
               </div>
             </div>
           </div>
-            );
-          })}
+        )}
         {displayCreateScoreSuccess && (
           <div>
             <div className="alert alert-success">
