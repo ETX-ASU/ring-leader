@@ -351,7 +351,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
 
   app.get(GET_JWKS_ENDPOINT, requestLogger, async (req, res) => {
     const reqQueryString: any = req.query;
-    const consumerTool: ToolConsumer = getToolConsumerByName(reqQueryString.name);
+    const consumerTool: ToolConsumer | undefined = await getToolConsumerByName(reqQueryString.name);
     res.send(consumerTool);
   });
 };
