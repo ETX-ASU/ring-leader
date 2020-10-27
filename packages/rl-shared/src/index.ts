@@ -17,7 +17,8 @@ import {
   LTI_STUDENT_REDIRECT,
   LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
-  LTI_INSTRUCTOR_REDIRECT
+  LTI_INSTRUCTOR_REDIRECT,
+  GET_JWKS_ENDPOINT
 } from "./util/environment";
 
 import {
@@ -76,6 +77,7 @@ export {
   LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
   LTI_INSTRUCTOR_REDIRECT,
+  GET_JWKS_ENDPOINT,
   logger,
   SubmitGradeParams,
   SubmitContentItem,

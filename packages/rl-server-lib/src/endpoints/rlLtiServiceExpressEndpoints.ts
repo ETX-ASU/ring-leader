@@ -3,12 +3,14 @@ import { Express } from "express";
 import { NamesAndRoles } from "../services/namesAndRolesService";
 import { Grade } from "../services/assignmentAndGradeService";
 import { DeepLinking } from "../services/DeepLinking";
+import { getToolConsumerByName } from "../services/ToolConsumerService";
 
 import requestLogger from "../middleware/requestLogger";
 
 import getDeepLinkItems from "../util/getDeepLinkItems";
 import { createAssignment } from "../services/AssignmentService";
 import Assignment from "../database/entities/Assignment";
+import ToolConsumer from "../database/entities/ToolConsumer";
 
 import {
   APPLICATION_URL,
@@ -24,6 +26,7 @@ import {
   DELETE_LINE_ITEM,
   GET_GRADES,
   LTI_ASSIGNMENT_REDIRECT,
+  GET_JWKS_ENDPOINT,
   logger
 } from "@asu-etx/rl-shared";
 
@@ -344,6 +347,12 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       logger.debug("scoreData - " + scoreData);
     }
     res.send(scoreData);
+  });
+
+  app.get(GET_JWKS_ENDPOINT, requestLogger, async (req, res) => {
+    const reqQueryString: any = req.query;
+    const consumerTool: ToolConsumer | undefined = await getToolConsumerByName(reqQueryString.name);
+    res.send(consumerTool);
   });
 };
 

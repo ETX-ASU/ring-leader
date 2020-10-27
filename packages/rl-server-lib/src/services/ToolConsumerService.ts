@@ -45,15 +45,32 @@ const getToolConsumer = async (
   logger.debug(
     `toolConsumerRepository -request : ${JSON.stringify(request)} )}`
   );
-  const toolConsumer:
+  let toolConsumer:
     | ToolConsumer
     | undefined = await toolConsumerRepository.findOne({
-    where: {
-      iss: request.iss,
-      client_id: request.client_id,
-      deployment_id: "0"
-    }
-  });
+      where: {
+        iss: request.iss,
+        client_id: request.client_id,
+        deployment_id: request.deployment_id
+      }
+    });
+
+  if (!toolConsumer) {
+    toolConsumer = await toolConsumerRepository.findOne({
+      where: {
+        iss: request.iss,
+        client_id: request.client_id
+      }
+    });
+  }
+
+  if (!toolConsumer) {
+    toolConsumer = await toolConsumerRepository.findOne({
+      where: {
+        iss: request.iss,
+      }
+    });
+  }
 
   logger.debug(
     `toolConsumerRepository -toolConsumer : ${JSON.stringify(toolConsumer)} )}`
