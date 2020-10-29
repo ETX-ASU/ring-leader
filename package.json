@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "©, 2020 Arizona State University ETX. Libraries to support LTI 1.3 enabled tools",
     "main": "NONE",
-    "repository": "https://github.com/ETX-ASU/ring-leader.git",
+    "repository": "git+https://github.com/jstanley70/ETX-ASU/ring-leader.git",
     "author": "Melanie.Narish@asu.edu",
     "license": "NOLICENSE",
     "private": true,
