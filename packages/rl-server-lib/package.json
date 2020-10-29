@@ -44,7 +44,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ETX-ASU/ring-leader",
+    "url": "git+https://github.com/jstanley70/ETX-ASU/ring-leader.git",
     "directory": "packages/rl-client-lib"
   },
   "publishConfig": {
