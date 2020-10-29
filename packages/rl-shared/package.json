@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/jstanley70/ringleader-modules.git",
+    "url": "git://github.com/ETX-ASU/ring-leader",
     "directory": "packages/rl-shared"
   },
   "publishConfig": {
