@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](http://github.com/jstanley70/ETX-ASU/ring-leader/compare/@asu-etx/rl-client-lib@0.2.0...@asu-etx/rl-client-lib@0.3.0) (2020-10-29)
+
+**Note:** Version bump only for package @asu-etx/rl-client-lib
+
+
+
+
+
 # 0.2.0 (2020-10-29)
 
 **Note:** Version bump only for package @asu-etx/rl-client-lib
