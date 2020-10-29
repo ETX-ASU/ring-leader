@@ -1,6 +1,6 @@
 {
     "name": "@asu-etx/ring-leader",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "©, 2020 Arizona State University ETX. Libraries to support LTI 1.3 enabled tools",
     "main": "NONE",
     "repository": "https://github.com/ETX-ASU/ring-leader.git",
@@ -17,12 +17,14 @@
         ]
     },
     "dependencies": {
+        "lerna": "^3.22.1",
         "pem-jwk": "^2.0.0",
         "ts-node": "^9.0.0",
         "typescript": "~4.0.2"
     },
     "devDependencies": {
         "concurrently": "^5.2.0",
+        "eslint": "^7.12.1",
         "prettier": "2.0.5"
     },
     "engines": {

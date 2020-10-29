@@ -1,6 +1,6 @@
 {
-  "name": "@asu-etx/rl-shared",
-  "version": "1.0.0",
+  "name": "rl-shared",
+  "version": "0.0.1",
   "private": true,
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -33,5 +33,14 @@
     "eslint-plugin-prettier": "3.1.3",
     "eslint-plugin-promise": "4.2.1",
     "prettier": "2.0.5"
+  },
+ "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/jstanley70/ringleader-modules.git",
+    "directory": "packages/rl-shared"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
+
 }
