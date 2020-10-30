@@ -40,13 +40,5 @@
     "eslint-plugin-promise": "4.2.1",
     "nodemon": "^2.0.4",
     "prettier": "2.0.5"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jstanley70/ETX-ASU/ring-leader.git",
-    "directory": "packages/rl-client-lib"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   }
 }
