@@ -1,6 +1,6 @@
 {
     "name": "@asu-etx/rl-tool-example-server",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "private": true,
     "main": "build/app.js",
     "types": "build/app.d.ts",
@@ -21,8 +21,8 @@
         "exec": "yarn run build"
     },
     "dependencies": {
-        "@asu-etx/rl-client-lib": "^0.6.0",
-        "@asu-etx/rl-server-lib": "^0.6.0",
+        "@asu-etx/rl-client-lib": "^0.6.1",
+        "@asu-etx/rl-server-lib": "^0.6.1",
         "axios": "^0.19.2",
         "body-parser": "^1.19.0",
         "dotenv": "^8.2.0",

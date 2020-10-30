@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/ETX-ASU/ring-leader/compare/@asu-etx/rl-server-lib@0.6.0...@asu-etx/rl-server-lib@0.6.1) (2020-10-30)
+
+**Note:** Version bump only for package @asu-etx/rl-server-lib
+
+
+
+
+
 # [0.6.0](http://github.com/jstanley70/ETX-ASU/ring-leader/compare/@asu-etx/rl-server-lib@0.5.0...@asu-etx/rl-server-lib@0.6.0) (2020-10-30)
 
 **Note:** Version bump only for package @asu-etx/rl-server-lib
