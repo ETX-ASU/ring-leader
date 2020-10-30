@@ -6,7 +6,7 @@
     "repository": "git+https://github.com/jstanley70/ETX-ASU/ring-leader.git",
     "author": "Melanie.Narish@asu.edu",
     "license": "NOLICENSE",
-    "private": false,
+    "private": true,
     "workspaces": {
         "packages": [
             "packages/rl-shared",

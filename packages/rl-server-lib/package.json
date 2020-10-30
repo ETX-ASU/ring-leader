@@ -29,6 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.0.0-beta.2",
     "parse-link": "^1.0.3",
+    "typeorm-aurora-data-api-driver": "^1.4.0",
     "typescript": "~4.0.2"
   },
   "devDependencies": {
@@ -41,5 +42,6 @@
     "eslint-plugin-promise": "4.2.1",
     "nodemon": "^2.0.4",
     "prettier": "2.0.5"
-  }
+  },
+  "gitHead": "7fb9f5c3bf6faeb0731f22a42aeb3ddf1f6eadd0"
 }

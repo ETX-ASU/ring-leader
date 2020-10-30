@@ -18,7 +18,8 @@ import {
   LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
   LTI_INSTRUCTOR_REDIRECT,
-  GET_JWKS_ENDPOINT
+  GET_JWKS_ENDPOINT,
+  PLATFORM
 } from "./util/environment";
 
 import {
@@ -107,5 +108,6 @@ export {
   ERROR_MSG_CLAIM,
   LOG_CLAIM,
   ERROR_LOG_CLAIM,
-  DATA_CLAIM
+  DATA_CLAIM,
+  PLATFORM
 };

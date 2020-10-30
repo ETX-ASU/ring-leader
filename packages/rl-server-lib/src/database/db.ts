@@ -1,6 +1,6 @@
 import ToolConsumer from "./entities/ToolConsumer";
 import Assignment from "./entities/Assignment";
-import { logger } from "@asu-etx/rl-shared";
+import { logger, PLATFORM } from "@asu-etx/rl-shared";
 import {
   createConnection,
   getConnection as getTypeOrmConnection,
@@ -10,7 +10,7 @@ import {
 let connectionCreationPromise: any = false;
 
 const getConnection = async (): Promise<Connection> => {
-  if (connectionCreationPromise === false) {
+  if (connectionCreationPromise === false && PLATFORM !== 'aws') {
     logger.debug("creating connection")
     connectionCreationPromise = createConnection({
       type: "sqlite",
@@ -19,6 +19,16 @@ const getConnection = async (): Promise<Connection> => {
       synchronize: true,
       entities: [ToolConsumer, Assignment],
       logging: true
+    });
+  } else if (connectionCreationPromise === false) {
+    connectionCreationPromise = await createConnection({
+      type: "aurora-data-api",
+      database: "LtiData",
+      secretArn:
+        "arn:aws:secretsmanager:us-west-2:540838891768:secret:dev/aurora/lti-48pdM7",
+      resourceArn: "arn:aws:rds:us-west-2:540838891768:cluster:dev-lti",
+      region: "us-west-2",
+      serviceConfigOptions: {}
     });
   }
 

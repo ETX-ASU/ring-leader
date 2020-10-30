@@ -54,5 +54,6 @@
         "eslint-plugin-promise": "4.2.1",
         "nodemon": "^2.0.4",
         "prettier": "2.0.5"
-    }
+    },
+    "gitHead": "7fb9f5c3bf6faeb0731f22a42aeb3ddf1f6eadd0"
 }
