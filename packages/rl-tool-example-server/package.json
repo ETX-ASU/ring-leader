@@ -1,7 +1,8 @@
 {
     "name": "@asu-etx/rl-tool-example-server",
     "version": "0.4.1",
-    "private": true,
+    "private": false,
+    "public": true,
     "main": "build/app.js",
     "types": "build/app.d.ts",
     "engines": {
