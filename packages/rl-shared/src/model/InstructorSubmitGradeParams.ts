@@ -1,3 +1,5 @@
+
+// Used to submit a grade for a single student
 class InstructorSubmitGradeParams {
   lineItemId: string | undefined;
   grade: number | undefined;
