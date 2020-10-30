@@ -1,6 +1,6 @@
 {
   "name": "@asu-etx/rl-shared",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": false,
   "public": true,
   "main": "build/index.js",
