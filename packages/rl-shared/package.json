@@ -1,7 +1,8 @@
 {
-  "name": "asu-etx/rl-shared",
+  "name": "@asu-etx/rl-shared",
   "version": "0.6.1",
   "private": false,
+  "public": true,
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "engines": {
