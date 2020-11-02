@@ -11,7 +11,7 @@ let connectionCreationPromise: any = false;
 
 const getConnection = async (): Promise<Connection> => {
   if (connectionCreationPromise === false && PLATFORM !== 'aws') {
-    logger.debug("creating connection")
+    logger.debug("creating connection");
     connectionCreationPromise = createConnection({
       type: "sqlite",
       database: ":memory:",

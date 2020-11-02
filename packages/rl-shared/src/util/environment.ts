@@ -48,4 +48,4 @@ export const LTI_INSTRUCTOR_REDIRECT =
   ENV_VARS.INSTRUCTOR_REDIRECT || "/instructor";
 
 export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";
-export const PLATFORM = ENV_VARS.PLATFORM || "local";
+export const PLATFORM = ENV_VARS.PLATFORM || "aws";
