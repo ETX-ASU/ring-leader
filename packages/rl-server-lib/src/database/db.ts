@@ -10,17 +10,7 @@ import {
 let connectionCreationPromise: any = false;
 
 const getConnection = async (): Promise<Connection> => {
-  if (connectionCreationPromise === false && PLATFORM !== 'aws') {
-    logger.debug("creating connection");
-    connectionCreationPromise = createConnection({
-      type: "sqlite",
-      database: ":memory:",
-      dropSchema: true,
-      synchronize: true,
-      entities: [ToolConsumer, Assignment],
-      logging: true
-    });
-  } else if (connectionCreationPromise === false) {
+  if (connectionCreationPromise === false) {
     connectionCreationPromise = await createConnection({
       type: "aurora-data-api",
       database: "LtiData",
