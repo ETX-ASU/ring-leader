@@ -1,6 +1,5 @@
 import { getConnection, createConnectionFromConfig } from "./db";
-import ToolConsumer from "./entities/ToolConsumer";
-import { createToolConsumer } from "../services/ToolConsumerService";
+import ToolConsumer from "@asu-etx/rl-server-lib/src/models/ToolConsumer";
 import { logger } from "@asu-etx/rl-shared";
 
 const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
@@ -14,24 +13,14 @@ const ensureToolConsumer = async (toolConsumer: ToolConsumer): Promise<any> => {
   }
 };
 
-// because this is an in-memory database we don't have to clear the table
-// assume it is empty and simply iterate through each tool consumer and add it
-const initToolConsumers = async (toolConsumers: ToolConsumer[]): Promise<any> => {
-  logger.debug("sticking these tool consumers in the DB:", toolConsumers);
 
-  toolConsumers.forEach(async (toolConsumerData: ToolConsumer) => {
-    toolConsumerData.public_key_jwk = JSON.stringify(toolConsumerData.public_key_jwk) || "";
-    await createToolConsumer(toolConsumerData);
-  });
-};
 
-const dbInit = async (toolConsumers: ToolConsumer[], options: any): Promise<any> => {
+const dbInit = async (options: any): Promise<any> => {
   // Init DB
   logger.debug("Initializing the DB");
   const connection = await getConnection();
   await connection.synchronize(); // this creates the tables based on our entity definitions
   await createConnectionFromConfig(options);
-  initToolConsumers(toolConsumers);
 }
 
 export { dbInit, ensureToolConsumer };

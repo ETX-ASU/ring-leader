@@ -57,6 +57,7 @@ import Student from "./model/Student";
 import User from "./model/User";
 import LineItem from "./model/LineItem";
 import InstructorSubmitGradeParams from "./model/InstructorSubmitGradeParams";
+import Assignment from "./model/Assignment";
 
 export {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
@@ -87,6 +88,7 @@ export {
   Student,
   User,
   InstructorSubmitGradeParams,
+  Assignment,
   DEEP_LINKING_SETTINGS_CLAIM,
   ROLES_CLAIM,
   INSTRUCTOR_ROLE_CLAIM,

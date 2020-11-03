@@ -1,6 +1,5 @@
 import { getConnection } from "../database/db";
-import Assignment from "../database/entities/Assignment";
-import { logger } from "@asu-etx/rl-shared";
+import { logger, Assignment } from "@asu-etx/rl-shared";
 
 const createAssignment = async (
   assignment: Assignment

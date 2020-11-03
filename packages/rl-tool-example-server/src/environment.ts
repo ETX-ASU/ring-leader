@@ -116,3 +116,5 @@ export const TOOL_CONSUMERS: ToolConsumer[] = (JSON.parse(
 ) as unknown) as ToolConsumer[];
 */
 export const TOOL_CONSUMERS: ToolConsumer[] = ENV_VARS.TOOL_CONSUMERS as unknown as ToolConsumer[];
+
+process.env.toolConsumers = JSON.stringify(TOOL_CONSUMERS);

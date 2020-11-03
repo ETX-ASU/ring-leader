@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity("ASSIGNMENT")
 class Assignment {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   id: number | undefined = undefined;
 
   @Column("varchar", { length: 128 })

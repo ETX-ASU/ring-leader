@@ -4,9 +4,8 @@ import url from "url";
 import { inspect } from "util";
 import { rlProcessOIDCRequest } from "../util/auth";
 
-import { getConnection } from "../database/db";
-import ToolConsumer from "../database/entities/ToolConsumer";
-import { getToolConsumer } from "../services/ToolConsumerService";
+import ToolConsumer from "../models/ToolConsumer";
+import { getToolConsumer } from "./ToolConsumerService";
 import { generateUniqueString } from "../util/generateUniqueString";
 import processRequest from "../util/processRequest";
 import { OIDC_LOGIN_INIT_ROUTE,
@@ -14,13 +13,12 @@ import { OIDC_LOGIN_INIT_ROUTE,
  LTI_DEEPLINK_REDIRECT,
  LTI_INSTRUCTOR_REDIRECT,
  LTI_ASSIGNMENT_REDIRECT,
- LTI_STUDENT_REDIRECT, logger} from "@asu-etx/rl-shared"
+  LTI_STUDENT_REDIRECT,
+  logger
+} from "@asu-etx/rl-shared";
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {
-  const connection = await getConnection();
-  const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  const toolConsumers = await toolConsumerRepository.find();
-  return toolConsumers;
+  return process.env.toolConsumers ? JSON.parse(process.env.toolConsumers) : [];
 };
 
 const initOidcGet = async (req: any, res: any): Promise<void> => {

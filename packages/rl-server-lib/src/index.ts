@@ -2,15 +2,12 @@ import { Grade } from "./services/assignmentAndGradeService";
 import { DeepLinking } from "./services/DeepLinking";
 import { NamesAndRoles } from "./services/namesAndRolesService";
 import { rlPlatform } from "./util/rlPlatform";
-import { dbInit } from "./database/init";
 import requestLogger from "./middleware/requestLogger";
 
 import rlLtiLaunchExpressEndpoints from "./endpoints/rlLtiLaunchExpressEndpoints";
 import rlLtiServiceExpressEndpoints from "./endpoints/rlLtiServiceExpressEndpoints";
 
-import ToolConsumer from "./database/entities/ToolConsumer";
-import getDeepLinkItems from "./util/getDeepLinkItems";
-import Assignment from "./database/entities/Assignment";
+import ToolConsumer from "./models/ToolConsumer";
 
 import {
   rlValidateToken,
@@ -43,11 +40,8 @@ export {
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,
-  dbInit,
   requestLogger,
   rlLtiLaunchExpressEndpoints,
   rlLtiServiceExpressEndpoints,
-  ToolConsumer,
-  getDeepLinkItems,
-  Assignment
+  ToolConsumer
 };

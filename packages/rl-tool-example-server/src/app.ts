@@ -5,15 +5,15 @@ import expressSession from "express-session";
 import bodyParser from "body-parser";
 import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
-import { dbInit } from "@asu-etx/rl-server-lib";
+import exampleServiceEndpoints from "./endpoints/exampleServiceEndpoints";
+import { dbInit } from "./database/init";
 import { logger, LTI_STUDENT_REDIRECT, LTI_INSTRUCTOR_REDIRECT, LTI_ASSIGNMENT_REDIRECT, LTI_DEEPLINK_REDIRECT } from "@asu-etx/rl-shared";
 
-import { PORT, USER_INTERFACE_ROOT, TOOL_CONSUMERS } from "./environment";
+import { PORT, USER_INTERFACE_ROOT } from "./environment";
 
 const USER_INTERFACE_PLAYER_PAGE = path.join(USER_INTERFACE_ROOT, "index.html");
 
 /*========================== LOG ALL REQUESTS =========================*/
-
 globalRequestLog.initialize();
 globalRequestLog.on("success", (request: any, response: any) => {
   logger.info({ request: request });
@@ -65,6 +65,8 @@ ltiLaunchEndpoints(app);
 // then these endpoints will not be needed. They could be completed to show what a server side flow might look like
 ltiServiceEndpoints(app);
 
+exampleServiceEndpoints(app);
+
 /*========================== UI ENDPOINTS ==========================*/
 
 // Instructor
@@ -95,10 +97,8 @@ async function start(): Promise<any> {
   logger.debug("Starting server...");
 
   // Make sure we have our test activities
-  await dbInit(TOOL_CONSUMERS, null);
-  logger.debug("TOOL_CONSUMERS", `${TOOL_CONSUMERS}`);
+  await dbInit(null);
 
-  logger.debug("TOOL_CONSUMERS", `${JSON.stringify(TOOL_CONSUMERS)}`);
   // Start the app
   app.listen(PORT, "0.0.0.0", () => {
     logger.debug("App is running at", `0.0.0.0:${PORT}`);
