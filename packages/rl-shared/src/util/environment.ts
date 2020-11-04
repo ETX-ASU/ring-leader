@@ -3,7 +3,7 @@ const ENV_VARS = process.env;
 console.log(`ENV_VARS in environments.ts: ${JSON.stringify(ENV_VARS)}`);
 console.log(`ENV_VARS.INSTRUCTOR_REDIRECT: ${ENV_VARS.INSTRUCTOR_REDIRECT}`);
 console.log(`ENV_VARS[INSTRUCTOR_REDIRECT]: ${ENV_VARS["INSTRUCTOR_REDIRECT"]}`);
-console.log(`ENV_VARS.platform: ${ENV_VARS.platform}`);
+console.log(`ENV_VARS.PLATFORM: ${ENV_VARS.PLATFORM}`);
 export const PORT: number = parseInt(ENV_VARS.PORT ? ENV_VARS.PORT : "8080");
 
 // this is set by the yarn run heroku-update-configs script
