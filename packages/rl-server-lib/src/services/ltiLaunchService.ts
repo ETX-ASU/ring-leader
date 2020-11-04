@@ -17,7 +17,7 @@ import { OIDC_LOGIN_INIT_ROUTE,
   logger
 } from "@asu-etx/rl-shared";
 
-const URL_ROOT = process.env.URL_ROOT;
+const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
 const initOidcGet = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
