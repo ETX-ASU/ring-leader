@@ -17,6 +17,7 @@ import { OIDC_LOGIN_INIT_ROUTE,
   logger
 } from "@asu-etx/rl-shared";
 
+const URL_ROOT = process.env.URL_ROOT;
 
 const initOidcGet = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
@@ -120,8 +121,8 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
     logger.debug("session data saved");
   });
   if (processedRequest.rlPlatform.isStudent)
-    response.redirect(LTI_STUDENT_REDIRECT);
-  else response.redirect(LTI_INSTRUCTOR_REDIRECT);
+    response.redirect(URL_ROOT + LTI_STUDENT_REDIRECT);
+  else response.redirect(URL_ROOT + LTI_INSTRUCTOR_REDIRECT);
 
   await request.session.save(() => {
     logger.debug("session data saved");
@@ -156,7 +157,7 @@ const assignmentRedirectPost = async (
     logger.debug("req.session- " + JSON.stringify(request.session));
   });
   response.redirect(
-    LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + reqQueryString.resourceId
+    URL_ROOT + LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + reqQueryString.resourceId
   );
 };
 
@@ -177,7 +178,7 @@ const deepLinkRedirect = async (request: any, response: any): Promise<void> => {
   await request.session.save(() => {
     logger.debug("session data saved");
   });
-  response.redirect(LTI_DEEPLINK_REDIRECT);
+  response.redirect(URL_ROOT + LTI_DEEPLINK_REDIRECT);
 };
 
 const toolInfoGet = async (

@@ -10,12 +10,12 @@ const getToolConsumers = (): ToolConsumer[] => {
 
 const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
   let toolConsumer = undefined;
-  logger.debug("toolConsumers", getToolConsumers());
   getToolConsumers().forEach((tc) => {
     if (tc.name == name) {
       return (toolConsumer = tc);
     }
   });
+  logger.debug(`found toolConsumer: ${toolConsumer}`);
   return toolConsumer;
 };
 

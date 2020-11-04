@@ -36,13 +36,14 @@ export const OIDC_LOGIN_INIT_ROUTE =
   ENV_VARS.OIDC_LOGIN_INIT_ROUTE || "/init-oidc";
 export const LTI_ADVANTAGE_LAUNCH_ROUTE =
   ENV_VARS.LTI_ADVANTAGE_LAUNCH_ROUTE || "/lti-advantage-launch";
+
+export const TOOL_INFO = ENV_VARS.TOOL_INFO || "/tool-info";
+export const GET_JWKS_ENDPOINT = ENV_VARS.GET_JWKS_ENDPOINT || "/jwks";
+
 export const LTI_ASSIGNMENT_REDIRECT =
   ENV_VARS.LTI_ASSIGNMENT_REDIRECT || "/assignment";
 export const LTI_DEEPLINK_REDIRECT =
   ENV_VARS.LTI_DEEPLINK_REDIRECT || "/deeplink";
-export const TOOL_INFO = ENV_VARS.TOOL_INFO || "/tool-info";
-export const GET_JWKS_ENDPOINT = ENV_VARS.GET_JWKS_ENDPOINT || "/jwks";
-
 export const LTI_STUDENT_REDIRECT = ENV_VARS.STUDENT_REDIRECT || "/student";
 export const LTI_INSTRUCTOR_REDIRECT =
   ENV_VARS.INSTRUCTOR_REDIRECT || "/instructor";
