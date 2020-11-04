@@ -120,6 +120,7 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   await request.session.save(() => {
     logger.debug("session data saved");
   });
+  console.log(`instructor redirect: ${URL_ROOT + LTI_INSTRUCTOR_REDIRECT}`);
   if (processedRequest.rlPlatform.isStudent)
     response.redirect(URL_ROOT + LTI_STUDENT_REDIRECT);
   else response.redirect(URL_ROOT + LTI_INSTRUCTOR_REDIRECT);

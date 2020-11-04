@@ -1,5 +1,6 @@
 // heroku
 const ENV_VARS = process.env;
+console.log(`process.env in envornments: ${process.env}`);
 
 export const PORT: number = parseInt(ENV_VARS.PORT ? ENV_VARS.PORT : "8080");
 
