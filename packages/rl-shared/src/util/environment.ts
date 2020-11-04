@@ -1,8 +1,8 @@
 // heroku
 const ENV_VARS = process.env;
 console.log(`ENV_VARS in environments.ts: ${JSON.stringify(ENV_VARS)}`);
-console.log(`ENV_VARS.INSTRUCTOR_REDIRECT: ${ENV_VARS.INSTRUCTOR_REDIRECT}`);
-console.log(`ENV_VARS[INSTRUCTOR_REDIRECT]: ${ENV_VARS["INSTRUCTOR_REDIRECT"]}`);
+console.log(`ENV_VARS.INSTRUCTOR_REDIRECT: ${process.env.NSTRUCTOR_REDIRECT}`);
+console.log(`ENV_VARS[INSTRUCTOR_REDIRECT]: ${process.env["INSTRUCTOR_REDIRECT"]}`);
 console.log(`ENV_VARS.PLATFORM: ${ENV_VARS.PLATFORM}`);
 export const PORT: number = parseInt(ENV_VARS.PORT ? ENV_VARS.PORT : "8080");
 
@@ -44,12 +44,11 @@ export const TOOL_INFO = ENV_VARS.TOOL_INFO || "/tool-info";
 export const GET_JWKS_ENDPOINT = ENV_VARS.GET_JWKS_ENDPOINT || "/jwks";
 
 export const LTI_ASSIGNMENT_REDIRECT =
-  ENV_VARS.LTI_ASSIGNMENT_REDIRECT || "/assignment";
+  ENV_VARS.LTI_ASSIGNMENT_REDIRECT || "/";
 export const LTI_DEEPLINK_REDIRECT =
-  ENV_VARS.LTI_DEEPLINK_REDIRECT || "/deeplink";
-export const LTI_STUDENT_REDIRECT = ENV_VARS.STUDENT_REDIRECT || "/student";
-export const LTI_INSTRUCTOR_REDIRECT =
-  ENV_VARS.INSTRUCTOR_REDIRECT || "/instructor";
+  ENV_VARS.LTI_DEEPLINK_REDIRECT || "/";
+export const LTI_STUDENT_REDIRECT = ENV_VARS.STUDENT_REDIRECT || "/";
+export const LTI_INSTRUCTOR_REDIRECT = ENV_VARS.INSTRUCTOR_REDIRECT || "/";
 
 export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";
 export const PLATFORM = ENV_VARS.PLATFORM || "aws";
