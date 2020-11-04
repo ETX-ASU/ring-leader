@@ -1,6 +1,8 @@
 // heroku
 const ENV_VARS = process.env;
-console.log(`process.env in envornments: ${process.env}`);
+console.log(`process.env in environments.ts: ${JSON.stringify(process.env)}`);
+console.log(`ENV_VARS.INSTRUCTOR_REDIRECT: ${ENV_VARS.INSTRUCTOR_REDIRECT}`);
+console.log(`ENV_VARS.[INSTRUCTOR_REDIRECT]: ${ENV_VARS["INSTRUCTOR_REDIRECT"]}`);
 
 export const PORT: number = parseInt(ENV_VARS.PORT ? ENV_VARS.PORT : "8080");
 
