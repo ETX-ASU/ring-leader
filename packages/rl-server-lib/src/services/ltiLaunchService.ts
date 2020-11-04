@@ -18,6 +18,8 @@ import { OIDC_LOGIN_INIT_ROUTE,
 } from "@asu-etx/rl-shared";
 
 const getToolConsumers = async (): Promise<ToolConsumer[]> => {
+  logger.info(`toolConsumers as string ${process.env.toolConsumers}`);
+  logger.info(`first toolConsumer parsed ${JSON.stringify(JSON.parse(process.env.toolConsumers ? process.env.toolConsumers: "{}")[0])}`);
   return process.env.toolConsumers ? JSON.parse(process.env.toolConsumers) : [];
 };
 
@@ -27,7 +29,7 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
   //This resposne will be save in session or DB and will be used in validating the nonce and other properties
   const response: any = rlProcessOIDCRequest(req, state, nonce);
 
-  const platformDetails = await getToolConsumer({
+  const platformDetails = getToolConsumer({
     name: "",
     client_id: response.client_id,
     iss: response.iss,
@@ -71,7 +73,7 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
     )}`
   );
 
-  const platformDetails = await getToolConsumer({
+  const platformDetails = getToolConsumer({
     name: "",
     client_id: response.client_id,
     iss: response.iss,
@@ -222,6 +224,7 @@ const toolInfoGet = async (
     null,
     2
   );
+
 
   res.send(`< pre > ${data} </pre>`);
 };
