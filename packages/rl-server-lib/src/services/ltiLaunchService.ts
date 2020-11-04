@@ -5,7 +5,7 @@ import { inspect } from "util";
 import { rlProcessOIDCRequest } from "../util/auth";
 
 import ToolConsumer from "../models/ToolConsumer";
-import { getToolConsumer } from "./ToolConsumerService";
+import { getToolConsumer, getToolConsumers } from "./ToolConsumerService";
 import { generateUniqueString } from "../util/generateUniqueString";
 import processRequest from "../util/processRequest";
 import { OIDC_LOGIN_INIT_ROUTE,
@@ -17,11 +17,6 @@ import { OIDC_LOGIN_INIT_ROUTE,
   logger
 } from "@asu-etx/rl-shared";
 
-const getToolConsumers = async (): Promise<ToolConsumer[]> => {
-  logger.info(`toolConsumers as string ${process.env.toolConsumers}`);
-  logger.info(`first toolConsumer parsed ${JSON.stringify(JSON.parse(process.env.toolConsumers ? process.env.toolConsumers: "{}")[0])}`);
-  return process.env.toolConsumers ? JSON.parse(process.env.toolConsumers) : [];
-};
 
 const initOidcGet = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
@@ -205,7 +200,7 @@ const toolInfoGet = async (
     ]
   };
 
-  const toolConsumers = await getToolConsumers();
+  const toolConsumers = getToolConsumers();
   const sanitizedToolConsumers = toolConsumers.map(
     ({ name, public_key_jwk, client_id }) => {
       return {

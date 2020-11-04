@@ -2,14 +2,16 @@ import ToolConsumer from "../models/ToolConsumer";
 import ToolConsumerRequest from "../models/ToolConsumerRequest";
 import { logger } from "@asu-etx/rl-shared";
 
-const toolConsumers: ToolConsumer[] | undefined = process.env.toolConsumers
-  ? JSON.parse(process.env.toolConsumers)
-  : undefined;
+const getToolConsumers = (): ToolConsumer[] => {
+  const toolConsumers = JSON.parse(process.env.toolConsumers ? process.env.toolConsumers: "[]");
+  logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
+  return process.env.toolConsumers ? JSON.parse(process.env.toolConsumers) : [];
+};
 
 const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
   let toolConsumer = undefined;
-  logger.debug("toolConsumers", toolConsumers);
-  toolConsumers?.forEach((tc) => {
+  logger.debug("toolConsumers", getToolConsumers());
+  getToolConsumers().forEach((tc) => {
     if (tc.name == name) {
       return (toolConsumer = tc);
     }
@@ -20,7 +22,7 @@ const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
 
 const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined => {
   let toolConsumer: ToolConsumer | undefined = undefined;
-  toolConsumers?.forEach((tc) => {
+  getToolConsumers().forEach((tc) => {
     if (
       tc.iss === request.iss &&
       tc.client_id === request.client_id &&
@@ -44,4 +46,4 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
   return toolConsumer;
 };
 
-export { getToolConsumer, getToolConsumerByName };
+export { getToolConsumer, getToolConsumerByName, getToolConsumers };
