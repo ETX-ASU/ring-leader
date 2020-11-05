@@ -1,6 +1,7 @@
 {
   "name": "@asu-etx/rl-shared",
-  "version": "0.6.11",
+  "version": "0.6.12",
+   "license": "Apache-2.0",
   "private": false,
   "public": true,
   "main": "build/index.js",
