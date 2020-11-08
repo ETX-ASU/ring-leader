@@ -1,4 +1,4 @@
-import { rlValidateDecodedToken, rlDecodeIdToken } from "./auth";
+import { rlValidateDecodedToken, rlDecodeIdToken } from "../util/auth";
 import { getToolConsumer } from "../services/ToolConsumerService";
 import { DEPLOYMENT_ID_CLAIM } from "@asu-etx/rl-shared";
 
