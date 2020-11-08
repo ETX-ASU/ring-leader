@@ -29,7 +29,7 @@
         "node": ">=8.3.0"
     },
     "scripts": {
-        "build": "cd packages/rl-shared && yarn run build && cd ../rl-server-lib && yarn run build && cd ../rl-client-lib && yarn run build && cd ../rl-amplify-client-lib && yarn run build",
+        "build": "cd packages/rl-shared && yarn run build && cd ../rl-server-lib && yarn run build && cd ../rl-client-lib && yarn run build",
         "setup-tool-keys": "npx ts-node scripts/setup-tool-keys.ts"
     }
 }

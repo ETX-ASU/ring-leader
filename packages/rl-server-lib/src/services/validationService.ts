@@ -1,9 +1,10 @@
 import { rlValidateDecodedToken, rlDecodeIdToken } from "../util/auth";
 import { getToolConsumer } from "../services/ToolConsumerService";
-import { DEPLOYMENT_ID_CLAIM } from "@asu-etx/rl-shared";
+import { DEPLOYMENT_ID_CLAIM, logger } from "@asu-etx/rl-shared";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const validateSession = async (session: any) => {
+  logger.debug(`session: ${session}`);
   if (!session) {
     return false;
   }
@@ -24,7 +25,6 @@ const validateSession = async (session: any) => {
   if (platformDetails == undefined) {
     return false;
   }
-
   return true;
 };
 
