@@ -12,4 +12,4 @@ const hasValidSession = async (): Promise<boolean> => {
   return hasValidSession.isValid;
 };
 
-export default hasValidSession;
+export { hasValidSession };

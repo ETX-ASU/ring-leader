@@ -8,6 +8,8 @@ import { submitGrade, submitInstructorGrade, getGrades } from "./services/GradeS
 import { getUsers, getUnassignedStudents, getAssignedStudents } from "./services/UserService";
 
 import { getLineItems, deleteLineItem } from "./services/LineItemService";
+
+import { hasValidSession } from "./services/ValidateSessionService";
 export {
   getDeepLinkResourceLinks,
   submitResourceSelection,
@@ -18,5 +20,6 @@ export {
   getUnassignedStudents,
   getAssignedStudents,
   getLineItems,
-  deleteLineItem
+  deleteLineItem,
+  hasValidSession
 };
