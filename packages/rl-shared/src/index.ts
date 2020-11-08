@@ -19,7 +19,8 @@ import {
   TOOL_INFO,
   LTI_INSTRUCTOR_REDIRECT,
   GET_JWKS_ENDPOINT,
-  PLATFORM
+  PLATFORM,
+  LTI_API_NAME
 } from "./util/environment";
 
 import {
@@ -111,5 +112,6 @@ export {
   LOG_CLAIM,
   ERROR_LOG_CLAIM,
   DATA_CLAIM,
-  PLATFORM
+  PLATFORM,
+  LTI_API_NAME
 };

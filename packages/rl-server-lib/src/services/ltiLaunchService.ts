@@ -4,15 +4,15 @@ import url from "url";
 import { inspect } from "util";
 import { rlProcessOIDCRequest } from "../util/auth";
 
-import ToolConsumer from "../models/ToolConsumer";
 import { getToolConsumer, getToolConsumers } from "./ToolConsumerService";
 import { generateUniqueString } from "../util/generateUniqueString";
 import processRequest from "../util/processRequest";
-import { OIDC_LOGIN_INIT_ROUTE,
- LTI_ADVANTAGE_LAUNCH_ROUTE,
- LTI_DEEPLINK_REDIRECT,
- LTI_INSTRUCTOR_REDIRECT,
- LTI_ASSIGNMENT_REDIRECT,
+import {
+  OIDC_LOGIN_INIT_ROUTE,
+  LTI_ADVANTAGE_LAUNCH_ROUTE,
+  LTI_DEEPLINK_REDIRECT,
+  LTI_INSTRUCTOR_REDIRECT,
+  LTI_ASSIGNMENT_REDIRECT,
   LTI_STUDENT_REDIRECT,
   logger
 } from "@asu-etx/rl-shared";
@@ -94,8 +94,7 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
     throw new Error("no session detected, something is wrong");
   }
   logger.debug(
-    `Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${
-      platformDetails.platformOIDCAuthEndPoint
+    `Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${platformDetails.platformOIDCAuthEndPoint
     } with platform details: ${JSON.stringify(platformDetails)}`
   );
 

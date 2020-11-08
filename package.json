@@ -11,7 +11,8 @@
         "packages": [
             "packages/rl-shared",
             "packages/rl-server-lib",
-            "packages/rl-client-lib"
+            "packages/rl-client-lib",
+            "packages/rl-amplify-client-lib"
         ]
     },
     "dependencies": {

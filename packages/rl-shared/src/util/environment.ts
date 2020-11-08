@@ -34,6 +34,7 @@ export const PUT_STUDENT_GRADE: string =
 export const DELETE_LINE_ITEM: string =
   ENV_VARS.DELETE_LINE_ITEM || "/lti-service/deleteLineItem";
 export const GET_GRADES: string = ENV_VARS.GET_GRADES || "/lti-service/grades";
+export const LTI_SESSION_VALIDATION_ENDPOINT = ENV_VARS.LTI_SESSION_VALIDATION_ENDPOINT || "/lti-service/validate";
 
 export const OIDC_LOGIN_INIT_ROUTE =
   ENV_VARS.OIDC_LOGIN_INIT_ROUTE || "/init-oidc";
@@ -47,6 +48,6 @@ export const LTI_ASSIGNMENT_REDIRECT = ENV_VARS.LTI_ASSIGNMENT_REDIRECT || "/";
 export const LTI_DEEPLINK_REDIRECT = ENV_VARS.LTI_DEEPLINK_REDIRECT || "/";
 export const LTI_STUDENT_REDIRECT = ENV_VARS.LTI_STUDENT_REDIRECT || "/";
 export const LTI_INSTRUCTOR_REDIRECT = ENV_VARS.LTI_INSTRUCTOR_REDIRECT || "/";
-
 export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";
 export const PLATFORM = ENV_VARS.PLATFORM || "aws";
+export const LTI_API_NAME = ENV_VARS.LTI_API_NAME || "ringleaderapi";

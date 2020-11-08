@@ -12,11 +12,11 @@ const getUsers = async (role: string): Promise<any> => {
   return results;
 };
 
-const getUnassignedStudents = (
+const getUnassignedStudents = async (
   assignmentId: string,
   resourceLinkId: string
 ): Promise<Student[]> => {
-  const results = axios
+  const results = await axios
     .get(GET_UNASSIGNED_STUDENTS_ENDPOINT, {
       params: {
         lineItemId: assignmentId,
@@ -30,11 +30,11 @@ const getUnassignedStudents = (
   return results;
 };
 
-const getAssignedStudents = (
+const getAssignedStudents = async (
   assignmentId: string,
   resourceLinkId: string
 ): Promise<Student[]> => {
-  const results = axios
+  const results = await axios
     .get(GET_ASSIGNED_STUDENTS_ENDPOINT, {
       params: {
         lineItemId: assignmentId,

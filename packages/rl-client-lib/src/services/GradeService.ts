@@ -40,7 +40,7 @@ const submitInstructorGrade = async (params: InstructorSubmitGradeParams): Promi
   return results;
 };
 
-const getGrades = (assignmentId: String): Promise<any> => {
+const getGrades = (assignmentId: string): Promise<any> => {
   const grades = axios
     .get(GET_GRADES, {
       params: {

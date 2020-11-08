@@ -7,12 +7,15 @@ import {
   ltiLaunchPost,
   deepLinkRedirect
 } from "../services/ltiLaunchService";
+
+import validateSession from "../services/validationService";
 import requestLogger from "../middleware/requestLogger";
 import {
   OIDC_LOGIN_INIT_ROUTE,
   LTI_ADVANTAGE_LAUNCH_ROUTE,
   LTI_ASSIGNMENT_REDIRECT,
   LTI_DEEPLINK_REDIRECT,
+  LTI_SESSION_VALIDATION_ENDPOINT,
   TOOL_INFO,
   APPLICATION_URL,
   logger
@@ -52,6 +55,10 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
   app.get(TOOL_INFO, requestLogger, async (req, res) => {
     toolInfoGet(req, res, APPLICATION_URL);
+  });
+
+  app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req, res) => {
+    res.send({ isValid: validateSession(req.session) });
   });
 };
 
