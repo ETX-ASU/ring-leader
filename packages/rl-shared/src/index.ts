@@ -21,7 +21,8 @@ import {
   LTI_INSTRUCTOR_REDIRECT,
   GET_JWKS_ENDPOINT,
   PLATFORM,
-  LTI_API_NAME
+  LTI_API_NAME,
+  API_URL
 } from "./util/environment";
 
 import {
@@ -115,5 +116,6 @@ export {
   ERROR_LOG_CLAIM,
   DATA_CLAIM,
   PLATFORM,
-  LTI_API_NAME
+  LTI_API_NAME,
+  API_URL
 };
