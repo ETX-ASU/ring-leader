@@ -7,6 +7,8 @@ import queryString from 'query-string';
 
 const hasValidSession = async (): Promise<boolean> => {
   logger.debug(`hitting endpoint GET:${LTI_SESSION_VALIDATION_ENDPOINT}`);
+  
+  
   const location = useLocation();
   console.log(queryString.parse(location.search));
   const params = queryString.parse(location.search);
