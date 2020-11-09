@@ -40,7 +40,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
       throw new Error("no session detected, something is wrong");
     }
     const platform: any = req.session.platform;
-    res.send(getRoster(platform, req.query.role));
+    res.send(await getRoster(platform, req.query.role));
   });
 
   app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req, res) => {
@@ -51,7 +51,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const reqQueryString: any = req.query;
     if (reqQueryString && reqQueryString.lineItemId) {
       const platform: any = req.session.platform;
-      res.send(getUnassignedStudents(platform, req.query.resourceLinkId));
+      res.send(await getUnassignedStudents(platform, req.query.resourceLinkId));
     }
   });
 
@@ -63,7 +63,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const resourceLinkId: any = req.query.resourceLinkId;
     const platform: any = req.session.platform;
 
-    res.send(getAssignedStudents(platform, lineItemId, resourceLinkId));
+    res.send(await getAssignedStudents(platform, lineItemId, resourceLinkId));
   });
 
   app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req, res) => {
@@ -73,7 +73,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const title = req.session.title;
     const platform: any = req.session.platform;
     const score = req.body.params;
-    res.send(putStudentGradeView(platform, score, title));
+    res.send(await putStudentGradeView(platform, score, title));
   });
 
   app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
@@ -84,7 +84,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     }
     const platform: any = req.session.platform;
     const contentItems = req.body.contentItems;
-    return res.send(postDeepLinkAssignment(platform, contentItems));
+    return res.send(await postDeepLinkAssignment(platform, contentItems));
   });
 
   app.post(PUT_STUDENT_GRADE, requestLogger, async (req, res) => {
@@ -94,7 +94,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const title = req.session.title;
     const platform: any = req.session.platform;
     const score = req.body.params;
-    res.send(putStudentGrade(platform, score, title));
+    res.send(await putStudentGrade(platform, score, title));
   });
 
   app.delete(DELETE_LINE_ITEM, requestLogger, async (req, res) => {
@@ -104,7 +104,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     const platform: any = req.session.platform;
     const lineItemId: any = req.query.lineItemId;
 
-    res.send(deleteLineItem(platform, lineItemId));
+    res.send(await deleteLineItem(platform, lineItemId));
   });
 
   app.get(GET_GRADES, requestLogger, async (req, res) => {
@@ -113,7 +113,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     }
     const platform: any = req.session.platform;
 
-    res.send(getGrades(platform, req.query.lineItemId));
+    res.send(await getGrades(platform, req.query.lineItemId));
   });
 
   app.get(GET_JWKS_ENDPOINT, requestLogger, async (req, res) => {
