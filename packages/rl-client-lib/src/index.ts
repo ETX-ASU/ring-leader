@@ -9,7 +9,6 @@ import { getUsers, getUnassignedStudents, getAssignedStudents } from "./services
 
 import { getLineItems, deleteLineItem } from "./services/LineItemService";
 
-import { hasValidSession } from "./services/ValidateSessionService";
 export {
   getDeepLinkResourceLinks,
   submitResourceSelection,
@@ -20,6 +19,5 @@ export {
   getUnassignedStudents,
   getAssignedStudents,
   getLineItems,
-  deleteLineItem,
-  hasValidSession
+  deleteLineItem
 };
