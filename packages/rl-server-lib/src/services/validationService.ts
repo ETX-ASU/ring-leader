@@ -3,18 +3,11 @@ import { getToolConsumer } from "../services/ToolConsumerService";
 import { DEPLOYMENT_ID_CLAIM, logger } from "@asu-etx/rl-shared";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const validateSession = async (session: any) => {
-  logger.debug(`session: ${session ? JSON.stringify(session) : "no session"}`);
-  if (!session) {
-    return false;
-  }
+const validateSession = async (platform: any) => {
 
-  if (!session.platform) {
-    return false;
-  }
-  const platform = session.platform;
-  const decodedToken = rlDecodeIdToken(platform.token);
-  rlValidateDecodedToken(decodedToken, session);
+  //logger.debug(`session: ${session ? JSON.stringify(session) : "no session"}`);
+  const decodedToken = rlDecodeIdToken(platform);
+  //rlValidateDecodedToken(decodedToken, session);
   const platformDetails = getToolConsumer({
     name: "",
     client_id: decodedToken["aud"],
