@@ -58,7 +58,7 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
   });
 
   app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req, res) => {
-    logger.debug(`sessionquery: ${JSON.stringify(req.query)}`);
+    logger.debug(`sessionquery: ${JSON.stringify(req.query["platform"])}`);
     res.send({ isValid: validateSession(req.query.platform) });
   });
 };
