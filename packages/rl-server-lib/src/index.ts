@@ -6,6 +6,7 @@ import requestLogger from "./middleware/requestLogger";
 
 import rlLtiLaunchExpressEndpoints from "./endpoints/rlLtiLaunchExpressEndpoints";
 import rlLtiServiceExpressEndpoints from "./endpoints/rlLtiServiceExpressEndpoints";
+import cacheLtiServiceExpressEndpoints from "./endpoints/cacheLtiServiceExpressEndpoints";
 
 import ToolConsumer from "./models/ToolConsumer";
 
@@ -43,5 +44,6 @@ export {
   requestLogger,
   rlLtiLaunchExpressEndpoints,
   rlLtiServiceExpressEndpoints,
+  cacheLtiServiceExpressEndpoints,
   ToolConsumer
 };

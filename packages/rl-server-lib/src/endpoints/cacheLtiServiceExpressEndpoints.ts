@@ -53,12 +53,12 @@ function getSession(req: any): any {
 }
 
 const cacheLtiServiceExpressEndpoints = (app: Express): void => {
-    app.get(ROSTER_ENDPOINT, requestLogger, async (req, res) => {
+    app.get(ROSTER_ENDPOINT, requestLogger, async (req: any, res: any) => {
 
         res.send(await getRoster(getPlatform(req), req.query.role));
     });
 
-    app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req, res) => {
+    app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req: any, res: any) => {
 
         const reqQueryString: any = req.query;
         if (reqQueryString && reqQueryString.lineItemId) {
@@ -68,7 +68,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         }
     });
 
-    app.get(GET_ASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req, res) => {
+    app.get(GET_ASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req: any, res: any) => {
         const lineItemId: any = req.query.lineItemId;
         const resourceLinkId: any = req.query.resourceLinkId;
 
@@ -77,38 +77,37 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         );
     });
 
-    app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req, res) => {
+    app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req: any, res: any) => {
         const title = getSession(req).title;
         const score = req.body.params;
         res.send(await putStudentGradeView(getPlatform(req), score, title));
     });
 
-    app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
+    app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: any, res: any) => {
 
         const contentItems = req.body.contentItems;
         // eslint-disable-next-line prettier/prettier
         return res.send(await postDeepLinkAssignment(getPlatform(req), contentItems));
     });
 
-    app.post(PUT_STUDENT_GRADE, requestLogger, async (req, res) => {
+    app.post(PUT_STUDENT_GRADE, requestLogger, async (req: any, res: any) => {
 
         const title = getSession(req).title;
         const score = req.body.params;
         res.send(await putStudentGrade(getPlatform(req), score, title));
     });
 
-    app.delete(DELETE_LINE_ITEM, requestLogger, async (req, res) => {
+    app.delete(DELETE_LINE_ITEM, requestLogger, async (req: any, res: any) => {
         const lineItemId: any = req.query.lineItemId;
 
         res.send(await deleteLineItem(getPlatform(req), lineItemId));
     });
 
-    app.get(GET_GRADES, requestLogger, async (req, res) => {
-
+    app.get(GET_GRADES, requestLogger, async (req: any, res: any) => {
         res.send(await getGrades(getPlatform(req), req.query.lineItemId));
     });
 
-    app.get(GET_JWKS_ENDPOINT, requestLogger, async (req, res) => {
+    app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: any, res: any) => {
         const query: any = req.query;
         const consumerTool: ToolConsumer | undefined = getToolConsumerByName(
             query.name
@@ -116,7 +115,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         res.send(consumerTool);
     });
 
-    app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req, res) => {
+    app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: any, res: any) => {
         logger.debug(`sessionquery: ${JSON.stringify(req.query["platform"])}`);
         res.send({ isValid: validateSession(req.query.platform) });
     });

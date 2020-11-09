@@ -35,7 +35,7 @@ import {
 // can be made server side if they don't want put the Canvas idToken into a
 // cookie and send it to the client
 const rlLtiServiceExpressEndpoints = (app: Express): void => {
-  app.get(ROSTER_ENDPOINT, requestLogger, async (req, res) => {
+  app.get(ROSTER_ENDPOINT, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -43,7 +43,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(await getRoster(platform, req.query.role));
   });
 
-  app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req, res) => {
+  app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -55,7 +55,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     }
   });
 
-  app.get(GET_ASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req, res) => {
+  app.get(GET_ASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -66,7 +66,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(await getAssignedStudents(platform, lineItemId, resourceLinkId));
   });
 
-  app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req, res) => {
+  app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -76,7 +76,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(await putStudentGradeView(platform, score, title));
   });
 
-  app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req, res) => {
+  app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error(
         `${DEEP_LINK_ASSIGNMENT_ENDPOINT}: no session detected, something is wrong`
@@ -87,7 +87,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     return res.send(await postDeepLinkAssignment(platform, contentItems));
   });
 
-  app.post(PUT_STUDENT_GRADE, requestLogger, async (req, res) => {
+  app.post(PUT_STUDENT_GRADE, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -97,7 +97,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(await putStudentGrade(platform, score, title));
   });
 
-  app.delete(DELETE_LINE_ITEM, requestLogger, async (req, res) => {
+  app.delete(DELETE_LINE_ITEM, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -107,7 +107,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(await deleteLineItem(platform, lineItemId));
   });
 
-  app.get(GET_GRADES, requestLogger, async (req, res) => {
+  app.get(GET_GRADES, requestLogger, async (req: any, res: any) => {
     if (!req.session) {
       throw new Error("no session detected, something is wrong");
     }
@@ -116,7 +116,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(await getGrades(platform, req.query.lineItemId));
   });
 
-  app.get(GET_JWKS_ENDPOINT, requestLogger, async (req, res) => {
+  app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: any, res: any) => {
     const query: any = req.query;
     const consumerTool: ToolConsumer | undefined = getToolConsumerByName(
       query.name
@@ -124,7 +124,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send(consumerTool);
   });
 
-  app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req, res) => {
+  app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: any, res: any) => {
     logger.debug(`sessionquery: ${JSON.stringify(req.query["platform"])}`);
     res.send({ isValid: validateSession(req.query.platform) });
   });
