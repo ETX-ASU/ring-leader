@@ -115,8 +115,7 @@ const oidcValidation = (token: any, platform: Platform): any => {
 const rlDecodeIdToken = (idToken: any): any => {
   logger.debug("idToken:" + idToken);
   const decodedToken = jwt.decode(idToken);
-  logger.debug("decodedtoken:");
-  logger.debug(JSON.stringify(decodedToken));
+  logger.debug(`decodedtoken:${JSON.stringify(decodedToken)}`);
   if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
   return decodedToken;
 };

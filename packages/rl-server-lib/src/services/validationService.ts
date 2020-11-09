@@ -4,10 +4,7 @@ import { DEPLOYMENT_ID_CLAIM, logger } from "@asu-etx/rl-shared";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const validateSession = async (platform: any) => {
-
-  //logger.debug(`session: ${session ? JSON.stringify(session) : "no session"}`);
   const decodedToken = rlDecodeIdToken(platform);
-  //rlValidateDecodedToken(decodedToken, session);
   const platformDetails = getToolConsumer({
     name: "",
     client_id: decodedToken["aud"],
