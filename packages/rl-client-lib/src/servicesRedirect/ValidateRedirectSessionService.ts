@@ -7,15 +7,13 @@ import queryString = require("query-string");
 
 const hasValidSession = async (): Promise<boolean> => {
   logger.debug(`hitting endpoint GET:${LTI_SESSION_VALIDATION_ENDPOINT}`);
-
-
-  const location = useLocation();
-  console.log(location.search);
-  const parsed = queryString.parse(location.search);
+  const search = window.location.search;
+  console.log(search);
+  const parsed = queryString.parse(search);
   const platform = parsed.platform;
   if (platform) {
     const hasValidSession = await axios
-      .get(API_URL + LTI_SESSION_VALIDATION_ENDPOINT + `?platform=${platform}`)
+      .get(API_URL + LTI_SESSION_VALIDATION_ENDPOINT + search)
       .then((results) => {
         logger.debug(JSON.stringify(results));
         return results.data;
