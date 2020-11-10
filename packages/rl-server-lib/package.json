@@ -1,6 +1,6 @@
 {
   "name": "@asu-etx/rl-server-lib",
-  "version": "0.6.35",
+  "version": "0.6.36",
   "license": "Apache-2.0",
   "private": false,
   "public": true,
@@ -46,5 +46,5 @@
     "nodemon": "^2.0.4",
     "prettier": "2.0.5"
   },
-  "gitHead": "7fb9f5c3bf6faeb0731f22a42aeb3ddf1f6eadd0"
+  "gitHead": "07a616e148eb25cd2867114bf6847e349f020225"
 }
