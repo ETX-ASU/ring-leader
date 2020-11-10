@@ -16,7 +16,7 @@ import {
 
 import validateSession from "../services/validationService";
 import ToolConsumer from "../models/ToolConsumer";
-import Cache from '@aws-amplify/cache';
+import { InMemoryCache } from '@aws-amplify/cache';
 import {
     DEEP_LINK_ASSIGNMENT_ENDPOINT,
     ROSTER_ENDPOINT,
@@ -36,19 +36,19 @@ import {
 // can be made server side if they don't want put the Canvas idToken into a
 // cookie and send it to the client
 
-function getPlatform(req: any): any {
+async function getPlatform(req: any): Promise<any> {
     let session = req.session;
     if (!req.session) {
-        session = Cache.getItem(req.query.userId + req.query.courseId);
+        session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
         logger.debug(`session in cache: ${JSON.stringify(session)}`);
     }
     return session.platform;
 }
 
-function getSession(req: any): any {
+async function getSession(req: any): Promise<any> {
     let session = req.session;
     if (!req.session) {
-        session = Cache.getItem(req.query.userId + req.query.courseId);
+        session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
     }
     return session;
 }
@@ -61,8 +61,8 @@ function send(response: Response) {
 }
 const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     app.get(ROSTER_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-        
-        send(res).send(await getRoster(getPlatform(req), req.query.role));
+
+        send(res).send(await getRoster(await getPlatform(req), req.query.role));
     });
 
     app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
@@ -70,7 +70,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const reqQueryString: any = req.query;
         if (reqQueryString && reqQueryString.lineItemId) {
             send(res).send(
-                await getUnassignedStudents(getPlatform(req), req.query.resourceLinkId)
+                await getUnassignedStudents(await getPlatform(req), req.query.resourceLinkId)
             );
         }
     });
@@ -80,21 +80,21 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const resourceLinkId: any = req.query.resourceLinkId;
 
         send(res).send(
-            await getAssignedStudents(getPlatform(req), lineItemId, resourceLinkId)
+            await getAssignedStudents(await getPlatform(req), lineItemId, resourceLinkId)
         );
     });
 
     app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req: Request, res: Response) => {
         const title = getSession(req).title;
         const score = req.body.params;
-        send(res).send(await putStudentGradeView(getPlatform(req), score, title));
+        send(res).send(await putStudentGradeView(await getPlatform(req), score, title));
     });
 
     app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
 
         const contentItems = req.body.contentItems;
         // eslint-disable-next-line prettier/prettier
-        return send(res).send(await postDeepLinkAssignment(getPlatform(req), contentItems));
+        return send(res).send(await postDeepLinkAssignment(await getPlatform(req), contentItems));
     });
 
     app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
@@ -107,11 +107,11 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     app.delete(DELETE_LINE_ITEM, requestLogger, async (req: Request, res: Response) => {
         const lineItemId: any = req.query.lineItemId;
 
-        send(res).send(await deleteLineItem(getPlatform(req), lineItemId));
+        send(res).send(await deleteLineItem(await getPlatform(req), lineItemId));
     });
 
     app.get(GET_GRADES, requestLogger, async (req: Request, res: Response) => {
-        send(res).send(await getGrades(getPlatform(req), req.query.lineItemId));
+        send(res).send(await getGrades(await getPlatform(req), req.query.lineItemId));
     });
 
     app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
@@ -124,8 +124,9 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
 
     app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
         logger.debug(`request userId: ${req.query.userId}, request courseId: ${req.query.courseId}, , request courseId: ${req.query.role}`);
-        logger.debug(`isValidSession: ${validateSession( getPlatform(req))}`);
-        send(res).send({ isValid: validateSession( getPlatform(req))});
+        const platform = await getPlatform(req);
+        logger.debug(`isValidSession: ${validateSession(platform)}`);
+        send(res).send({ isValid: validateSession(platform) });
     });
 };
 
