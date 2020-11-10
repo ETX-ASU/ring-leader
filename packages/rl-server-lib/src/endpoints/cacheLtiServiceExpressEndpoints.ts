@@ -40,6 +40,7 @@ function getPlatform(req: any): any {
     let session = req.session;
     if (!req.session) {
         session = Cache.getItem(req.query.userId + req.query.courseId);
+        logger.debug(`session in cache: ${JSON.stringify(session)}`);
     }
     return session.platform;
 }
@@ -122,10 +123,9 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-        
-        logger.debug(`request url: ${req.url} request userId: ${req.query.userId}, request courseId: ${req.query.courseId}, , request courseId: ${req.query.role}`);
-       
-        send(res).send({ isValid: validateSession( getPlatform(req)) });
+        logger.debug(`request userId: ${req.query.userId}, request courseId: ${req.query.courseId}, , request courseId: ${req.query.role}`);
+        logger.debug(`isValidSession: ${validateSession( getPlatform(req))}`);
+        send(res).send({ isValid: validateSession( getPlatform(req))});
     });
 };
 
