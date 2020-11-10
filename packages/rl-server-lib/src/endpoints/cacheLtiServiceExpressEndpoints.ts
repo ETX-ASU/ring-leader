@@ -37,19 +37,14 @@ import {
 // cookie and send it to the client
 
 async function getPlatform(req: any): Promise<any> {
-    let session = req.session;
-    if (!req.session) {
-        session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
-        logger.debug(`session in cache: ${JSON.stringify(session)}`);
-    }
-    return session.platform;
+    const session = await getSession(req);
+    return session?.platform;
 }
-
 async function getSession(req: any): Promise<any> {
     let session = req.session;
-    if (!req.session) {
-        session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
-    }
+    logger.debug(`session in request: ${JSON.stringify(session)}`);
+    session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
+    logger.debug(`session in cache: ${JSON.stringify(session)}`);
     return session;
 }
 
