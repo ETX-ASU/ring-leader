@@ -85,9 +85,10 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req: Request, res: Response) => {
-        const title = getSession(req).title;
+        const session = await getSession(req);
+        const title = session.title;
         const score = req.body.params;
-        send(res).send(await putStudentGradeView(await getPlatform(req), score, title));
+        send(res).send(await putStudentGradeView(await session.platform, score, title));
     });
 
     app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
@@ -99,9 +100,10 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
 
     app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
 
-        const title = getSession(req).title;
+        const session = await getSession(req);
+        const title = session.title;
         const score = req.body.params;
-        send(res).send(await putStudentGrade(getPlatform(req), score, title));
+        send(res).send(await putStudentGrade(session.platform, score, title));
     });
 
     app.delete(DELETE_LINE_ITEM, requestLogger, async (req: Request, res: Response) => {
