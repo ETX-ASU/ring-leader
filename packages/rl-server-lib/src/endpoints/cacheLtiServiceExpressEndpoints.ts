@@ -48,7 +48,7 @@ async function getSession(req: any): Promise<any> {
     logger.debug(`sesison_key: ${key}`);
     let session = req.session;
     
-    if (!req.session.platform) {
+    if (req.session.platform) {
         try {
             const foundSession: Session | null = await Session.primaryKey.get(key);
             if (foundSession) {
@@ -58,7 +58,7 @@ async function getSession(req: any): Promise<any> {
             console.error(`attempting to find session:${key} failed`, err)
         }
     }
-    logger.debug(`session in request: ${JSON.stringify(session)}`);
+    logger.debug(`stored session: ${JSON.stringify(session)}`);
     return session;
 }
 
