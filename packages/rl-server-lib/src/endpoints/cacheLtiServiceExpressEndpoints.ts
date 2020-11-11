@@ -39,18 +39,26 @@ import { Session } from "../database/entity/Session";
 // cookie and send it to the client
 
 async function getPlatform(req: any): Promise<any> {
+
     const session = await getSession(req);
     return session?.platform;
 }
 async function getSession(req: any): Promise<any> {
+    const key = `${req.query.userId}${req.query.courseId}`;
+    logger.debug(`sesison_key: ${key}`);
     let session = req.session;
+    
+    if (!req.session.platform) {
+        try {
+            const foundSession: Session | null = await Session.primaryKey.get(key);
+            if (foundSession) {
+                session = JSON.parse(foundSession.session);
+            }
+        } catch (err) {
+            console.error(`attempting to find session:${key} failed`, err)
+        }
+    }
     logger.debug(`session in request: ${JSON.stringify(session)}`);
-    //const foundSession : Session | null = await Session.primaryKey.get(req.query.userId + req.query.courseId);
-    /*if(foundSession) {
-        session = JSON.parse(foundSession.session);
-    }*/
-    //session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
-    logger.debug(`session in cache: ${JSON.stringify(session)}`);
     return session;
 }
 
@@ -100,7 +108,6 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
-
         const session = await getSession(req);
         const title = session.title;
         const score = req.body.params;
@@ -127,11 +134,10 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
 
     app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
         logger.debug(`request userId: ${req.query.userId}, request courseId: ${req.query.courseId}, , request courseId: ${req.query.role}`);
-        logger.debug(`query: ${JSON.stringify(req.query)}`);
-        logger.debug(`params: ${JSON.stringify(req.params)}`);
         const platform = await getPlatform(req);
-        logger.debug(`isValidSession: ${validateSession(platform)}`);
-        send(res).send({ isValid: validateSession(platform) });
+        const isValid = validateSession(platform);
+        logger.debug(`isValidSession: ${isValid}`);
+        send(res).send({ isValid: isValid });
     });
 };
 
