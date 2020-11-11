@@ -45,10 +45,10 @@ async function getPlatform(req: any): Promise<any> {
 async function getSession(req: any): Promise<any> {
     let session = req.session;
     logger.debug(`session in request: ${JSON.stringify(session)}`);
-    const foundSession : Session | null = await Session.primaryKey.get(req.query.userId + req.query.courseId);
-    if(foundSession) {
+    //const foundSession : Session | null = await Session.primaryKey.get(req.query.userId + req.query.courseId);
+    /*if(foundSession) {
         session = JSON.parse(foundSession.session);
-    }
+    }*/
     //session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
     logger.debug(`session in cache: ${JSON.stringify(session)}`);
     return session;
@@ -127,6 +127,8 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
 
     app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
         logger.debug(`request userId: ${req.query.userId}, request courseId: ${req.query.courseId}, , request courseId: ${req.query.role}`);
+        logger.debug(`query: ${JSON.stringify(req.query)}`);
+        logger.debug(`params: ${JSON.stringify(req.params)}`);
         const platform = await getPlatform(req);
         logger.debug(`isValidSession: ${validateSession(platform)}`);
         send(res).send({ isValid: validateSession(platform) });
