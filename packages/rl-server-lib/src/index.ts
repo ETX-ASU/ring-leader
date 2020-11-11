@@ -10,7 +10,7 @@ import cacheLtiServiceExpressEndpoints from "./endpoints/cacheLtiServiceExpressE
 
 import ToolConsumer from "./models/ToolConsumer";
 import {Session} from "./database/entity/Session";
-import initDb from "./database/dataconnection";
+import initDBTables from "./database/dataconnection";
 
 import {
   rlValidateToken,
@@ -49,5 +49,5 @@ export {
   cacheLtiServiceExpressEndpoints,
   ToolConsumer,
   Session,
-  initDb
+  initDBTables
 };
