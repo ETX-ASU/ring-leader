@@ -46,7 +46,10 @@ async function getPlatform(req: any): Promise<any> {
 async function getSession(req: any): Promise<any> {
     let session = req.session;
     logger.debug(`session in request: ${JSON.stringify(session)}`);
-    Session.primaryKey.get(req.query.userId + req.query.courseId));
+    const foundSession : Session | null = await Session.primaryKey.get(req.query.userId + req.query.courseId);
+    if(foundSession) {
+        session = JSON.parse(foundSession.session);
+    }
     //session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
     logger.debug(`session in cache: ${JSON.stringify(session)}`);
     return session;

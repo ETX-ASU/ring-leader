@@ -7,6 +7,7 @@ import {
   
   @Decorator.Table({ name: `Session` })
   export class Session extends Table {
+      
     @Decorator.HashPrimaryKey("session_id")
     public static readonly primaryKey: Query.HashPrimaryKey<Session, string>;
   
@@ -14,7 +15,7 @@ import {
     public static readonly writer: Query.Writer<Session>;
   
     @Decorator.Attribute({ name: "session_id" })
-    public cardId: string;
+    public sessionId: string;
   
     @Decorator.Attribute({ name: "session" })
     public session: string;
