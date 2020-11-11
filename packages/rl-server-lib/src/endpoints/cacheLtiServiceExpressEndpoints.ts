@@ -31,6 +31,9 @@ import {
     logger
 } from "@asu-etx/rl-shared";
 
+import { Session } from "../database/entity/Session";
+
+
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls
 // can be made server side if they don't want put the Canvas idToken into a
@@ -43,7 +46,8 @@ async function getPlatform(req: any): Promise<any> {
 async function getSession(req: any): Promise<any> {
     let session = req.session;
     logger.debug(`session in request: ${JSON.stringify(session)}`);
-    session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
+    Session.primaryKey.get(req.query.userId + req.query.courseId));
+    //session = await InMemoryCache.getItem(req.query.userId + req.query.courseId);
     logger.debug(`session in cache: ${JSON.stringify(session)}`);
     return session;
 }

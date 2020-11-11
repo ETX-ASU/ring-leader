@@ -9,6 +9,8 @@ import rlLtiServiceExpressEndpoints from "./endpoints/rlLtiServiceExpressEndpoin
 import cacheLtiServiceExpressEndpoints from "./endpoints/cacheLtiServiceExpressEndpoints";
 
 import ToolConsumer from "./models/ToolConsumer";
+import {Session} from "./database/entity/Session";
+import initDb from "./database/dataconnection";
 
 import {
   rlValidateToken,
@@ -45,5 +47,7 @@ export {
   rlLtiLaunchExpressEndpoints,
   rlLtiServiceExpressEndpoints,
   cacheLtiServiceExpressEndpoints,
-  ToolConsumer
+  ToolConsumer,
+  Session,
+  initDb
 };
