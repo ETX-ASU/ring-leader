@@ -16,7 +16,6 @@ import {
 
 import validateSession from "../services/validationService";
 import ToolConsumer from "../models/ToolConsumer";
-import { InMemoryCache } from '@aws-amplify/cache';
 import {
     DEEP_LINK_ASSIGNMENT_ENDPOINT,
     ROSTER_ENDPOINT,
