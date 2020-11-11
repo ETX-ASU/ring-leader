@@ -45,14 +45,14 @@ async function getPlatform(req: any): Promise<any> {
 }
 async function getSession(req: any): Promise<any> {
     const key = `${req.query.userId}${req.query.courseId}`;
-    logger.debug(`sesison_key: ${key}`);
+    logger.debug(`session_key: ${key}`);
     let session = req.session;
     
-    if (req.session.platform) {
+    if (!req.session.platform) {
         try {
             const foundSession: Session | null = await Session.primaryKey.get(key);
             if (foundSession) {
-                session = JSON.parse(foundSession.session);
+                session = JSON.parse(foundSession.session);         
             }
         } catch (err) {
             console.error(`attempting to find session:${key} failed`, err)
