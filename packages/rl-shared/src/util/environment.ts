@@ -48,6 +48,4 @@ export const LTI_INSTRUCTOR_REDIRECT = ENV_VARS.LTI_INSTRUCTOR_REDIRECT || "/";
 export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";
 export const PLATFORM = ENV_VARS.PLATFORM || "aws";
 export const LTI_API_NAME = ENV_VARS.LTI_API_NAME || "ringleaderapi";
-export const API_URL =
-  ENV_VARS.API_URL ||
-  "https://3m04i9b475.execute-api.us-west-2.amazonaws.com/jimd";
+export const API_URL = ENV_VARS.API_URL || "https://prod.dyl4ur5zvn9kt.amplifyapp.com";
