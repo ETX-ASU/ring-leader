@@ -38,15 +38,15 @@ const returnUsers = (ltiResult: any): User[] => {
                 roles: roles
             }));
     }
-    return returnUsers(users);
+    return users;
 };
 
-const getRoster = async (platform: any, role: any): Promise<void> => {
+const getRoster = async (platform: any, role: any): Promise<any> => {
 
     const results = await new NamesAndRoles().getMembers(platform, {
         role: role
     });
-   return results;
+   return returnUsers(results);
 };
 
 const getUnassignedStudents = async (platform: any, resourceLinkId: any ): Promise<any[]> => {
