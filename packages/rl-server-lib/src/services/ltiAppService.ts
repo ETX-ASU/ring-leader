@@ -4,7 +4,8 @@ import { Grade } from "../services/assignmentAndGradeService";
 import { DeepLinking } from "../services/DeepLinking";
 
 import {
-    logger
+    logger,
+    User
 } from "@asu-etx/rl-shared";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
@@ -18,6 +19,31 @@ const getRoster = async (platform: any, role: any): Promise<void> => {
         role: role
     });
    return results;
+};
+
+const returnUsers = (ltiResult: any): User[] => {
+    const members = ltiResult.members;
+    const users: User[] = [];
+    for (const key in members) {
+        const courseMember = members[key];
+        const roles: string[] = [];
+        for(const key in courseMember.roles) {
+            const role = courseMember.roles[key];
+            role.split("#")
+            roles.push(role.split("#")[1]);
+        }
+        users.push(new User{
+                id: courseMember.user_id,
+                name: courseMember.name,
+                status: courseMember.status,
+                picture: courseMember.picture,
+                givenName: courseMember.given_name,
+                familyName: courseMember.family_name,
+                lti11LegacyUserId: courseMember.lti11_legacy_user_id,
+                email: courseMember.email,
+                roles: roles
+            });
+    }
 };
 
 const getUnassignedStudents = async (platform: any, resourceLinkId: any ): Promise<any[]> => {
@@ -50,16 +76,9 @@ const getUnassignedStudents = async (platform: any, resourceLinkId: any ): Promi
             });
             logger.debug("filteredData -" + JSON.stringify(filteredData));
             if (filteredData.length <= 0)
-                studentsNotAssignedToThisAssignments.push({
-                    id: courseMember.user_id,
-                    name: courseMember.name,
-                    status: courseMember.status,
-                    picture: courseMember.picture,
-                    givenName: courseMember.given_name,
-                    familyName: courseMember.family_name
-                });
+                studentsNotAssignedToThisAssignments.push(courseMember);
         }
-    return studentsNotAssignedToThisAssignments;
+    return returnUsers(studentsNotAssignedToThisAssignments);
 };
 
 const getAssignedStudents = async (platform: any, lineItemId: any, resourceLinkId: any): Promise<any[]> => {
@@ -78,17 +97,10 @@ const getAssignedStudents = async (platform: any, lineItemId: any, resourceLinkI
 
         for (const key in assignmentMembers) {
             const assignmentMember = assignmentMembers[key];
-            assignedStudents.push({
-                id: assignmentMember.user_id,
-                name: assignmentMember.name,
-                status: assignmentMember.status,
-                picture: assignmentMember.picture,
-                givenName: assignmentMember.given_name,
-                familyName: assignmentMember.family_name
-            });
+            assignedStudents.push(assignmentMember);
         }
     }
-    return assignedStudents;
+    return returnUsers(assignedStudents);
 };
 
 const putStudentGradeView = async (platform: any, score: any, title: string | undefined): Promise<void> => {
