@@ -76,8 +76,11 @@ function send(response: Response) {
 }
 const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     app.get(ROSTER_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-
-        send(res).send(await getRoster(await getPlatform(req), req.query.role));
+        logger.debug(`roster request role: ${req.query.role}`);
+        const platform = await getPlatform(req);
+        const users = await getRoster(platform, req.query.role);
+        logger.debug("users.found: ${users}");
+        send(res).send(users);
     });
 
     app.get(GET_UNASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req: Request, res: Response) => {

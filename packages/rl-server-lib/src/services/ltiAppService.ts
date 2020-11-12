@@ -1,15 +1,9 @@
 // eslint-disable-next-line node/no-extraneous-import
-import { Express } from "express";
 import { NamesAndRoles } from "../services/namesAndRolesService";
 import { Grade } from "../services/assignmentAndGradeService";
 import { DeepLinking } from "../services/DeepLinking";
-import { getToolConsumerByName } from "../services/ToolConsumerService";
-import requestLogger from "../middleware/requestLogger";
-
-import ToolConsumer from "../models/ToolConsumer";
 
 import {
-    DEEP_LINK_ASSIGNMENT_ENDPOINT,
     logger
 } from "@asu-etx/rl-shared";
 
@@ -19,13 +13,12 @@ import {
 // cookie and send it to the client
 
 const getRoster = async (platform: any, role: any): Promise<void> => {
+
     const results = await new NamesAndRoles().getMembers(platform, {
         role: role
     });
    return results;
 };
-
-
 
 const getUnassignedStudents = async (platform: any, resourceLinkId: any ): Promise<any[]> => {
     const studentsNotAssignedToThisAssignments = [];
