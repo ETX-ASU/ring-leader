@@ -13,13 +13,7 @@ import {
 // can be made server side if they don't want put the Canvas idToken into a
 // cookie and send it to the client
 
-const getRoster = async (platform: any, role: any): Promise<void> => {
 
-    const results = await new NamesAndRoles().getMembers(platform, {
-        role: role
-    });
-   return results;
-};
 
 const returnUsers = (ltiResult: any): User[] => {
     const members = ltiResult.members;
@@ -32,7 +26,7 @@ const returnUsers = (ltiResult: any): User[] => {
             role.split("#")
             roles.push(role.split("#")[1]);
         }
-        users.push(new User{
+        users.push(new User({
                 id: courseMember.user_id,
                 name: courseMember.name,
                 status: courseMember.status,
@@ -42,8 +36,17 @@ const returnUsers = (ltiResult: any): User[] => {
                 lti11LegacyUserId: courseMember.lti11_legacy_user_id,
                 email: courseMember.email,
                 roles: roles
-            });
+            }));
     }
+    return returnUsers(users);
+};
+
+const getRoster = async (platform: any, role: any): Promise<void> => {
+
+    const results = await new NamesAndRoles().getMembers(platform, {
+        role: role
+    });
+   return results;
 };
 
 const getUnassignedStudents = async (platform: any, resourceLinkId: any ): Promise<any[]> => {
