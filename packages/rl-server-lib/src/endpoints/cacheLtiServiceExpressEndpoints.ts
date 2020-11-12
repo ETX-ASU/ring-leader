@@ -44,7 +44,7 @@ async function getPlatform(req: any): Promise<any> {
     return session?.platform;
 }
 
-async function getSessionFromKey(req: any, key: string) {
+async function getSessionFromKey(req: any, key: string): Promise<any>  {
     logger.debug(`session_key: ${key}`);
     let session = req.session;
     
@@ -64,7 +64,7 @@ async function getSessionFromKey(req: any, key: string) {
 }
 async function getSession(req: any): Promise<any> {
     const key = `${req.query.userId}${req.query.courseId}`;
-    const session = getSessionFromKey(req, key);
+    const session = await getSessionFromKey(req, key);
 }
 
 function send(response: Response) {
@@ -112,7 +112,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const session = await getSessionFromKey(req, key);
         const contentItems = req.body.contentItems;
         // eslint-disable-next-line prettier/prettier
-        return send(res).send(await postDeepLinkAssignment(await getPlatform(req), contentItems));
+        return send(res).send(await postDeepLinkAssignment(session.platform, contentItems));
     });
 
     app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
@@ -142,7 +142,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-        logger.debug(`request userId: ${req.query.userId}, request courseId: ${req.query.courseId}, , request courseId: ${req.query.role}`);
+        logger.debug(`request userId: ${req.query.userId}, request courseId: ${req.query.courseId} request role: ${req.query.role}`);
         const platform = await getPlatform(req);
         const isValid = validateSession(platform);
         logger.debug(`isValidSession: ${isValid}`);
