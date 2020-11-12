@@ -65,6 +65,7 @@ async function getSessionFromKey(req: any, key: string): Promise<any>  {
 async function getSession(req: any): Promise<any> {
     const key = `${req.query.userId}${req.query.courseId}`;
     const session = await getSessionFromKey(req, key);
+    return session;
 }
 
 function send(response: Response) {
