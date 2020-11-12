@@ -43,8 +43,8 @@ async function getPlatform(req: any): Promise<any> {
     const session = await getSession(req);
     return session?.platform;
 }
-async function getSession(req: any): Promise<any> {
-    const key = `${req.query.userId}${req.query.courseId}`;
+
+async function getSessionFromKey(req: any, key: string) {
     logger.debug(`session_key: ${key}`);
     let session = req.session;
     
@@ -60,6 +60,11 @@ async function getSession(req: any): Promise<any> {
     }
     logger.debug(`stored session: ${JSON.stringify(session)}`);
     return session;
+
+}
+async function getSession(req: any): Promise<any> {
+    const key = `${req.query.userId}${req.query.courseId}`;
+    const session = getSessionFromKey(req, key);
 }
 
 function send(response: Response) {
@@ -94,21 +99,25 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req: Request, res: Response) => {
-        const session = await getSession(req);
+        const key = `${req.body.userId}${req.body.courseId}`;
+        const session = await getSessionFromKey(req, key);
         const title = session.title;
         const score = req.body.params;
+       
         send(res).send(await putStudentGradeView(await session.platform, score, title));
     });
 
     app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-
+        const key = `${req.body.userId}${req.body.courseId}`;
+        const session = await getSessionFromKey(req, key);
         const contentItems = req.body.contentItems;
         // eslint-disable-next-line prettier/prettier
         return send(res).send(await postDeepLinkAssignment(await getPlatform(req), contentItems));
     });
 
     app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
-        const session = await getSession(req);
+        const key = `${req.body.userId}${req.body.courseId}`;
+        const session = await getSessionFromKey(req, key);
         const title = session.title;
         const score = req.body.params;
         send(res).send(await putStudentGrade(session.platform, score, title));
