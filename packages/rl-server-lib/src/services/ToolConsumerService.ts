@@ -19,6 +19,17 @@ const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
   return toolConsumer;
 };
 
+const getToolConsumerById = (uuid: string): ToolConsumer | undefined => {
+  let toolConsumer = undefined;
+  getToolConsumers().forEach((tc) => {
+    if (tc.uuid == uuid) {
+      return (toolConsumer = tc);
+    }
+  });
+  logger.debug(`found toolConsumer: ${toolConsumer}`);
+  return toolConsumer;
+};
+
 
 const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined => {
   let toolConsumer: ToolConsumer | undefined = undefined;
@@ -46,4 +57,4 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
   return toolConsumer;
 };
 
-export { getToolConsumer, getToolConsumerByName, getToolConsumers };
+export { getToolConsumer, getToolConsumerByName, getToolConsumers, getToolConsumerById };

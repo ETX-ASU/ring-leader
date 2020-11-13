@@ -1,10 +1,12 @@
 import axios from "axios";
-import { ROSTER_ENDPOINT, GET_UNASSIGNED_STUDENTS_ENDPOINT, GET_ASSIGNED_STUDENTS_ENDPOINT, logger, Student } from "@asu-etx/rl-shared";
+import { ROSTER_ENDPOINT, GET_UNASSIGNED_STUDENTS_ENDPOINT,
+  GET_ASSIGNED_STUDENTS_ENDPOINT, User, logger } from "@asu-etx/rl-shared";
+import {getHash} from '../utils/hashUtils';
 
-const getUsers = async (role: string): Promise<any> => {
+const getUsers = async (role: string): Promise<User[]> => {
   logger.debug(`hitting endpoint GET:${ROSTER_ENDPOINT}`);
   const results = await axios
-    .get(ROSTER_ENDPOINT, { params: { role: role } })
+    .get(ROSTER_ENDPOINT, { params: { role: role, hash: getHash() } })
     .then((results) => {
       logger.debug(JSON.stringify(results));
       return results.data;
@@ -15,12 +17,13 @@ const getUsers = async (role: string): Promise<any> => {
 const getUnassignedStudents = async (
   assignmentId: string,
   resourceLinkId: string
-): Promise<Student[]> => {
+): Promise<User[]> => {
   const results = await axios
     .get(GET_UNASSIGNED_STUDENTS_ENDPOINT, {
       params: {
         lineItemId: assignmentId,
-        resourceLinkId: resourceLinkId
+        resourceLinkId: resourceLinkId,
+        hash: getHash()
       }
     })
     .then((results) => {
@@ -33,12 +36,13 @@ const getUnassignedStudents = async (
 const getAssignedStudents = async (
   assignmentId: string,
   resourceLinkId: string
-): Promise<Student[]> => {
+): Promise<User[]> => {
   const results = await axios
     .get(GET_ASSIGNED_STUDENTS_ENDPOINT, {
       params: {
         lineItemId: assignmentId,
-        resourceLinkId: resourceLinkId
+        resourceLinkId: resourceLinkId,
+        hash: getHash()
       }
     })
     .then((results) => {

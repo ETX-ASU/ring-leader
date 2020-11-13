@@ -1,9 +1,11 @@
 import axios from "axios";
 import { GET_ASSIGNMENT_ENDPOINT, DELETE_LINE_ITEM, LineItem, logger } from "@asu-etx/rl-shared";
 
+import {getHash, startParamsWithHash} from '../utils/hashUtils';
+
 const getLineItems = (): Promise<LineItem[]> => {
   logger.debug(`hitting endpoint GET:${GET_ASSIGNMENT_ENDPOINT}`);
-  const results = axios.get(GET_ASSIGNMENT_ENDPOINT).then((results) => {
+  const results = axios.get(GET_ASSIGNMENT_ENDPOINT + startParamsWithHash()).then((results) => {
     logger.debug(JSON.stringify(results.data));
     if (results.data.length <= 0) {
       return [];
@@ -18,7 +20,8 @@ const deleteLineItem = (assignmentId: string): Promise<any> => {
   const results = axios
     .delete(DELETE_LINE_ITEM, {
       params: {
-        lineItemId: assignmentId
+        lineItemId: assignmentId,
+        hash: getHash()
       }
     })
     .then((results) => {

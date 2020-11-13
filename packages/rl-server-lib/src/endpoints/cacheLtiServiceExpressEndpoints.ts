@@ -32,6 +32,8 @@ import {
 
 import { Session } from "../database/entity/Session";
 
+import { validateToken } from "../util/externalRedirect";
+
 
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls
@@ -63,10 +65,12 @@ async function getSessionFromKey(req: any, key: string): Promise<any>  {
 
 }
 async function getSession(req: any): Promise<any> {
-    const key = `${req.query.userId}${req.query.courseId}`;
+    const key = validateToken(req.query.hash);
     const session = await getSessionFromKey(req, key);
     return session;
 }
+
+
 
 function send(response: Response) {
     response.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -103,7 +107,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.post(PUT_STUDENT_GRADE_VIEW, requestLogger, async (req: Request, res: Response) => {
-        const key = `${req.body.userId}${req.body.courseId}`;
+        const key = validateToken(req.body.hash);
         const session = await getSessionFromKey(req, key);
         const title = session.title;
         const score = req.body.params;

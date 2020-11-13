@@ -2,7 +2,7 @@
 class ToolConsumer {
  
   id: number | null = null;
-
+  uuid = "";
   name = "";
 
   iss = "";
