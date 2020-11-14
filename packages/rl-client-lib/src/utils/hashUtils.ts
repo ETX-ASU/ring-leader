@@ -1,18 +1,18 @@
 const queryString = require('query-string');
 
-const getHash = async ()  => {
+const getHash =  () : any  => {
     const parsed = queryString.parse(window.location.search);
     return parsed.hash;
 };
 
-const startParamsWithHash = async ()  => {
+const startParamsWithHash =  () : any  => {
     const parsed = queryString.parse(window.location.search);
     return `?hash=${parsed.hash}`;
 }
 
-const hashParam = async ()  => {
+const addHashParam =  () : any => {
     const parsed = queryString.parse(window.location.search);
-    return `?hash=${parsed.hash}`;
+    return `&hash=${parsed.hash}`;
 }
 
-export {getHash, startParamsWithHash, hashParam}
+export {getHash, startParamsWithHash, addHashParam}
