@@ -28,6 +28,10 @@ import {
   ltiLaunchPost
 } from "./services/ltiLaunchService";
 
+import {
+  getRedirectToken
+} from "./util/externalRedirect";
+
 export {
   rlProcessOIDCRequest,
   getAccessToken,
@@ -49,5 +53,6 @@ export {
   cacheLtiServiceExpressEndpoints,
   ToolConsumer,
   Session,
-  initDBTables
+  initDBTables,
+  getRedirectToken
 };

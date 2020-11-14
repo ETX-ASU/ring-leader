@@ -210,7 +210,7 @@ const getGrades = async (platform: any, lineItemId: any): Promise<any> => {
             });
 
             scoreData.push({
-                userId: score.userId,
+                studentId: score.userId,
                 StudenName: tooltipsData[0].name,
                 score: score.resultScore,
                 comment: score.comment
