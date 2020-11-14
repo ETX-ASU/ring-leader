@@ -150,7 +150,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-        logger.debug(`request userId: ${req.query.userId}, request courseId: ${req.query.courseId} request role: ${req.query.role}`);
+        logger.debug(`request hash: ${req.query.hash}`);
         const platform = await getPlatform(req);
         const isValid = validateSession(platform);
         logger.debug(`isValidSession: ${isValid}`);

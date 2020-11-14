@@ -24,8 +24,6 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
 }
 
 const validateTokenWithToolConsumer = (token: string, toolConsumer:ToolConsumer): any => {
-    
-
     const jwttoken = token.substr(0, 40) + token.substring(72);
     logger.debug(`return token: ${jwttoken}`);
     logger.debug(`consumerid from tool: ${toolConsumer?.uuid}`);
@@ -50,10 +48,13 @@ const validateToken = (token: string): any => {
     const consumerId = token.substr(40, 72);
     logger.debug(`found consumerId: ${consumerId}`);
     const toolConsumer = getToolConsumerById(consumerId);
-    if(toolConsumer)
-        return validateTokenWithToolConsumer(token, toolConsumer);
-    return null;
+    if(toolConsumer) {
+        const key =  validateTokenWithToolConsumer(token, toolConsumer);
+        return key;
+    }
+    logger.error("Validation failed: unable to find key: for consumerId:" + consumerId);
 }
+
 
 export { getRedirectToken, validateToken, validateTokenWithToolConsumer }
 
