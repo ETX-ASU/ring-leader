@@ -1,8 +1,10 @@
 import API from "@aws-amplify/api";
 import { LTI_SESSION_VALIDATION_ENDPOINT } from "@asu-etx/rl-shared";
-import {getHash, startParamsWithHash} from '../utils/hashUtils';
+import {startParamsWithHash} from '../utils/hashUtils';
 const LTI_API_NAME = "ringleaderapi";
-const hasValidSession = async () => {
+
+const hasValidSession = async (aws_exports: any) => {
+  API.configure(aws_exports)
   const hasValidSession = await API.get(
     LTI_API_NAME,
     LTI_SESSION_VALIDATION_ENDPOINT+ startParamsWithHash(),null

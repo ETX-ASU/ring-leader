@@ -6,8 +6,10 @@ import {
   LTI_API_NAME
 } from "@asu-etx/rl-shared";
 import {getHash, startParamsWithHash} from '../utils/hashUtils';
+//import aws_exports from '../aws-exports'
 
-const submitGrade = async (params: any) => {
+const submitGrade = async (aws_exports:any, params: any) => {
+  API.configure(aws_exports);
   const data = {
     params: params,
     hash: getHash()
@@ -18,8 +20,10 @@ const submitGrade = async (params: any) => {
 };
 
 const submitInstructorGrade = async (
+  aws_exports:any,
   params: any
 ) => {
+  API.configure(aws_exports);
   const data = {
     params: params,
     hash: getHash()
@@ -28,7 +32,8 @@ const submitInstructorGrade = async (
   return results;
 };
 
-const getGrades = async (assignmentId: string) => {
+const getGrades = async (aws_exports:any, assignmentId: string) => {
+  API.configure(aws_exports);
   const grades = await API.get(LTI_API_NAME, 
     `${GET_GRADES}`, null);
   return grades;
