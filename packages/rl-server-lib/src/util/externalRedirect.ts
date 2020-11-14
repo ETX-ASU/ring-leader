@@ -45,7 +45,7 @@ const validateTokenWithToolConsumer = (token: string, toolConsumer:ToolConsumer)
 }
 
 const validateToken = (token: string): any => {
-    const consumerId = token.substr(40, 72);
+    const consumerId = token.substr(40, 32);
     logger.debug(`found consumerId: ${consumerId}`);
     const toolConsumer = getToolConsumerById(consumerId);
     if(toolConsumer) {
