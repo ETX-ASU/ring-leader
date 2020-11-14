@@ -6,9 +6,11 @@ import ToolConsumer from "../models/ToolConsumer";
 
 const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
     if (toolConsumer) {
-        const jwtToken = jwt.sign(key, toolConsumer.private_key, {
+        const jwtToken = jwt.sign({
+            key: key
+        }, toolConsumer.private_key, {
             algorithm: "RS256",
-            expiresIn: "120000",
+            expiresIn: 120,
             audience: toolConsumer.name,
             issuer: toolConsumer.uuid
         });
