@@ -12,8 +12,8 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
         }, toolConsumer.private_key, {
             algorithm: "RS256",
             expiresIn: 120,
-            audience: toolConsumer.name,
-            issuer: toolConsumer.uuid
+            audience: toolConsumer.uuid,
+            issuer: toolConsumer.iss
         });
         logger.debug(`created token: ${jwtToken}`);
         logger.debug(`consumerid: ${toolConsumer.uuid}`);
@@ -31,8 +31,8 @@ const validateTokenWithToolConsumer = (token: string, toolConsumer:ToolConsumer)
         if (toolConsumer) {
             const decoded : any = jwt.verify(jwttoken, toolConsumer.public_key, {
                 algorithms: ["RS256"],
-                audience: toolConsumer.name,
-                issuer: toolConsumer.uuid
+                audience: toolConsumer.uuid,
+                issuer: toolConsumer.iss
             });
             logger.debug(`decoded object: ${toolConsumer.uuid}`);
             return decoded.key;
