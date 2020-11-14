@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
 import { getToolConsumerByName, getToolConsumerById } from "../services/ToolConsumerService"
+import ToolConsumer from "../models/ToolConsumer";
 
-const getRedirectToken = (response: Response, consumerName: string, key: string): string => {
-    const toolConsumer = getToolConsumerByName(consumerName);
+const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
     if (toolConsumer) {
         const jwtToken = jwt.sign(key, toolConsumer.private_key, {
             algorithm: "RS256",
