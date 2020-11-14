@@ -7,7 +7,7 @@ import {getHash, startParamsWithHash} from '../utils/hashUtils';
   const getDeepLinkResourceLinks = async (aws_exports:any) => {
   API.configure(aws_exports);
   const links = await API.get(
-    LTI_API_NAME, DEEP_LINK_RESOURCELINKS_ENDPOINT + startParamsWithHash(), null);
+    LTI_API_NAME, DEEP_LINK_RESOURCELINKS_ENDPOINT, null);
   return links;
 };
 const submitResourceSelection = async (
@@ -16,8 +16,7 @@ const submitResourceSelection = async (
 ) => {
   API.configure(aws_exports);
   const data = {
-    contentItems: [resourceLink],
-    hash: getHash()
+    contentItems: [resourceLink]
 };
   const assignment = await API.post(
     LTI_API_NAME,

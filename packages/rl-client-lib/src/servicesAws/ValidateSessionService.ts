@@ -7,7 +7,7 @@ const hasValidSession = async (aws_exports: any) => {
   API.configure(aws_exports)
   const hasValidSession = await API.get(
     LTI_API_NAME,
-    LTI_SESSION_VALIDATION_ENDPOINT+ startParamsWithHash(),null
+    LTI_SESSION_VALIDATION_ENDPOINT/*+ startParamsWithHash()*/,null
   );
   console.log(`hasValidSession: ${JSON.stringify(hasValidSession)}`);
   return hasValidSession.isValid;

@@ -1,9 +1,15 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
 import { getToolConsumerByName, getToolConsumerById } from "../services/ToolConsumerService"
 import ToolConsumer from "../models/ToolConsumer";
 import { logger } from "@asu-etx/rl-shared";
+
+const setResponseAuthorization = (response: Response, toolConsumer: ToolConsumer, key: string) : void => {
+    const jwtToken = getRedirectToken(toolConsumer, key);
+    logger.debug(`set authorization header: ${jwtToken}`);
+    response.setHeader("Authorization", "Bearer " + jwtToken);
+}
 
 const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
     if (toolConsumer) {
@@ -11,14 +17,13 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
             key: key
         }, toolConsumer.private_key, {
             algorithm: "RS256",
-            expiresIn: 120,
+            expiresIn: 600,
             audience: toolConsumer.uuid,
             issuer: toolConsumer.iss
         });
         logger.debug(`created token: ${jwtToken}`);
         logger.debug(`consumerid: ${toolConsumer.uuid}`);
-        const jtsToken = jwtToken.substr(0, 40) + toolConsumer.uuid + jwtToken.substring(40);
-        return jtsToken;
+        return jwtToken.substr(0, 40) + toolConsumer.uuid + jwtToken.substring(40);
     }
     throw Error("unable to find toolConsumer");
 }
@@ -44,6 +49,17 @@ const validateTokenWithToolConsumer = (token: string, toolConsumer:ToolConsumer)
     };
 }
 
+
+const validateRequest = (request: Request): string => {
+    const authorization = request.headers.authorization;
+    logger.debug(`found authorization: ${authorization}`);
+    if(authorization && authorization.split(' ')[0] === 'Bearer')
+        return validateToken(authorization.split(' ')[1]);
+    else
+       throw Error("no authorization header found");
+
+}
+
 const validateToken = (token: string): any => {
     const consumerId = token.substr(40, 32);
     logger.debug(`found consumerId: ${consumerId}`);
@@ -56,5 +72,7 @@ const validateToken = (token: string): any => {
 }
 
 
-export { getRedirectToken, validateToken, validateTokenWithToolConsumer }
-
+export { getRedirectToken, validateToken, 
+    validateTokenWithToolConsumer, 
+    setResponseAuthorization, 
+    validateRequest };
