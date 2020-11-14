@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
 import { getToolConsumerByName, getToolConsumerById } from "../services/ToolConsumerService"
 import ToolConsumer from "../models/ToolConsumer";
+import { logger } from "@asu-etx/rl-shared";
 
 const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
     if (toolConsumer) {
@@ -14,6 +15,8 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
             audience: toolConsumer.name,
             issuer: toolConsumer.uuid
         });
+        logger.debug(`created token: ${jwtToken}`);
+        logger.debug(`consumerid: ${toolConsumer.uuid}`);
         const jtsToken = jwtToken.substr(0, 40) + toolConsumer.uuid + jwtToken.substring(40);
         return jtsToken;
     }
@@ -22,14 +25,19 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
 
 const validateToken = (token: string): string => {
     const consumerId = token.substr(40, 72);
+    logger.debug(`found consumerId: ${consumerId}`);
     const toolConsumer = getToolConsumerById(consumerId);
+
     const jwttoken = token.substr(0, 40) + token.substring(72);
+    logger.debug(`return token: ${jwttoken}`);
+    logger.debug(`consumerid from tool: ${toolConsumer?.uuid}`);
     if (toolConsumer) {
         const decoded = jwt.verify(jwttoken, toolConsumer.private_key, {
             algorithms: ["RS256"],
             audience: toolConsumer.name,
             issuer: toolConsumer.uuid
         });
+        logger.debug(`decoded object: ${toolConsumer.uuid}`);
         return decoded.toString();
     } else {
         throw Error("Token failed to validate for");
