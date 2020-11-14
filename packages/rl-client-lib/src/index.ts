@@ -17,6 +17,18 @@ import {
   submitResourceSelection as submitResourceSelectionRedirect
 } from "./servicesRedirect/DeepLinkService";
 
+
+import { submitGrade as submitGradeAws, submitInstructorGrade as submitInstructorGradeAws
+  , getGrades as getGradesAws } from "./servicesAws/GradeService";
+import { getUsers as getUsersAws, getUnassignedStudents as getUnassignedStudentsAws, 
+  getAssignedStudents as getAssignedStudentsAws} from "./servicesAws/UserService";
+import { getLineItems as getLineItemsAws, 
+  deleteLineItem as deleteLineItemAws} from "./servicesAws/LineItemService";
+import {
+  getDeepLinkResourceLinks as getDeepLinkResourceLinksAws,
+  submitResourceSelection as submitResourceSelectionAws
+} from "./servicesAws/DeepLinkService";
+
 export {
   getDeepLinkResourceLinks,
   submitResourceSelection,
@@ -28,7 +40,17 @@ export {
   getAssignedStudents,
   getLineItems,
   deleteLineItem,
-
+  
+  getDeepLinkResourceLinksAws,
+  submitResourceSelectionAws,
+  submitGradeAws,
+  submitInstructorGradeAws,
+  getGradesAws,
+  getUsersAws,
+  getUnassignedStudentsAws,
+  getAssignedStudentsAws,
+  getLineItemsAws,
+  deleteLineItemAws,
   
   getDeepLinkResourceLinksRedirect,
   submitResourceSelectionRedirect,
