@@ -14,7 +14,7 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
             audience: toolConsumer.name,
             issuer: toolConsumer.uuid
         });
-        const jtsToken = jwtToken.substr(0, 40) + toolConsumer.id + jwtToken.substring(72);
+        const jtsToken = jwtToken.substr(0, 40) + toolConsumer.uuid + jwtToken.substring(40);
         return jtsToken;
     }
     throw Error("unable to find toolConsumer");

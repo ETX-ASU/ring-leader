@@ -1,6 +1,6 @@
 {
   "name": "@asu-etx/rl-server-lib",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "license": "Apache-2.0",
   "private": false,
   "public": true,
@@ -11,7 +11,8 @@
   },
   "scripts": {
     "build": "tsc -d",
-    "watch": "nodemon"
+    "watch": "nodemon",
+    "test": "mocha --recursive --exit"
   },
   "nodemonConfig": {
     "watch": [
@@ -43,6 +44,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "3.1.3",
     "eslint-plugin-promise": "4.2.1",
+    "mocha": "^8.2.1",
     "nodemon": "^2.0.4",
     "prettier": "2.0.5"
   },
