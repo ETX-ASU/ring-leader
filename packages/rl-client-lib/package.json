@@ -1,8 +1,7 @@
 {
     "name": "@asu-etx/rl-client-lib",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "license": "Apache-2.0",
-    "private": false,
     "public": true,
     "main": "build/index.js",
     "types": "build/index.d.ts",
@@ -22,7 +21,7 @@
         "exec": "yarn run build"
     },
     "dependencies": {
-        "@asu-etx/rl-shared": "^0.6.21",
+        "@asu-etx/rl-shared": "^0.7.0",
         "@aws-amplify/api": "^3.2.11",
         "axios": "^0.21.0",
         "query-string": "^6.13.7",
