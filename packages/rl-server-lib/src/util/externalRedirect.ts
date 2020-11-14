@@ -32,7 +32,7 @@ const validateToken = (token: string): string => {
     logger.debug(`return token: ${jwttoken}`);
     logger.debug(`consumerid from tool: ${toolConsumer?.uuid}`);
     if (toolConsumer) {
-        const decoded = jwt.verify(jwttoken, toolConsumer.private_key, {
+        const decoded = jwt.verify(jwttoken, toolConsumer.public_key, {
             algorithms: ["RS256"],
             audience: toolConsumer.name,
             issuer: toolConsumer.uuid
