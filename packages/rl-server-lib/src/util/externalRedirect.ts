@@ -1,11 +1,11 @@
-import { Request, response, Response } from "express";
+import { request, Request, response, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
 import { getToolConsumerByName, getToolConsumerById } from "../services/ToolConsumerService"
 import ToolConsumer from "../models/ToolConsumer";
 import { logger } from "@asu-etx/rl-shared";
 
-const setResponseAuthorization = (response: Response, toolConsumer: ToolConsumer, key: string) : void => {
+const setResponseAuthorization = (response: Response, toolConsumer: ToolConsumer, key: string): void => {
     const jwtToken = getRedirectToken(toolConsumer, key);
     logger.debug(`set authorization header: ${jwtToken}`);
     response.setHeader("Authorization", "Bearer " + jwtToken);
@@ -28,13 +28,13 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
     throw Error("unable to find toolConsumer");
 }
 
-const validateTokenWithToolConsumer = (token: string, toolConsumer:ToolConsumer): any => {
+const validateTokenWithToolConsumer = (token: string, toolConsumer: ToolConsumer): any => {
     const jwttoken = token.substr(0, 40) + token.substring(72);
     logger.debug(`return token: ${jwttoken}`);
     logger.debug(`consumerid from tool: ${toolConsumer?.uuid}`);
     try {
         if (toolConsumer) {
-            const decoded : any = jwt.verify(jwttoken, toolConsumer.public_key, {
+            const decoded: any = jwt.verify(jwttoken, toolConsumer.public_key, {
                 algorithms: ["RS256"],
                 audience: toolConsumer.uuid,
                 issuer: toolConsumer.iss
@@ -50,13 +50,20 @@ const validateTokenWithToolConsumer = (token: string, toolConsumer:ToolConsumer)
 }
 
 
-const validateRequest = (request: Request): string => {
-    const authorization = request.headers.authorization;
+const validateRequest = (request: any): string => {
+    const authorization = request.get('authorization');
     logger.debug(`found authorization: ${authorization}`);
-    if(authorization && authorization.split(' ')[0] === 'Bearer')
+    if (authorization && authorization.split(' ')[0] === 'Bearer')
         return validateToken(authorization.split(' ')[1]);
-    else
-       throw Error("no authorization header found");
+    else if (request.query && request.query.hash) {
+        const hash: string = request.query.hash;
+        return validateToken(hash);
+    }
+    else if (request.body.hash) {
+        const hash: string = request.body.hash;
+        return validateToken(hash);
+    }
+    throw Error("no authorization header found");
 
 }
 
@@ -64,15 +71,17 @@ const validateToken = (token: string): any => {
     const consumerId = token.substr(40, 32);
     logger.debug(`found consumerId: ${consumerId}`);
     const toolConsumer = getToolConsumerById(consumerId);
-    if(toolConsumer) {
-        const key =  validateTokenWithToolConsumer(token, toolConsumer);
+    if (toolConsumer) {
+        const key = validateTokenWithToolConsumer(token, toolConsumer);
         return key;
     }
     logger.error("Validation failed: unable to find key: for consumerId:" + consumerId);
 }
 
 
-export { getRedirectToken, validateToken, 
-    validateTokenWithToolConsumer, 
-    setResponseAuthorization, 
-    validateRequest };
+export {
+    getRedirectToken, validateToken,
+    validateTokenWithToolConsumer,
+    setResponseAuthorization,
+    validateRequest
+};

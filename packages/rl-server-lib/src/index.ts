@@ -29,7 +29,8 @@ import {
 } from "./services/ltiLaunchService";
 
 import {
-  setResponseAuthorization
+  setResponseAuthorization,
+  getRedirectToken
 } from "./util/externalRedirect";
 
 export {
@@ -54,5 +55,6 @@ export {
   ToolConsumer,
   Session,
   initDBTables,
-  setResponseAuthorization
+  setResponseAuthorization,
+  getRedirectToken
 };

@@ -11,7 +11,8 @@ import {getHash, startParamsWithHash} from '../utils/hashUtils';
 const submitGrade = async (aws_exports:any, params: any) => {
   API.configure(aws_exports);
   const data = {
-    params: params
+    params: params,
+    hash: getHash()
   };
   const results = await API.post(LTI_API_NAME, PUT_STUDENT_GRADE, data);
   logger.debug(`submitGrade: ${results}`);
@@ -24,7 +25,8 @@ const submitInstructorGrade = async (
 ) => {
   API.configure(aws_exports);
   const data = {
-    params: params
+    params: params,
+    hash: getHash()
   };
   const results = await API.post(LTI_API_NAME, PUT_STUDENT_GRADE, data);
   return results;
@@ -33,8 +35,8 @@ const submitInstructorGrade = async (
 const getGrades = async (aws_exports:any, assignmentId: string) => {
   API.configure(aws_exports);
   const grades = await API.get(LTI_API_NAME, 
-    `${GET_GRADES}`, null);
-  return grades;
+    `${GET_GRADES}${startParamsWithHash()}}`, null);
+    return grades;
   };
 
 export { submitGrade, getGrades, submitInstructorGrade };
