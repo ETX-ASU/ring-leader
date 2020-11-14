@@ -22,9 +22,9 @@ const returnUsers = (ltiResult: any): User[] => {
         const courseMember = members[key];
         const roles: string[] = [];
         for(const key in courseMember.roles) {
-            const role = courseMember.roles[key];
+            const role : string = courseMember.roles[key];
             role.split("#")
-            roles.push(role.split("#")[1]);
+            roles.push(role.split("#")[1].toLowerCase());
         }
         users.push(new User({
                 id: courseMember.user_id,
@@ -33,7 +33,6 @@ const returnUsers = (ltiResult: any): User[] => {
                 picture: courseMember.picture,
                 givenName: courseMember.given_name,
                 familyName: courseMember.family_name,
-                lti11LegacyUserId: courseMember.lti11_legacy_user_id,
                 email: courseMember.email,
                 roles: roles
             }));

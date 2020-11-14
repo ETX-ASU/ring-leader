@@ -1,15 +1,15 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
-import { logger } from "@asu-etx/rl-shared";
-
-const DEEP_LINKING_SETTINGS_CLAIM = "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings";
-const ROLES_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/roles";
-const INSTRUCTOR_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor";
-const LEARNER_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner";
-const DEPLOYMENT_ID_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/deployment_id";
-const CONTEXT_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/context";
-const ASSIGNMENT_GRADE_CLAIM = "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint";
-const RESOURCE_LINK_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/resource_link";
+import { logger, 
+  DEEP_LINKING_SETTINGS_CLAIM, 
+  ROLES_CLAIM, 
+  INSTRUCTOR_ROLE_CLAIM,
+  LEARNER_ROLE_CLAIM,
+  DEPLOYMENT_ID_CLAIM,
+  CONTEXT_CLAIM,
+  ASSIGNMENT_GRADE_CLAIM,
+  RESOURCE_LINK_CLAIM
+ } from "@asu-etx/rl-shared";
 
 const setDefaultValues = (token: any): any => {
   logger.debug("setDefaultValues - " + JSON.stringify(token));
@@ -48,11 +48,11 @@ const setDefaultValues = (token: any): any => {
     deploymentId: token[DEPLOYMENT_ID_CLAIM] || null,
     roles: [
       {
-        role: "Learner",
+        role: "learner",
         claim: LEARNER_ROLE_CLAIM
       },
       {
-        role: "Instructor",
+        role: "instructor",
         claim: INSTRUCTOR_ROLE_CLAIM
       }
     ],
