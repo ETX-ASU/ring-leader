@@ -16,7 +16,9 @@ import {
   getDeepLinkResourceLinks as getDeepLinkResourceLinksRedirect,
   submitResourceSelection as submitResourceSelectionRedirect
 } from "./servicesRedirect/DeepLinkService";
-
+import {
+  hasValidSession as hasValidSessionAwsRedirect,
+} from "./servicesRedirect/ValidateSessionService";
 
 import { submitGrade as submitGradeAws, submitInstructorGrade as submitInstructorGradeAws
   , getGrades as getGradesAws } from "./servicesAws/GradeService";
@@ -28,6 +30,11 @@ import {
   getDeepLinkResourceLinks as getDeepLinkResourceLinksAws,
   submitResourceSelection as submitResourceSelectionAws
 } from "./servicesAws/DeepLinkService";
+
+import {
+  hasValidSession as hasValidSessionAws,
+} from "./servicesAws/ValidateSessionService";
+
 
 export {
   getDeepLinkResourceLinks,
@@ -51,6 +58,7 @@ export {
   getAssignedStudentsAws,
   getLineItemsAws,
   deleteLineItemAws,
+  hasValidSessionAws,
   
   getDeepLinkResourceLinksRedirect,
   submitResourceSelectionRedirect,
@@ -61,5 +69,6 @@ export {
   getUnassignedStudentsRedirect,
   getAssignedStudentsRedirect,
   getLineItemsRedirect,
-  deleteLineItemRedirect
+  deleteLineItemRedirect,
+  hasValidSessionAwsRedirect
 };
