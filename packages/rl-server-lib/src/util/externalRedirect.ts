@@ -51,7 +51,7 @@ const validateToken = (token: string): any => {
     logger.debug(`found consumerId: ${consumerId}`);
     const toolConsumer = getToolConsumerById(consumerId);
     if(toolConsumer)
-    return validateTokenWithToolConsumer(token, toolConsumer);
+        return validateTokenWithToolConsumer(token, toolConsumer);
     return null;
 }
 
