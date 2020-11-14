@@ -1,7 +1,9 @@
 // Requiring module 
-const assert = require('assert'); 
-const jwt = require("jsonwebtoken");
-const mocha = require("mocha");
+import assert from 'assert'; 
+import jwt from "jsonwebtoken";
+import {describe, before, after, beforeEach, it} from 'mocha';
+import {getRedirectToken, validateTokenWithToolConsumer} from '../src/util/externalRedirect';
+const toolConsumers = require("./.tool_consumers.jim.json");
 
 // We can group similar tests inside a describe block 
 describe("Simple Calculations", () => { 
@@ -14,7 +16,7 @@ after(() => {
 }); 
 	
 // We can add nested blocks for different tests 
-describe( "Test1", () => { 
+describe( "Simple token test", () => { 
     let resToken = '';
     let jwtToken = 'aa';
    	beforeEach(() => { 
@@ -24,6 +26,22 @@ describe( "Test1", () => {
     });
     it("Jwks are equal", () => { 
         assert.equal(jwtToken, resToken); 
+    }); 
+    
+
+
+}); 
+
+// We can add nested blocks for different tests 
+describe( "Test token validation", () => { 
+    let key = "thisisakey";
+    let keyFinal = 'aa';
+   	beforeEach(() => { 
+        const jwtToken = getRedirectToken(toolConsumers[0], key);
+        keyFinal = validateTokenWithToolConsumer(jwtToken, toolConsumers[0]);
+    });
+    it("Jwks are equal", () => { 
+        assert.equal(key, keyFinal); 
       }); 
     
 

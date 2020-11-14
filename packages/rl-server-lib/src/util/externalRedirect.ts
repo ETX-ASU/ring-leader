@@ -23,26 +23,37 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
     throw Error("unable to find toolConsumer");
 }
 
-const validateToken = (token: string): string => {
-    const consumerId = token.substr(40, 72);
-    logger.debug(`found consumerId: ${consumerId}`);
-    const toolConsumer = getToolConsumerById(consumerId);
+const validateTokenWithToolConsumer = (token: string, toolConsumer:ToolConsumer): any => {
+    
 
     const jwttoken = token.substr(0, 40) + token.substring(72);
     logger.debug(`return token: ${jwttoken}`);
     logger.debug(`consumerid from tool: ${toolConsumer?.uuid}`);
-    if (toolConsumer) {
-        const decoded = jwt.verify(jwttoken, toolConsumer.public_key, {
-            algorithms: ["RS256"],
-            audience: toolConsumer.name,
-            issuer: toolConsumer.uuid
-        });
-        logger.debug(`decoded object: ${toolConsumer.uuid}`);
-        return decoded.toString();
-    } else {
-        throw Error("Token failed to validate for");
-    }
+    try {
+        if (toolConsumer) {
+            const decoded : any = jwt.verify(jwttoken, toolConsumer.public_key, {
+                algorithms: ["RS256"],
+                audience: toolConsumer.name,
+                issuer: toolConsumer.uuid
+            });
+            logger.debug(`decoded object: ${toolConsumer.uuid}`);
+            return decoded.key;
+        } else {
+            throw Error("Token failed to validate for unable to find toolConsumer");
+        }
+    } catch (error) {
+        logger.error("Validation failed:" + JSON.stringify(error));
+    };
 }
 
-export { getRedirectToken, validateToken }
+const validateToken = (token: string): any => {
+    const consumerId = token.substr(40, 72);
+    logger.debug(`found consumerId: ${consumerId}`);
+    const toolConsumer = getToolConsumerById(consumerId);
+    if(toolConsumer)
+    return validateTokenWithToolConsumer(token, toolConsumer);
+    return null;
+}
+
+export { getRedirectToken, validateToken, validateTokenWithToolConsumer }
 
