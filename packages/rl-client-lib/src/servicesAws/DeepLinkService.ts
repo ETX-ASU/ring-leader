@@ -27,9 +27,14 @@ const submitResourceSelection = async (
     LTI_API_NAME,
     DEEP_LINK_ASSIGNMENT_ENDPOINT,
     data
-  );
+  ).then(response => {
+    console.log(JSON.stringify(response));
+  })
+  .catch(error => {
+    console.log(error.response);
+  });
   logger.debug(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
-  return assignment.body;
+  return assignment;
 };
 
 export { getDeepLinkResourceLinks, submitResourceSelection }
