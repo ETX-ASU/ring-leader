@@ -125,13 +125,12 @@ class DeepLinking {
     logger.debug("Accepts Mutiple: " + acceptMultiple);
     logger.debug("Received content items: ");
     logger.debug(contentItems);
-
+//${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}
     for (const contentItem of contentItems) {
       if (!acceptedTypes.includes(contentItem.type)) continue;
       if(!contentItem.url || !contentItem.url.trim().length) {
-        contentItem.url = `${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}${LTI_ASSIGNMENT_REDIRECT}?assignmentId=${contentItem.resourceId}`;
+        contentItem.url = `${LTI_ASSIGNMENT_REDIRECT}?assignmentId=${contentItem.resourceId}`;
       }
-      
       selectedContentItems.push(contentItem);
       if (!acceptMultiple) break;
     }
