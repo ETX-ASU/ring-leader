@@ -41,14 +41,14 @@ export const LTI_ADVANTAGE_LAUNCH_ROUTE =
 export const TOOL_INFO = ENV_VARS.TOOL_INFO || "/tool-info";
 export const GET_JWKS_ENDPOINT = ENV_VARS.GET_JWKS_ENDPOINT || "/jwks";
 
-export const LTI_ASSIGNMENT_REDIRECT = ENV_VARS.LTI_ASSIGNMENT_REDIRECT || "/";
-export const LTI_DEEPLINK_REDIRECT = ENV_VARS.LTI_DEEPLINK_REDIRECT || "/";
-export const LTI_STUDENT_REDIRECT = ENV_VARS.LTI_STUDENT_REDIRECT || "/";
-export const LTI_INSTRUCTOR_REDIRECT = ENV_VARS.LTI_INSTRUCTOR_REDIRECT || "/";
+export const LTI_ASSIGNMENT_REDIRECT = ENV_VARS.LTI_ASSIGNMENT_REDIRECT || "/assignment";
+export const LTI_DEEPLINK_REDIRECT = ENV_VARS.LTI_DEEPLINK_REDIRECT || "/deeplink";
+export const LTI_STUDENT_REDIRECT = ENV_VARS.LTI_STUDENT_REDIRECT || "/student";
+export const LTI_INSTRUCTOR_REDIRECT = ENV_VARS.LTI_INSTRUCTOR_REDIRECT || "/instructor";
 export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";
 export const PLATFORM = ENV_VARS.PLATFORM || "aws";
 export const LTI_API_NAME = ENV_VARS.LTI_API_NAME || "ringleaderapi";
-export const API_URL = ENV_VARS.API_URL || "https://prod.dyl4ur5zvn9kt.amplifyapp.com";
+export const API_URL = ENV_VARS.API_URL || "https://stage.dyl4ur5zvn9kt.amplifyapp.com";
 //DEEP_LINK_DISPLAY_BASE_URL is to be used if the launch url for deeplinks does not have the same base as for launch of main app.
 // for most application will be null or empty
 export const DEEP_LINK_DISPLAY_BASE_URL = ENV_VARS.DEEP_LINK_DISPLAY_BASE_URL || "";

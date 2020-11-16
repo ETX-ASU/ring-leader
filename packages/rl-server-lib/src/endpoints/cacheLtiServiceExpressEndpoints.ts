@@ -27,8 +27,7 @@ import {
     GET_GRADES,
     GET_JWKS_ENDPOINT,
     LTI_SESSION_VALIDATION_ENDPOINT,
-    logger,
-    LTI_DEEPLINK_REDIRECT
+    logger
 } from "@asu-etx/rl-shared";
 
 import { Session } from "../database/entity/Session";
