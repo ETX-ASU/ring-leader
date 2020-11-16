@@ -34,6 +34,7 @@ import {
 import { Session } from "../database/entity/Session";
 
 import { validateRequest } from "../util/externalRedirect";
+import { deepLinkRedirect } from "../services/ltiLaunchService";
 
 const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
@@ -160,12 +161,6 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const isValid = validateSession(platform);
         logger.debug(`isValidSession: ${isValid}`);
         send(res).send({ isValid: isValid });
-    });
-
-    // post to accept the LMS launch with idToken
-    app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req: any, res: any) => {
-        logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
-        res.redirect(URL_ROOT + LTI_DEEPLINK_REDIRECT);
     });
 };
 

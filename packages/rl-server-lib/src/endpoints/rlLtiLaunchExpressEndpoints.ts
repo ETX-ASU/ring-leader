@@ -5,6 +5,7 @@ import {
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,
+  deepLinkRedirect,
 } from "../services/ltiLaunchService";
 
 
@@ -15,8 +16,9 @@ import {
   LTI_ASSIGNMENT_REDIRECT,
   TOOL_INFO,
   APPLICATION_URL,
-  logger
-}  from "@asu-etx/rl-shared";
+  logger,
+  LTI_DEEPLINK_REDIRECT
+} from "@asu-etx/rl-shared";
 
 /**
  * @description Creates a set of endpoints to support LTI1.3 launch given an Express application.
@@ -46,6 +48,13 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )
   app.get(TOOL_INFO, requestLogger, async (req: any, res: any) => {
     toolInfoGet(req, res, APPLICATION_URL);
+  });
+
+  // post to accept the LMS launch with idToken
+  app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req: any, res: any) => {
+    logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
+    logger.debug(`req for DEEPLINK, query:${req.query} , body:${req.body}`);
+    deepLinkRedirect(req, res);
   });
 };
 
