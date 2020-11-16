@@ -53,7 +53,6 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
   // post to accept the LMS launch with idToken
   app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req: any, res: any) => {
     logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
-    logger.debug(`req for DEEPLINK, query:${req.query} , body:${req.body}`);
     deepLinkRedirect(req, res);
   });
 };
