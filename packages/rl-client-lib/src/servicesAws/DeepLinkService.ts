@@ -17,8 +17,7 @@ const submitResourceSelection = async (
   API.configure(aws_exports);
   const data = {
     headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'text/html'
+      'Content-Type': 'application/json'
     }, body: {
       contentItems: [resourceLink],
     hash: getHash()
@@ -29,9 +28,9 @@ const submitResourceSelection = async (
     DEEP_LINK_ASSIGNMENT_ENDPOINT,
     data
   );
-  logger.debug(`assignment form`)
+  logger.debug(`assignment form: %${assignment}`);
   logger.debug(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
-  return assignment;
+  return assignment.form;
 };
 
 export { getDeepLinkResourceLinks, submitResourceSelection }
