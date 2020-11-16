@@ -17,7 +17,8 @@ const submitResourceSelection = async (
   API.configure(aws_exports);
   const data = {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept': 'text/html'
     }, body: {
       contentItems: [resourceLink],
     hash: getHash()
@@ -27,12 +28,8 @@ const submitResourceSelection = async (
     LTI_API_NAME,
     DEEP_LINK_ASSIGNMENT_ENDPOINT,
     data
-  ).then(response => {
-    console.log(JSON.stringify(response));
-  })
-  .catch(error => {
-    console.log(error.response);
-  });
+  );
+  logger.debug(`assignment form`)
   logger.debug(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
   return assignment;
 };
