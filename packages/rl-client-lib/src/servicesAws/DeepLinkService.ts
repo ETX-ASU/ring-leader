@@ -1,8 +1,6 @@
 import API from "@aws-amplify/api";
 import { logger, DEEP_LINK_RESOURCELINKS_ENDPOINT, DEEP_LINK_ASSIGNMENT_ENDPOINT, LTI_API_NAME } from "@asu-etx/rl-shared";
 import { getHash, startParamsWithHash } from '../utils/hashUtils';
-//import aws_exports from '../aws-exports'
-
 
 const getDeepLinkResourceLinks = async (aws_exports: any) => {
   API.configure(aws_exports);
