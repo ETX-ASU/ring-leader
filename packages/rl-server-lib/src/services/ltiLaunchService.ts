@@ -157,7 +157,7 @@ const assignmentRedirectPost = async (
     logger.debug("req.session- " + JSON.stringify(request.session));
   });
   response.redirect(
-    URL_ROOT + LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + reqQueryString.resourceId
+    URL_ROOT + LTI_ASSIGNMENT_REDIRECT + "?assignmentId=" + reqQueryString.assignmentId
   );
 };
 
