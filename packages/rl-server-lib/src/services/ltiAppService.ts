@@ -129,7 +129,7 @@ const putStudentGradeView = async (platform: any, score: any, title: string | un
 
 
 
-const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise<void> => {
+const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise<any> => {
     logger.debug("deeplink - platform - " + JSON.stringify(platform));
     logger.debug("deeplink - contentItems - " + JSON.stringify(contentItems));
 
@@ -142,7 +142,7 @@ const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise
         }
     );
 
-    return form;
+    return {form:form};
 };
 
 const putStudentGrade = async (platform: any, score: any,  title: string | undefined): Promise<void> => {
