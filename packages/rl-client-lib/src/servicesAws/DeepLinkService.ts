@@ -29,7 +29,7 @@ const submitResourceSelection = async (
     data
   );
   logger.debug(`hitting endpoint POST:${DEEP_LINK_ASSIGNMENT_ENDPOINT}`);
-  return assignment;
+  return assignment.body;
 };
 
 export { getDeepLinkResourceLinks, submitResourceSelection }
