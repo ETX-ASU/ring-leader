@@ -5,7 +5,6 @@ import {
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,
-  deepLinkRedirect
 } from "../services/ltiLaunchService";
 
 
@@ -14,7 +13,6 @@ import {
   OIDC_LOGIN_INIT_ROUTE,
   LTI_ADVANTAGE_LAUNCH_ROUTE,
   LTI_ASSIGNMENT_REDIRECT,
-  LTI_DEEPLINK_REDIRECT,
   TOOL_INFO,
   APPLICATION_URL,
   logger
@@ -43,12 +41,6 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
   // post to accept the LMS launch with idToken
   app.post(LTI_ASSIGNMENT_REDIRECT, requestLogger, async (req: any, res: any) => {
     assignmentRedirectPost(req, res);
-  });
-
-  // post to accept the LMS launch with idToken
-  app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req: any, res: any) => {
-    logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
-    deepLinkRedirect(req, res);
   });
 
   // a convenience endpoint for sharing integration info ( not recommended to do this in production )

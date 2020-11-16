@@ -27,12 +27,15 @@ import {
     GET_GRADES,
     GET_JWKS_ENDPOINT,
     LTI_SESSION_VALIDATION_ENDPOINT,
-    logger
+    logger,
+    LTI_DEEPLINK_REDIRECT
 } from "@asu-etx/rl-shared";
 
 import { Session } from "../database/entity/Session";
 
 import { validateRequest } from "../util/externalRedirect";
+
+const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
 
 // NOTE: If we make calls from the client directly to Canvas with the token
@@ -46,15 +49,15 @@ async function getPlatform(req: any): Promise<any> {
     return session?.platform;
 }
 
-async function getSessionFromKey(req: any, key: string): Promise<any>  {
+async function getSessionFromKey(req: any, key: string): Promise<any> {
     logger.debug(`session_key: ${key}`);
     let session = req.session;
-    
+
     if (!req.session.platform) {
         try {
             const foundSession: Session | null = await Session.primaryKey.get(key);
             if (foundSession) {
-                session = JSON.parse(foundSession.session);         
+                session = JSON.parse(foundSession.session);
             }
         } catch (err) {
             console.error(`attempting to find session:${key} failed`, err)
@@ -111,7 +114,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const session = await getSessionFromKey(req, key);
         const title = session.title;
         const score = req.body.params;
-       
+
         send(res).send(await putStudentGradeView(await session.platform, score, title));
     });
 
@@ -157,6 +160,12 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const isValid = validateSession(platform);
         logger.debug(`isValidSession: ${isValid}`);
         send(res).send({ isValid: isValid });
+    });
+
+    // post to accept the LMS launch with idToken
+    app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req: any, res: any) => {
+        logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
+        res.redirect(URL_ROOT + LTI_DEEPLINK_REDIRECT);
     });
 };
 

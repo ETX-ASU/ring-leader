@@ -15,6 +15,9 @@ import {
 
 import validateSession from "../services/validationService";
 import ToolConsumer from "../models/ToolConsumer";
+import {
+  deepLinkRedirect
+} from "../services/ltiLaunchService";
 
 import {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
@@ -27,7 +30,8 @@ import {
   GET_GRADES,
   GET_JWKS_ENDPOINT,
   LTI_SESSION_VALIDATION_ENDPOINT,
-  logger
+  logger,
+  LTI_DEEPLINK_REDIRECT
 } from "@asu-etx/rl-shared";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
@@ -128,6 +132,12 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     logger.debug(`sessionquery: ${JSON.stringify(req.query["platform"])}`);
     res.send({ isValid: validateSession(req.query.platform) });
   });
+
+    // post to accept the LMS launch with idToken
+    app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req: any, res: any) => {
+      logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
+      deepLinkRedirect(req, res);
+    });
 };
 
 export default rlLtiServiceExpressEndpoints;
