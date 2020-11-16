@@ -133,11 +133,7 @@ const rlLtiServiceExpressEndpoints = (app: Express): void => {
     res.send({ isValid: validateSession(req.query.platform) });
   });
 
-    // post to accept the LMS launch with idToken
-    app.post(LTI_DEEPLINK_REDIRECT, requestLogger, async (req: any, res: any) => {
-      logger.debug(`LTI_DEEPLINK_REDIRECT:${LTI_DEEPLINK_REDIRECT}`);
-      deepLinkRedirect(req, res);
-    });
+
 };
 
 export default rlLtiServiceExpressEndpoints;
