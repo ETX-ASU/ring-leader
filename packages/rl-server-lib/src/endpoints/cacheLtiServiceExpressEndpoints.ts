@@ -116,7 +116,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-        const key = `${req.body.userId}${req.body.courseId}`;
+        const key = validateRequest(req);
         const session = await getSessionFromKey(req, key);
         const contentItems = req.body.contentItems;
         // eslint-disable-next-line prettier/prettier
@@ -124,7 +124,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
     });
 
     app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
-        const key = `${req.body.userId}${req.body.courseId}`;
+        const key = validateRequest(req);
         const session = await getSessionFromKey(req, key);
         const title = session.title;
         const score = req.body.params;

@@ -49,3 +49,6 @@ export const LOGGING_LEVEL = ENV_VARS.LOGGING_LEVEL || "error";
 export const PLATFORM = ENV_VARS.PLATFORM || "aws";
 export const LTI_API_NAME = ENV_VARS.LTI_API_NAME || "ringleaderapi";
 export const API_URL = ENV_VARS.API_URL || "https://prod.dyl4ur5zvn9kt.amplifyapp.com";
+//DEEP_LINK_DISPLAY_BASE_URL is to be used if the launch url for deeplinks does not have the same base as for launch of main app.
+// for most application will be null or empty
+export const DEEP_LINK_DISPLAY_BASE_URL = ENV_VARS.DEEP_LINK_DISPLAY_BASE_URL || "";

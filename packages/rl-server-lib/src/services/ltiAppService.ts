@@ -156,8 +156,8 @@ const putStudentGrade = async (platform: any, score: any,  title: string | undef
             gradingProgress: score.gradingProgress
         },
         {
-            id: score.lineItemId || platform.lineitem,
-            userId: score.userId,
+            id: score.lineItemId || score.resourceId || score.assignmentId || platform.lineitem,
+            userId: score.userId || score.studentId,
             title: platform.lineitem || title || null
             //if platform.lineitem is null then it means that the SSO was not performed hence we
             //will fetch line item id by matching the assignment title.

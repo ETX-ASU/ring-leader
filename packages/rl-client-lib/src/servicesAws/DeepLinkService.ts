@@ -16,8 +16,12 @@ const submitResourceSelection = async (
 ) => {
   API.configure(aws_exports);
   const data = {
-    contentItems: [resourceLink],
+    headers: {
+      'Content-Type': 'application/json'
+    }, body: {
+      contentItems: [resourceLink],
     hash: getHash()
+    }
   };
   const assignment = await API.post(
     LTI_API_NAME,

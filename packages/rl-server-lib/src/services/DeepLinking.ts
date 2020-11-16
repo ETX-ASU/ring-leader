@@ -7,7 +7,10 @@ import {
   ERROR_MSG_CLAIM,
   LOG_CLAIM,
   ERROR_LOG_CLAIM,
-  DATA_CLAIM
+  DATA_CLAIM,
+  DEEP_LINK_DISPLAY_BASE_URL,
+  LTI_ASSIGNMENT_REDIRECT,
+  APPLICATION_URL
 } from "@asu-etx/rl-shared";
 
 class DeepLinking {
@@ -125,6 +128,10 @@ class DeepLinking {
 
     for (const contentItem of contentItems) {
       if (!acceptedTypes.includes(contentItem.type)) continue;
+      if(!contentItem.url || !contentItem.url.trim().length) {
+        contentItem.url = `${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}${LTI_ASSIGNMENT_REDIRECT}?assignmentId=${contentItem.resourceId}`;
+      }
+      
       selectedContentItems.push(contentItem);
       if (!acceptMultiple) break;
     }

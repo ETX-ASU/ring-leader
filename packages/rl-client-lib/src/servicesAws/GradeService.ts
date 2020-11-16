@@ -11,8 +11,12 @@ import {getHash, startParamsWithHash} from '../utils/hashUtils';
 const submitGrade = async (aws_exports:any, params: any) => {
   API.configure(aws_exports);
   const data = {
-    params: params,
-    hash: getHash()
+    headers: {
+      'Content-Type': 'application/json'
+    }, body: {
+      params: params,
+      hash: getHash()
+    }
   };
   const results = await API.post(LTI_API_NAME, PUT_STUDENT_GRADE, data);
   logger.debug(`submitGrade: ${results}`);
@@ -25,8 +29,12 @@ const submitInstructorGrade = async (
 ) => {
   API.configure(aws_exports);
   const data = {
-    params: params,
-    hash: getHash()
+    headers: {
+      'Content-Type': 'application/json'
+    }, body: {
+      params: params,
+      hash: getHash()
+    }
   };
   const results = await API.post(LTI_API_NAME, PUT_STUDENT_GRADE, data);
   return results;
