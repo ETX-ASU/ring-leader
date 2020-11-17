@@ -10,7 +10,8 @@ import {
   DATA_CLAIM,
   DEEP_LINK_DISPLAY_BASE_URL,
   LTI_ASSIGNMENT_REDIRECT,
-  APPLICATION_URL
+  APPLICATION_URL,
+  DEEP_LINK_FORM_SUBMIT_SCRIPT
 } from "@asu-etx/rl-shared";
 
 const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
@@ -47,12 +48,19 @@ class DeepLinking {
       '" method="POST">' +
       '<input type="hidden" name="JWT" value="' +
       message +
-      '" />' +
-      "</form>" +
-      "<script>" +
-      'document.getElementById("ltijs_submit").submit()' +
-      "</script>";
+      '" />' +  
+      "</form>" + this.simpleSubmitScript();
     return form;
+  }
+
+  simpleSubmitScript() : string  {
+    let script = "";
+    switch(DEEP_LINK_FORM_SUBMIT_SCRIPT) {
+      case "simple": 
+        script = '<script>document.getElementById("ltijs_submit").submit()</script>';
+        break;
+    }
+    return script;
   }
   /**
    * @description Creates a DeepLinking signed message.
