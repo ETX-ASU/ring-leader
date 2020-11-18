@@ -3,9 +3,9 @@ import ToolConsumerRequest from "../models/ToolConsumerRequest";
 import { logger } from "@asu-etx/rl-shared";
 
 const getToolConsumers = (): ToolConsumer[] => {
-  const toolConsumers = JSON.parse(process.env.toolConsumers ? process.env.toolConsumers: "[]");
+  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS: "[]");
   logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
-  return process.env.toolConsumers ? JSON.parse(process.env.toolConsumers) : [];
+  return toolConsumers;
 };
 
 const getToolConsumerByName = (name: string): ToolConsumer | undefined => {

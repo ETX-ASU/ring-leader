@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "../util/Platform";
+import express  from "express";
+import { Express } from "express";
+import globalRequestLog from "global-request-logger";
+ import bodyParser from "body-parser";
 import {
   logger,
   MSG_CLAIM,
@@ -13,6 +17,7 @@ import {
   APPLICATION_URL,
   DEEP_LINK_FORM_SUBMIT_SCRIPT
 } from "@asu-etx/rl-shared";
+import { isExpressionStatement } from "typescript";
 
 const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
@@ -51,6 +56,21 @@ class DeepLinking {
       '" />' +  
       "</form>" + this.simpleSubmitScript();
     return form;
+  }
+
+  async postDeepLink(
+    response: any,
+    platform: Platform,
+    contentItems: any,
+    options: any
+  ): Promise<void> {
+    const message = await this.createDeepLinkingMessage(
+      platform,
+      contentItems,
+      options
+    ); // Creating auto submitting form
+    const params ="JWT=" + message;
+    response.status(301).redirect(platform.deepLinkingSettings.deep_link_return_url, params);
   }
 
   simpleSubmitScript() : string  {

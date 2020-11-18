@@ -145,6 +145,20 @@ const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise
     return {form:form};
 };
 
+const forwardDeepLinkAssignmentPost = async (response: any, platform: any, contentItems: any): Promise<void> => {
+    logger.debug("deeplink - platform - " + JSON.stringify(platform));
+    logger.debug("deeplink - contentItems - " + JSON.stringify(contentItems));
+
+    // Creates the deep linking request form
+    new DeepLinking().postDeepLink(response,
+        platform,
+        contentItems,
+        {
+            message: "Successfully registered resource!"
+        }
+    );
+};
+
 const putStudentGrade = async (platform: any, score: any,  title: string | undefined): Promise<void> => {
     const results = await new Grade().putGrade(
         platform,
@@ -220,4 +234,4 @@ const getGrades = async (platform: any, lineItemId: any): Promise<any> => {
     return scoreData;
 };
 
-export { getGrades, deleteLineItem, putStudentGrade, postDeepLinkAssignment, putStudentGradeView, getAssignedStudents, getUnassignedStudents, getRoster };
+export { getGrades, deleteLineItem, putStudentGrade, postDeepLinkAssignment, forwardDeepLinkAssignmentPost, putStudentGradeView, getAssignedStudents, getUnassignedStudents, getRoster };

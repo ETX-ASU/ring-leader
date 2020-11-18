@@ -8,6 +8,7 @@ import {
     deleteLineItem,
     putStudentGrade,
     postDeepLinkAssignment,
+    forwardDeepLinkAssignmentPost,
     putStudentGradeView,
     getAssignedStudents,
     getUnassignedStudents,
@@ -27,13 +28,13 @@ import {
     GET_GRADES,
     GET_JWKS_ENDPOINT,
     LTI_SESSION_VALIDATION_ENDPOINT,
+    DEEP_LINK_FORWARD_SERVER_SIDE,
     logger
 } from "@asu-etx/rl-shared";
 
 import { Session } from "../database/entity/Session";
 
 import { validateRequest } from "../util/externalRedirect";
-import { deepLinkRedirect } from "../services/ltiLaunchService";
 
 const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
@@ -125,7 +126,11 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const session = await getSessionFromKey(req, key);
         const contentItems = req.body.contentItems;
         // eslint-disable-next-line prettier/prettier
-        return send(res).send(await postDeepLinkAssignment(session.platform, contentItems));
+        if(DEEP_LINK_FORWARD_SERVER_SIDE) {
+            forwardDeepLinkAssignmentPost(res, session.platform, contentItems); 
+        } else {
+            return send(res).send(await postDeepLinkAssignment(session.platform, contentItems));
+        }
     });
 
     app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
