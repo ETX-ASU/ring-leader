@@ -1,7 +1,7 @@
 
 import path from "path";
 import globalRequestLog from "global-request-logger";
-import { Express } from "express";
+import { Express, Request, Response } from "express";
 import expressSession from "express-session";
 import getLaunchParameters from "../util/getLaunchParameters"
 import bodyParser from "body-parser";

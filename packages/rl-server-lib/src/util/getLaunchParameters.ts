@@ -10,11 +10,11 @@ const getLaunchParameters = async (req: any, role: any) => {
         client_id:platform.clientId,
         deployment_id : platform.deploymentId
     };
-    console.log(`attempting to find consumerTool with following values: ${findConsumer}`);
+    console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
     const toolConsumer = getToolConsumer(findConsumer);
     let hash = "";
     if(toolConsumer) {
-        const hash = getRedirectToken(toolConsumer, userId+courseId);
+        hash = getRedirectToken(toolConsumer, userId+courseId);
     } else {
          throw new Error(`unable to find consumer tool: ${toolConsumer}`);
     }
