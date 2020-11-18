@@ -33,7 +33,7 @@ const cacheApp = (app: Express): void => {
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
         next()
     });
-    logger.debug("Session secret" + SESSION_SECRET);
+    
     app.use(expressSession({
         secret: SESSION_SECRET,
         resave: true,

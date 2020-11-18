@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "../util/Platform";
-import express  from "express";
-import { Express } from "express";
+import { Response } from "express";
 import globalRequestLog from "global-request-logger";
  import bodyParser from "body-parser";
 import {
@@ -59,7 +58,7 @@ class DeepLinking {
   }
 
   async postDeepLink(
-    response: any,
+    response: Response,
     platform: Platform,
     contentItems: any,
     options: any
@@ -67,10 +66,10 @@ class DeepLinking {
     const message = await this.createDeepLinkingMessage(
       platform,
       contentItems,
-      options
+      options, 
     ); // Creating auto submitting form
     const params ="JWT=" + message;
-    response.status(301).redirect(platform.deepLinkingSettings.deep_link_return_url, params);
+    response.redirect(307, `${platform.deepLinkingSettings.deep_link_return_url}?${params}`);
   }
 
   simpleSubmitScript() : string  {
