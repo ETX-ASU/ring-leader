@@ -18,6 +18,7 @@ const getLaunchParameters = async (req: any, role: any) => {
     } else {
          throw new Error(`unable to find consumer tool: ${toolConsumer}`);
     }
+    console.log(`this is hash: ${JSON.stringify(hash)}`);
     let session = {};
     try {
         const session = new Session();
