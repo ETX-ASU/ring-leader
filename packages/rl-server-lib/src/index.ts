@@ -11,6 +11,8 @@ import cacheLtiServiceExpressEndpoints from "./endpoints/cacheLtiServiceExpressE
 import ToolConsumer from "./models/ToolConsumer";
 import {Session} from "./database/entity/Session";
 import initDBTables from "./database/dataconnection";
+import getLaunchParameters from "./util/getLaunchParameters"
+import cacheApp from "./apps/cacheApp"
 
 import {
   rlValidateToken,
@@ -56,5 +58,7 @@ export {
   Session,
   initDBTables,
   setResponseAuthorization,
-  getRedirectToken
+  getRedirectToken,
+  getLaunchParameters,
+  cacheApp
 };

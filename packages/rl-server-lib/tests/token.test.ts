@@ -3,7 +3,7 @@ import assert from 'assert';
 import jwt from "jsonwebtoken";
 import {describe, before, after, beforeEach, it} from 'mocha';
 import {getRedirectToken, validateTokenWithToolConsumer} from '../src/util/externalRedirect';
-const toolConsumers = require("./.tool_consumers.jim.json");
+const toolConsumers = require("./.tool_consumers.test.json");
 
 // We can group similar tests inside a describe block 
 describe("Simple Calculations", () => { 

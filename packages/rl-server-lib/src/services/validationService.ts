@@ -6,7 +6,6 @@ import { DEPLOYMENT_ID_CLAIM, logger } from "@asu-etx/rl-shared";
 const validateSession =  (platform: any) => {
   const decodedToken = rlDecodeIdToken(platform.idToken);
   const platformDetails = getToolConsumer({
-    name: "",
     client_id: decodedToken["aud"],
     iss: decodedToken["iss"],
     deployment_id: decodedToken[DEPLOYMENT_ID_CLAIM]

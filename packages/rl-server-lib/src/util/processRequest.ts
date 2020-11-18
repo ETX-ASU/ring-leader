@@ -14,7 +14,6 @@ const processRequest = async (request: any) => {
   const decodedToken = rlDecodeIdToken(request.body.id_token);
   rlValidateDecodedToken(decodedToken, session);
   const platformDetails = getToolConsumer({
-    name: "",
     client_id: decodedToken["aud"],
     iss: decodedToken["iss"],
     deployment_id: decodedToken[DEPLOYMENT_ID_CLAIM]

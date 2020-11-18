@@ -55,3 +55,4 @@ export const DEEP_LINK_DISPLAY_BASE_URL = ENV_VARS.DEEP_LINK_DISPLAY_BASE_URL ||
 
 //current options are simple or ""
 export const DEEP_LINK_FORM_SUBMIT_SCRIPT = ENV_VARS.DEEP_LINK_FORM_SUBMIT_SCRIPT || "";
+export const SESSION_SECRET = process.env.SESSION_SECRET ? process.env.SESSION_SECRET : "demo-secret";

@@ -26,7 +26,6 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
   const response: any = rlProcessOIDCRequest(req, state, nonce);
 
   const platformDetails = getToolConsumer({
-    name: "",
     client_id: response.client_id,
     iss: response.iss,
     deployment_id: ""
@@ -70,7 +69,6 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
   );
 
   const platformDetails = getToolConsumer({
-    name: "",
     client_id: response.client_id,
     iss: response.iss,
     deployment_id: ""

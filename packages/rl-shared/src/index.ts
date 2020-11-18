@@ -24,7 +24,8 @@ import {
   GET_JWKS_ENDPOINT,
   PLATFORM,
   LTI_API_NAME,
-  API_URL
+  API_URL,
+  SESSION_SECRET
 } from "./util/environment";
 
 import {
@@ -119,5 +120,6 @@ export {
   DATA_CLAIM,
   PLATFORM,
   LTI_API_NAME,
-  API_URL
+  API_URL,
+  SESSION_SECRET
 };

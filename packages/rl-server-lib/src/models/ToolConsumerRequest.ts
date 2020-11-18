@@ -1,8 +1,5 @@
 
 class ToolConsumerRequest {
-
-  name = "";
-
   iss = "";
 
   client_id = "";
