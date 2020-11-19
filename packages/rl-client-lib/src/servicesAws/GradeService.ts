@@ -43,7 +43,7 @@ const submitInstructorGrade = async (
 const getGrades = async (aws_exports:any, assignmentId: string) => {
   API.configure(aws_exports);
   const grades = await API.get(LTI_API_NAME, 
-    `${GET_GRADES}${startParamsWithHash()}}&lineItemId=${assignmentId}`, null);
+    `${GET_GRADES}${startParamsWithHash()}&lineItemId=${assignmentId}`, null);
     return grades;
   };
 
