@@ -68,8 +68,14 @@ class DeepLinking {
       contentItems,
       options, 
     ); // Creating auto submitting form
-    const params ="JWT=" + message;
-    response.redirect(307, `${platform.deepLinkingSettings.deep_link_return_url}?${params}`);
+    const params ="JWT=" + message; //&${params}
+    const json = `{JWT:${message}}`;
+    try {
+      response.json(json);
+    response.redirect(307, `${platform.deepLinkingSettings.deep_link_return_url}`);
+    } catch (err) {
+      logger.error("Unable to forward, returned error:" + JSON.stringify(err));
+    } 
   }
 
   simpleSubmitScript() : string  {
