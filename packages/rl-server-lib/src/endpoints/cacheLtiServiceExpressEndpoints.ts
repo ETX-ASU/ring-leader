@@ -126,7 +126,7 @@ const cacheLtiServiceExpressEndpoints = (app: Express): void => {
         const session = await getSessionFromKey(req, key);
         const contentItems = req.body.contentItems;
         // eslint-disable-next-line prettier/prettier
-        if(DEEP_LINK_FORWARD_SERVER_SIDE) {
+        if(DEEP_LINK_FORWARD_SERVER_SIDE == "TRUE") {
             forwardDeepLinkAssignmentPost(res, session.platform, contentItems); 
         } else {
             return send(res).send(await postDeepLinkAssignment(session.platform, contentItems));
