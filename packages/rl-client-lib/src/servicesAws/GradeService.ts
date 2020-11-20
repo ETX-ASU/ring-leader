@@ -6,10 +6,15 @@ import {
   LTI_API_NAME
 } from "@asu-etx/rl-shared";
 import {getHash, startParamsWithHash} from '../utils/hashUtils';
+import { parseCommandLine } from "typescript";
 //import aws_exports from '../aws-exports'
 
 const submitGrade = async (aws_exports:any, params: any) => {
   API.configure(aws_exports);
+  if(params.score) {
+    params.givenScore = params.score;
+    params.socore = null;
+  }
   const data = {
     headers: {
       'Content-Type': 'application/json'
@@ -27,6 +32,10 @@ const submitInstructorGrade = async (
   aws_exports:any,
   params: any
 ) => {
+  if(params.score) {
+    params.givenScore = params.score;
+    params.socore = null;
+  }
   API.configure(aws_exports);
   const data = {
     headers: {
