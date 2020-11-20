@@ -1,17 +1,18 @@
-
+import path from "path";
 import globalRequestLog from "global-request-logger";
 import { Express } from "express";
+import express from "express";
 import expressSession from "express-session";
-import getLaunchParameters from "../util/getLaunchParameters"
 import bodyParser from "body-parser";
 import ltiLaunchEndpoints from "../endpoints/ltiLaunchEndpoints";
-import cacheLtiServiceEndpoints from "../endpoints/cacheLtiServiceEndpoints";
+import ltiServiceEndpoints from "../endpoints/ltiServiceEndpoints";
 
-import { logger, SESSION_SECRET, LTI_STUDENT_REDIRECT, LTI_INSTRUCTOR_REDIRECT, LTI_ASSIGNMENT_REDIRECT, LTI_DEEPLINK_REDIRECT } from "@asu-etx/rl-shared";
+import { logger, LTI_STUDENT_REDIRECT, LTI_INSTRUCTOR_REDIRECT, LTI_ASSIGNMENT_REDIRECT, LTI_DEEPLINK_REDIRECT, SESSION_SECRET } from "@asu-etx/rl-shared";
 
 
-const cacheApp = (app: Express, sessionParams: any): void => {
+const expressApp = (app: Express, userInterfaceRood: string, sessionParams: any): void => {
   /*========================== LOG ALL REQUESTS =========================*/
+  const USER_INTERFACE_PLAYER_PAGE = path.join(userInterfaceRood, "index.html");
   globalRequestLog.initialize();
   globalRequestLog.on("success", (request: any, response: any) => {
     logger.info({ request: request });
@@ -24,17 +25,12 @@ const cacheApp = (app: Express, sessionParams: any): void => {
 
   // avoid signature failure for LTI https://github.com/omsmith/ims-lti/issues/4
   app.enable("trust proxy");
+
   /*========================== GLOBAL MIDDLEWARE ==========================*/
+
   // make req.body access easier for all request handlers
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
-
-  // Enable CORS for all methods
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-    next()
-  });
 
   // In Memory Sessions ( not recommended for production servers )
   if (!sessionParams)
@@ -53,42 +49,49 @@ const cacheApp = (app: Express, sessionParams: any): void => {
     expressSession(sessionParams)
   );
 
-  /*========================== UI ENDPOINTS ==========================*/
-  // Instructor
-  const APPLICATION_URL = process.env.APPLICATION_URL;
+  // UI static asset server ( CSS, JS, etc...)
+  // This points the root to the built create react app in rl-tool-example-client
+  app.use("/", express.static(userInterfaceRood));
+
+  /*========================== REGISTER REST ENDPOINTS ==========================*/
 
   // lti 1.3 launch with context and establish session
   ltiLaunchEndpoints(app);
 
   // lti 1.3 advantage service endpoints. NOTE: If we decide to only make calls client side with the idToken
   // then these endpoints will not be needed. They could be completed to show what a server side flow might look like
-  cacheLtiServiceEndpoints(app);
+  ltiServiceEndpoints(app);
 
+
+
+  /*========================== UI ENDPOINTS ==========================*/
+
+  // Instructor
   app.route(LTI_INSTRUCTOR_REDIRECT).get(async (req: any, res: any) => {
-    logger.debug(`hitting instructor request ${APPLICATION_URL}:${JSON.stringify(req.session)}`);
-    const params = await getLaunchParameters(req, "instructor");
-    res.status(301).redirect(APPLICATION_URL + params);
+    logger.debug(`hitting instructor response:${JSON.stringify(res.session)}`);
+    logger.debug(`hitting instructor request:${JSON.stringify(req.session)}`);
+    res.sendFile(USER_INTERFACE_PLAYER_PAGE);
   });
+
   // Student
   app.route(LTI_STUDENT_REDIRECT).get(async (req, res) => {
-    const params = await getLaunchParameters(req, "learner");
-    res.status(301).redirect(APPLICATION_URL + params);
+    res.sendFile(USER_INTERFACE_PLAYER_PAGE);
   });
+
   // Student Assignment
   app.route(LTI_ASSIGNMENT_REDIRECT).get(async (req, res) => {
-    const params = await getLaunchParameters(req, null);
-    res.status(301).redirect(APPLICATION_URL + params);
+    res.sendFile(USER_INTERFACE_PLAYER_PAGE);
   });
+
   // Deep Link
   app.route(LTI_DEEPLINK_REDIRECT).get(async (req, res) => {
-    const params = await getLaunchParameters(req, null);
-    res.status(301).redirect(APPLICATION_URL + params + "&mode=selectAssignment");
+    res.sendFile(USER_INTERFACE_PLAYER_PAGE);
   });
 
+  /*========================== SERVER STARTUP ==========================*/
 
-  app.listen(3000, function () {
-    console.log("App started")
-  });
 }
 
-export default cacheApp;
+
+
+export { expressApp };

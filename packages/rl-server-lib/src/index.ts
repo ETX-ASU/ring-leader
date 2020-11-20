@@ -4,12 +4,12 @@ import { NamesAndRoles } from "./services/namesAndRolesService";
 import { rlPlatform } from "./util/rlPlatform";
 import requestLogger from "./middleware/requestLogger";
 
-import rlLtiLaunchExpressEndpoints from "./endpoints/rlLtiLaunchExpressEndpoints";
-import rlLtiServiceExpressEndpoints from "./endpoints/rlLtiServiceExpressEndpoints";
-import cacheLtiServiceExpressEndpoints from "./endpoints/cacheLtiServiceExpressEndpoints";
+import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
+import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
+import cacheLtiServiceEndpoints from "./endpoints/cacheLtiServiceEndpoints";
 
 import ToolConsumer from "./models/ToolConsumer";
-import {Session} from "./database/entity/Session";
+import { Session } from "./database/entity/Session";
 import initDBTables from "./database/dataconnection";
 import getLaunchParameters from "./util/getLaunchParameters"
 import cacheApp from "./apps/cacheApp"
@@ -51,9 +51,9 @@ export {
   assignmentRedirectPost,
   ltiLaunchPost,
   requestLogger,
-  rlLtiLaunchExpressEndpoints,
-  rlLtiServiceExpressEndpoints,
-  cacheLtiServiceExpressEndpoints,
+  ltiLaunchEndpoints,
+  ltiServiceEndpoints,
+  cacheLtiServiceEndpoints,
   ToolConsumer,
   Session,
   initDBTables,

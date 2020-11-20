@@ -25,7 +25,7 @@ import {
  * @param {Object} app - the express application that needs to bind endpoints.
  *
  **/
-const rlLtiLaunchExpressEndpoints = (app: Express): void => {
+const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req: any, res: any) => {
     initOidcGet(req, res);
@@ -57,4 +57,4 @@ const rlLtiLaunchExpressEndpoints = (app: Express): void => {
   });
 };
 
-export default rlLtiLaunchExpressEndpoints;
+export default ltiLaunchEndpoints;
