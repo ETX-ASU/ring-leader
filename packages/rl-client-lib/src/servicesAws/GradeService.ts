@@ -5,24 +5,24 @@ import {
   logger,
   LTI_API_NAME
 } from "@asu-etx/rl-shared";
-import {getHash, startParamsWithHash} from '../utils/hashUtils';
+import { getHash, startParamsWithHash } from '../utils/hashUtils';
 //import aws_exports from '../aws-exports' does not need to be imported
 
-const buildScore = (params: any) : any => {
+const buildScore = (params: any): any => {
   const score: any = {};
   score.grade = params.score ? params.score : params.grade ? params.grade : params.scoreGiven;
-    if(params.timestamp) score.timestamp =  params.timestamp;
-    score.comment = params.comment;
-    if(params.activityProgress) score.activityProgress =  params.activiyProgress;
-    score.gradingProgress = params.progress ? params.progress : params.gradingProgress;
-    if(params.studentId || params.userId) score.userId = params.studentId ? params.studentId : params.userId;
-    if(params.scoreMaximum) score.scoreMaximum =  params.scoreMaximum;
+  if (params.timestamp) score.timestamp = params.timestamp;
+  score.comment = params.comment;
+  if (params.activityProgress) score.activityProgress = params.activiyProgress;
+  score.gradingProgress = params.progress ? params.progress : params.gradingProgress;
+  if (params.studentId || params.userId) score.userId = params.studentId ? params.studentId : params.userId;
+  if (params.scoreMaximum) score.scoreMaximum = params.scoreMaximum;
 
-    score.activityProgress = params.activityProgress ? params.activityProgress : determineProgress(score.gradingProgress);
-    return score;
+  score.activityProgress = params.activityProgress ? params.activityProgress : determineProgress(score.gradingProgress);
+  return score;
 }
 
-const determineProgress = (gradingProgress: string) : any => {
+const determineProgress = (gradingProgress: string): any => {
   let activityProgress = gradingProgress == "NotReady" ? "InProgress" : "Completed";
   return activityProgress;
 }
@@ -43,17 +43,21 @@ const submitGrade = async (aws_exports: any, params: any) => {
 };
 
 const submitInstructorGrade = async (
-  aws_exports:any,
+  aws_exports: any,
   params: any
 ) => {
-   return submitGrade(aws_exports, params);
+  return submitGrade(aws_exports, params);
 };
 
-const getGrades = async (aws_exports:any, assignmentId: string) => {
+const getGrades = async (aws_exports: any, assignmentId: string) => {
   API.configure(aws_exports);
-  const grades = await API.get(LTI_API_NAME, 
-    `${GET_GRADES}${startParamsWithHash()}&lineItemId=${assignmentId}`, null);
-    return grades;
-  };
+  const grades = await API.get(LTI_API_NAME,
+    GET_GRADES,{queryStringParameters: 
+    {
+      lineItemId: assignmentId,
+      hash: getHash()
+    }});
+  return grades;
+};
 
 export { submitGrade, getGrades, submitInstructorGrade };
