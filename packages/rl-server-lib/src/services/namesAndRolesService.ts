@@ -33,7 +33,7 @@ class NamesAndRoles {
     );
     const tokenRes = await getAccessToken(platform, CONTEXT_MEMBERSHIP_READ_CLAIM);
     logger.debug("Access_token retrieved for [" + platform.iss + "]");
-    logger.debug("Access token received -" + tokenRes);
+    logger.debug("Access token received -" + JSON.stringify(tokenRes));
 
     logger.debug("tokenRes.access_token: " + tokenRes.access_token);
     logger.debug("tokenRes.token_type: " + tokenRes.token_type);

@@ -200,7 +200,7 @@ const getGrades = async (platform: any, lineItemId: any): Promise<any> => {
             resourceLinkId: false
         }));
         logger.debug(
-            " results.results - " + JSON.stringify(results)
+            "results.results - " + JSON.stringify(results)
         );
 
         const membersCollection = await new NamesAndRoles().getMembers(platform, {

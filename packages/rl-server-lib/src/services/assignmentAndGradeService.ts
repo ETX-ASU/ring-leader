@@ -34,10 +34,12 @@ class Grade {
     logger.debug(
       `Access token to get line items - get new token ${accessToken}`
     );
-
+    
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
+    logger.debug(`platform for get line items: ${JSON.stringify(platform)}`);
+    logger.debug(`options for get line items: ${JSON.stringify(platform)}`);
     if (!accessToken) {
       logger.debug("Access token blank - get new token");
 
@@ -344,7 +346,7 @@ class Grade {
         let searchParams: any = [...queryParams, ...query];
         searchParams = new URLSearchParams(searchParams);
         logger.debug(
-          `Inside GetGrades - searchParams, url - ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
+          `Inside GetGrades - searchParams, ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
         );
 
         const results = await got
