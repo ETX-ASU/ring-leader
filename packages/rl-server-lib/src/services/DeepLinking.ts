@@ -31,7 +31,13 @@ class DeepLinking {
    * @param {String} options.log - Message the platform may log in it's system upon return to the platform.
    * @param {String} options.errlog - Message the platform may log in it's system upon return to the platform if some error has occurred.
    */
-  async createDeepLinkingForm(
+  async sendFormToConsumer(platform: Platform,
+    contentItems: any,
+    options: any) {
+    const form = await this.createDeepLinkingForm(platform, contentItems, options);
+  }
+  
+   async createDeepLinkingForm(
     platform: Platform,
     contentItems: any,
     options: any

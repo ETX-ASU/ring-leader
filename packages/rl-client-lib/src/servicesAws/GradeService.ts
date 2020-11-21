@@ -10,15 +10,23 @@ import {getHash, startParamsWithHash} from '../utils/hashUtils';
 
 const buildScore = (params: any) : any => {
   const score: any = {};
-  score.scoreGiven = params.score ? params.score : params.givenScore;
+  score.grade = params.score ? params.score : params.grade ? params.grade : params.scoreGiven;
     if(params.timestamp) score.timestamp =  params.timestamp;
     score.comment = params.comment;
     if(params.activityProgress) score.activityProgress =  params.activiyProgress;
     score.gradingProgress = params.progress ? params.progress : params.gradingProgress;
     if(params.studentId || params.userId) score.userId = params.studentId ? params.studentId : params.userId;
     if(params.scoreMaximum) score.scoreMaximum =  params.scoreMaximum;
+
+    score.activityProgress = params.activityProgress ? params.activityProgress : determineProgress(score.gradingProgress);
     return score;
 }
+
+const determineProgress = (gradingProgress: string) : any => {
+  let activityProgress = gradingProgress == "NotReady" ? "InProgress" : "Completed";
+  return activityProgress;
+}
+
 const submitGrade = async (aws_exports: any, params: any) => {
   API.configure(aws_exports);
   const data = {
@@ -30,7 +38,7 @@ const submitGrade = async (aws_exports: any, params: any) => {
     }
   };
   const results = await API.post(LTI_API_NAME, PUT_STUDENT_GRADE, data);
-  logger.debug(`submitGrade: ${results}`);
+  logger.debug(`submitGrade results: ${results}`);
   return results;
 };
 

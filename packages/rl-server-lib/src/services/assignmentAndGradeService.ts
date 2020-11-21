@@ -227,7 +227,7 @@ class Grade {
 
     for (const lineitem of lineItems) {
       try {
-        logger.debug("lineitem - " + JSON.stringify(lineitem));
+        logger.debug("Inside putGrade lineitem found - " + JSON.stringify(lineitem));
 
         const lineitemUrl = lineitem.id;
         let scoreUrl = lineitemUrl + "/scores";
