@@ -12,10 +12,10 @@ const getUsers = async (aws_exports: any, role: string) => {
   logger.debug(`hitting endpoint GET:${ROSTER_ENDPOINT}`);
   const users = await API.get(LTI_API_NAME,
     ROSTER_ENDPOINT,
-    {
+    {queryStringParameters: {
       role: role,
       hash: getHash()
-    });
+    }});
   return users;
 };
 
@@ -42,7 +42,8 @@ const getAssignedStudents = async (
   resourceLinkId: string
 ) => {
   API.configure(aws_exports);
-  const uanssignedStudents = await API.get(LTI_API_NAME, GET_ASSIGNED_STUDENTS_ENDPOINT, {queryStringParameters: {
+  const uanssignedStudents = await API.get(LTI_API_NAME, GET_ASSIGNED_STUDENTS_ENDPOINT, 
+    {queryStringParameters: {
     lineItemId: assignmentId,
     resourceLinkId: resourceLinkId,
     hash: getHash()

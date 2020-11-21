@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "../util/Platform";
 import { Response } from "express";
-import globalRequestLog from "global-request-logger";
- import bodyParser from "body-parser";
+import axios from "axios";
+import { AxiosResponse } from "axios";
 import {
   logger,
   MSG_CLAIM,
@@ -31,11 +31,6 @@ class DeepLinking {
    * @param {String} options.log - Message the platform may log in it's system upon return to the platform.
    * @param {String} options.errlog - Message the platform may log in it's system upon return to the platform if some error has occurred.
    */
-  async sendFormToConsumer(platform: Platform,
-    contentItems: any,
-    options: any) {
-    const form = await this.createDeepLinkingForm(platform, contentItems, options);
-  }
   
    async createDeepLinkingForm(
     platform: Platform,
@@ -75,13 +70,15 @@ class DeepLinking {
       options, 
     ); // Creating auto submitting form
     const params ="JWT=" + message; //&${params}
-    const json = `{JWT:${message}}`;
     try {
-      response.json(json);
-    response.redirect(307, `${platform.deepLinkingSettings.deep_link_return_url}`);
+      const axiosResponse:AxiosResponse = await axios.post(platform.deepLinkingSettings.deep_link_return_url, params);
+      response.json(axiosResponse.data);
+      response.status(axiosResponse.status);
     } catch (err) {
       logger.error("Unable to forward, returned error:" + JSON.stringify(err));
+      throw Error("Unable to forward, returned error:" + JSON.stringify(err));
     } 
+    
   }
 
   simpleSubmitScript() : string  {
