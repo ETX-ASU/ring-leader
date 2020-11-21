@@ -25,7 +25,7 @@ class Grade {
    * @param {String} [options.id = false] - Filters line items based on the id
    * @param {String} [options.label = false] - Filters line items based on the label
    */
-
+//TODO fix logic allow for both lineItemId and resouceLinkId
   async getLineItems(
     platform: Platform,
     options?: Options,
@@ -82,7 +82,9 @@ class Grade {
         })
         .json(); // Applying special filters
       logger.debug("lineItems retreived - " + JSON.stringify(lineItems));
-
+      return lineItems;
+    }
+/*
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
           return lineitem.id === options.id;
@@ -103,7 +105,7 @@ class Grade {
       )
         lineItems = lineItems.slice(0, options.limit);
       return lineItems;
-    }
+    }*/
   }
   /**
    * @description Creates a new lineItem for the given context
