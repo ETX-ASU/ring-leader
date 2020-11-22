@@ -10,6 +10,7 @@ import { getHash, startParamsWithHash } from '../utils/hashUtils';
 
 const buildScore = (params: any): any => {
   const score: any = {};
+  logger.debug(`params used to build score: ${params}`)
   score.grade = params.resultScore ? params.resultScore : params.grade ? params.grade : params.scoreGiven;
   if (params.timestamp) score.timestamp = params.timestamp;
   score.comment = params.comment;
@@ -19,6 +20,7 @@ const buildScore = (params: any): any => {
   if (params.scoreMaximum) score.scoreMaximum = params.scoreMaximum;
 
   score.activityProgress = params.activityProgress ? params.activityProgress : determineProgress(score.gradingProgress);
+  logger.debug(`final score: ${score}`);
   return score;
 }
 
@@ -46,7 +48,7 @@ const submitInstructorGrade = async (
   aws_exports: any,
   params: any
 ) => {
-  return submitGrade(aws_exports, params);
+  return submitGrade(aws_exports, buildScore(params));
 };
 
 const getGrades = async (aws_exports: any, assignmentId: string) => {
