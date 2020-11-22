@@ -211,7 +211,7 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
             "Get Grades - members - " + JSON.stringify(membersCollection)
         );
         if (results.length <= 0) return [];
-        logger.debug(`full results from GetGrade: ${results}`);
+        logger.debug(`full results from GetGrade: ${JSON.stringify(results)}`);
         for (const key in results[0].results) {
             const score = results[0].results[key];
             logger.debug("score results from Tool Consumer - " + JSON.stringify(score));
