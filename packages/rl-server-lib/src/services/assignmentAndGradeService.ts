@@ -1,6 +1,6 @@
 // eslint-disable-next-line node/no-extraneous-import
+import axios from "axios";
 import got from "got";
-import { URLSearchParams } from "url";
 import { Score } from "../util/Score";
 import { Platform } from "../util/Platform";
 import { getAccessToken } from "../util/auth";
@@ -50,33 +50,30 @@ class Grade {
         lineitemsEndpoint = lineitemsEndpoint.split("?")[0];
       }
 
-      let queryParams: any = [...query];
-      logger.debug("getLineItems -  options - " + JSON.stringify(options));
-
+      const queryParams : any = {};
       if (options) {
         if (options.resourceLinkId)
-          queryParams.push(["resource_link_id", platform.resourceLinkId]);
+          queryParams.resource_link_id =platform.resourceLinkId;
         if (options.limit && !options.id && !options.label)
-          queryParams.push(["limit", options.limit]);
-        if (options.tag) queryParams.push(["tag", options.tag]);
+          queryParams.limit =options.limit;
+        if (options.tag) 
+          queryParams.tag = options.tag;
         if (options.resourceId)
-          queryParams.push(["resource_id", options.resourceId]);
+          queryParams.resource_id = options.resourceId;
       }
-      logger.debug("getlines - queryParams-" + JSON.stringify(queryParams));
-      queryParams = new URLSearchParams(queryParams);
       logger.debug("getlines - queryParams-" + JSON.stringify(queryParams));
       logger.debug("lineitemsEndpoint - " + lineitemsEndpoint);
 
-      let lineItems: any = await got
+      let results: any = await axios
         .get(lineitemsEndpoint, {
-          searchParams: queryParams,
+          params: queryParams,
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
             Accept: "application/vnd.ims.lis.v2.lineitemcontainer+json"
           }
         })
-        .json(); // Applying special filters
+      let lineItems: any =  results.data;
       logger.debug("lineItems retreived - " + JSON.stringify(lineItems));
 
       if (options && options.id)
@@ -246,13 +243,13 @@ class Grade {
         );
         logger.debug("score - " + JSON.stringify(score));
 
-        const res = await got.post(scoreUrl, {
+        const res = await axios.post(scoreUrl, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
             "Content-Type": "application/vnd.ims.lis.v1.score+json"
           },
-          json: score
+          params: score
         });
 
         logger.debug("Score successfully sent");
@@ -310,10 +307,13 @@ class Grade {
         options.limit = false;
       }
     }
-
-    const lineItems = await this.getLineItems(platform, options);
+    let lineItems = []
+    if(platform.lineitem) {
+      lineItems = [platform.lineitem];
+    } else {
+      lineItems = await this.getLineItems(platform, options);
+    }
     logger.debug("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
-
     const queryParams = [];
 
     if (options) {
@@ -341,20 +341,20 @@ class Grade {
           `Inside GetGrades - searchParams, ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
         );
 
-        const results = await got
+        const results = await axios
           .get(resultsUrl, {
-            searchParams: searchParams,
+            params: searchParams,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
               Accept: "application/vnd.ims.lis.v2.resultcontainer+json"
             }
           })
-          .json();
-        logger.debug("Inside GetGrades - results - " + JSON.stringify(results));
+         
+        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.data));
         resultsArray.push({
           lineitem: lineitem.id,
-          results: results
+          results: results.data
         });
       } catch (err) {
         resultsArray.push({
@@ -395,7 +395,7 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         const lineitemUrl = lineitem.id;
-        await got.delete(lineitemUrl, {
+        await axios.delete(lineitemUrl, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token
