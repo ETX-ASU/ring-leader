@@ -329,7 +329,7 @@ class Grade {
         if(lineitem.id)
           lineitemUrl = lineitem.id + "/results";
         else
-          lineitemUrl = lineitem;
+          lineitemUrl = lineitem + "/results";
         logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
         const results : Response = await axios
@@ -342,7 +342,7 @@ class Grade {
             }
           });
          
-        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.body));
+        logger.debug("Inside GetGrades - results - " + JSON.stringify(results));
         
         resultsArray.push({
           lineitem: lineitem.id,
