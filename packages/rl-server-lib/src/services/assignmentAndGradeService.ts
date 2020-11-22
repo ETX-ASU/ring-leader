@@ -291,10 +291,7 @@ class Grade {
       throw new Error("PLATFORM_NOT_FOUND");
     }
     //we will change this when go for actual implementation
-    const accessToken = await getAccessToken(
-      platform,
-      `${LINE_ITEM_READ_ONLY_CLAIM} ${RESULT_CLAIM}`
-    );
+   
 
     let limit: any = false;
 
@@ -308,12 +305,11 @@ class Grade {
       }
     }
     let lineItems = []
-    if(platform.lineitem) {
-      lineItems = [platform.lineitem];
-    } else {
-      lineItems = await this.getLineItems(platform, options);
-    }
-    logger.debug("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
+    lineItems = await this.getLineItems(platform, options);
+    logger.debug(`Inside GetGrades - line items found by call: ${lineItems}`);
+    logger.debug(`Inside GetGrades - line item in platform: ${platform.lineitem}`);
+    logger.debug(`Inside GetGrades - platform: ${platform}`);
+
     const queryParams:any = {};
 
     if (options) {
@@ -321,6 +317,10 @@ class Grade {
     }
 
     const resultsArray = [];
+    const accessToken = await getAccessToken(
+      platform,
+      `${LINE_ITEM_READ_ONLY_CLAIM} ${RESULT_CLAIM}`
+    );
 
     for (const lineitem of lineItems) {
       try {
@@ -335,9 +335,8 @@ class Grade {
           }
         logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
-        const results : Response = await axios
+        const response  = await got
           .get(lineitemUrl, {
-            params: queryParams,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
@@ -345,14 +344,14 @@ class Grade {
               ContentType: "application/vnd.ims.lis.v2.resultcontainer+json"
             }
           });
-         
-        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.json()));
-        logger.debug("Inside GetGrades - status - " + JSON.stringify(results.status));
-        logger.debug("Inside GetGrades - body - " + JSON.stringify(results.body));
+
+        const body = JSON.parse(response.body);
+        logger.debug("Inside GetGrades - status - " + JSON.stringify(response.statusCode));
+        logger.debug("Inside GetGrades - body - " + JSON.stringify(body));
         
         resultsArray.push({
           lineitem: lineitem.id,
-          results: results.json()
+          results: body
         });
       } catch (err) {
         resultsArray.push({
