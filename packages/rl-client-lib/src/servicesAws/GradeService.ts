@@ -62,4 +62,16 @@ const getGrades = async (aws_exports: any, assignmentId: string) => {
   return grades;
 };
 
-export { submitGrade, getGrades, submitInstructorGrade };
+const getGrade = async (aws_exports: any, assignmentId: string, userId: string) => {
+  API.configure(aws_exports);
+  const grades = await API.get(LTI_API_NAME,
+    GET_GRADES,{queryStringParameters: 
+    {
+      resourceId: assignmentId,
+      userId: userId,
+      hash: getHash()
+    }});
+  return grades;
+};
+
+export { submitGrade, getGrades, submitInstructorGrade, getGrade };

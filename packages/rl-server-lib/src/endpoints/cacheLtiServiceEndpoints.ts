@@ -148,7 +148,7 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
   });
 
   app.get(GET_GRADES, requestLogger, async (req: Request, res: Response) => {
-    send(res).send(await getGrades(await getPlatform(req), req.query.lineItemId));
+    send(res).send(await getGrades(await getPlatform(req), req.query.resourceId, req.query.userId));
   });
 
   app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: Request, res: Response) => {

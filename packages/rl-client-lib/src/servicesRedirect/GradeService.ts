@@ -59,4 +59,21 @@ const getGrades = (assignmentId: string): Promise<any> => {
   return grades;
 };
 
-export { submitGrade, getGrades, submitInstructorGrade };
+
+const getGrade = (assignmentId: string, userId: string): Promise<any> => {
+  const grades = axios
+    .get(GET_GRADES, {
+      params: {
+        lineItemId: assignmentId,
+        userId: userId,
+        hash: getHash()
+      }
+    })
+    .then((results) => {
+      logger.debug(JSON.stringify(results.data));
+      return results.data;
+    });
+  return grades;
+};
+
+export { submitGrade, getGrades, submitInstructorGrade, getGrade };

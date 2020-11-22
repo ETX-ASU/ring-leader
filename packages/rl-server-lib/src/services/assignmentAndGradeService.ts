@@ -84,9 +84,7 @@ class Grade {
         })
         .json(); // Applying special filters
       logger.debug("lineItems retreived - " + JSON.stringify(lineItems));
-      return lineItems;
-    }
-/*
+
       if (options && options.id)
         lineItems = lineItems.filter((lineitem: any) => {
           return lineitem.id === options.id;
@@ -107,7 +105,7 @@ class Grade {
       )
         lineItems = lineItems.slice(0, options.limit);
       return lineItems;
-    }*/
+    }
   }
   /**
    * @description Creates a new lineItem for the given context

@@ -2,12 +2,12 @@ import {
   getDeepLinkResourceLinks,
   submitResourceSelection
 } from "./services/DeepLinkService";
-import { submitGrade, submitInstructorGrade, getGrades } from "./services/GradeService";
+import { submitGrade, submitInstructorGrade, getGrades, getGrade } from "./services/GradeService";
 import { getUsers, getUnassignedStudents, getAssignedStudents } from "./services/UserService";
 import { getLineItems, deleteLineItem } from "./services/LineItemService";
 
 import { submitGrade as submitGradeRedirect, submitInstructorGrade as submitInstructorGradeRedirect
-  , getGrades as getGradesRedirect } from "./servicesRedirect/GradeService";
+  , getGrades as getGradesRedirect, getGrade as getGradeRedirect } from "./servicesRedirect/GradeService";
 import { getUsers as getUsersRedirect, getUnassignedStudents as getUnassignedStudentsRedirect, 
   getAssignedStudents as getAssignedStudentsRedirect} from "./servicesRedirect/UserService";
 import { getLineItems as getLineItemsRedirect, 
@@ -21,7 +21,7 @@ import {
 } from "./servicesRedirect/ValidateSessionService";
 
 import { submitGrade as submitGradeAws, submitInstructorGrade as submitInstructorGradeAws
-  , getGrades as getGradesAws } from "./servicesAws/GradeService";
+  , getGrades as getGradesAws, getGrade as getGradeAws } from "./servicesAws/GradeService";
 import { getUsers as getUsersAws, getUnassignedStudents as getUnassignedStudentsAws, 
   getAssignedStudents as getAssignedStudentsAws} from "./servicesAws/UserService";
 import { getLineItems as getLineItemsAws, 
@@ -42,6 +42,7 @@ export {
   submitGrade,
   submitInstructorGrade,
   getGrades,
+  getGrade,
   getUsers,
   getUnassignedStudents,
   getAssignedStudents,
@@ -53,6 +54,7 @@ export {
   submitGradeAws,
   submitInstructorGradeAws,
   getGradesAws,
+  getGradeAws,
   getUsersAws,
   getUnassignedStudentsAws,
   getAssignedStudentsAws,
@@ -65,6 +67,7 @@ export {
   submitGradeRedirect,
   submitInstructorGradeRedirect,
   getGradesRedirect,
+  getGradeRedirect,
   getUsersRedirect,
   getUnassignedStudentsRedirect,
   getAssignedStudentsRedirect,

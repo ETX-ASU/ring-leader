@@ -192,12 +192,13 @@ const deleteLineItem = async (platform: any, lineItemId: any): Promise<any> => {
     return null;
 };
 
-const getGrades = async (platform: any, lineItemId: any): Promise<any> => {
+const getGrades = async (platform: any, resourceId: any, userId: any): Promise<any> => {
     const scoreData = [];
-    if (lineItemId) {
+    if (resourceId) {
         const results: any = ([] = await new Grade().getGrades(platform, {
-            id: lineItemId,
-            resourceLinkId: false
+            resourceId: resourceId,
+            resourceLinkId: false,
+            userId: userId
         }));
         logger.debug(
             "results.results - " + JSON.stringify(results)
