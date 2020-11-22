@@ -342,7 +342,7 @@ class Grade {
             }
           });
          
-        logger.debug("Inside GetGrades - results - " + JSON.stringify(results));
+        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.body));
         
         resultsArray.push({
           lineitem: lineitem.id,
