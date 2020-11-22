@@ -116,7 +116,7 @@ const ltiServiceEndpoints = (app: Express): void => {
     }
     const platform: any = req.session.platform;
 
-    res.send(await getGrades(platform, req.query.lineItemId));
+    res.send(await getGrades(platform, req.query.resourceId, req.query.userId));
   });
 
   app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: any, res: any) => {
