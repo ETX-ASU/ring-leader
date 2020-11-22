@@ -314,36 +314,21 @@ class Grade {
       lineItems = await this.getLineItems(platform, options);
     }
     logger.debug("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
-    const queryParams = [];
+    const queryParams:any = {};
 
     if (options) {
-      if (options.userId) queryParams.push(["user_id", options.userId]);
-      if (limit) queryParams.push(["limit", limit]);
+      if (options.userId) queryParams.user_id = options.userId;
+      if (limit) queryParams.limit = limit;
     }
 
     const resultsArray = [];
 
     for (const lineitem of lineItems) {
       try {
-        const lineitemUrl = lineitem.id;
-        let query: any = [];
-        let resultsUrl = lineitemUrl + "/results";
-
-        if (lineitemUrl.indexOf("?") !== -1) {
-          query = Array.from(new URLSearchParams(lineitemUrl.split("?")[1]));
-          const url = lineitemUrl.split("?")[0];
-          resultsUrl = url + "/results";
-        }
-
-        let searchParams: any = [...queryParams, ...query];
-        searchParams = new URLSearchParams(searchParams);
-        logger.debug(
-          `Inside GetGrades - searchParams, ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
-        );
-
-        const results = await axios
-          .get(resultsUrl, {
-            params: searchParams,
+        const lineitemUrl = lineitem.id + "/results";
+        const results: Response = await axios
+          .get(lineitemUrl, {
+            params: queryParams,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
@@ -351,10 +336,11 @@ class Grade {
             }
           })
          
-        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.data));
+        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.body));
+        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
         resultsArray.push({
           lineitem: lineitem.id,
-          results: results.data
+          results: results.body
         });
       } catch (err) {
         resultsArray.push({
