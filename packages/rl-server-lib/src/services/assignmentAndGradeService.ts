@@ -326,18 +326,20 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         const lineitemUrl = lineitem.id + "/results";
-        const results: Response = await axios
+        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
+        logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
+        const results = await got
           .get(lineitemUrl, {
-            params: queryParams,
+            //params: queryParams,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
               Accept: "application/vnd.ims.lis.v2.resultcontainer+json"
             }
-          })
+          });
          
         logger.debug("Inside GetGrades - results - " + JSON.stringify(results.body));
-        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
+        
         resultsArray.push({
           lineitem: lineitem.id,
           results: results.body
