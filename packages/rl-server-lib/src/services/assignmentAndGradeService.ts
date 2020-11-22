@@ -317,7 +317,6 @@ class Grade {
     const queryParams:any = {};
 
     if (options) {
-      if (options.userId) queryParams.user_id = options.userId;
       if (limit) queryParams.limit = limit;
     }
 
@@ -327,9 +326,13 @@ class Grade {
       try {
         let lineitemUrl = "";
         if(lineitem.id)
-          lineitemUrl = lineitem.id + "/results";
+          lineitemUrl = lineitem.id
         else
           lineitemUrl = lineitem + "/results";
+          lineitemUrl = lineitemUrl + "/results";
+          if (options) {
+            if (options.userId) lineitemUrl += "/" + options.userId;
+          }
         logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
         const results : Response = await axios
@@ -339,14 +342,17 @@ class Grade {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
               Accept: "application/vnd.ims.lis.v2.resultcontainer+json",
+              ContentType: "application/vnd.ims.lis.v2.resultcontainer+json"
             }
           });
          
-        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.body));
+        logger.debug("Inside GetGrades - results - " + JSON.stringify(results.json()));
+        logger.debug("Inside GetGrades - status - " + JSON.stringify(results.status));
+        logger.debug("Inside GetGrades - body - " + JSON.stringify(results.body));
         
         resultsArray.push({
           lineitem: lineitem.id,
-          results: results.body
+          results: results.json()
         });
       } catch (err) {
         resultsArray.push({
