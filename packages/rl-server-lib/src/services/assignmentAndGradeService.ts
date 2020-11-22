@@ -298,7 +298,7 @@ class Grade {
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
       else options.resourceLinkId = true;
-
+      if(options.resourceId) options.resourceId = undefined;
       if (options.limit) {
         limit = options.limit;
         options.limit = false;
@@ -308,8 +308,11 @@ class Grade {
     lineItems = await this.getLineItems(platform, options);
     logger.debug(`Inside GetGrades - line items found by call: ${lineItems}`);
     logger.debug(`Inside GetGrades - line item in platform: ${platform.lineitem}`);
-    logger.debug(`Inside GetGrades - platform: ${platform}`);
+    logger.debug(`Inside GetGrades - platform: ${JSON.stringify(platform)}`);
 
+    if(lineItems && lineItems.length < 0) {
+      lineItems = [platform.lineitem];
+    }
     const queryParams:any = {};
 
     if (options) {
