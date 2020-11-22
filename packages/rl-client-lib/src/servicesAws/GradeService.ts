@@ -56,7 +56,7 @@ const getGrades = async (aws_exports: any, assignmentId: string) => {
   const grades = await API.get(LTI_API_NAME,
     GET_GRADES,{queryStringParameters: 
     {
-      lineItemId: assignmentId,
+      resourceId: assignmentId,
       hash: getHash()
     }});
   return grades;

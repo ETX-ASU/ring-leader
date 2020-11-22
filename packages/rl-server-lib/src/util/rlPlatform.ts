@@ -12,10 +12,10 @@ import { logger,
  } from "@asu-etx/rl-shared";
 
 const setDefaultValues = (token: any): any => {
-  logger.debug("setDefaultValues - " + JSON.stringify(token));
-  logger.debug(
+  //logger.debug("setDefaultValues - " + JSON.stringify(token));
+  /*logger.debug(
     DEEP_LINKING_SETTINGS_CLAIM + token[DEEP_LINKING_SETTINGS_CLAIM]
-  );
+  );*/
   let isStudent = false;
   let isInstructor = false;
   if (token[ROLES_CLAIM]) {
@@ -71,7 +71,7 @@ const setDefaultValues = (token: any): any => {
       }
       : null
   };
-  logger.debug("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
+  //logger.debug("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
 };
 const rlPlatform = (
@@ -83,9 +83,9 @@ const rlPlatform = (
   idToken: string
 ): Platform => {
   const token = jwt.decode(idToken);
-  logger.debug(
+  /*logger.debug(
     `rlPlatform - received - idTokenDecoded: ${JSON.stringify(token)}`
-  );
+  );*/
   const tokenData = setDefaultValues(token);
   const platform: Platform = {
     jti: tokenData.jti,
@@ -115,7 +115,7 @@ const rlPlatform = (
     isStudent: tokenData.isStudent,
     deploymentId: tokenData.deploymentId
   };
-  logger.debug("rlPlatformplatform - " + JSON.stringify(platform));
+  //logger.debug("rlPlatformplatform - " + JSON.stringify(platform));
 
   return platform;
 };

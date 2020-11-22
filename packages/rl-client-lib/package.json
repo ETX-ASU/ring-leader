@@ -1,6 +1,6 @@
 {
     "name": "@asu-etx/rl-client-lib",
-    "version": "0.7.29",
+    "version": "0.7.30",
     "license": "MIT",
     "public": true,
     "main": "build/index.js",

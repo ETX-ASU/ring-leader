@@ -4,7 +4,7 @@ import { logger } from "@asu-etx/rl-shared";
 
 const getToolConsumers = (): ToolConsumer[] => {
   const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS: "[]");
-  logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
+  //logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
   return toolConsumers;
 };
 
@@ -15,7 +15,7 @@ const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
       return (toolConsumer = tc);
     }
   });
-  logger.debug(`found toolConsumer: ${toolConsumer}`);
+  //logger.debug(`found toolConsumer: ${JSON.stringify(toolConsumer)}`);
   return toolConsumer;
 };
 
@@ -26,7 +26,7 @@ const getToolConsumerById = (uuid: string): ToolConsumer | undefined => {
       return (toolConsumer = tc);
     }
   });
-  logger.debug(`found toolConsumer: ${toolConsumer}`);
+  //logger.debug(`found toolConsumer: ${toolConsumer}`);
   return toolConsumer;
 };
 
