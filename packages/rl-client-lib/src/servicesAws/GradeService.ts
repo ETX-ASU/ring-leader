@@ -10,7 +10,7 @@ import { getHash, startParamsWithHash } from '../utils/hashUtils';
 
 const buildScore = (params: any): any => {
   const score: any = {};
-  score.grade = params.score ? params.score : params.grade ? params.grade : params.scoreGiven;
+  score.grade = params.resultScore ? params.resultScore : params.grade ? params.grade : params.scoreGiven;
   if (params.timestamp) score.timestamp = params.timestamp;
   score.comment = params.comment;
   if (params.activityProgress) score.activityProgress = params.activiyProgress;
