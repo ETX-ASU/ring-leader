@@ -306,11 +306,11 @@ class Grade {
     }
     let lineItems = []
     lineItems = await this.getLineItems(platform, options);
-    logger.debug(`Inside GetGrades - line items found by call: ${lineItems}`);
+    const currentLineItem = platform.lineitem;
     logger.debug(`Inside GetGrades - line item in platform: ${platform.lineitem}`);
     logger.debug(`Inside GetGrades - platform: ${JSON.stringify(platform)}`);
 
-    if(lineItems && lineItems.length < 0) {
+    if(lineItems && lineItems.length <= 0) {
       lineItems = [platform.lineitem];
     }
     const queryParams:any = {};
@@ -328,14 +328,15 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         let lineitemUrl = "";
+        logger.debug(`currentLineItem: ${currentLineItem} lineitem.id: ${lineitem.id}`);
+        if(currentLineItem != lineitem.id)
+          continue;
         if(lineitem.id)
           lineitemUrl = lineitem.id
-        else
-          lineitemUrl = lineitem + "/results";
-          lineitemUrl = lineitemUrl + "/results";
-          if (options) {
-            if (options.userId) lineitemUrl += "/" + options.userId;
-          }
+        lineitemUrl = lineitemUrl + "/results";
+        if (options) {
+          if (options.userId) lineitemUrl += "/" + options.userId;
+        }
         logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
         const response  = await got
