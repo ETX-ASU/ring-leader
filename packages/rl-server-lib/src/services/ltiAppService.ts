@@ -210,8 +210,10 @@ const getGrades = async (platform: any, lineItemId: any): Promise<any> => {
             "Get Grades - members - " + JSON.stringify(membersCollection)
         );
         if (results.length <= 0) return [];
+        logger.debug(`full results from GetGrade: ${results}`);
         for (const key in results[0].results) {
             const score = results[0].results[key];
+            logger.debug("score results from Tool Consumer - " + JSON.stringify(score));
             //Grades service call will only return user Id along with the score
             //so for this demo, we are retrieving the user info from the session
             //so that we can display name of the student
@@ -223,13 +225,15 @@ const getGrades = async (platform: any, lineItemId: any): Promise<any> => {
             });
 
             scoreData.push({
-                studentId: score.userId,
-                StudenName: tooltipsData[0].name,
-                score: score.resultScore,
+                id: score.id,
+                userId: score.userId,
+                studentName: tooltipsData[0].name,
+                resultScore: score.resultScore,
+                resultMaximum: score.resultMaximum,
                 comment: score.comment
             });
         }
-        logger.debug("scoreData - " + scoreData);
+        logger.debug("scoreData response - " + JSON.stringify(scoreData));
     }
     return scoreData;
 };

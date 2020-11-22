@@ -7,7 +7,7 @@ import { logger } from "@asu-etx/rl-shared";
 
 const setResponseAuthorization = (response: Response, toolConsumer: ToolConsumer, key: string): void => {
     const jwtToken = getRedirectToken(toolConsumer, key);
-    logger.debug(`set authorization header: ${jwtToken}`);
+    //logger.debug(`set authorization header: ${jwtToken}`);
     response.setHeader("Authorization", "Bearer " + jwtToken);
 }
 
@@ -21,8 +21,8 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
             audience: toolConsumer.uuid,
             issuer: toolConsumer.iss
         });
-        logger.debug(`created token: ${jwtToken}`);
-        logger.debug(`consumerid: ${toolConsumer.uuid}`);
+        //logger.debug(`created token: ${jwtToken}`);
+        //.debug(`consumerid: ${toolConsumer.uuid}`);
         return jwtToken.substr(0, 40) + toolConsumer.uuid + jwtToken.substring(40);
     }
     throw Error("unable to find toolConsumer");
@@ -30,8 +30,8 @@ const getRedirectToken = (toolConsumer: ToolConsumer, key: string): string => {
 
 const validateTokenWithToolConsumer = (token: string, toolConsumer: ToolConsumer): any => {
     const jwttoken = token.substr(0, 40) + token.substring(72);
-    logger.debug(`return token: ${jwttoken}`);
-    logger.debug(`consumerid from tool: ${toolConsumer?.uuid}`);
+    //logger.debug(`return token: ${jwttoken}`);
+    //logger.debug(`consumerid from tool: ${toolConsumer?.uuid}`);
     try {
         if (toolConsumer) {
             const decoded: any = jwt.verify(jwttoken, toolConsumer.public_key, {
@@ -39,7 +39,7 @@ const validateTokenWithToolConsumer = (token: string, toolConsumer: ToolConsumer
                 audience: toolConsumer.uuid,
                 issuer: toolConsumer.iss
             });
-            logger.debug(`decoded object: ${toolConsumer.uuid}`);
+            //logger.debug(`decoded object: ${toolConsumer.uuid}`);
             return decoded.key;
         } else {
             throw Error("Token failed to validate for unable to find toolConsumer");
@@ -52,7 +52,7 @@ const validateTokenWithToolConsumer = (token: string, toolConsumer: ToolConsumer
 
 const validateRequest = (request: any): string => {
     const authorization = request.get('authorization');
-    logger.debug(`found authorization: ${authorization}`);
+    //logger.debug(`found authorization: ${authorization}`);
     if (authorization && authorization.split(' ')[0] === 'Bearer')
         return validateToken(authorization.split(' ')[1]);
     else if (request.query && request.query.hash) {
@@ -69,7 +69,7 @@ const validateRequest = (request: any): string => {
 
 const validateToken = (token: string): any => {
     const consumerId = token.substr(40, 32);
-    logger.debug(`found consumerId: ${consumerId}`);
+    //logger.debug(`found consumerId: ${consumerId}`);
     const toolConsumer = getToolConsumerById(consumerId);
     if (toolConsumer) {
         const key = validateTokenWithToolConsumer(token, toolConsumer);
