@@ -72,7 +72,10 @@ class DeepLinking {
     const params ="JWT=" + message; //&${params}
     try {
       const axiosResponse:AxiosResponse = await axios.post(platform.deepLinkingSettings.deep_link_return_url, params);
+      logger.debug("deep link post response data from consumer:" + JSON.stringify(axiosResponse.data));
       response.json(axiosResponse.data);
+      logger.debug("deep link post response status from consumer:" + JSON.stringify(axiosResponse.status));
+      
       response.status(axiosResponse.status);
     } catch (err) {
       logger.error("Unable to forward, returned error:" + JSON.stringify(err));

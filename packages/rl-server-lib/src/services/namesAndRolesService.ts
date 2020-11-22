@@ -24,7 +24,7 @@ class NamesAndRoles {
       throw new Error("MISSING_TOKEN");
     }
     const token: any = await jwt.decode(platform.idToken);
-    logger.debug(JSON.stringify("getMembers token- " + token));
+    logger.debug("getMembers token- " + JSON.stringify(token));
     logger.debug(
       JSON.stringify("getMembers tokenObject- " + JSON.stringify(platform))
     );
