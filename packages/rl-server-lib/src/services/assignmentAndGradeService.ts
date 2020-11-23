@@ -191,10 +191,7 @@ class Grade {
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
     }
-    const accessToken: any = await getAccessToken(
-      platform,
-      `${LINE_ITEM_CLAIM} ${SCORE_CLAIM}`
-    );
+
     const lineItems: any = await this.getLineItems(platform, options);
 
     logger.debug("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
@@ -202,26 +199,33 @@ class Grade {
       success: [],
       failure: []
     };
+    let currentLineItem = platform.lineitem;
 
     if (lineItems.length === 0) {
       if (options && options.autoCreate) {
+        currentLineItem = await this.createLineItem(
+          platform,
+          options.autoCreate,
+          {
+            resourceLinkId: options.resourceLinkId
+          }
+        )
         lineItems.push(
-          await this.createLineItem(
-            platform,
-            options.autoCreate,
-            {
-              resourceLinkId: options.resourceLinkId
-            },
-            accessToken
-          )
+          currentLineItem
         );
       }
     }
 
+    const accessToken: any = await getAccessToken(
+      platform,
+      `${LINE_ITEM_CLAIM} ${SCORE_CLAIM}`
+    );
+
     for (const lineitem of lineItems) {
       try {
         logger.debug("Inside putGrade lineitem found - " + JSON.stringify(lineitem));
-
+        if(!currentLineItem || currentLineItem != lineitem.id)
+          continue;
         const lineitemUrl = lineitem.id;
         let scoreUrl = lineitemUrl + "/scores";
 
@@ -243,13 +247,13 @@ class Grade {
         );
         logger.debug("score - " + JSON.stringify(score));
 
-        const res = await axios.post(scoreUrl, {
+        const res = await axios.post(scoreUrl, score, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
-            "Content-Type": "application/vnd.ims.lis.v1.score+json"
+            "Content-Type": "application/vnd.ims.lis.v1.score+json",
+            "Accept": "application/vnd.ims.lis.v1.score+json"
           },
-          params: score
         });
 
         logger.debug("Score successfully sent");
