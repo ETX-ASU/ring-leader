@@ -329,7 +329,7 @@ class Grade {
       try {
         let lineitemUrl = "";
         logger.debug(`currentLineItem: ${currentLineItem} lineitem.id: ${lineitem.id}`);
-        if(currentLineItem != lineitem.id)
+        if(currentLineItem && currentLineItem != lineitem.id)
           continue;
         if(lineitem.id)
           lineitemUrl = lineitem.id

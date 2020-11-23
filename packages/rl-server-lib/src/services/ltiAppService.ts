@@ -212,6 +212,7 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
         );
         if (results.length <= 0) return [];
         logger.debug(`full results from GetGrade: ${JSON.stringify(results)}`);
+
         for (const key in results[0].results) {
             const score = results[0].results[key];
             logger.debug("score results from Tool Consumer - " + JSON.stringify(score));
@@ -227,7 +228,7 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
 
             scoreData.push({
                 id: score.id,
-                userId: score.userId,
+                studentId: score.userId,
                 studentName: tooltipsData[0].name,
                 resultScore: score.resultScore,
                 resultMaximum: score.resultMaximum,
