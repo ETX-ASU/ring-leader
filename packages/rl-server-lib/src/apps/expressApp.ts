@@ -92,6 +92,4 @@ const expressApp = (app: Express, userInterfaceRood: string, sessionParams: any)
 
 }
 
-
-
-export { expressApp };
+export default expressApp;
