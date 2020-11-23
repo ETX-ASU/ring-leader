@@ -4,7 +4,7 @@ This is a monorepo that houses several packages that can be published and consum
 
 The `rl-server-lib` and `rl-client-lib` packages are published as private NPM packages that can be included within tools. These libraries will be used to expedite the integration with LTI 1.3 capable LMSs.
 
-There are several additional libraries in the asu-etx repository that illustrate the use of these libraries to stand up an lti compliant tool with minimal additional code.
+There are several additional repositories in asu-etx that illustrate the use of these libraries to stand up an lti compliant tool with minimal additional code.
 
 ## Example AWS Amplify aplication:
  https://github.com/ETX-ASU/boiler
