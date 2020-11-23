@@ -9,7 +9,7 @@ There are several additional repositories in asu-etx that illustrate the use of 
 ## Example AWS Amplify aplication:
  https://github.com/ETX-ASU/boiler
 ## Example Express Application
- https://github.com/ETX-ASU/boiler
+ https://github.com/ETX-ASU/ring-leader-express
 ## Example Serverless Application
 https://github.com/ETX-ASU/ring-leader-serverless
 
