@@ -13,6 +13,7 @@ import { Session } from "./database/entity/Session";
 import initDBTables from "./database/dataconnection";
 import getLaunchParameters from "./util/getLaunchParameters"
 import cacheApp from "./apps/cacheApp"
+import expressApp from "./apps/expressApp"
 
 import {
   rlValidateToken,
@@ -60,5 +61,6 @@ export {
   setResponseAuthorization,
   getRedirectToken,
   getLaunchParameters,
-  cacheApp
+  cacheApp,
+  expressApp
 };
