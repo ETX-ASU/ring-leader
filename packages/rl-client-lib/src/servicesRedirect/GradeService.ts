@@ -4,11 +4,10 @@ import {
   PUT_STUDENT_GRADE,
   GET_GRADES,
   logger,
-  SubmitGradeParams,
-  InstructorSubmitGradeParams
+  SubmitGradeParams
 } from "@asu-etx/rl-shared";
 
-import {getHash} from '../utils/hashUtils';
+import { getHash } from '../utils/hashUtils';
 
 const submitGrade = async (params: SubmitGradeParams): Promise<any> => {
   const results = await axios
@@ -27,7 +26,7 @@ const submitGrade = async (params: SubmitGradeParams): Promise<any> => {
   return results;
 };
 
-const submitInstructorGrade = async (params: InstructorSubmitGradeParams): Promise<any> => {
+const submitInstructorGrade = async (params: SubmitGradeParams): Promise<any> => {
   const results = await axios
     .post(PUT_STUDENT_GRADE, {
       params: params,

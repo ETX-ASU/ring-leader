@@ -1,7 +1,6 @@
 // eslint-disable-next-line node/no-extraneous-import
 import axios from "axios";
 import got from "got";
-import { Score } from "../util/Score";
 import { Platform } from "../util/Platform";
 import { getAccessToken } from "../util/auth";
 import { Options } from "../util/Options";
@@ -10,7 +9,8 @@ import {
   SCORE_CLAIM,
   LINE_ITEM_CLAIM,
   LINE_ITEM_READ_ONLY_CLAIM,
-  RESULT_CLAIM
+  RESULT_CLAIM,
+  SubmitGradeParams
 } from "@asu-etx/rl-shared";
 
 class Grade {
@@ -25,7 +25,7 @@ class Grade {
    * @param {String} [options.id = false] - Filters line items based on the id
    * @param {String} [options.label = false] - Filters line items based on the label
    */
-//TODO fix logic allow for both lineItemId and resouceLinkId
+  //TODO fix logic allow for both lineItemId and resouceLinkId
   async getLineItems(
     platform: Platform,
     options?: Options,
@@ -50,13 +50,13 @@ class Grade {
         lineitemsEndpoint = lineitemsEndpoint.split("?")[0];
       }
 
-      const queryParams : any = {};
+      const queryParams: any = {};
       if (options) {
         if (options.resourceLinkId)
-          queryParams.resource_link_id =platform.resourceLinkId;
+          queryParams.resource_link_id = platform.resourceLinkId;
         if (options.limit && !options.id && !options.label)
-          queryParams.limit =options.limit;
-        if (options.tag) 
+          queryParams.limit = options.limit;
+        if (options.tag)
           queryParams.tag = options.tag;
         if (options.resourceId)
           queryParams.resource_id = options.resourceId;
@@ -73,7 +73,7 @@ class Grade {
             Accept: "application/vnd.ims.lis.v2.lineitemcontainer+json"
           }
         })
-      let lineItems: any =  results.data;
+      let lineItems: any = results.data;
       logger.debug("lineItems retreived - " + JSON.stringify(lineItems));
 
       if (options && options.id)
@@ -172,7 +172,7 @@ class Grade {
 
   async putGrade(
     platform: Platform,
-    score: Score,
+    score: SubmitGradeParams,
     options?: Options
   ): Promise<any> {
     if (!platform) {
@@ -224,7 +224,7 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         logger.debug("Inside putGrade lineitem found - " + JSON.stringify(lineitem));
-        if(!currentLineItem || currentLineItem != lineitem.id)
+        if (!currentLineItem || currentLineItem != lineitem.id)
           continue;
         const lineitemUrl = lineitem.id;
         let scoreUrl = lineitemUrl + "/scores";
@@ -236,12 +236,12 @@ class Grade {
         }
 
         if (options && options.userId) score.userId = options.userId;
-        else score.userId = platform.userId;
+        else if (!score.userId) score.userId = platform.userId;
 
         logger.debug("score.userId - " + score.userId);
 
-        score.timestamp = new Date(Date.now()).toISOString();
-        score.scoreMaximum = lineitem.scoreMaximum;
+        score.timestamp = score.timestamp ? score.timestamp : new Date(Date.now()).toISOString();
+        score.scoreMaximum = score.scoreMaximum ? score.scoreMaximum : lineitem.scoreMaximum;
         logger.debug(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
         );
@@ -295,14 +295,14 @@ class Grade {
       throw new Error("PLATFORM_NOT_FOUND");
     }
     //we will change this when go for actual implementation
-   
+
 
     let limit: any = false;
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
       else options.resourceLinkId = true;
-      if(options.resourceId) options.resourceId = undefined;
+      if (options.resourceId) options.resourceId = undefined;
       if (options.limit) {
         limit = options.limit;
         options.limit = false;
@@ -314,10 +314,10 @@ class Grade {
     logger.debug(`Inside GetGrades - line item in platform: ${platform.lineitem}`);
     logger.debug(`Inside GetGrades - platform: ${JSON.stringify(platform)}`);
 
-    if(lineItems && lineItems.length <= 0) {
+    if (lineItems && lineItems.length <= 0) {
       lineItems = [platform.lineitem];
     }
-    const queryParams:any = {};
+    const queryParams: any = {};
 
     if (options) {
       if (limit) queryParams.limit = limit;
@@ -333,9 +333,9 @@ class Grade {
       try {
         let lineitemUrl = "";
         logger.debug(`currentLineItem: ${currentLineItem} lineitem.id: ${lineitem.id}`);
-        if(currentLineItem && currentLineItem != lineitem.id)
+        if (currentLineItem && currentLineItem != lineitem.id)
           continue;
-        if(lineitem.id)
+        if (lineitem.id)
           lineitemUrl = lineitem.id
         lineitemUrl = lineitemUrl + "/results";
         if (options) {
@@ -343,7 +343,7 @@ class Grade {
         }
         logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
-        const response  = await got
+        const response = await got
           .get(lineitemUrl, {
             headers: {
               Authorization:
@@ -356,7 +356,7 @@ class Grade {
         const body = JSON.parse(response.body);
         logger.debug("Inside GetGrades - status - " + JSON.stringify(response.statusCode));
         logger.debug("Inside GetGrades - body - " + JSON.stringify(body));
-        
+
         resultsArray.push({
           lineitem: lineitem.id,
           results: body

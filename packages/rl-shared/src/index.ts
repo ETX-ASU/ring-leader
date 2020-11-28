@@ -57,13 +57,13 @@ import {
 import { logger }
   from "./util/LogService";
 
-import SubmitGradeParams from "./model/SubmitGradeParams";
 import SubmitContentItem from "./model/SubmitContentItem";
 import SubmitLineItem from "./model/SubmitLineItem";
 import User from "./model/User";
 import LineItem from "./model/LineItem";
-import InstructorSubmitGradeParams from "./model/InstructorSubmitGradeParams";
+import SubmitGradeParams from "./model/SubmitGradeParams";
 import Assignment from "./model/Assignment";
+import ResultScore from "./model/ResultScore";
 
 export {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
@@ -96,7 +96,6 @@ export {
   SubmitLineItem,
   LineItem,
   User,
-  InstructorSubmitGradeParams,
   Assignment,
   DEEP_LINKING_SETTINGS_CLAIM,
   ROLES_CLAIM,
@@ -123,5 +122,6 @@ export {
   PLATFORM,
   LTI_API_NAME,
   API_URL,
-  SESSION_SECRET
+  SESSION_SECRET,
+  ResultScore
 };
