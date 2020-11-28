@@ -17,7 +17,7 @@ const buildScore = (params: any): any => {
   if (params.activityProgress) score.activityProgress = params.activiyProgress;
   score.gradingProgress = params.progress ? params.progress : params.gradingProgress;
   if (params.studentId || params.userId) score.userId = params.studentId ? params.studentId : params.userId;
-  if (params.scoreMaximum) score.scoreMaximum = params.scoreMaximum ? params.scoreMaximum : params.resultMaximum;
+  if (params.scoreMaximum || params.resultMaximum) score.scoreMaximum = params.scoreMaximum ? params.scoreMaximum : params.resultMaximum;
 
   score.activityProgress = params.activityProgress ? params.activityProgress : determineProgress(score.gradingProgress);
   logger.debug(`final score: ${score}`);
@@ -55,11 +55,11 @@ const getGrades = async (aws_exports: any, assignmentId: string) => {
   API.configure(aws_exports);
   const grades = await API.get(LTI_API_NAME,
     GET_GRADES, {
-      queryStringParameters:
-      {
-        resourceId: assignmentId,
-        hash: getHash()
-      }
+    queryStringParameters:
+    {
+      resourceId: assignmentId,
+      hash: getHash()
+    }
   });
   return grades;
 };
@@ -68,12 +68,12 @@ const getGrade = async (aws_exports: any, assignmentId: string, userId: string) 
   API.configure(aws_exports);
   const grades = await API.get(LTI_API_NAME,
     GET_GRADES, {
-      queryStringParameters:
-      {
-        resourceId: assignmentId,
-        userId: userId,
-        hash: getHash()
-      }
+    queryStringParameters:
+    {
+      resourceId: assignmentId,
+      userId: userId,
+      hash: getHash()
+    }
   });
   return grades;
 };
