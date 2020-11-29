@@ -3,15 +3,15 @@ import {
   PUT_STUDENT_GRADE,
   GET_GRADES,
   logger,
-  LTI_API_NAME
+  LTI_API_NAME,
+  SubmitGradeParams
 } from "@asu-etx/rl-shared";
 import { getHash, startParamsWithHash } from '../utils/hashUtils';
-//import aws_exports from '../aws-exports' does not need to be imported
 
-const buildScore = (params: any): any => {
+const buildScore = (params: any): SubmitGradeParams => {
   const score: any = {};
   logger.debug(`params used to build score: ${params}`)
-  score.scoreGiven = params.resultScore ? params.resultScore : params.grade ? params.grade : params.scoreGiven;
+  score.scoreGiven = params.scoreGiven ? params.scoreGiven : params.grade ? params.grade : params.resultScore;
   if (params.timestamp) score.timestamp = params.timestamp;
   score.comment = params.comment;
   if (params.activityProgress) score.activityProgress = params.activiyProgress;
@@ -21,7 +21,7 @@ const buildScore = (params: any): any => {
 
   score.activityProgress = params.activityProgress ? params.activityProgress : determineProgress(score.gradingProgress);
   logger.debug(`final score: ${score}`);
-  return score;
+  return new SubmitGradeParams(score);
 }
 
 const determineProgress = (gradingProgress: string): any => {
@@ -30,15 +30,17 @@ const determineProgress = (gradingProgress: string): any => {
 }
 
 const submitGrade = async (aws_exports: any, params: any) => {
+  const grades: SubmitGradeParams = buildScore(params);
   API.configure(aws_exports);
   const data = {
     headers: {
       'Content-Type': 'application/json'
     }, body: {
-      params: buildScore(params),
+      params: grades,
       hash: getHash()
     }
   };
+  logger.debug(`submitGrade results: ${data}`);
   const results = await API.post(LTI_API_NAME, PUT_STUDENT_GRADE, data);
   logger.debug(`submitGrade results: ${results}`);
   return results;
@@ -48,7 +50,7 @@ const submitInstructorGrade = async (
   aws_exports: any,
   params: any
 ) => {
-  return submitGrade(aws_exports, buildScore(params));
+  return submitGrade(aws_exports, params);
 };
 
 const getGrades = async (aws_exports: any, assignmentId: string) => {
