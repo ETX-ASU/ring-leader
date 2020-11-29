@@ -1,7 +1,6 @@
 // eslint-disable-next-line node/no-extraneous-import
+import axios from "axios";
 import got from "got";
-import { URLSearchParams } from "url";
-import { Score } from "../util/Score";
 import { Platform } from "../util/Platform";
 import { getAccessToken } from "../util/auth";
 import { Options } from "../util/Options";
@@ -10,7 +9,8 @@ import {
   SCORE_CLAIM,
   LINE_ITEM_CLAIM,
   LINE_ITEM_READ_ONLY_CLAIM,
-  RESULT_CLAIM
+  RESULT_CLAIM,
+  SubmitGradeParams
 } from "@asu-etx/rl-shared";
 
 class Grade {
@@ -25,22 +25,18 @@ class Grade {
    * @param {String} [options.id = false] - Filters line items based on the id
    * @param {String} [options.label = false] - Filters line items based on the label
    */
-
+  //TODO fix logic allow for both lineItemId and resouceLinkId
   async getLineItems(
     platform: Platform,
     options?: Options,
     accessToken?: any
   ): Promise<any> {
-    logger.debug(
-      `Access token to get line items - get new token ${accessToken}`
-    );
-
     if (!platform) {
       throw new Error("MISSING_ID_TOKEN");
     }
+    logger.debug(`platform for get line items: ${JSON.stringify(platform)}`);
     if (!accessToken) {
       logger.debug("Access token blank - get new token");
-
       accessToken = await getAccessToken(platform, LINE_ITEM_READ_ONLY_CLAIM);
     }
     if (accessToken) {
@@ -54,33 +50,30 @@ class Grade {
         lineitemsEndpoint = lineitemsEndpoint.split("?")[0];
       }
 
-      let queryParams: any = [...query];
-      logger.debug("getLineItems -  options - " + JSON.stringify(options));
-
+      const queryParams: any = {};
       if (options) {
         if (options.resourceLinkId)
-          queryParams.push(["resource_link_id", platform.resourceLinkId]);
+          queryParams.resource_link_id = platform.resourceLinkId;
         if (options.limit && !options.id && !options.label)
-          queryParams.push(["limit", options.limit]);
-        if (options.tag) queryParams.push(["tag", options.tag]);
+          queryParams.limit = options.limit;
+        if (options.tag)
+          queryParams.tag = options.tag;
         if (options.resourceId)
-          queryParams.push(["resource_id", options.resourceId]);
+          queryParams.resource_id = options.resourceId;
       }
-
-      queryParams = new URLSearchParams(queryParams);
       logger.debug("getlines - queryParams-" + JSON.stringify(queryParams));
       logger.debug("lineitemsEndpoint - " + lineitemsEndpoint);
 
-      let lineItems: any = await got
+      let results: any = await axios
         .get(lineitemsEndpoint, {
-          searchParams: queryParams,
+          params: queryParams,
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
             Accept: "application/vnd.ims.lis.v2.lineitemcontainer+json"
           }
         })
-        .json(); // Applying special filters
+      let lineItems: any = results.data;
       logger.debug("lineItems retreived - " + JSON.stringify(lineItems));
 
       if (options && options.id)
@@ -179,7 +172,7 @@ class Grade {
 
   async putGrade(
     platform: Platform,
-    score: Score,
+    score: SubmitGradeParams,
     options?: Options
   ): Promise<any> {
     if (!platform) {
@@ -198,10 +191,7 @@ class Grade {
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
     }
-    const accessToken: any = await getAccessToken(
-      platform,
-      `${LINE_ITEM_CLAIM} ${SCORE_CLAIM}`
-    );
+
     const lineItems: any = await this.getLineItems(platform, options);
 
     logger.debug("Inside PutGrades - lineItems - " + JSON.stringify(lineItems));
@@ -209,26 +199,33 @@ class Grade {
       success: [],
       failure: []
     };
+    let currentLineItem = platform.lineitem;
 
     if (lineItems.length === 0) {
       if (options && options.autoCreate) {
+        currentLineItem = await this.createLineItem(
+          platform,
+          options.autoCreate,
+          {
+            resourceLinkId: options.resourceLinkId
+          }
+        )
         lineItems.push(
-          await this.createLineItem(
-            platform,
-            options.autoCreate,
-            {
-              resourceLinkId: options.resourceLinkId
-            },
-            accessToken
-          )
+          currentLineItem
         );
       }
     }
 
+    const accessToken: any = await getAccessToken(
+      platform,
+      `${LINE_ITEM_CLAIM} ${SCORE_CLAIM}`
+    );
+
     for (const lineitem of lineItems) {
       try {
-        logger.debug("lineitem - " + JSON.stringify(lineitem));
-
+        logger.debug("Inside putGrade lineitem found - " + JSON.stringify(lineitem));
+        if (!currentLineItem || currentLineItem != lineitem.id)
+          continue;
         const lineitemUrl = lineitem.id;
         let scoreUrl = lineitemUrl + "/scores";
 
@@ -239,24 +236,24 @@ class Grade {
         }
 
         if (options && options.userId) score.userId = options.userId;
-        else score.userId = platform.userId;
+        else if (!score.userId) score.userId = platform.userId;
 
         logger.debug("score.userId - " + score.userId);
 
-        score.timestamp = new Date(Date.now()).toISOString();
-        score.scoreMaximum = lineitem.scoreMaximum;
+        score.timestamp = score.timestamp ? score.timestamp : new Date(Date.now()).toISOString();
+        score.scoreMaximum = score.scoreMaximum ? score.scoreMaximum : lineitem.scoreMaximum;
         logger.debug(
           "Inside PutGrades - scoreUrl - " + JSON.stringify(scoreUrl)
         );
         logger.debug("score - " + JSON.stringify(score));
 
-        const res = await got.post(scoreUrl, {
+        const res = await axios.post(scoreUrl, score, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token,
-            "Content-Type": "application/vnd.ims.lis.v1.score+json"
+            "Content-Type": "application/vnd.ims.lis.v1.score+json",
+            "Accept": "application/vnd.ims.lis.v1.score+json"
           },
-          json: score
         });
 
         logger.debug("Score successfully sent");
@@ -298,67 +295,75 @@ class Grade {
       throw new Error("PLATFORM_NOT_FOUND");
     }
     //we will change this when go for actual implementation
-    const accessToken = await getAccessToken(
-      platform,
-      `${LINE_ITEM_READ_ONLY_CLAIM} ${RESULT_CLAIM}`
-    );
+
 
     let limit: any = false;
 
     if (options) {
       if (options.resourceLinkId === false) options.resourceLinkId = false;
       else options.resourceLinkId = true;
-
+      if (options.resourceId) options.resourceId = undefined;
       if (options.limit) {
         limit = options.limit;
         options.limit = false;
       }
     }
+    let lineItems = []
+    lineItems = await this.getLineItems(platform, options);
+    const currentLineItem = platform.lineitem;
+    logger.debug(`Inside GetGrades - line item in platform: ${platform.lineitem}`);
+    logger.debug(`Inside GetGrades - platform: ${JSON.stringify(platform)}`);
 
-    const lineItems = await this.getLineItems(platform, options, accessToken);
-    logger.debug("Inside GetGrades - lineItems - " + JSON.stringify(lineItems));
-
-    const queryParams = [];
+    if (lineItems && lineItems.length <= 0) {
+      lineItems = [platform.lineitem];
+    }
+    const queryParams: any = {};
 
     if (options) {
-      if (options.userId) queryParams.push(["user_id", options.userId]);
-      if (limit) queryParams.push(["limit", limit]);
+      if (limit) queryParams.limit = limit;
     }
 
     const resultsArray = [];
+    const accessToken = await getAccessToken(
+      platform,
+      `${LINE_ITEM_READ_ONLY_CLAIM} ${RESULT_CLAIM}`
+    );
 
     for (const lineitem of lineItems) {
       try {
-        const lineitemUrl = lineitem.id;
+        let lineitemUrl = "";
         let query: any = [];
-        let resultsUrl = lineitemUrl + "/results";
-
-        if (lineitemUrl.indexOf("?") !== -1) {
-          query = Array.from(new URLSearchParams(lineitemUrl.split("?")[1]));
-          const url = lineitemUrl.split("?")[0];
-          resultsUrl = url + "/results";
+        logger.debug(`currentLineItem: ${currentLineItem} lineitem.id: ${lineitem.id}`);
+        if (currentLineItem && currentLineItem != lineitem.id)
+          continue;
+        if (lineitem.id)
+          lineitemUrl = lineitem.id
+        lineitemUrl = lineitemUrl + "/results";
+        if (options) {
+          if (options.userId) query.push("user_id", options.userId);
         }
-
-        let searchParams: any = [...queryParams, ...query];
-        searchParams = new URLSearchParams(searchParams);
-        logger.debug(
-          `Inside GetGrades - searchParams, url - ${JSON.stringify(searchParams)} to url: ${JSON.stringify(resultsUrl)}`
-        );
-
-        const results = await got
-          .get(resultsUrl, {
-            searchParams: searchParams,
+        if (query.length > 0) query = new URLSearchParams(query);
+        else query = false;
+        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
+        logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
+        const response = await got
+          .get(lineitemUrl, {
+            searchParams: query,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
-              Accept: "application/vnd.ims.lis.v2.resultcontainer+json"
+              Accept: "application/vnd.ims.lis.v2.resultcontainer+json",
+              ContentType: "application/vnd.ims.lis.v2.resultcontainer+json"
             }
-          })
-          .json();
-        logger.debug("Inside GetGrades - results - " + JSON.stringify(results));
+          });
+
+        const body = JSON.parse(response.body);
+        logger.debug("Inside GetGrades - status - " + JSON.stringify(response.statusCode));
+        logger.debug("Inside GetGrades - body - " + JSON.stringify(body));
+
         resultsArray.push({
           lineitem: lineitem.id,
-          results: results
+          results: body
         });
       } catch (err) {
         resultsArray.push({
@@ -399,7 +404,7 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         const lineitemUrl = lineitem.id;
-        await got.delete(lineitemUrl, {
+        await axios.delete(lineitemUrl, {
           headers: {
             Authorization:
               accessToken.token_type + " " + accessToken.access_token

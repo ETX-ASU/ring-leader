@@ -1,6 +1,9 @@
 import {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
   DEEP_LINK_RESOURCELINKS_ENDPOINT,
+  DEEP_LINK_DISPLAY_BASE_URL,
+  DEEP_LINK_FORM_SUBMIT_SCRIPT,
+  DEEP_LINK_FORWARD_SERVER_SIDE,
   ROSTER_ENDPOINT,
   CREATE_ASSIGNMENT_ENDPOINT,
   GET_ASSIGNMENT_ENDPOINT,
@@ -16,9 +19,14 @@ import {
   LTI_ADVANTAGE_LAUNCH_ROUTE,
   LTI_STUDENT_REDIRECT,
   LTI_DEEPLINK_REDIRECT,
+  LTI_SESSION_VALIDATION_ENDPOINT,
   TOOL_INFO,
   LTI_INSTRUCTOR_REDIRECT,
-  GET_JWKS_ENDPOINT
+  GET_JWKS_ENDPOINT,
+  PLATFORM,
+  LTI_API_NAME,
+  API_URL,
+  SESSION_SECRET
 } from "./util/environment";
 
 import {
@@ -49,16 +57,19 @@ import {
 import { logger }
   from "./util/LogService";
 
-import SubmitGradeParams from "./model/SubmitGradeParams";
 import SubmitContentItem from "./model/SubmitContentItem";
 import SubmitLineItem from "./model/SubmitLineItem";
-import Student from "./model/Student";
 import User from "./model/User";
 import LineItem from "./model/LineItem";
-import InstructorSubmitGradeParams from "./model/InstructorSubmitGradeParams";
+import SubmitGradeParams from "./model/SubmitGradeParams";
+import Assignment from "./model/Assignment";
+import ResultScore from "./model/ResultScore";
 
 export {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
+  DEEP_LINK_DISPLAY_BASE_URL,
+  DEEP_LINK_FORM_SUBMIT_SCRIPT,
+  DEEP_LINK_FORWARD_SERVER_SIDE,
   LTI_ASSIGNMENT_REDIRECT,
   APPLICATION_URL,
   ROSTER_ENDPOINT,
@@ -75,6 +86,7 @@ export {
   LTI_ADVANTAGE_LAUNCH_ROUTE,
   LTI_STUDENT_REDIRECT,
   LTI_DEEPLINK_REDIRECT,
+  LTI_SESSION_VALIDATION_ENDPOINT,
   TOOL_INFO,
   LTI_INSTRUCTOR_REDIRECT,
   GET_JWKS_ENDPOINT,
@@ -83,9 +95,8 @@ export {
   SubmitContentItem,
   SubmitLineItem,
   LineItem,
-  Student,
   User,
-  InstructorSubmitGradeParams,
+  Assignment,
   DEEP_LINKING_SETTINGS_CLAIM,
   ROLES_CLAIM,
   INSTRUCTOR_ROLE_CLAIM,
@@ -107,5 +118,10 @@ export {
   ERROR_MSG_CLAIM,
   LOG_CLAIM,
   ERROR_LOG_CLAIM,
-  DATA_CLAIM
+  DATA_CLAIM,
+  PLATFORM,
+  LTI_API_NAME,
+  API_URL,
+  SESSION_SECRET,
+  ResultScore
 };

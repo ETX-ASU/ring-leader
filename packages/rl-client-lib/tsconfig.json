@@ -9,7 +9,8 @@
     "inlineSourceMap": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
   },
   "noErrorTruncation": true
 }

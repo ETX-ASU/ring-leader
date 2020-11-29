@@ -13,7 +13,7 @@ class SubmitContentItem {
     } else {
       this.type = "ltiResourceLink";
       this.title = "Title";
-      this.url = "/assignment?resourceId=tool-assignment-xyz";
+      this.url = "/assignment?assignmentId=tool-assignment-xyz";
       this.resourceId = "tool-assignment-xyz";
       this.lineItem = new SubmitLineItem(null);
     }

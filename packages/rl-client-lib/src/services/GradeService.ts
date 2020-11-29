@@ -4,8 +4,7 @@ import {
   PUT_STUDENT_GRADE,
   GET_GRADES,
   logger,
-  SubmitGradeParams,
-  InstructorSubmitGradeParams
+  SubmitGradeParams
 } from "@asu-etx/rl-shared";
 
 const submitGrade = async (params: SubmitGradeParams): Promise<any> => {
@@ -24,7 +23,7 @@ const submitGrade = async (params: SubmitGradeParams): Promise<any> => {
   return results;
 };
 
-const submitInstructorGrade = async (params: InstructorSubmitGradeParams): Promise<any> => {
+const submitInstructorGrade = async (params: SubmitGradeParams): Promise<any> => {
   const results = await axios
     .post(PUT_STUDENT_GRADE, {
       params: params
@@ -40,7 +39,7 @@ const submitInstructorGrade = async (params: InstructorSubmitGradeParams): Promi
   return results;
 };
 
-const getGrades = (assignmentId: String): Promise<any> => {
+const getGrades = (assignmentId: string): Promise<any> => {
   const grades = axios
     .get(GET_GRADES, {
       params: {
@@ -54,4 +53,20 @@ const getGrades = (assignmentId: String): Promise<any> => {
   return grades;
 };
 
-export { submitGrade, getGrades, submitInstructorGrade };
+const getGrade = (assignmentId: string, userId: string): Promise<any> => {
+  const grades = axios
+    .get(GET_GRADES, {
+      params: {
+        lineItemId: assignmentId,
+        userId: userId
+      }
+    })
+    .then((results) => {
+      logger.debug(JSON.stringify(results.data));
+      return results.data;
+    });
+  return grades;
+};
+
+
+export { submitGrade, getGrades, submitInstructorGrade, getGrade };

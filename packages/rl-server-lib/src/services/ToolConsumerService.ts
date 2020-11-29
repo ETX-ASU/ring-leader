@@ -1,102 +1,60 @@
-import { getConnection } from "../database/db";
-import ToolConsumer from "../database/entities/ToolConsumer";
-import ToolConsumerRequest from "../database/entities/ToolConsumerRequest";
+import ToolConsumer from "../models/ToolConsumer";
+import ToolConsumerRequest from "../models/ToolConsumerRequest";
 import { logger } from "@asu-etx/rl-shared";
 
-const createToolConsumer = async (
-  consumer: ToolConsumer
-): Promise<ToolConsumer> => {
-  const connection = await getConnection();
-  const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  return toolConsumerRepository.save(consumer);
+const getToolConsumers = (): ToolConsumer[] => {
+  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS: "[]");
+  //logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
+  return toolConsumers;
 };
 
-const getDeploymentConsumer = async (
-  request: ToolConsumerRequest
-): Promise<ToolConsumer | undefined> => {
-  const connection = await getConnection();
-  const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  const consumerDeployment = await toolConsumerRepository.findOne({
-    where: {
-      iss: request.iss,
-      client_id: request.client_id,
-      deployment_id: request.deployment_id
+const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
+  let toolConsumer = undefined;
+  getToolConsumers().forEach((tc) => {
+    if (tc.name == name) {
+      return (toolConsumer = tc);
     }
   });
-  if (consumerDeployment == undefined) {
-    const toolConsumer: ToolConsumer | undefined = await getToolConsumer(
-      request
-    );
-    if (toolConsumer != undefined) {
-      toolConsumer.id = 0;
-      toolConsumer.deployment_id = request.deployment_id;
-      toolConsumer.name = `toolConsumer.name - ${request.deployment_id}`;
-      return createToolConsumer(toolConsumer);
-    }
-  }
-  return consumerDeployment;
-};
-
-const getToolConsumer = async (
-  request: ToolConsumerRequest
-): Promise<ToolConsumer | undefined> => {
-  const connection = await getConnection();
-  const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  logger.debug(
-    `toolConsumerRepository -request : ${JSON.stringify(request)} )}`
-  );
-  let toolConsumer:
-    | ToolConsumer
-    | undefined = await toolConsumerRepository.findOne({
-      where: {
-        iss: request.iss,
-        client_id: request.client_id,
-        deployment_id: request.deployment_id
-      }
-    });
-
-  if (!toolConsumer) {
-    toolConsumer = await toolConsumerRepository.findOne({
-      where: {
-        iss: request.iss,
-        client_id: request.client_id
-      }
-    });
-  }
-
-  if (!toolConsumer) {
-    toolConsumer = await toolConsumerRepository.findOne({
-      where: {
-        iss: request.iss,
-      }
-    });
-  }
-
-  logger.debug(
-    `toolConsumerRepository -toolConsumer : ${JSON.stringify(toolConsumer)} )}`
-  );
-  logger.debug(
-    `found tool consumer: ${request.name} : ${request.iss} : ${request.client_id} : ${request.client_id})}`
-  );
+  //logger.debug(`found toolConsumer: ${JSON.stringify(toolConsumer)}`);
   return toolConsumer;
 };
 
-const getToolConsumerByName = async (
-  name: String
-): Promise<ToolConsumer | undefined> => {
-  const connection = await getConnection();
-  const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  const toolConsumer = await toolConsumerRepository.findOne({
-    where: {
-      name: name
+const getToolConsumerById = (uuid: string): ToolConsumer | undefined => {
+  let toolConsumer = undefined;
+  getToolConsumers().forEach((tc) => {
+    if (tc.uuid == uuid) {
+      return (toolConsumer = tc);
+    }
+  });
+  //logger.debug(`found toolConsumer: ${toolConsumer}`);
+  return toolConsumer;
+};
+
+
+const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined => {
+  let toolConsumer: ToolConsumer | undefined = undefined;
+  getToolConsumers().forEach((tc) => {
+    if (
+      tc.iss === request.iss &&
+      tc.client_id === request.client_id &&
+      tc.deployment_id === request.deployment_id
+    ) {
+      return (toolConsumer = tc);
+    }
+
+    if (!toolConsumer) {
+      if (tc.iss === request.iss && tc.client_id === request.client_id) {
+        return (toolConsumer = tc);
+      }
+    }
+
+    if (!toolConsumer) {
+      if (tc.iss === request.iss) {
+        return (toolConsumer = tc);
+      }
     }
   });
   return toolConsumer;
 };
 
-export {
-  createToolConsumer,
-  getDeploymentConsumer,
-  getToolConsumer,
-  getToolConsumerByName
-};
+export { getToolConsumer, getToolConsumerByName, getToolConsumers, getToolConsumerById };

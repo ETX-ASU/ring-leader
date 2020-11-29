@@ -24,7 +24,7 @@ class NamesAndRoles {
       throw new Error("MISSING_TOKEN");
     }
     const token: any = await jwt.decode(platform.idToken);
-    logger.debug(JSON.stringify("getMembers token- " + token));
+    logger.debug("getMembers token- " + JSON.stringify(token));
     logger.debug(
       JSON.stringify("getMembers tokenObject- " + JSON.stringify(platform))
     );
@@ -32,12 +32,12 @@ class NamesAndRoles {
       "Attempting to retrieve platform access_token for [" + platform.iss + "]"
     );
     const tokenRes = await getAccessToken(platform, CONTEXT_MEMBERSHIP_READ_CLAIM);
-    logger.debug("Access_token retrieved for [" + platform.iss + "]");
-    logger.debug("Access token received -" + tokenRes);
+    logger.debug("getMemebers Access_token retrieved for [" + platform.iss + "]");
+    logger.debug("getMemebers Access token received -" + JSON.stringify(tokenRes));
 
-    logger.debug("tokenRes.access_token: " + tokenRes.access_token);
-    logger.debug("tokenRes.token_type: " + tokenRes.token_type);
-    logger.debug("options: " + options);
+    logger.debug("getMemebers tokenRes.access_token: " + tokenRes.access_token);
+    logger.debug("getMemebers tokenRes.token_type: " + tokenRes.token_type);
+    logger.debug("getMemebers options: " + JSON.stringify(options));
     let query: any = [];
     if (options && options.role) {
       logger.debug("Adding role parameter with value: " + options.role);

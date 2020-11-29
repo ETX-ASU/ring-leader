@@ -1,4 +1,3 @@
-import { inspect } from "util";
 import { rlValidateDecodedToken, rlDecodeIdToken } from "./auth";
 
 import { rlPlatform } from "../util/rlPlatform";
@@ -14,8 +13,7 @@ const processRequest = async (request: any) => {
 
   const decodedToken = rlDecodeIdToken(request.body.id_token);
   rlValidateDecodedToken(decodedToken, session);
-  const platformDetails = await getToolConsumer({
-    name: "",
+  const platformDetails = getToolConsumer({
     client_id: decodedToken["aud"],
     iss: decodedToken["iss"],
     deployment_id: decodedToken[DEPLOYMENT_ID_CLAIM]

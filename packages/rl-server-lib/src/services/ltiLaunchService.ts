@@ -4,24 +4,20 @@ import url from "url";
 import { inspect } from "util";
 import { rlProcessOIDCRequest } from "../util/auth";
 
-import { getConnection } from "../database/db";
-import ToolConsumer from "../database/entities/ToolConsumer";
-import { getToolConsumer } from "../services/ToolConsumerService";
+import { getToolConsumer, getToolConsumers } from "./ToolConsumerService";
 import { generateUniqueString } from "../util/generateUniqueString";
 import processRequest from "../util/processRequest";
-import { OIDC_LOGIN_INIT_ROUTE,
- LTI_ADVANTAGE_LAUNCH_ROUTE,
- LTI_DEEPLINK_REDIRECT,
- LTI_INSTRUCTOR_REDIRECT,
- LTI_ASSIGNMENT_REDIRECT,
- LTI_STUDENT_REDIRECT, logger} from "@asu-etx/rl-shared"
+import {
+  OIDC_LOGIN_INIT_ROUTE,
+  LTI_ADVANTAGE_LAUNCH_ROUTE,
+  LTI_DEEPLINK_REDIRECT,
+  LTI_INSTRUCTOR_REDIRECT,
+  LTI_ASSIGNMENT_REDIRECT,
+  LTI_STUDENT_REDIRECT,
+  logger
+} from "@asu-etx/rl-shared";
 
-const getToolConsumers = async (): Promise<ToolConsumer[]> => {
-  const connection = await getConnection();
-  const toolConsumerRepository = connection.getRepository(ToolConsumer);
-  const toolConsumers = await toolConsumerRepository.find();
-  return toolConsumers;
-};
+const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
 const initOidcGet = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
@@ -29,8 +25,7 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
   //This resposne will be save in session or DB and will be used in validating the nonce and other properties
   const response: any = rlProcessOIDCRequest(req, state, nonce);
 
-  const platformDetails = await getToolConsumer({
-    name: "",
+  const platformDetails = getToolConsumer({
     client_id: response.client_id,
     iss: response.iss,
     deployment_id: ""
@@ -73,8 +68,7 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
     )}`
   );
 
-  const platformDetails = await getToolConsumer({
-    name: "",
+  const platformDetails = getToolConsumer({
     client_id: response.client_id,
     iss: response.iss,
     deployment_id: ""
@@ -98,8 +92,7 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
     throw new Error("no session detected, something is wrong");
   }
   logger.debug(
-    `Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${
-      platformDetails.platformOIDCAuthEndPoint
+    `Redirection from OIDC_LOGIN_INIT_ROUTE: ${OIDC_LOGIN_INIT_ROUTE} to :${platformDetails.platformOIDCAuthEndPoint
     } with platform details: ${JSON.stringify(platformDetails)}`
   );
 
@@ -124,9 +117,10 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   await request.session.save(() => {
     logger.debug("session data saved");
   });
+  console.log(`instructor redirect: ${URL_ROOT + LTI_INSTRUCTOR_REDIRECT}`);
   if (processedRequest.rlPlatform.isStudent)
-    response.redirect(LTI_STUDENT_REDIRECT);
-  else response.redirect(LTI_INSTRUCTOR_REDIRECT);
+    response.redirect(URL_ROOT + LTI_STUDENT_REDIRECT);
+  else response.redirect(URL_ROOT + LTI_INSTRUCTOR_REDIRECT);
 
   await request.session.save(() => {
     logger.debug("session data saved");
@@ -161,7 +155,7 @@ const assignmentRedirectPost = async (
     logger.debug("req.session- " + JSON.stringify(request.session));
   });
   response.redirect(
-    LTI_ASSIGNMENT_REDIRECT + "?resourceId=" + reqQueryString.resourceId
+    URL_ROOT + LTI_ASSIGNMENT_REDIRECT + "?assignmentId=" + reqQueryString.assignmentId
   );
 };
 
@@ -182,7 +176,7 @@ const deepLinkRedirect = async (request: any, response: any): Promise<void> => {
   await request.session.save(() => {
     logger.debug("session data saved");
   });
-  response.redirect(LTI_DEEPLINK_REDIRECT);
+  response.redirect(URL_ROOT + LTI_DEEPLINK_REDIRECT);
 };
 
 const toolInfoGet = async (
@@ -205,7 +199,7 @@ const toolInfoGet = async (
     ]
   };
 
-  const toolConsumers = await getToolConsumers();
+  const toolConsumers = getToolConsumers();
   const sanitizedToolConsumers = toolConsumers.map(
     ({ name, public_key_jwk, client_id }) => {
       return {
@@ -224,6 +218,7 @@ const toolInfoGet = async (
     null,
     2
   );
+
 
   res.send(`< pre > ${data} </pre>`);
 };

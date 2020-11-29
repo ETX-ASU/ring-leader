@@ -1,0 +1,20 @@
+{
+  "packages": [
+    "packages/rl-shared",
+    "packages/rl-server-lib",
+    "packages/rl-client-lib",
+    "packages/rl-tool-example-server",
+    "packages/rl-tool-example-client"
+  ],
+  "version": "independent",
+  "npmClient": "npm",
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "message": "chore(release): publish",
+      "registry": "https://registry.etx-asu.npme.io",
+      "allowBranch": "master"
+    }
+  }
+}

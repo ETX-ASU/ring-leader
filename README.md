@@ -2,13 +2,25 @@
 
 This is a monorepo that houses several packages that can be published and consumed independently to support the Ring Leader vision. That vision is to simplify the LTI 1.3 integration from LMSs into tools developed by the ETX team.
 
-The `rl-server-lib` and `rl-client-lib` packages are published as private NPM packages that can be included within tools. These libraries will be used to expedite the integration with LTI 1.3 capable LMSs.
+The `rl-server-lib` and `rl-client-lib` packages are published as public NPM packages that can be included within tools. These libraries will be used to expedite the integration with LTI 1.3 capable LMSs.
 
-The `rl-tool-example-client` and `rl-tool-example-server` packages are used to stand up an example usage of the `rl-server-lib` and `rl-client-lib` libraries.
+There are several additional repositories in asu-etx that illustrate the use of these libraries to stand up an lti compliant tool with minimal additional code.
+
+## Example AWS Amplify aplication:
+ https://github.com/ETX-ASU/boiler
+## Example Express Application
+ https://github.com/ETX-ASU/ring-leader-express
+## Example Serverless Application
+https://github.com/ETX-ASU/ring-leader-serverless
 
 # Install Tools
 
 ## Install `Node.js`
+## Install `Typescript`
+
+```bash
+npm install -g typescript
+```
 
 This project requires `Node.js`. All code is written in `TypeScript` which compiles into executable `Node.js` scripts that are run as a CLI. This means we will need to install a compatible version of `Node.js` if you don't already have one.
 
@@ -44,165 +56,104 @@ Now it's time to install all `yarn workspaces`. From the root of the repository 
 
 ```bash
 yarn install
+
 ```
 
-# Setup VS Code
+# TO Build
+ ```bash
+yarn build
+```
 
-The recommended editor is VS Code. When you open VS Code at the root of this repository, VS Code, **should** prompt you to open this project as a `workspace`. Say **YES**!
-
-Loading the project as a `workspace` is IMPORTANT. It has configurations that will help make CloudFormation editing better among other things.
-
-VS Code will then prompt you to install recommended extensions. Be sure to add these at a minimum:
-
-- GitHub Markdown Style: bierner.markdown-preview-github-styles
-- ESLint: dbaeumer.vscode-eslint
-- Package.json syntax highlighting: eg2.vscode-npm-script
-
-# Creating and Configuring a `.env.local` File for Heroku
-
-In order to fully test the Ring Leader libraries using the test server, you will need to setup a Heroku app as well as public and private keys for the LTI 1.3 launch.
-
-All of the configurations for the LTI 1.3 launch and Heroku app will be stored in a `.env.local` file. Follow these steps:
-
-1. Find the `packages/rl-tool-example-server/.env` file.
-2. Make a copy of that file and name it `packages/rl-tool-example-server/.env.local`
-3. Substitute `<replace me>` in the value of the `HEROKU_APP_NAME` field with your name. Example:
+# To Publish a library
+If you have made changes and you want to publish the changes to the npm repositoy. You will go to the package that you have made changes in.
+Bump the package version and then:
 
 ```bash
-# before
-HEROKU_APP_NAME=ring-leader-<replace me>
-# after
-HEROKU_APP_NAME=ring-leader-john-martin
+yarn build
+npm publish --access=public
 ```
 
-4. Save your updated `.env.local.json` file.
+# Library Useage
 
-# Local Development
+## Client Lib:
+1. Add package rl-client-lib and rl-shared to package.json
+2. Select one of the 3 services:
+  a. When using amplify API use servicesAWS
+  b. When required to use a caching mechanism for session state use servicesRedirect. Typically, when using a serverless setup, other than amplify API.
+  c. When working with a simple express backend use services found under Services.
 
-From the root of the project run the following:
+## Server Lib
+1. Add package rl-server-lib and rl-shared lit to package.json.
+2. Create an Express app then use either apps.cacheApp or apps.expressApp to activate the backend.
 
-```bash
-yarn run develop
-```
-
-This will install all dependencies, build each of the packages and being watching each package for changes.
-
-Note that the utilization of `Yarn Workspaces` allows packages do list other packages within this monorepo as dependencies. The watches that run should allow a change in a dependent package to be picked up automatically.
-
-# Building and Deploying the Test Server
-
-The test server is best used as an https service publicly available on the web. Standing up a simple NodeJS Heroku app is a fast way to achieve this.
-
-## Creating a Free Heroku Account
-
-You will need to [setup a free Heroku account](https://signup.heroku.com/signup/dc) first.
-
-## Installing the Heroku CLI
-
-You will need to install the Heroku cli and create an account.
-
-https://devcenter.heroku.com/articles/heroku-cli
-
-## Login to Heroku
-
-```bash
-heroku login
-```
-
-## Initializing your App
-
-The app will need a unique name within Heroku and within your Heroku account. Be sure you have already completed the step above to set your `.env.local` key for the Heroku app name.
-
-Once you have configured your Heroku app name, then run the following:
-
-```bash
-yarn run heroku-create
-```
-
-Run the following command to verify that Heroku is now listed as a `git` remote:
-
-```bash
-git remote -v
-# heroku	https://git.heroku.com/ring-leader-john-martin.git (fetch)
-# heroku	https://git.heroku.com/ring-leader-john-martin.git (push)
-# origin	https://github.com/ETX-ASU/ring-leader.git (fetch)
-# origin	https://github.com/ETX-ASU/ring-leader.git (push)
-```
-
-### Generating Public/Private Keys and a JWK
-
-Canvas will require a Public Key embedded in a JWK to create a `developer key` to be used to add the LTI Tool ( example server ) as an application.
-
-#### Setup Public & Private Keys
-
-A public and private key pair need to be generated. The public key will be provided through a JWK to Canvas. The private key will be configured to load within the Heroku app for verification of requests coming from Canvas.
-
-```bash
-yarn run setup-tool-keys
-```
-
-This script does the following:
-
-1. Generates the required `.pem` files that represent the public and private RAS keys
-2. Converts the public key into the `JWK` format
-3. Configures your Heroku app with the private Key
-
-## Staring or Updating your App
-
-When you want to start your app or push a change, run the following command from the root of the project:
-
-```bash
-git push heroku <your current branch>:master
-```
-
-## Debugging the Heroku App
-
-Tailing the Heroku App Logs
-
-```bash
-heroku logs --tail
-```
-
-SH into the Heroku server:
-```bash
-heroku run bash
-```
-
-## Updating configs for your heroku app:
-```bash
-yarn heroku-update-configs
-```
-Will take config from .env.local.json
-
-# Sample Tool Registration with Canvas
-
-[Follow these steps to integrate the example tool with Canvas](./documentation/SampleToolCanvasRegistration.md)
-
-# Running Tests
-
-// todo
-
-# SemVer
-
-Because there could be many tools relying on the Ring Leader libraries, it is critical to follow [`SemVer`](https://semver.org/) as a convention.
-
-// TODO outline Git Commit and testing conventions
-
-# Publishing Ring Leader Packages
-
-The `rl-client-lib` and `rl-server-lib` packages can be pulled down by anyone who has access to the "@asu-etx" scoped private NPM repositories. They are pulled by many tools.
-
-Publishing should only take place after extensive review of the all `Git` commits, successful completion of all tests, and manual testing using the test server.
-
-Making an update means first determining the next [`SemVer`](https://semver.org/) version number to use to ensure there is no disruption for tools that already have dependencies on these libraries.
-
-// todo utilize git conventions
-// make note of tests
+### For straight express applications an example:
 
 ```
-// TODO
+//USER_INTERFACE_ROOT is the physical location of the frontend index.js example: 
+//path.join( __dirname,"/../../rl-tool-example-client/build");
+
+import express from "express";
+import { PORT, USER_INTERFACE_ROOT } from "./environment";
+import { expressApp } from "@asu-etx/rl-server-lib";
+
+expressApp(app, USER_INTERFACE_ROOT, null);
+endpointsToSupportToolAPI(app);
+
+async function start(): Promise<any> {
+  await dbInit(null);
+  app.listen(PORT, "0.0.0.0", () => {
+    logger.debug("App is running at", `0.0.0.0:${PORT}`);
+  });
+}
+
+start()
 ```
 
-# LTI Advantage Documentation
+See  https://github.com/ETX-ASU/ring-leader-express for a complete example
 
-[Read more about integrating LTI Advantage tools with Canvas](./documentation/CanvasRegistration.md)
+The other types of applications follow a similar pattern:
+  1. create an express application.
+  2. pass it to an application that populates the endpoints and functionality to support the lti 1.3 and advantage services. The set of endpoints can be found in shared_lib/util/environment.ts and can be adjusted if necessary by setting in .env.
+
+### For an example of a Amplify Application:
+See https://github.com/ETX-ASU/boiler
+
+### For an example of a Serverless Express Application
+See https://github.com/ETX-ASU/ring-leader-serverless
+
+# How to add an application to a Consumer  (Canvas, Blackboard etc.)
+
+To add an appplication you will need administrative persmissions and you will add the following information about the 
+## Tool to the Consumer:
+   1. A name for your tool: Boiler Maker that will show up in admin screens.
+   2. A title for your tool: that instructors and potentially students will see.
+   3. Redirect uris (these are defaults as part of the built in lti support):
+      https://www.yourtool.com/lti-advantage-launch (launches the main application)
+      https://www.yourtool.com/assignment           (launches the assignment)
+      https://www.yourtool.com/deeplink             (used to attach the Tool assignment to the Consumer assignment)
+   4. Target link: https://www.yourtool.com/lti-advantage-launch
+   5. OIDC links (post and get for this library they are the same:) https://www.yourtool.com/init-oidc
+   6. A public key  (Consumer may want in PEM format or as a JWK) can be generated from scripts.
+   7. Then activate the following services:
+      a. Can create and view assignment data in the gradebook associated with the tool.
+      b. Can view assignment data in the gradebook associated with the tool.
+      c. Can view submission data for assignments associated with the tool.
+      d. Can create and update submission results for assignments associated with the tool.
+      e. Can retrieve user data associated with the context the tool is installed in.
+
+## Consumer Info To Tool:
+  You will need the following information about the consumer to create a valid TOOL_CONSUMER for the tool.
+  to see examples look for .tool_consumers.jim.json in the service of interest:
+  1. iss (issurer: typically the url of the service)
+  2. client_id: Will be generated by Consumer when adding tool to the consumer, see above.
+  3. deployment_id: Again, this is generated by the consumer when adding the tool to the consumer.
+  4. "platformOIDCAuthEndPoint": "https://ltiadvantagevalidator.imsglobal.org/ltitool/oidcauthurl.html",
+  5. "platformAccessTokenEndpoint": "https://ltiadvantagevalidator.imsglobal.org/ltitool/authcodejwt.html"
+  6. uuid (generated by tool and added WITHOUT the -'s)
+  7. keyid: generated by the tool, can be anything.
+  8. alg: RS256
+  
+
+
+
+

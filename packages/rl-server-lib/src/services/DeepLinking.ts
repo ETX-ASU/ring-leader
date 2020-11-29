@@ -1,5 +1,8 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "../util/Platform";
+import { Response } from "express";
+import axios from "axios";
+import { AxiosResponse } from "axios";
 import {
   logger,
   MSG_CLAIM,
@@ -7,8 +10,15 @@ import {
   ERROR_MSG_CLAIM,
   LOG_CLAIM,
   ERROR_LOG_CLAIM,
-  DATA_CLAIM
+  DATA_CLAIM,
+  DEEP_LINK_DISPLAY_BASE_URL,
+  LTI_ASSIGNMENT_REDIRECT,
+  APPLICATION_URL,
+  DEEP_LINK_FORM_SUBMIT_SCRIPT
 } from "@asu-etx/rl-shared";
+import { isExpressionStatement } from "typescript";
+
+const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
 class DeepLinking {
   /**
@@ -21,6 +31,7 @@ class DeepLinking {
    * @param {String} options.log - Message the platform may log in it's system upon return to the platform.
    * @param {String} options.errlog - Message the platform may log in it's system upon return to the platform if some error has occurred.
    */
+
   async createDeepLinkingForm(
     platform: Platform,
     contentItems: any,
@@ -43,11 +54,44 @@ class DeepLinking {
       '<input type="hidden" name="JWT" value="' +
       message +
       '" />' +
-      "</form>" +
-      "<script>" +
-      'document.getElementById("ltijs_submit").submit()' +
-      "</script>";
+      "</form>" + this.simpleSubmitScript();
     return form;
+  }
+
+  async postDeepLink(
+    response: Response,
+    platform: Platform,
+    contentItems: any,
+    options: any
+  ): Promise<void> {
+    const message = await this.createDeepLinkingMessage(
+      platform,
+      contentItems,
+      options,
+    ); // Creating auto submitting form
+    const params = "JWT=" + message; //&${params}
+    try {
+      const axiosResponse: AxiosResponse = await axios.post(platform.deepLinkingSettings.deep_link_return_url, params);
+      logger.debug("deep link post response data from consumer:" + JSON.stringify(axiosResponse.data));
+      response.json(axiosResponse.data);
+      logger.debug("deep link post response status from consumer:" + JSON.stringify(axiosResponse.status));
+
+      response.status(axiosResponse.status);
+    } catch (err) {
+      logger.error("Unable to forward, returned error:" + JSON.stringify(err));
+      throw Error("Unable to forward, returned error:" + JSON.stringify(err));
+    }
+
+  }
+
+  simpleSubmitScript(): string {
+    let script = "";
+    switch (DEEP_LINK_FORM_SUBMIT_SCRIPT) {
+      case "simple":
+        script = '<script>document.getElementById("ltijs_submit").submit()</script>';
+        break;
+    }
+    return script;
   }
   /**
    * @description Creates a DeepLinking signed message.
@@ -122,15 +166,18 @@ class DeepLinking {
     logger.debug("Accepts Mutiple: " + acceptMultiple);
     logger.debug("Received content items: ");
     logger.debug(contentItems);
-
+    //
     for (const contentItem of contentItems) {
       if (!acceptedTypes.includes(contentItem.type)) continue;
+      if (!contentItem.url || !contentItem.url.trim().length) {
+        contentItem.url = `${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}${URL_ROOT}${LTI_ASSIGNMENT_REDIRECT}?assignmentId=${contentItem.resourceId}`;
+      }
       selectedContentItems.push(contentItem);
       if (!acceptMultiple) break;
     }
 
     logger.debug("Content items to be sent: ");
-    logger.debug(selectedContentItems);
+    logger.debug(JSON.stringify(selectedContentItems));
     jwtBody[CONTENT_ITEMS_CLAIM] = selectedContentItems;
     const message = await jwt.sign(jwtBody, platform.platformPrivateKey, {
       algorithm: platform.alg,

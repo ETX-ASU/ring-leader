@@ -2,15 +2,18 @@ import { Grade } from "./services/assignmentAndGradeService";
 import { DeepLinking } from "./services/DeepLinking";
 import { NamesAndRoles } from "./services/namesAndRolesService";
 import { rlPlatform } from "./util/rlPlatform";
-import { dbInit } from "./database/init";
 import requestLogger from "./middleware/requestLogger";
 
-import rlLtiLaunchExpressEndpoints from "./endpoints/rlLtiLaunchExpressEndpoints";
-import rlLtiServiceExpressEndpoints from "./endpoints/rlLtiServiceExpressEndpoints";
+import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
+import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
+import cacheLtiServiceEndpoints from "./endpoints/cacheLtiServiceEndpoints";
 
-import ToolConsumer from "./database/entities/ToolConsumer";
-import getDeepLinkItems from "./util/getDeepLinkItems";
-import Assignment from "./database/entities/Assignment";
+import ToolConsumer from "./models/ToolConsumer";
+import { Session } from "./database/entity/Session";
+import initDBTables from "./database/dataconnection";
+import getLaunchParameters from "./util/getLaunchParameters"
+import cacheApp from "./apps/cacheApp"
+import expressApp from "./apps/expressApp"
 
 import {
   rlValidateToken,
@@ -28,6 +31,11 @@ import {
   ltiLaunchPost
 } from "./services/ltiLaunchService";
 
+import {
+  setResponseAuthorization,
+  getRedirectToken
+} from "./util/externalRedirect";
+
 export {
   rlProcessOIDCRequest,
   getAccessToken,
@@ -43,11 +51,16 @@ export {
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,
-  dbInit,
   requestLogger,
-  rlLtiLaunchExpressEndpoints,
-  rlLtiServiceExpressEndpoints,
+  ltiLaunchEndpoints,
+  ltiServiceEndpoints,
+  cacheLtiServiceEndpoints,
   ToolConsumer,
-  getDeepLinkItems,
-  Assignment
+  Session,
+  initDBTables,
+  setResponseAuthorization,
+  getRedirectToken,
+  getLaunchParameters,
+  cacheApp,
+  expressApp
 };
