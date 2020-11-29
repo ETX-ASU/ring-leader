@@ -332,6 +332,7 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         let lineitemUrl = "";
+        let query: any = [];
         logger.debug(`currentLineItem: ${currentLineItem} lineitem.id: ${lineitem.id}`);
         if (currentLineItem && currentLineItem != lineitem.id)
           continue;
@@ -339,12 +340,15 @@ class Grade {
           lineitemUrl = lineitem.id
         lineitemUrl = lineitemUrl + "/results";
         if (options) {
-          if (options.userId) lineitemUrl += "/" + options.userId;
+          if (options.userId) query.push("user_id", options.userId);
         }
+        if (query.length > 0) query = new URLSearchParams(query);
+        else query = false;
         logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
         const response = await got
           .get(lineitemUrl, {
+            searchParams: query,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
