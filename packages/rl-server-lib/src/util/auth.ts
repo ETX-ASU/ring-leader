@@ -59,9 +59,9 @@ const claimValidation = (token: any): any => {
   //logger.debug("Checking Message type claim");
   if (
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-      "LtiResourceLinkRequest" &&
+    "LtiResourceLinkRequest" &&
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-      "LtiDeepLinkingRequest"
+    "LtiDeepLinkingRequest"
   )
     throw new Error("NO_MESSAGE_TYPE_CLAIM");
 
@@ -203,11 +203,12 @@ const getAccessToken = async (
   //logger.debug("confjwt- " + JSON.stringify(confjwt));
 
   const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
+    header: { "keyid": platform.kid },
     algorithm: platform.alg,
     keyid: platform.kid
   });
 
-  
+
   const payload = {
     grant_type: "client_credentials",
     client_assertion_type:
