@@ -1,6 +1,6 @@
 {
     "name": "@asu-etx/rl-client-lib",
-    "version": "0.7.37",
+    "version": "0.7.39",
     "license": "MIT",
     "public": true,
     "main": "build/index.js",
@@ -21,7 +21,7 @@
         "exec": "yarn run build"
     },
     "dependencies": {
-        "@asu-etx/rl-shared": "^0.7.10",
+        "@asu-etx/rl-shared": "^0.7.11",
         "@aws-amplify/api": "^3.2.11",
         "axios": "^0.21.0",
         "query-string": "^6.13.7",
