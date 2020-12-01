@@ -188,7 +188,7 @@ const getAccessToken = async (
   platform: Platform,
   scopes: any
 ): Promise<any> => {
-  //logger.debug("Inside getAccessToken-" + platform.platformPrivateKey);
+  logger.debug("platform to get access token-" + JSON.stringify(platform));
 
   const clientId = platform.aud;
 
@@ -197,10 +197,10 @@ const getAccessToken = async (
     iss: platform.iss,
     aud: platform.accesstokenEndpoint,
     iat: platform.iat || Date.now() / 1000,
-    exp: platform.exp || Date.now() / 1000 + 60,
+    exp: platform.exp || Date.now() / 1000 + 600,
     jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
-  //logger.debug("confjwt- " + JSON.stringify(confjwt));
+  logger.debug("confjwt- " + JSON.stringify(confjwt));
 
   const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
     header: { "keyid": platform.kid },
