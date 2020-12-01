@@ -188,7 +188,7 @@ const getAccessToken = async (
   platform: Platform,
   scopes: any
 ): Promise<any> => {
-  logger.debug("platform to get access token-" + JSON.stringify(platform));
+  //logger.debug("platform to get access token-" + JSON.stringify(platform));
 
   const clientId = platform.aud;
 
@@ -203,7 +203,7 @@ const getAccessToken = async (
   logger.debug("confjwt- " + JSON.stringify(confjwt));
 
   const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
-    header: { "keyid": platform.kid },
+    header: { "kid": platform.kid },
     algorithm: platform.alg,
     keyid: platform.kid
   });
@@ -218,15 +218,22 @@ const getAccessToken = async (
   };
 
   //logger.debug("payload- " + JSON.stringify(payload));
-  const access = await got
-    .post(platform.accesstokenEndpoint, {
-      form: payload
-    })
-    .json();
-  //logger.debug(`Access token received ${JSON.stringify(access)}`);
-  //logger.debug("Access token for the scopes - " + scopes);
+  logger.debug(`endpoint and payload -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
+  try {
+    const access = await got
+      .post(platform.accesstokenEndpoint, {
+        form: payload
+      })
+      .json();
+    //logger.debug(`Access token received ${JSON.stringify(access)}`);
+    //logger.debug("Access token for the scopes - " + scopes);
 
-  return access;
+    return access;
+  } catch (error) {
+    logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
+    throw Error("unable to obtain accessToken: " + JSON.stringify(error));
+  }
+  return null;
 };
 export {
   rlProcessOIDCRequest,
