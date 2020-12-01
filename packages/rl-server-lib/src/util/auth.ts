@@ -196,8 +196,8 @@ const getAccessToken = async (
     sub: clientId,
     iss: platform.iss,
     aud: platform.accesstokenEndpoint,
-    iat: platform.iat || Date.now() / 1000,
-    exp: platform.exp || Date.now() / 1000 + 600,
+    iat: Date.now() / 1000, //platform.iat || 
+    exp: Date.now() / 1000 + 600, // platform.exp || 
     jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
   logger.debug("confjwt- " + JSON.stringify(confjwt));
