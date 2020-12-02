@@ -205,6 +205,9 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
 
     for (const key in results[0].results) {
       const score = results[0].results[key];
+      if (userId || userId == "" && score.userId != userId) {
+        continue;
+      }
       logger.debug("score results from Tool Consumer - " + JSON.stringify(score));
       //Grades service call will only return user Id along with the score
       //so for this demo, we are retrieving the user info from the session

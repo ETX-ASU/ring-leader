@@ -317,10 +317,10 @@ class Grade {
     if (lineItems && lineItems.length <= 0) {
       lineItems = [platform.lineitem];
     }
-    const queryParams: any = {};
+    const query: any = {};
 
     if (options) {
-      if (limit) queryParams.limit = limit;
+      if (limit) query.limit = limit;
     }
 
     const resultsArray = [];
@@ -332,7 +332,6 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         let lineitemUrl = "";
-        let query: any = [];
         logger.debug(`currentLineItem: ${currentLineItem} lineitem.id: ${lineitem.id}`);
         if (currentLineItem && currentLineItem != lineitem.id)
           continue;
@@ -342,9 +341,7 @@ class Grade {
         if (options) {
           if (options.userId) query.push("user_id", options.userId);
         }
-        //if (query.length > 0) query = new URLSearchParams(query);
-        //else query = false;
-        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
+        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(query));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
         const response = await axios
           .get(lineitemUrl, {
