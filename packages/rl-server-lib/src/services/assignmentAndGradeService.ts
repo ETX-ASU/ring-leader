@@ -339,7 +339,7 @@ class Grade {
           lineitemUrl = lineitem.id
         lineitemUrl = lineitemUrl + "/results";
         if (options) {
-          if (options.userId) query.push("user_id", options.userId);
+          if (options.userId) query.user_id = options.userId;
         }
         logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(query));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
