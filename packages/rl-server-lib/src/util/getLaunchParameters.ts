@@ -1,6 +1,7 @@
 import { getToolConsumer } from "../services/ToolConsumerService";
 import { getRedirectToken } from "./externalRedirect";
 import { Session } from "../database/entity/Session";
+import crypto from "crypto";
 const getLaunchParameters = async (req: any, role: any) => {
   const platform = req.session.platform;
   const userId = platform.userId;
@@ -22,9 +23,18 @@ const getLaunchParameters = async (req: any, role: any) => {
   }
   console.log(`this is hash: ${JSON.stringify(hash)}`);
   let session = {};
+  if (!role) {
+    if (platform.isInstructor) {
+      role = "instructor";
+    } else {
+      role = "learner";
+    }
+  }
   try {
     const session = new Session();
-    session.sessionId = platform.userId + platform.context_id;
+    console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
+    const id = platform.userId + role + platform.context_id + resourceLinkId + platform.clientId + platform.deploymentId
+    session.sessionId = crypto.createHash('sha256').update(id).digest('base64');;
     session.session = JSON.stringify(req.session);
     await Session.writer.put(session);
     await session.save();
@@ -33,13 +43,7 @@ const getLaunchParameters = async (req: any, role: any) => {
     console.log(`session failed: ${JSON.stringify(err)}`);
     console.log(`session failed value : ${JSON.stringify(session)}`);
   }
-  if (!role) {
-    if (platform.isInstructor) {
-      role = "instructor";
-    } else {
-      role = "learner";
-    }
-  }
+
 
   //example const params = `userId=user-id-uncle-bob&courseId=the-course-id-123a&assignmentId=4c43a1b5-e5db-4b3e-ae32-a9405927e472`
   if (resourceLinkId !== courseId)

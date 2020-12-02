@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import got from "got";
 import { Platform } from "./Platform";
 import { logger } from "@asu-etx/rl-shared";
+import { response } from "express";
 
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
@@ -220,15 +221,15 @@ const getAccessToken = async (
   //logger.debug("payload- " + JSON.stringify(payload));
   logger.debug(`endpoint and payload -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
   try {
-    const access = await got
+    const reponse = await got
       .post(platform.accesstokenEndpoint, {
         form: payload
-      })
-      .json();
+      });
     //logger.debug(`Access token received ${JSON.stringify(access)}`);
-    //logger.debug("Access token for the scopes - " + scopes);
-
-    return access;
+    //logger.debug("Access token for theX-Request-Cost  scopes - " + scopes);
+    logger.debug(`Response token response header:X-Request-Cost: ${response.getHeader("X-Request-Cost")} 
+      and  X-Rate-Limit-Remaining: ${response.getHeader("X-Rate-Limit-Remaining")}`);
+    return response.json();
   } catch (error) {
     logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
     throw Error("unable to obtain accessToken: " + JSON.stringify(error));
