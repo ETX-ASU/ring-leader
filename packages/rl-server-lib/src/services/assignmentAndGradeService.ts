@@ -345,7 +345,6 @@ class Grade {
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
         const response = await axios
           .get(lineitemUrl, {
-            params: query,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
