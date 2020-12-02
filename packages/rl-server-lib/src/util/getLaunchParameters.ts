@@ -6,7 +6,7 @@ const getLaunchParameters = async (req: any, role: any) => {
   const userId = platform.userId;
   const courseId = platform.context_id;
   const resourceLinkId = req.query.assignmentId ? req.query.assignmentId : platform.resourceLinkId;
-  const lineItemId = platform.lineItem;
+  const lineItemId = platform.lineitem;
   const findConsumer = {
     iss: platform.iss,
     client_id: platform.clientId,
