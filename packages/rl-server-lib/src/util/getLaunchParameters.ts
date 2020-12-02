@@ -13,6 +13,13 @@ const getLaunchParameters = async (req: any, role: any) => {
     client_id: platform.clientId,
     deployment_id: platform.deploymentId
   };
+  if (!role) {
+    if (platform.isInstructor) {
+      role = "instructor";
+    } else {
+      role = "learner";
+    }
+  }
   const id = platform.userId + role + platform.context_id + resourceLinkId + platform.clientId + platform.deploymentId;
   const sessionId = crypto.createHash('sha256').update(id).digest('base64');
   console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
@@ -25,13 +32,6 @@ const getLaunchParameters = async (req: any, role: any) => {
   }
   console.log(`this is hash: ${JSON.stringify(hash)}`);
   let session = {};
-  if (!role) {
-    if (platform.isInstructor) {
-      role = "instructor";
-    } else {
-      role = "learner";
-    }
-  }
   try {
     const session = new Session();
     console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
