@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import { pem2jwk } from "pem-jwk";
+import { v4 as uuid } from "uuid";
 
 import shellPromise from "./shell-promise";
 
@@ -61,6 +62,7 @@ const toolConsumerPromises = configsFromEnvFile.TOOL_CONSUMERS.map(
         toolConsumer.private_key = private_key_str;
         toolConsumer.public_key = public_key_str;
         toolConsumer.public_key_jwk = jwk;
+        toolConsumer.uuid = uuid().replace("-", "").toUpperCase();
 
         console.log("Private Key Configured with Heroku");
         console.log(

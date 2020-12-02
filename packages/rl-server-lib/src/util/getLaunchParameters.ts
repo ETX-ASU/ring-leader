@@ -13,11 +13,13 @@ const getLaunchParameters = async (req: any, role: any) => {
     client_id: platform.clientId,
     deployment_id: platform.deploymentId
   };
+  const id = platform.userId + role + platform.context_id + resourceLinkId + platform.clientId + platform.deploymentId;
+  const sessionId = crypto.createHash('sha256').update(id).digest('base64');
   console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
   const toolConsumer = getToolConsumer(findConsumer);
   let hash = "";
   if (toolConsumer) {
-    hash = getRedirectToken(toolConsumer, userId + courseId);
+    hash = getRedirectToken(toolConsumer, sessionId);
   } else {
     throw new Error(`unable to find consumer tool: ${toolConsumer}`);
   }
@@ -33,8 +35,8 @@ const getLaunchParameters = async (req: any, role: any) => {
   try {
     const session = new Session();
     console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
-    const id = platform.userId + role + platform.context_id + resourceLinkId + platform.clientId + platform.deploymentId
-    session.sessionId = crypto.createHash('sha256').update(id).digest('base64');;
+
+    session.sessionId = sessionId;
     session.session = JSON.stringify(req.session);
     await Session.writer.put(session);
     await session.save();
