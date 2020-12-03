@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import got from "got";
+import axios from "axios";
 import { Platform } from "./Platform";
 import { logger } from "@asu-etx/rl-shared";
-import { response } from "express";
+import AccessToken from "../models/AccessToken";
 
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
@@ -185,12 +185,51 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
     return response;
   }
 };
+
+const formUrlEncoded = (x: { [x: string]: string | number | boolean; }) =>
+  Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '');
+
+const findAccessToken = (scopes: string, platform: Platform): string | null => {
+  const accessTokens = platform.accessTokens.filter((accessToken: any) => {
+    return accessToken.scopes === scopes;
+  });
+
+  if (accessTokens && accessTokens.length == 1) {
+    const accessToken: AccessToken = accessTokens[0];
+    if (!accessToken.isExpired()) {
+      platform.accessTokensUpdated = false;
+      return accessToken.token;
+    }
+    const index = platform.accessTokens.findIndex((accessToken: any) => {
+      return accessToken.scopes === scopes;
+    });
+    if (index >= 0) {
+      platform.accessTokens.splice(index, 1);
+    }
+  } else if (accessTokens.length > 1) {
+    for (let i = 0; i++; i < accessTokens.length) {
+      const index = platform.accessTokens.findIndex((accessToken: any) => {
+        return accessToken.scopes === scopes;
+      });
+      if (index >= 0) {
+        platform.accessTokens.splice(index, 1);
+      }
+    }
+  }
+  return null;
+}
+
+
 const getAccessToken = async (
   platform: Platform,
   scopes: any
 ): Promise<any> => {
   //logger.debug("platform to get access token-" + JSON.stringify(platform));
 
+  const accessToken = findAccessToken(JSON.stringify(scopes), platform);
+  if (accessToken) {
+    return accessToken;
+  }
   const clientId = platform.aud;
 
   const confjwt = {
@@ -198,7 +237,7 @@ const getAccessToken = async (
     iss: platform.iss,
     aud: platform.accesstokenEndpoint,
     iat: Date.now() / 1000, //platform.iat || 
-    exp: Date.now() / 1000 + 600, // platform.exp || 
+    exp: (Date.now() / 1000) + 600, // platform.exp || 
     jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
   logger.debug("confjwt- " + JSON.stringify(confjwt));
@@ -209,7 +248,6 @@ const getAccessToken = async (
     keyid: platform.kid
   });
 
-
   const payload = {
     grant_type: "client_credentials",
     client_assertion_type:
@@ -219,17 +257,23 @@ const getAccessToken = async (
   };
 
   //logger.debug("payload- " + JSON.stringify(payload));
-  logger.debug(`endpoint and payload -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
+  logger.debug(` -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
   try {
-    const reponse = await got
-      .post(platform.accesstokenEndpoint, {
-        form: payload
+    const response = await axios
+      .post(platform.accesstokenEndpoint, formUrlEncoded(payload), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       });
     //logger.debug(`Access token received ${JSON.stringify(access)}`);
     //logger.debug("Access token for theX-Request-Cost  scopes - " + scopes);
-    logger.debug(`Response token response header:X-Request-Cost: ${response.getHeader("X-Request-Cost")} 
-      and  X-Rate-Limit-Remaining: ${response.getHeader("X-Rate-Limit-Remaining")}`);
-    return response.json();
+    logger.debug(`Response token response header:X-Request-Cost: ${JSON.stringify(response.headers)}`);
+    logger.debug(`Access Token generated: ${JSON.stringify(response.data)}`);
+
+    platform.accessTokens.push(new AccessToken(JSON.stringify(scopes), JSON.stringify(response.data)));
+    platform.accessTokensUpdated = true;
+
+    return response.data;
   } catch (error) {
     logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
     throw Error("unable to obtain accessToken: " + JSON.stringify(error));

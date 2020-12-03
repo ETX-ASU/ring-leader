@@ -1,15 +1,16 @@
 import jwt from "jsonwebtoken";
 import { Platform } from "./Platform";
-import { logger, 
-  DEEP_LINKING_SETTINGS_CLAIM, 
-  ROLES_CLAIM, 
+import {
+  logger,
+  DEEP_LINKING_SETTINGS_CLAIM,
+  ROLES_CLAIM,
   INSTRUCTOR_ROLE_CLAIM,
   LEARNER_ROLE_CLAIM,
   DEPLOYMENT_ID_CLAIM,
   CONTEXT_CLAIM,
   ASSIGNMENT_GRADE_CLAIM,
   RESOURCE_LINK_CLAIM
- } from "@asu-etx/rl-shared";
+} from "@asu-etx/rl-shared";
 
 const setDefaultValues = (token: any): any => {
   //logger.debug("setDefaultValues - " + JSON.stringify(token));
@@ -63,6 +64,8 @@ const setDefaultValues = (token: any): any => {
     lineitem: assignmentGradeClaim ? assignmentGradeClaim.lineitem : null,
     resourceLinkId: resourceLinkClaim ? resourceLinkClaim.id : null,
     resource: resourceLinkClaim,
+    accessTokens: [],
+    accessTokensUpdated: false,
     deepLinkingSettings: deepLinkSettingsClaim
       ? {
         deep_link_return_url: deepLinkSettingsClaim.deep_link_return_url || null,
@@ -111,6 +114,8 @@ const rlPlatform = (
     deepLinkingSettings: tokenData.deepLinkingSettings,
     userId: tokenData.userId,
     roles: tokenData.roles,
+    accessTokens: tokenData.accessTokens,
+    accessTokensUpdated: tokenData.accessTokensUpdated,
     isInstructor: tokenData.isInstructor,
     isStudent: tokenData.isStudent,
     deploymentId: tokenData.deploymentId

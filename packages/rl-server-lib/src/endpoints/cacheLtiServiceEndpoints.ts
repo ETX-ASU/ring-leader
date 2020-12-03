@@ -35,6 +35,7 @@ import {
 import { Session } from "../database/entity/Session";
 
 import { validateRequest } from "../util/externalRedirect";
+import { Platform } from "../util/Platform";
 
 const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 
@@ -45,7 +46,6 @@ const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
 // cookie and send it to the client
 
 async function getPlatform(req: any): Promise<any> {
-
   const session = await getSession(req);
   return session?.platform;
 }
@@ -66,7 +66,6 @@ async function getSessionFromKey(req: any, key: string): Promise<any> {
   }
   logger.debug(`stored session: ${JSON.stringify(session)}`);
   return session;
-
 }
 async function getSession(req: any): Promise<any> {
   const key = validateRequest(req);
@@ -74,7 +73,18 @@ async function getSession(req: any): Promise<any> {
   return session;
 }
 
-
+async function updateSession(req: any, platform: Platform) {
+  if (platform.accessTokensUpdated) {
+    const key = validateRequest(req);
+    const session = await getSessionFromKey(req, key);
+    session.platform = platform;
+    const storeSession = new Session();
+    storeSession.sessionId = key;
+    storeSession.session = JSON.stringify(session);
+    await Session.writer.put(session);
+    await session.save();
+  }
+}
 
 function send(response: Response) {
   response.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -87,6 +97,8 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
     logger.debug(`roster request role: ${req.query.role}`);
     const platform = await getPlatform(req);
     const users = await getRoster(platform, req.query.role);
+
+    await updateSession(req, platform);
     logger.debug("users.found: ${users}");
     send(res).send(users);
   });
@@ -95,8 +107,11 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
 
     const reqQueryString: any = req.query;
     if (reqQueryString && reqQueryString.lineItemId) {
+      const platform = await getPlatform(req);
+      const students = await getUnassignedStudents(platform, req.query.resourceLinkId);
+      await updateSession(req, platform);
       send(res).send(
-        await getUnassignedStudents(await getPlatform(req), req.query.resourceLinkId)
+        students
       );
     }
   });
@@ -104,9 +119,11 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
   app.get(GET_ASSIGNED_STUDENTS_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
     const lineItemId: any = req.query.lineItemId;
     const resourceLinkId: any = req.query.resourceLinkId;
-
+    const platform = await getPlatform(req);
+    const students = await getAssignedStudents(platform, lineItemId, resourceLinkId);
+    await updateSession(req, platform);
     send(res).send(
-      await getAssignedStudents(await getPlatform(req), lineItemId, resourceLinkId)
+      students
     );
   });
 
@@ -115,8 +132,9 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
     const session = await getSessionFromKey(req, key);
     const title = session.title;
     const score = req.body.params;
-
-    send(res).send(await putStudentGradeView(await session.platform, score, title));
+    const grades = await putStudentGradeView(session.platform, score, title);
+    await updateSession(req, session.platform);
+    send(res).send(grades);
   });
 
   app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
@@ -129,8 +147,10 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
     if (DEEP_LINK_FORWARD_SERVER_SIDE == "TRUE") {
       forwardDeepLinkAssignmentPost(res, session.platform, contentItems);
     } else {
-      return send(res).send(await postDeepLinkAssignment(session.platform, contentItems));
+      postDeepLinkAssignment(session.platform, contentItems);
     }
+    await updateSession(req, session.platform);
+    send(res).send();
   });
 
   app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
@@ -138,17 +158,24 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
     const session = await getSessionFromKey(req, key);
     const title = session.title;
     const score = req.body.params;
-    send(res).send(await putStudentGrade(session.platform, score, title));
+    await putStudentGrade(session.platform, score, title);
+    await updateSession(req, session.platform);
+    send(res).send();
   });
 
   app.delete(DELETE_LINE_ITEM, requestLogger, async (req: Request, res: Response) => {
     const lineItemId: any = req.query.lineItemId;
-
-    send(res).send(await deleteLineItem(await getPlatform(req), lineItemId));
+    const platform: Platform = await getPlatform(req);
+    const value = await deleteLineItem(platform, lineItemId);
+    await updateSession(req, platform);
+    send(res).send(value);
   });
 
   app.get(GET_GRADES, requestLogger, async (req: Request, res: Response) => {
-    send(res).send(await getGrades(await getPlatform(req), req.query.resourceId, req.query.userId));
+    const platform: Platform = await getPlatform(req);
+    const grades = await getGrades(await getPlatform(req), req.query.resourceId, req.query.userId);
+    await updateSession(req, platform);
+    send(res).send(grades);
   });
 
   app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: Request, res: Response) => {

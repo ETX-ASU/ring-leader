@@ -1,3 +1,4 @@
+import AccessToken from "../models/AccessToken"
 export interface Platform {
   jti: string;
   iss: string;
@@ -25,6 +26,8 @@ export interface Platform {
   isStudent: boolean;
   deploymentId: string;
   nonce: string;
+  accessTokens: AccessToken[];
+  accessTokensUpdated: boolean;
 }
 
 interface DeeplinkSettings {
