@@ -127,8 +127,8 @@ const putStudentGradeView = async (platform: any, score: SubmitGradeParams, titl
 
 
 const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise<any> => {
-  logger.debug("deeplink - platform - " + JSON.stringify(platform));
-  logger.debug("deeplink - contentItems - " + JSON.stringify(contentItems));
+  logger.debug("post deeplink - platform - " + JSON.stringify(platform));
+  logger.debug("post deeplink - contentItems - " + JSON.stringify(contentItems));
 
   // Creates the deep linking request form
   const form = await new DeepLinking().createDeepLinkingForm(
@@ -143,8 +143,8 @@ const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise
 };
 
 const forwardDeepLinkAssignmentPost = async (response: any, platform: any, contentItems: any): Promise<void> => {
-  logger.debug("deeplink - platform - " + JSON.stringify(platform));
-  logger.debug("deeplink - contentItems - " + JSON.stringify(contentItems));
+  logger.debug("forward deeplink - platform - " + JSON.stringify(platform));
+  logger.debug("forward deeplink - contentItems - " + JSON.stringify(contentItems));
 
   // Creates the deep linking request form
   new DeepLinking().postDeepLink(response,

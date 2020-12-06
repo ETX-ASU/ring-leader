@@ -195,7 +195,7 @@ const findAccessToken = (scopes: string, platform: Platform): string | null => {
   });
 
   if (accessTokens && accessTokens.length == 1) {
-    const accessToken: AccessToken = accessTokens[0];
+    const accessToken: AccessToken = new AccessToken(accessTokens[0]);
     if (!accessToken.isExpired()) {
       platform.accessTokensUpdated = false;
       return accessToken.token;
@@ -228,7 +228,7 @@ const getAccessToken = async (
 
   const accessToken = findAccessToken(JSON.stringify(scopes), platform);
   if (accessToken) {
-    return accessToken;
+    return JSON.parse(accessToken);
   }
   const clientId = platform.aud;
 
@@ -270,7 +270,7 @@ const getAccessToken = async (
     logger.debug(`Response token response header:X-Request-Cost: ${JSON.stringify(response.headers)}`);
     logger.debug(`Access Token generated: ${JSON.stringify(response.data)}`);
 
-    platform.accessTokens.push(new AccessToken(JSON.stringify(scopes), JSON.stringify(response.data)));
+    platform.accessTokens.push(new AccessToken({ scopes: JSON.stringify(scopes), token: JSON.stringify(response.data) }));
     platform.accessTokensUpdated = true;
 
     return response.data;

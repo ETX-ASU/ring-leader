@@ -81,8 +81,8 @@ async function updateSession(req: any, platform: Platform) {
     const storeSession = new Session();
     storeSession.sessionId = key;
     storeSession.session = JSON.stringify(session);
-    await Session.writer.put(session);
-    await session.save();
+    await Session.writer.put(storeSession);
+    await storeSession.save();
   }
 }
 
@@ -144,13 +144,14 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
     const session = await getSessionFromKey(req, key);
     const contentItems = req.body.contentItems;
     // eslint-disable-next-line prettier/prettier
+    let canvasResponse = null;
     if (DEEP_LINK_FORWARD_SERVER_SIDE == "TRUE") {
-      forwardDeepLinkAssignmentPost(res, session.platform, contentItems);
+      canvasResponse = await forwardDeepLinkAssignmentPost(res, session.platform, contentItems);
     } else {
-      postDeepLinkAssignment(session.platform, contentItems);
+      canvasResponse = await postDeepLinkAssignment(session.platform, contentItems);
     }
     await updateSession(req, session.platform);
-    send(res).send();
+    send(res).send(canvasResponse);
   });
 
   app.post(PUT_STUDENT_GRADE, requestLogger, async (req: Request, res: Response) => {
@@ -158,9 +159,9 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
     const session = await getSessionFromKey(req, key);
     const title = session.title;
     const score = req.body.params;
-    await putStudentGrade(session.platform, score, title);
+    const canvasResponse = await putStudentGrade(session.platform, score, title);
     await updateSession(req, session.platform);
-    send(res).send();
+    send(res).send(canvasResponse);
   });
 
   app.delete(DELETE_LINE_ITEM, requestLogger, async (req: Request, res: Response) => {
