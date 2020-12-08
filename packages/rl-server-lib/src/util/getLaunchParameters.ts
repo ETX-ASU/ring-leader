@@ -2,6 +2,7 @@ import { getToolConsumer } from "../services/ToolConsumerService";
 import { getRedirectToken } from "./externalRedirect";
 import { Session } from "../database/entity/Session";
 import crypto from "crypto";
+import { logger } from "@asu-etx/rl-shared";
 const getLaunchParameters = async (req: any, role: any) => {
   const platform = req.session.platform;
   const userId = platform.userId;
@@ -21,7 +22,8 @@ const getLaunchParameters = async (req: any, role: any) => {
     }
   }
   const id = userId + role + courseId + resourceLinkId + platform.iss + platform.clientId + platform.deploymentId + lineItemId ? lineItemId : "";
-  const sessionId = crypto.createHash('sha256').update(id).digest('base64');
+  logger.debug("id used for launch hash: " + JSON.stringify(id))
+  const sessionId = crypto.createHash('sha256').update(JSON.stringify(id)).digest('base64');
   console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
   const toolConsumer = getToolConsumer(findConsumer);
   let hash = "";

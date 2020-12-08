@@ -118,7 +118,7 @@ const rlDecodeIdToken = (idToken: any): any => {
   const decodedToken: any = jwt.decode(idToken, { complete: true });
   logger.debug(`decodedtoken:${JSON.stringify(decodedToken)}`);
   if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
-  if (!decodedToken.header.kid) throw new Error("INVALID_JWT_RECEIVED_NO_KID");
+  if (!decodedToken.header.kid && !decodedToken.header.keyid) throw new Error("INVALID_JWT_RECEIVED_NO_KID");
   return decodedToken.payload;
 };
 const rlValidateToken = (idToken: any, platform: Platform): any => {
