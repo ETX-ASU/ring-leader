@@ -20,7 +20,7 @@ const getLaunchParameters = async (req: any, role: any) => {
       role = "learner";
     }
   }
-  const id = platform.userId + role + platform.context_id + resourceLinkId + platform.clientId + platform.deploymentId;
+  const id = userId + role + courseId + resourceLinkId + platform.iss + platform.clientId + platform.deploymentId + lineItemId ? lineItemId : "";
   const sessionId = crypto.createHash('sha256').update(id).digest('base64');
   console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
   const toolConsumer = getToolConsumer(findConsumer);

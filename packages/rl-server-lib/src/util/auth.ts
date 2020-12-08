@@ -115,10 +115,11 @@ const oidcValidation = (token: any, platform: Platform): any => {
 
 const rlDecodeIdToken = (idToken: any): any => {
   //logger.debug(`idToken:${idToken}`);
-  const decodedToken = jwt.decode(idToken);
-  //logger.debug(`decodedtoken:${JSON.stringify(decodedToken)}`);
+  const decodedToken: any = jwt.decode(idToken, { complete: true });
+  logger.debug(`decodedtoken:${JSON.stringify(decodedToken)}`);
   if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
-  return decodedToken;
+  if (!decodedToken.header.kid) throw new Error("INVALID_JWT_RECEIVED_NO_KID");
+  return decodedToken.payload;
 };
 const rlValidateToken = (idToken: any, platform: Platform): any => {
   const decodedToken = rlDecodeIdToken(idToken);
