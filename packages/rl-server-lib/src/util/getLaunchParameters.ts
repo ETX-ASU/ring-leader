@@ -7,8 +7,16 @@ const getLaunchParameters = async (req: any, role: any) => {
   const platform = req.session.platform;
   const userId = platform.userId;
   const courseId = platform.context_id;
-  const resourceLinkId = req.query.assignmentId ? req.query.assignmentId : platform.resourceLinkId;
-  const lineItemId = platform.lineitem;
+  const assignmentId = req.query.assignmentId;
+  const resourceLinkId = platform.resourceLinkId;
+  let lineItemId = platform.lineitem;
+  if (!lineItemId) {
+    if (platform.lineitems) {
+      lineItemId = JSON.stringify(platform.lineitems);
+    } else {
+      lineItemId = "";
+    }
+  }
   const findConsumer = {
     iss: platform.iss,
     client_id: platform.clientId,
@@ -21,7 +29,22 @@ const getLaunchParameters = async (req: any, role: any) => {
       role = "learner";
     }
   }
-  const id = userId + role + courseId + resourceLinkId + platform.iss + platform.clientId + platform.deploymentId + lineItemId ? lineItemId : "";
+  let id = userId;
+  logger.debug("id with userId: " + JSON.stringify(id));
+  id += role;
+  logger.debug("id with userId + role: " + JSON.stringify(id));
+  id += courseId;
+  logger.debug("id with userId + role + courseId: " + JSON.stringify(id));
+  id += resourceLinkId;
+  logger.debug("id with userId + role + courseId + resourceLinkId: " + JSON.stringify(id));
+  id += platform.iss;
+  logger.debug("id with userId + role + courseId + resourceLinkId + platform.iss: " + JSON.stringify(id));
+  id += platform.clientId;
+  logger.debug("id with userId + role + courseId + resourceLinkId + iss + clientId: " + JSON.stringify(id));
+  id += platform.deploymentId;
+  logger.debug("id with userId + role + courseId + resourceLinkId + iss + clientId + deploymentId: " + JSON.stringify(id));
+  id += lineItemId;
+  logger.debug("id with userId + role + courseId + resourceLinkId + iss + clientId + deploymentId + lineItemId: " + JSON.stringify(id));
   logger.debug("id used for launch hash: " + JSON.stringify(id))
   const sessionId = crypto.createHash('sha256').update(JSON.stringify(id)).digest('base64');
   console.log(`attempting to find consumerTool with following values: ${JSON.stringify(findConsumer)}`);
@@ -50,9 +73,9 @@ const getLaunchParameters = async (req: any, role: any) => {
 
 
   //example const params = `userId=user-id-uncle-bob&courseId=the-course-id-123a&assignmentId=4c43a1b5-e5db-4b3e-ae32-a9405927e472`
-  if (resourceLinkId !== courseId)
-    return `/assignment?role=${role}&userId=${userId}&courseId=${courseId}&assignmentId=${resourceLinkId}&lineItemId=${lineItemId}&hash=${hash}`
-  return `?role=${role}&userId=${userId}&courseId=${courseId}&hash=${hash}`
+  if (assignmentId)
+    return `/assignment?role=${role}&userId=${userId}&courseId=${courseId}&assignmentId=${assignmentId}&resourceLinkId=${resourceLinkId}&lineItemId=${lineItemId}&hash=${hash}`
+  return `?role=${role}&userId=${userId}&courseId=${courseId}&resourceLinkId=${resourceLinkId}&hash=${hash}`
 };
 
 export default getLaunchParameters;

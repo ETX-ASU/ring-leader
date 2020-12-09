@@ -2,7 +2,7 @@ import { rlValidateDecodedToken, rlDecodeIdToken } from "./auth";
 
 import { rlPlatform } from "../util/rlPlatform";
 import { getToolConsumer } from "../services/ToolConsumerService";
-import { DEPLOYMENT_ID_CLAIM } from "@asu-etx/rl-shared";
+import { DEPLOYMENT_ID_CLAIM, logger } from "@asu-etx/rl-shared";
 
 const processRequest = async (request: any) => {
   if (!request.session) {
@@ -18,7 +18,7 @@ const processRequest = async (request: any) => {
     iss: decodedToken["iss"],
     deployment_id: decodedToken[DEPLOYMENT_ID_CLAIM]
   });
-
+  logger.debug(`Tool Consumer found: ${JSON.stringify(platformDetails)} `)
   if (platformDetails == undefined) {
     return;
   }

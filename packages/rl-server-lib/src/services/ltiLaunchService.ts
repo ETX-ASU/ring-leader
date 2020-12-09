@@ -113,7 +113,7 @@ const ltiLaunchPost = async (request: any, response: any): Promise<void> => {
   }
 
   request.session.platform = processedRequest.rlPlatform;
-
+  logger.debug("session data to be saved, platform: " + JSON.stringify(request.session.platform));
   await request.session.save(() => {
     logger.debug("session data saved");
   });
