@@ -1,0 +1,340 @@
+{
+  "application": {
+    "application-url-const": "APPLICATION_URL",
+    "example_application_url": "https://ring-leader-james-stanley.herokuapp.com",
+    "application_endpoint_url": "APPLICATION_URL/ROSTER_ENDPOINT",
+    "example_application_endpoint_url": "https://ring-leader-james-stanley.herokuapp.com/lti-service/roster"
+  },
+  "application-lti-endpoints": [
+    {
+      "endpont-const": "ROSTER_ENDPOINT",
+      "endpoint": "/lti-service/roster?role=Learner,Instructor",
+      "method": "GET",
+      "IS_LTI": "YES",
+      "response": {
+        "id": "https://unicon.instructure.com/api/lti/courses/786/names_and_roles?role=http%3A%2F%2Fpurl.imsglobal.org%2Fvocab%2Flis%2Fv2%2Fmembership%23Learner",
+        "context": {
+          "id": "dfc56043706f1db369a8b8b7c7ae4c7e6676d45b",
+          "label": "RL",
+          "title": "RL Test Course"
+        },
+        "members": [
+          {
+            "status": "Active",
+            "name": "Devesh Tiwari Student A",
+            "picture": "https://canvas.instructure.com/images/messages/avatar-50.png",
+            "given_name": "Devesh Tiwari Student",
+            "family_name": "A",
+            "email": "devesh@ats360.com",
+            "user_id": "fa8fde11-43df-4328-9939-58b56309d20d",
+            "lti11_legacy_user_id": "f25bad78fee7b4585be9153faa3afe94cf8374f3",
+            "roles": [
+              "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+            ]
+          },
+          {
+            "status": "Active",
+            "name": "Devesh Tiwari Student B",
+            "picture": "https://canvas.instructure.com/images/messages/avatar-50.png",
+            "given_name": "Devesh Tiwari Student",
+            "family_name": "B",
+            "email": "dtiwari@avistais.com",
+            "user_id": "50681b1d-72ce-4102-94d6-dc586f9ba43f",
+            "lti11_legacy_user_id": "6e3ffd424baf7c6a22139b6efcc586960976aa2b",
+            "roles": [
+              "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "endpoint-const": "GET_ASSIGNMENT_ENDPOINT",
+      "endpoint": "/lti-service/getassignment",
+      "method": "GET",
+      "IS_LTI": "YES",
+      "response": [
+        {
+          "id": "https://unicon.instructure.com/api/lti/courses/786/line_items/280",
+          "scoreMaximum": 100,
+          "label": "Math Assignment",
+          "resourceLinkId": "6fed5651-0171-4d45-afb4-0b262dd801e5"
+        },
+        {
+          "id": "https://unicon.instructure.com/api/lti/courses/786/line_items/281",
+          "scoreMaximum": 100,
+          "label": "Title",
+          "resourceLinkId": "eaa788a7-9051-4ef4-a386-cbbaad0e9c1e"
+        }
+      ]
+    },
+    {
+      "endpoint-const": "CREATE_ASSIGNMENT_ENDPOINT",
+      "endpoint": "/lti-service/createassignment",
+      "method": "POST",
+      "IS_LTI": "NO",
+      "body": {
+        "params": {
+          "scoreMaximum": 100,
+          "label": "Title",
+          "tag": "etag",
+          "resourceId": "resource+id"
+        },
+        "response": {}
+      }
+    },
+    {
+      "endpoint-const": "DEEP_LINK_RESOURCELINKS_ENDPOINT",
+      "endpoint": "/lti-service/getDeepLinkAssignments",
+      "method": "GET",
+      "IS_LTI": "NO"
+    },
+    {
+      "endpoint-const": "DEEP_LINK_ASSIGNMENT_ENDPOINT",
+      "endpoint": "/lti-service/deeplink",
+      "IS_LTI": "YES",
+      "method": "POST",
+      "body": {
+        "contentItems": [
+          {
+            "type": "ltiResourceLink",
+            "title": "Title",
+            "url": "/assignment?resourceId=tool-assignment-xyz",
+            "resourceId": "tool-assignment-xyz",
+            "lineItem": {
+              "scoreMaximum": "100",
+              "label": "Title",
+              "resourceId": "tool-assignment-xyz",
+              "tag": "etag"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint-const": "DELETE_LINE_ITEM",
+      "endpoint": "/lti-service/deleteLineItem"
+    },
+    {
+      "endpoint-const": "PUT_STUDENT_GRADE_VIEW",
+      "endpoint": "/lti-service/putGradeStudentView"
+    },
+    {
+      "endpoint-const": "GET_UNASSIGNED_STUDENTS_ENDPOINT",
+      "endpoint": "/lti-service/getunassignedstudents"
+    },
+    {
+      "endpoint-const": "GET_ASSIGNED_STUDENTS_ENDPOINT",
+      "endpoint": "/lti-service/getunassignedstudents"
+    },
+    {
+      "endpoint-const": "PUT_STUDENT_GRADE",
+      "endpoint": "/lti-service/putGrade",
+      "method": "POST",
+      "IS_LTI": "YES",
+      "body": {
+        "params": {
+          "grade": 81,
+          "comment": "Instructor comment on the student performance",
+          "activityProgress": "Completed",
+          "gradingProgress": "FullyGraded"
+        }
+      }
+    },
+    {
+      "endpoint-const": "GET_GRADES",
+      "endpoint": "/lti-service/grades",
+      "query-params": "lineItemId=https:%2F%2Funicon.instructure.com%2Fapi%2Flti%2Fcourses%2F786%2Fline_items%2F280",
+      "method": "GET",
+      "IS_LTI": "YES",
+      "response": [
+        {
+          "userId": "fa8fde11-43df-4328-9939-58b56309d20d",
+          "StudenName": "Devesh Tiwari Student A",
+          "score": 100,
+          "comment": "Instructor comment on the student performance"
+        }
+      ]
+    },
+    {
+      "endpoint-const": "PUT_STUDENT_GRADE",
+      "endpoint": "/lti-service/putGrade",
+      "method": "POST",
+      "IS_LTI": "YES",
+      "body": {
+        "params": {
+          "lineItemId": "https://unicon.instructure.com/api/lti/courses/786/line_items/280",
+          "grade": 100,
+          "userId": "fa8fde11-43df-4328-9939-58b56309d20d",
+          "comment": "Instructor comment on the student performance",
+          "activityProgress": "Completed",
+          "gradingProgress": "FullyGraded"
+        }
+      }
+    }
+  ],
+  "session.platform": {
+    "jti": "r-h-0-n-4-2-0-i-i-6-v-j-y-i-q-r-8-f-6-f-w-h-c-1-7",
+    "iss": "https://canvas.instructure.com",
+    "aud": "97140000000000180",
+    "iat": 1603320401,
+    "sub": "a4c0a444-bc32-41d6-8edb-4df61f035ece",
+    "exp": 1603324001,
+    "state": 1603324001,
+    "nonce": "yZk4re9YRDKsVlFd4aojEmB4m",
+    "context_id": "dfc56043706f1db369a8b8b7c7ae4c7e6676d45b",
+    "clientId": "97140000000000180",
+    "lineitems": "https://unicon.instructure.com/api/lti/courses/786/line_items",
+    "resourceLinkId": null,
+    "accesstokenEndpoint": "https://unicon.instructure.com/login/oauth2/token",
+    "authOIDCRedirectEndpoint": "https://unicon.instructure.com/api/lti/authorize_redirect",
+    "kid": "ASU ETX - Ring Leader - james-stanley  - Public Key",
+    "platformPrivateKey": "PRIVATE KEY --- eyJ0eXAiOiJKV1QiLCJhbGcieyJ0eXAiOiJKV1QiLCJhbGci",
+    "idToken": "eyJ0eXAiOiJKV1QiLCJhbGci....",
+    "alg": "RS256",
+    "deepLinkingSettings": null,
+    "userId": "a4c0a444-bc32-41d6-8edb-4df61f035ece",
+    "roles": [
+      {
+        "role": "Learner",
+        "claim": "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner"
+      },
+      {
+        "role": "Instructor",
+        "claim": "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+      }
+    ],
+    "isInstructor": true,
+    "isStudent": false,
+    "deploymentId": "416:5440a08422ab1ee7794a0588b5e4cb4a094c4256"
+  },
+  "decoded.id.token": {
+    "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+    "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+    "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+      "id": "dfc56043706f1db369a8b8b7c7ae4c7e6676d45b",
+      "description": null,
+      "title": null,
+      "validation_context": null,
+      "errors": {
+        "errors": {}
+      }
+    },
+    "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+      "scope": [
+        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly",
+        "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+        "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+      ],
+      "lineitems": "https://unicon.instructure.com/api/lti/courses/786/line_items",
+      "validation_context": null,
+      "errors": {
+        "errors": {}
+      }
+    },
+    "aud": "97140000000000180",
+    "azp": "97140000000000180",
+    "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "416:5440a08422ab1ee7794a0588b5e4cb4a094c4256",
+    "exp": 1603324001,
+    "iat": 1603320401,
+    "iss": "https://canvas.instructure.com",
+    "nonce": "yZk4re9YRDKsVlFd4aojEmB4m",
+    "sub": "a4c0a444-bc32-41d6-8edb-4df61f035ece",
+    "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://ring-leader-james-stanley.herokuapp.com/lti-advantage-launch",
+    "https://purl.imsglobal.org/spec/lti/claim/context": {
+      "id": "dfc56043706f1db369a8b8b7c7ae4c7e6676d45b",
+      "label": "RL",
+      "title": "RL Test Course",
+      "type": [
+        "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+      ],
+      "validation_context": null,
+      "errors": {
+        "errors": {}
+      }
+    },
+    "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+      "guid": "pot28yNpDSZs1FvMQa42MiPWlROLQCAedzQX6Mc2:canvas-lms",
+      "name": "Unicon",
+      "version": "cloud",
+      "product_family_code": "canvas",
+      "validation_context": null,
+      "errors": {
+        "errors": {}
+      }
+    },
+    "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+      "document_target": "iframe",
+      "height": 400,
+      "width": 800,
+      "return_url": "https://unicon.instructure.com/courses/786/external_content/success/external_tool_redirect",
+      "locale": "en",
+      "validation_context": null,
+      "errors": {
+        "errors": {}
+      }
+    },
+    "locale": "en",
+    "https://purl.imsglobal.org/spec/lti/claim/roles": [
+      "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Administrator",
+      "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Instructor",
+      "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Student",
+      "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor",
+      "http://purl.imsglobal.org/vocab/lis/v2/system/person#User"
+    ],
+    "https://purl.imsglobal.org/spec/lti/claim/custom": {},
+    "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+      "context_memberships_url": "https://unicon.instructure.com/api/lti/courses/786/names_and_roles",
+      "service_versions": [
+        "2.0"
+      ],
+      "validation_context": null,
+      "errors": {
+        "errors": {}
+      }
+    },
+    "errors": {
+      "errors": {}
+    },
+    "picture": "https://canvas.instructure.com/images/messages/avatar-50.png",
+    "email": "jstanley@unicon.net",
+    "name": "James Stanley",
+    "given_name": "James",
+    "family_name": "Stanley",
+    "https://purl.imsglobal.org/spec/lti/claim/lis": {
+      "person_sourcedid": "0032g000007o7ZkAAI",
+      "course_offering_sourcedid": null,
+      "validation_context": null,
+      "errors": {
+        "errors": {}
+      }
+    }
+  },
+  "lti-internal-endpoints": [
+    {
+      "endpoint-const": "INIT_OIDC",
+      "endpoint": "/init-oidc"
+    },
+    {
+      "endpoint-const": "LTI_ADVANTAGE_LAUNCH_ROUTE",
+      "endpoint": "/lti-advantage-launch"
+    },
+    {
+      "endpoint-const": "LTI_INSTRUCTOR_REDIRECT",
+      "endpoint": "/instructor"
+    },
+    {
+      "endpoint-const": "LTI_ASSIGNMENT_REDIRECT",
+      "endpoint": "/assignment"
+    },
+    {
+      "endpoint-const": "LTI_STUDENT_REDIRECT",
+      "endpoint": "/student"
+    },
+    {
+      "endpoint-const": "LTI_DEEPLINK_REDIRECT",
+      "endpoint": "/deeplink"
+    }
+  ]
+}

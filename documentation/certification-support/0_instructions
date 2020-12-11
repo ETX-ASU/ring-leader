@@ -1,0 +1,42 @@
+Start your certification journey by
+1. Go to https://www.imsglobal.org/ and either login or register.
+2. Click on CERTIFIED PRODUCTS -> GET IMS CERTIFIED.
+   Then follow the screens found in this folder.
+3. Below is the data you will need when you are asked for your Tool Configuration:
+  REPLACE: https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage with the actual root/base url of the Tool instance.
+Your Tool Configuration
+Tool End-Point to Receive Launches
+(Note: this is the target_link_url that the cert suite will send in OIDC initiation.)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/lti-advantage-launch
+OIDC Login Initiation URL
+(Note: this is your tool's OIDC initiation URI.)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/init-oidc
+Tool OIDC Launch Redirect URL
+(Note: this should be the REGISTERED URL for your Tool. The cert suite POSTs launches here!)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/lti-advantage-launch
+Tool End-Point to Receive Deep Link Launches
+(Note: this is the target_link_url that the cert suite will send in OIDC initiation for Deep Linking.)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/deeplink
+Tool OIDC Redirect Deep Linking URL
+(Note: this is the REGISTERED URL in OIDC for your Tool's Deep Linking. The cert suite POSTs launches here!)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/deeplink
+
+
+3. These are the values that will need to go into the consumer tools (note there is already a current example.)
+Certification Configuration Details
+Testing iss Value
+(Note: the cert suite will send this value in the OIDC initialization)
+https://ltiadvantagevalidator.imsglobal.org
+OIDC Auth URL
+(Note: this is the URL value for your Tool's OIDC auth call)
+https://ltiadvantagevalidator.imsglobal.org/ltitool/oidcauthurl.html
+Platform Well-Known/JWKS URL
+https://oauth2server.imsglobal.org/jwks
+OAuth2 Access Token URL
+https://ltiadvantagevalidator.imsglobal.org/ltitool/authcodejwt.html
+
+4. Screens will give you the client_id and the deploymentId. These must be added to the Tool Consumer json file.
+
+5. Once testing begins you will need to use CloudWatch to pull logs for the lambda of interest. You should only need to pull entries for the pertinent request responses and errors that are generated during the initial launch sequence where you are validating error conditions.
+
+6. Test away.
