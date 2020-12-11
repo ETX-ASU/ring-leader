@@ -8,6 +8,8 @@ import {
   SubmitGradeParams,
   User
 } from "@asu-etx/rl-shared";
+import ToolConsumer from "../models/ToolConsumer";
+import { getToolConsumerByName, getJwks as getJwksForTools } from "./ToolConsumerService";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls
@@ -232,5 +234,6 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
   }
   return scoreData;
 };
+
 
 export { getGrades, deleteLineItem, putStudentGrade, postDeepLinkAssignment, forwardDeepLinkAssignmentPost, putStudentGradeView, getAssignedStudents, getUnassignedStudents, getRoster };

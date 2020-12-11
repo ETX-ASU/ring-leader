@@ -16,7 +16,6 @@ import {
 } from "../services/ltiAppService";
 
 import validateSession from "../services/validationService";
-import ToolConsumer from "../models/ToolConsumer";
 import {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
   ROSTER_ENDPOINT,
@@ -26,7 +25,6 @@ import {
   PUT_STUDENT_GRADE,
   DELETE_LINE_ITEM,
   GET_GRADES,
-  GET_JWKS_ENDPOINT,
   LTI_SESSION_VALIDATION_ENDPOINT,
   DEEP_LINK_FORWARD_SERVER_SIDE,
   logger
@@ -81,6 +79,7 @@ async function updateSession(req: any, platform: Platform) {
     const storeSession = new Session();
     storeSession.sessionId = key;
     storeSession.session = JSON.stringify(session);
+    storeSession.modifiedOn = Date.now();
     await Session.writer.put(storeSession);
     await storeSession.save();
   }
@@ -174,23 +173,15 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
 
   app.get(GET_GRADES, requestLogger, async (req: Request, res: Response) => {
     const platform: Platform = await getPlatform(req);
-    const grades = await getGrades(await getPlatform(req), req.query.resourceId, req.query.userId);
+    const grades = await getGrades(platform, req.query.resourceId, req.query.userId);
     await updateSession(req, platform);
     send(res).send(grades);
-  });
-
-  app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-    const query: any = req.query;
-    const consumerTool: ToolConsumer | undefined = getToolConsumerByName(
-      query.name
-    );
-    send(res).send(consumerTool);
   });
 
   app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
     logger.debug(`request hash: ${req.query.hash}`);
     const platform = await getPlatform(req);
-    const isValid = validateSession(platform);
+    const isValid = await validateSession(platform);
     logger.debug(`isValidSession: ${isValid}`);
     send(res).send({ isValid: isValid });
   });

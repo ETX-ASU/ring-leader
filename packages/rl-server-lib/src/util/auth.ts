@@ -3,6 +3,7 @@ import axios from "axios";
 import { Platform } from "./Platform";
 import { logger } from "@asu-etx/rl-shared";
 import AccessToken from "../models/AccessToken";
+import verifyConsumerJwt from "./verifyConsumerJwt"
 
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
@@ -113,16 +114,18 @@ const oidcValidation = (token: any, platform: Platform): any => {
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
-const rlDecodeIdToken = (idToken: any): any => {
+const rlDecodeIdToken = async (idToken: any): Promise<any> => {
   //logger.debug(`idToken:${idToken}`);
   const decodedToken: any = jwt.decode(idToken, { complete: true });
   logger.debug(`decodedtoken:${JSON.stringify(decodedToken)}`);
   if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
   if (!decodedToken.header.kid && !decodedToken.header.keyid) throw new Error("INVALID_JWT_RECEIVED_NO_KID");
+
+  await verifyConsumerJwt(idToken, decodedToken);
   return decodedToken.payload;
 };
-const rlValidateToken = (idToken: any, platform: Platform): any => {
-  const decodedToken = rlDecodeIdToken(idToken);
+const rlValidateToken = async (idToken: any, platform: Platform): Promise<any> => {
+  const decodedToken = await rlDecodeIdToken(idToken);
   //logger.debug("platform.nonce-" + platform.nonce);
   //logger.debug("platform.state-" + platform.state);
   //logger.debug("platform.client_id-" + platform.clientId);

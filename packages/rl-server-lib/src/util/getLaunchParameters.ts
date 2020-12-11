@@ -63,6 +63,7 @@ const getLaunchParameters = async (req: any, role: any) => {
 
     session.sessionId = sessionId;
     session.session = JSON.stringify(req.session);
+    session.modifiedOn = Date.now();
     await Session.writer.put(session);
     await session.save();
     console.log(`session added : ${JSON.stringify(session)}`);

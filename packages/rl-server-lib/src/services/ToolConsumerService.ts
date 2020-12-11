@@ -3,7 +3,7 @@ import ToolConsumerRequest from "../models/ToolConsumerRequest";
 import { logger } from "@asu-etx/rl-shared";
 
 const getToolConsumers = (): ToolConsumer[] => {
-  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS: "[]");
+  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS : "[]");
   //logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
   return toolConsumers;
 };
@@ -57,4 +57,12 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
   return toolConsumer;
 };
 
-export { getToolConsumer, getToolConsumerByName, getToolConsumers, getToolConsumerById };
+const getJwks = (): any[] => {
+  const jwks: any[] = [];
+  getToolConsumers().forEach((tc) => {
+    jwks.push(tc.public_key_jwk);
+  });
+  return jwks;
+}
+
+export { getToolConsumer, getToolConsumerByName, getToolConsumers, getToolConsumerById, getJwks };
