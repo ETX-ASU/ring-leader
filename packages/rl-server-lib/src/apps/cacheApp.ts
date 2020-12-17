@@ -55,7 +55,7 @@ const cacheApp = (app: Express, sessionParams: any): void => {
 
   /*========================== UI ENDPOINTS ==========================*/
   // Instructor
-  const APPLICATION_URL = process.env.APPLICATION_URL;
+  let APPLICATION_URL = process.env.APPLICATION_URL;
 
   // lti 1.3 launch with context and establish session
   ltiLaunchEndpoints(app);
@@ -66,23 +66,23 @@ const cacheApp = (app: Express, sessionParams: any): void => {
 
   app.route(LTI_INSTRUCTOR_REDIRECT).get(async (req: any, res: any) => {
     logger.debug(`hitting instructor request ${APPLICATION_URL}:${JSON.stringify(req.session)}`);
-    const params = await getLaunchParameters(req, "instructor");
-    res.status(301).redirect(APPLICATION_URL + params);
+    const launchParams: LaunchParams = await getLaunchParameters(req, "instructor");
+    res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params);
   });
   // Student
   app.route(LTI_STUDENT_REDIRECT).get(async (req, res) => {
-    const params = await getLaunchParameters(req, "learner");
-    res.status(301).redirect(APPLICATION_URL + params);
+    const launchParams: LaunchParams = await getLaunchParameters(req, "learner");
+    res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params);
   });
   // Student Assignment
   app.route(LTI_ASSIGNMENT_REDIRECT).get(async (req, res) => {
-    const params = await getLaunchParameters(req, null);
-    res.status(301).redirect(APPLICATION_URL + params);
+    const launchParams: LaunchParams = await getLaunchParameters(req, null);
+    res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params);
   });
   // Deep Link
   app.route(LTI_DEEPLINK_REDIRECT).get(async (req, res) => {
-    const params = await getLaunchParameters(req, null);
-    res.status(301).redirect(APPLICATION_URL + params + "&mode=selectAssignment");
+    const launchParams: LaunchParams = await getLaunchParameters(req, null);
+    res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params + "&mode=selectAssignment");
   });
 
 

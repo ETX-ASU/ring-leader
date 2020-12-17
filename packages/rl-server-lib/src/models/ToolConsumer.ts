@@ -28,6 +28,8 @@ class ToolConsumer {
   platformPublicJWKEndpoint = "";
 
   platformPublicKey = "";
+
+  toolApplicationUrl = "";
 }
 
 export default ToolConsumer;

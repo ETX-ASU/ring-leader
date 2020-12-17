@@ -3,7 +3,7 @@ import { getRedirectToken } from "./externalRedirect";
 import { Session } from "../database/entity/Session";
 import crypto from "crypto";
 import { logger } from "@asu-etx/rl-shared";
-const getLaunchParameters = async (req: any, role: any) => {
+const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> => {
   const platform = req.session.platform;
   const userId = platform.userId;
   const courseId = platform.context_id;
@@ -72,11 +72,16 @@ const getLaunchParameters = async (req: any, role: any) => {
     console.log(`session failed value : ${JSON.stringify(session)}`);
   }
 
+  const launchInfo: any = {};
 
+  launchInfo.toolApplicationUrl = toolConsumer.toolApplicationUrl;
   //example const params = `userId=user-id-uncle-bob&courseId=the-course-id-123a&assignmentId=4c43a1b5-e5db-4b3e-ae32-a9405927e472`
-  if (assignmentId)
-    return `/assignment?role=${role}&userId=${userId}&courseId=${courseId}&assignmentId=${assignmentId}&resourceLinkId=${resourceLinkId}&lineItemId=${lineItemId}&hash=${hash}`
-  return `?role=${role}&userId=${userId}&courseId=${courseId}&resourceLinkId=${resourceLinkId}&hash=${hash}`
+  if (assignmentId) {
+    launchInfo.params = `/assignment?role=${role}&userId=${userId}&courseId=${courseId}&assignmentId=${assignmentId}&resourceLinkId=${resourceLinkId}&lineItemId=${lineItemId}&hash=${hash}`
+  } else {
+    launchInfo.params = `?role=${role}&userId=${userId}&courseId=${courseId}&resourceLinkId=${resourceLinkId}&hash=${hash}`
+  }
+  return launchInfo;
 };
 
 export default getLaunchParameters;
