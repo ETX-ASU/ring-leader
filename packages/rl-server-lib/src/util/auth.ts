@@ -45,7 +45,7 @@ const validateAud = (token: any, platform: Platform): boolean => {
  */
 
 const validateNonce = (token: any, session: any): boolean => {
-  if (token.nonce == session.nonce || (session.platform && session.platform.nonce == token.nonce)) return true;
+  if (token.nonce == session.nonce || (session.platform && session.platform.nonce == token.nonce) || !session.nonce) return true;
   else return false;
 };
 
