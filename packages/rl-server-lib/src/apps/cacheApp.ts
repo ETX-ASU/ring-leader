@@ -65,23 +65,26 @@ const cacheApp = (app: Express, sessionParams: any): void => {
   cacheLtiServiceEndpoints(app);
 
   app.route(LTI_INSTRUCTOR_REDIRECT).get(async (req: any, res: any) => {
-    logger.debug(`hitting instructor request ${APPLICATION_URL}:${JSON.stringify(req.session)}`);
     const launchParams: LaunchParams = await getLaunchParameters(req, "instructor");
+    logger.info(`hitting instructor request ${launchParams.toolApplicationUrl}:${JSON.stringify(req.session)}`);
     res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params);
   });
   // Student
-  app.route(LTI_STUDENT_REDIRECT).get(async (req, res) => {
+  app.route(LTI_STUDENT_REDIRECT).get(async (req: any, res: any) => {
     const launchParams: LaunchParams = await getLaunchParameters(req, "learner");
+    logger.info(`hitting instructor request ${launchParams.toolApplicationUrl}:${JSON.stringify(req.session)}`);
     res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params);
   });
   // Student Assignment
-  app.route(LTI_ASSIGNMENT_REDIRECT).get(async (req, res) => {
+  app.route(LTI_ASSIGNMENT_REDIRECT).get(async (req: any, res: any) => {
     const launchParams: LaunchParams = await getLaunchParameters(req, null);
+    logger.info(`hitting assignment request ${launchParams.toolApplicationUrl}:${JSON.stringify(req.session)}`);
     res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params);
   });
   // Deep Link
-  app.route(LTI_DEEPLINK_REDIRECT).get(async (req, res) => {
+  app.route(LTI_DEEPLINK_REDIRECT).get(async (req: any, res: any) => {
     const launchParams: LaunchParams = await getLaunchParameters(req, null);
+    logger.info(`hitting deeplink request ${launchParams.toolApplicationUrl}:${JSON.stringify(req.session)}`);
     res.status(301).redirect(launchParams.toolApplicationUrl + launchParams.params + "&mode=selectAssignment");
   });
 

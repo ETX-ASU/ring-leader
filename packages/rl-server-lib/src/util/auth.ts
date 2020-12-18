@@ -44,10 +44,8 @@ const validateAud = (token: any, platform: Platform): boolean => {
  * @param {Object} token - Id token you wish to validate.
  */
 
-const validateNonce = (token: any, platform: Platform): boolean => {
-  logger.debug("Validating nonce");
-  logger.debug("Token Nonce: " + token.nonce);
-  if (token.nonce == platform.nonce) return true;
+const validateNonce = (token: any, session: any): boolean => {
+  if (token.nonce == session.nonce || (session.platform && session.platform.nonce == token.nonce)) return true;
   else return false;
 };
 
@@ -137,12 +135,12 @@ const rlValidateToken = async (idToken: any, platform: Platform): Promise<any> =
   return idToken;
 };
 
-const rlValidateDecodedToken = (decodedToken: any, platform: Platform): any => {
+const rlValidateDecodedToken = (decodedToken: any, session: any): any => {
   //logger.debug("platform.nonce-" + platform.nonce);
   //logger.debug("platform.state-" + platform.state);
   //logger.debug("platform.client_id-" + platform.clientId);
 
-  const oidcVerified: any = oidcValidation(decodedToken, platform);
+  const oidcVerified: any = oidcValidation(decodedToken, session);
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");

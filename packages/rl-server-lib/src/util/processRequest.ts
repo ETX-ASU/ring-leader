@@ -12,7 +12,11 @@ const processRequest = async (request: any) => {
   const session = request.session;
 
   const decodedToken = await rlDecodeIdToken(request.body.id_token);
-  rlValidateDecodedToken(decodedToken, session.platform);
+
+  const platformNonce = session.platform ? session.platform.nonce : "";
+  logger.info("Validating nonce: Token Nonce: " + decodedToken.nonce + " session Nonce: " + session.nonce + " platform Nonce: " + platformNonce);
+
+  rlValidateDecodedToken(decodedToken, session);
   const platformDetails = getToolConsumer({
     client_id: decodedToken["aud"],
     iss: decodedToken["iss"],
