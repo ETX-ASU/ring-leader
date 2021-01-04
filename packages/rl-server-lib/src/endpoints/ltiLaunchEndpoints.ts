@@ -1,7 +1,6 @@
 import { Express } from "express";
 import {
-  initOidcGet,
-  initOidcPost,
+  initOidcGetPost,
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,
@@ -31,11 +30,11 @@ import ToolConsumer from "../models/ToolConsumer";
 const ltiLaunchEndpoints = (app: Express): void => {
   // OIDC GET initiation
   app.get(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req: any, res: any) => {
-    initOidcGet(req, res);
+    initOidcGetPost(req, res);
   });
 
   app.post(OIDC_LOGIN_INIT_ROUTE, requestLogger, async (req: any, res: any) => {
-    initOidcPost(req, res);
+    initOidcGetPost(req, res);
   });
 
   // post to accept the LMS launch with idToken

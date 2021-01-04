@@ -45,6 +45,16 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
   });
   if (!toolConsumer) {
     getToolConsumers().forEach((tc) => {
+      if (
+        tc.iss == request.iss &&
+        tc.deployment_id == request.deployment_id
+      ) {
+        return (toolConsumer = tc);
+      }
+    });
+  }
+  if (!toolConsumer) {
+    getToolConsumers().forEach((tc) => {
       if (tc.iss == request.iss && tc.client_id == request.client_id) {
         return (toolConsumer = tc);
       }

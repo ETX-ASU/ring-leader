@@ -30,6 +30,8 @@ class ToolConsumer {
   platformPublicKey = "";
 
   toolApplicationUrl = "";
+
+  accessTokenPostContentType = "";
 }
 
 export default ToolConsumer;

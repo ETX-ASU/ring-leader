@@ -31,6 +31,7 @@ const processRequest = async (request: any) => {
     platformDetails.private_key,
     platformDetails.platformOIDCAuthEndPoint,
     platformDetails.platformAccessTokenEndpoint,
+    platformDetails.accessTokenPostContentType,
     platformDetails.keyid,
     platformDetails.alg,
     request.body.id_token

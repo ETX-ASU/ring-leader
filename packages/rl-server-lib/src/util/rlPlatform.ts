@@ -81,6 +81,7 @@ const rlPlatform = (
   platformPrivateKey: string,
   authenticationEndpoint: string,
   accesstokenEndpoint: string,
+  accessTokenPostContentType: string,
   kid: string,
   alg: string,
   idToken: string
@@ -118,7 +119,8 @@ const rlPlatform = (
     accessTokensUpdated: tokenData.accessTokensUpdated,
     isInstructor: tokenData.isInstructor,
     isStudent: tokenData.isStudent,
-    deploymentId: tokenData.deploymentId
+    deploymentId: tokenData.deploymentId,
+    accessTokenPostContentType: accessTokenPostContentType
   };
   //logger.debug("rlPlatformplatform - " + JSON.stringify(platform));
 

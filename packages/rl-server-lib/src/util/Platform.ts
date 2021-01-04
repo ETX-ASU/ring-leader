@@ -1,5 +1,6 @@
 import AccessToken from "../models/AccessToken"
 export interface Platform {
+  accessTokenPostContentType: string;
   jti: string;
   iss: string;
   aud: string;

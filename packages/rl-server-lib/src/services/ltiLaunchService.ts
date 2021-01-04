@@ -18,7 +18,7 @@ import {
 } from "@asu-etx/rl-shared";
 
 const URL_ROOT = process.env.URL_ROOT ? process.env.URL_ROOT : "";
-
+/*
 const initOidcGet = async (req: any, res: any): Promise<void> => {
   const nonce = generateUniqueString(25, false);
   const state = generateUniqueString(30, false);
@@ -28,7 +28,7 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
   const platformDetails = getToolConsumer({
     client_id: response.client_id,
     iss: response.iss,
-    deployment_id: ""
+    deployment_id: response.lti_deployment_id ? response.lti_deployment_id : ""
   });
   if (platformDetails == undefined) {
     return;
@@ -55,8 +55,8 @@ const initOidcGet = async (req: any, res: any): Promise<void> => {
     })
   );
 };
-
-const initOidcPost = async (req: any, res: any): Promise<void> => {
+*/
+const initOidcGetPost = async (req: any, res: any): Promise<void> => {
   // OIDC POST initiation
 
   const nonce = generateUniqueString(25, false);
@@ -71,15 +71,22 @@ const initOidcPost = async (req: any, res: any): Promise<void> => {
   const platformDetails = getToolConsumer({
     client_id: response.client_id,
     iss: response.iss,
-    deployment_id: ""
+    deployment_id: response.lti_deployment_id ? response.lti_deployment_id : ""
   });
   logger.debug(
     "initOidcPost - platformDetails-" + JSON.stringify(platformDetails)
   );
 
   if (platformDetails == undefined) {
+    logger.error(`unable to find tool consumer with response:${JSON.stringify(response)}`)
     return;
   }
+
+  //Support for blackboard which sends the deployment_id and the iss but not the client_id
+  if (!response.client_id) {
+    response.client_id = platformDetails.client_id;
+  }
+
   logger.debug("initOidcPost - req.session-" + JSON.stringify(req.session));
   if (req.session) {
     req.session.nonce = nonce;
@@ -224,8 +231,7 @@ const toolInfoGet = async (
 };
 
 export {
-  initOidcGet,
-  initOidcPost,
+  initOidcGetPost,
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,
