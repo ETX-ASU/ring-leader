@@ -52,8 +52,8 @@ const validateTokenWithToolConsumer = (token: string, toolConsumer: ToolConsumer
 const validateRequest = (request: any): string => {
   const authorization = request.get('authorization');
   logger.debug(`found authorization: ${authorization}`);
-  logger.debug(`request.query: ${request.query}`);
-  logger.debug(`request.body: ${request.body}`);
+  logger.debug(`request.query: ${JSON.stringify(request.query)}`);
+  logger.debug(`request.body: ${JSON.stringify(request.body)}`);
   if (authorization && authorization.split(' ')[0] === 'Bearer')
     return validateToken(authorization.split(' ')[1]);
   else if (request.query && request.query.hash) {

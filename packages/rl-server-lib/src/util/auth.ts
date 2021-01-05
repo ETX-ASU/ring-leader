@@ -258,7 +258,7 @@ const getAccessToken = async (
     scope: scopes
   };
 
-  logger.debug(`platform.accessTokenPostContentType: ${platform.accessTokenPostContentType}`);
+  logger.info(`platform.accessTokenPostContentType: ${platform.accessTokenPostContentType}`);
 
   if (platform.accessTokenPostContentType == "application/x-www-form-urlencoded") {
     return await requestAccessTokenEncodedForm(platform, payload, scopes, false);
@@ -270,19 +270,22 @@ const getAccessToken = async (
 
 const requestAccessTokenEncodedForm = async (platform: any, payload: any, scopes: any, previousAttemptFailed: boolean): Promise<any> => {
   //logger.debug("payload- " + JSON.stringify(payload));
-  logger.debug(` -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
+  logger.info(`getting accesstoken encoded form at  -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
+  const params = new URLSearchParams();
+  params.append("grant_type", payload["grant_type"]);
+  params.append("client_assertion_type", payload["client_assertion_type"]);
+  params.append("client_assertion", payload["client_assertion"]);
+  params.append("scope", payload["scope"]);
+  logger.info(`Params for getting accesstoken encoded form at -${platform.accesstokenEndpoint} : ${JSON.stringify(params.toString())}`);
   try {
-    const params = new URLSearchParams();
-    params.append("grant_type", payload.client_credentials);
-    params.append("client_assertion_type", payload.client_assertion_type);
-    params.append("client_assertion", payload.client_credentials);
-    params.append("scope", payload.client_credentials);
 
+    const str = `grant_type=${encodeURIComponent(payload.grant_type)}&client_assertion_type=${encodeURIComponent(payload.client_assertion_type)}&client_assertion=${encodeURIComponent(payload.client_assertion)}&scope=${encodeURIComponent(payload.scope)}`
+    logger.info(`Params as str -${platform.accesstokenEndpoint} : ${str}`);
     const response = await axios
-      .post(platform.accesstokenEndpoint, {
-        params: params,
+      .post(platform.accesstokenEndpoint, params, {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
         }
       });
 
@@ -299,9 +302,10 @@ const requestAccessTokenEncodedForm = async (platform: any, payload: any, scopes
         logger.error("failed to retrieve accessToken with encoded form will try JSON" + JSON.stringify(error));
         return await requestAccessTokenJson(platform, payload, scopes, true);
       }
-      logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
-      throw Error("unable to obtain accessToken: " + JSON.stringify(error));
+      logger.error("Complete failure: failed to retrieve accessToken from encoded form:" + JSON.stringify(error));
+      throw Error("Complete failure: unable to obtain accessToken: " + JSON.stringify(error));
     } catch (error) {
+
       logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
       throw Error("unable to obtain accessToken: " + JSON.stringify(error));
     }
@@ -329,8 +333,8 @@ const requestAccessTokenJson = async (platform: any, payload: any, scopes: any, 
         logger.error("failed to retrieve accessToken with JSON will try encodedForm:" + JSON.stringify(error));
         return await requestAccessTokenEncodedForm(platform, payload, scopes, true);
       }
-      logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
-      throw Error("unable to obtain accessToken: " + JSON.stringify(error));
+      logger.error("Complete failure: failed to retrieve accessToken from JSON:" + JSON.stringify(error));
+      throw Error("Complete failure: unable to obtain accessToken: " + JSON.stringify(error));
     } catch (error) {
       logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
       throw Error("unable to obtain accessToken: " + JSON.stringify(error));
