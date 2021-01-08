@@ -233,27 +233,25 @@ const getAccessToken = async (
     return JSON.parse(accessToken);
   }
   const clientId = platform.aud;
-
+  const now = Math.trunc(new Date().getTime() / 1000);
   const confjwt = {
+    iss: clientId,
     sub: clientId,
-    iss: platform.iss,
-    aud: platform.accesstokenEndpoint,
-    iat: Date.now() / 1000, //platform.iat || 
-    exp: (Date.now() / 1000) + 600, // platform.exp || 
+    aud: [platform.accesstokenEndpoint],
+    iat: now, //platform.iat || 
+    exp: now + 600, // platform.exp || 
     jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
   logger.debug("confjwt- " + JSON.stringify(confjwt));
 
   const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
-    header: { "kid": platform.kid },
     algorithm: platform.alg,
     keyid: platform.kid
   });
 
   const payload = {
     grant_type: "client_credentials",
-    client_assertion_type:
-      "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+    client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: jwtToken,
     scope: scopes
   };
