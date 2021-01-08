@@ -6,12 +6,13 @@ import {
   LTI_API_NAME,
   SubmitGradeParams
 } from "@asu-etx/rl-shared";
-import { getHash, startParamsWithHash } from '../utils/hashUtils';
+import { getHash } from '../utils/hashUtils';
 
 const buildScore = (params: any): SubmitGradeParams => {
   const score: any = {};
   logger.debug(`params used to build score: ${params}`)
-  score.scoreGiven = params.scoreGiven ? params.scoreGiven : params.grade ? params.grade : params.resultScore;
+  score.scoreGiven = params.scoreGiven || params.scoreGiven == 0 || params.scoreGiven == 0.0 ? params.scoreGiven :
+    params.grade || params.grade == 0 ? params.grade : params.resultScore;
   if (params.timestamp) score.timestamp = params.timestamp;
   score.comment = params.comment;
   if (params.activityProgress) score.activityProgress = params.activiyProgress;

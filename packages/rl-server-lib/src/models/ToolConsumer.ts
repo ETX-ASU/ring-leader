@@ -1,6 +1,6 @@
 
 class ToolConsumer {
- 
+
   id: number | null = null;
   uuid = "";
   name = "";
@@ -24,6 +24,14 @@ class ToolConsumer {
   platformOIDCAuthEndPoint = "";
 
   platformAccessTokenEndpoint = "";
+
+  platformPublicJWKEndpoint = "";
+
+  platformPublicKey = "";
+
+  toolApplicationUrl = "";
+
+  accessTokenPostContentType = "";
 }
 
 export default ToolConsumer;

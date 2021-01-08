@@ -26,7 +26,9 @@ import {
   PLATFORM,
   LTI_API_NAME,
   API_URL,
-  SESSION_SECRET
+  SESSION_SECRET,
+  JWK_CACHE_TOKEN_EXPIRY,
+  SESSION_TABLE_NAME
 } from "./util/environment";
 
 import {
@@ -123,5 +125,7 @@ export {
   LTI_API_NAME,
   API_URL,
   SESSION_SECRET,
-  ResultScore
+  ResultScore,
+  JWK_CACHE_TOKEN_EXPIRY,
+  SESSION_TABLE_NAME
 };

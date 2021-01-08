@@ -24,8 +24,7 @@ import {
 } from "./util/auth";
 
 import {
-  initOidcGet,
-  initOidcPost,
+  initOidcGetPost,
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost
@@ -46,8 +45,7 @@ export {
   DeepLinking,
   NamesAndRoles,
   rlPlatform,
-  initOidcGet,
-  initOidcPost,
+  initOidcGetPost,
   toolInfoGet,
   assignmentRedirectPost,
   ltiLaunchPost,

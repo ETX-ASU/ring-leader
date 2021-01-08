@@ -3,7 +3,7 @@ import ToolConsumerRequest from "../models/ToolConsumerRequest";
 import { logger } from "@asu-etx/rl-shared";
 
 const getToolConsumers = (): ToolConsumer[] => {
-  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS: "[]");
+  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS : "[]");
   //logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
   return toolConsumers;
 };
@@ -33,28 +33,52 @@ const getToolConsumerById = (uuid: string): ToolConsumer | undefined => {
 
 const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined => {
   let toolConsumer: ToolConsumer | undefined = undefined;
+  logger.info("Tool Consumer Request: " + JSON.stringify(request));
   getToolConsumers().forEach((tc) => {
     if (
-      tc.iss === request.iss &&
-      tc.client_id === request.client_id &&
-      tc.deployment_id === request.deployment_id
+      tc.iss == request.iss &&
+      tc.client_id == request.client_id &&
+      tc.deployment_id == request.deployment_id
     ) {
       return (toolConsumer = tc);
     }
-
-    if (!toolConsumer) {
-      if (tc.iss === request.iss && tc.client_id === request.client_id) {
-        return (toolConsumer = tc);
-      }
-    }
-
-    if (!toolConsumer) {
-      if (tc.iss === request.iss) {
-        return (toolConsumer = tc);
-      }
-    }
   });
+  if (!toolConsumer) {
+    getToolConsumers().forEach((tc) => {
+      if (
+        tc.iss == request.iss &&
+        tc.deployment_id == request.deployment_id
+      ) {
+        return (toolConsumer = tc);
+      }
+    });
+  }
+  if (!toolConsumer) {
+    getToolConsumers().forEach((tc) => {
+      if (tc.iss == request.iss && tc.client_id == request.client_id) {
+        return (toolConsumer = tc);
+      }
+    });
+  }
+
+  if (!toolConsumer) {
+    getToolConsumers().forEach((tc) => {
+      if (tc.iss == request.iss) {
+        return (toolConsumer = tc);
+      }
+    });
+  }
+
+  logger.info("Tool Consumer Found from request: " + JSON.stringify(toolConsumer));
   return toolConsumer;
 };
 
-export { getToolConsumer, getToolConsumerByName, getToolConsumers, getToolConsumerById };
+const getJwks = (): any[] => {
+  const jwks: any[] = [];
+  getToolConsumers().forEach((tc) => {
+    jwks.push(tc.public_key_jwk);
+  });
+  return jwks;
+}
+
+export { getToolConsumer, getToolConsumerByName, getToolConsumers, getToolConsumerById, getJwks };

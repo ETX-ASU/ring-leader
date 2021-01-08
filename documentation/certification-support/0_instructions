@@ -1,0 +1,57 @@
+Start your certification journey by
+1. Go to https://www.imsglobal.org/ and either login or register.
+2. Click on CERTIFIED PRODUCTS -> GET IMS CERTIFIED.
+   Then follow the screens found in this folder.
+3. Below is the data you will need when you are asked for your Tool Configuration:
+  REPLACE: https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage with the actual root/base url of the Tool instance.
+Your Tool Configuration
+Tool End-Point to Receive Launches
+(Note: this is the target_link_url that the cert suite will send in OIDC initiation.)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/lti-advantage-launch
+OIDC Login Initiation URL
+(Note: this is your tool's OIDC initiation URI.)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/init-oidc
+Tool OIDC Launch Redirect URL
+(Note: this should be the REGISTERED URL for your Tool. The cert suite POSTs launches here!)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/lti-advantage-launch
+Tool End-Point to Receive Deep Link Launches
+(Note: this is the target_link_url that the cert suite will send in OIDC initiation for Deep Linking.)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/deeplink
+Tool OIDC Redirect Deep Linking URL
+(Note: this is the REGISTERED URL in OIDC for your Tool's Deep Linking. The cert suite POSTs launches here!)
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/deeplink
+
+You can either either supply IMS with a public key in PEM format OR you can give them the url that will send a list of public jwk keys:
+https://1cxw5vr28f.execute-api.us-west-2.amazonaws.com/stage/jwks
+
+
+3. These are the values that will need to go into the consumer tools (note there is already a current example.)
+Certification Configuration Details
+Testing iss Value
+(Note: the cert suite will send this value in the OIDC initialization)
+https://ltiadvantagevalidator.imsglobal.org
+OIDC Auth URL
+(Note: this is the URL value for your Tool's OIDC auth call)
+https://ltiadvantagevalidator.imsglobal.org/ltitool/oidcauthurl.html
+Platform Well-Known/JWKS URL
+https://oauth2server.imsglobal.org/jwks
+OAuth2 Access Token URL
+https://ltiadvantagevalidator.imsglobal.org/ltitool/authcodejwt.html
+
+4. Screens will give you the client_id and the deploymentId. These must be added to the Tool Consumer json file.
+
+5. Once testing begins you will need to use CloudWatch to pull logs for the lambda of interest. You should only need to pull entries for the pertinent request responses and errors that are generated during the initial launch sequence where you are validating error conditions.
+
+6. Test away.
+
+Final Thoughts:
+
+It's a bit of a challenge to describe the actual cert process in words and will probably be more confusing than if you just get the process started.  The UI leaves much to be desired but I believe it is decipherable. 
+Things I think are confusing:
+1. What is the jwt and do I need to do anything with it?
+   Answer: Its what the IMS platform will be sending to the tool  and no you don't need to do anything with. It is for information purposes only.
+
+2. How do I know I passed a test and what do I need to capture from the logs to demonstrate it.   
+
+a. If a test is indicated that it is expected to fail you should see an Internal Server error in the UI and you will see a log entry that shows a message marked as error.   
+b. If the test is indicated that it should pass. Right now you will get to the tool UI but the tool will have the spinning icon. IMS is only concerned with the launch, so go to the CloudWatch and pull the relevant launch request and response. I can help you with this. I am working with Dune to get it to lauch the ui properly due to the fact in the early tests they do not appear to support the roster advantage so we are throwing an error.

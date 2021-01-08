@@ -317,10 +317,10 @@ class Grade {
     if (lineItems && lineItems.length <= 0) {
       lineItems = [platform.lineitem];
     }
-    const queryParams: any = {};
+    const query: any = {};
 
     if (options) {
-      if (limit) queryParams.limit = limit;
+      if (limit) query.limit = limit;
     }
 
     const resultsArray = [];
@@ -332,7 +332,6 @@ class Grade {
     for (const lineitem of lineItems) {
       try {
         let lineitemUrl = "";
-        let query: any = [];
         logger.debug(`currentLineItem: ${currentLineItem} lineitem.id: ${lineitem.id}`);
         if (currentLineItem && currentLineItem != lineitem.id)
           continue;
@@ -340,15 +339,12 @@ class Grade {
           lineitemUrl = lineitem.id
         lineitemUrl = lineitemUrl + "/results";
         if (options) {
-          if (options.userId) query.push("user_id", options.userId);
+          if (options.userId) query.user_id = options.userId;
         }
-        if (query.length > 0) query = new URLSearchParams(query);
-        else query = false;
-        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(queryParams));
+        logger.debug("Inside GetGrades - queryparam - " + JSON.stringify(query));
         logger.debug("Inside GetGrades - lineitemUrl - " + JSON.stringify(lineitemUrl));
-        const response = await got
+        const response = await axios
           .get(lineitemUrl, {
-            searchParams: query,
             headers: {
               Authorization:
                 accessToken.token_type + " " + accessToken.access_token,
@@ -357,8 +353,8 @@ class Grade {
             }
           });
 
-        const body = JSON.parse(response.body);
-        logger.debug("Inside GetGrades - status - " + JSON.stringify(response.statusCode));
+        const body = response.data;
+        logger.debug("Inside GetGrades - status - " + JSON.stringify(response.status));
         logger.debug("Inside GetGrades - body - " + JSON.stringify(body));
 
         resultsArray.push({

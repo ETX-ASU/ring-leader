@@ -1,6 +1,6 @@
 // eslint-disable-next-line node/no-extraneous-import
 import { Express } from "express";
-import { getToolConsumerByName } from "../services/ToolConsumerService";
+
 import requestLogger from "../middleware/requestLogger";
 import {
   getGrades,
@@ -14,10 +14,7 @@ import {
 } from "../services/ltiAppService";
 
 import validateSession from "../services/validationService";
-import ToolConsumer from "../models/ToolConsumer";
-import {
-  deepLinkRedirect
-} from "../services/ltiLaunchService";
+
 
 import {
   DEEP_LINK_ASSIGNMENT_ENDPOINT,
@@ -28,7 +25,6 @@ import {
   PUT_STUDENT_GRADE,
   DELETE_LINE_ITEM,
   GET_GRADES,
-  GET_JWKS_ENDPOINT,
   LTI_SESSION_VALIDATION_ENDPOINT,
   logger
 } from "@asu-etx/rl-shared";
@@ -119,17 +115,9 @@ const ltiServiceEndpoints = (app: Express): void => {
     res.send(await getGrades(platform, req.query.resourceId, req.query.userId));
   });
 
-  app.get(GET_JWKS_ENDPOINT, requestLogger, async (req: any, res: any) => {
-    const query: any = req.query;
-    const consumerTool: ToolConsumer | undefined = getToolConsumerByName(
-      query.name
-    );
-    res.send(consumerTool);
-  });
-
   app.get(LTI_SESSION_VALIDATION_ENDPOINT, requestLogger, async (req: any, res: any) => {
     logger.debug(`sessionquery: ${JSON.stringify(req.query["platform"])}`);
-    res.send({ isValid: validateSession(req.query.platform) });
+    res.send({ isValid: await validateSession(req.query.platform) });
   });
 
 

@@ -8,6 +8,8 @@ import {
   SubmitGradeParams,
   User
 } from "@asu-etx/rl-shared";
+import ToolConsumer from "../models/ToolConsumer";
+import { getToolConsumerByName, getJwks as getJwksForTools } from "./ToolConsumerService";
 
 // NOTE: If we make calls from the client directly to Canvas with the token
 // then this service may not be needed. It could be used to show how the calls
@@ -127,8 +129,8 @@ const putStudentGradeView = async (platform: any, score: SubmitGradeParams, titl
 
 
 const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise<any> => {
-  logger.debug("deeplink - platform - " + JSON.stringify(platform));
-  logger.debug("deeplink - contentItems - " + JSON.stringify(contentItems));
+  logger.debug("post deeplink - platform - " + JSON.stringify(platform));
+  logger.debug("post deeplink - contentItems - " + JSON.stringify(contentItems));
 
   // Creates the deep linking request form
   const form = await new DeepLinking().createDeepLinkingForm(
@@ -143,8 +145,8 @@ const postDeepLinkAssignment = async (platform: any, contentItems: any): Promise
 };
 
 const forwardDeepLinkAssignmentPost = async (response: any, platform: any, contentItems: any): Promise<void> => {
-  logger.debug("deeplink - platform - " + JSON.stringify(platform));
-  logger.debug("deeplink - contentItems - " + JSON.stringify(contentItems));
+  logger.debug("forward deeplink - platform - " + JSON.stringify(platform));
+  logger.debug("forward deeplink - contentItems - " + JSON.stringify(contentItems));
 
   // Creates the deep linking request form
   new DeepLinking().postDeepLink(response,
@@ -205,6 +207,9 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
 
     for (const key in results[0].results) {
       const score = results[0].results[key];
+      if (userId && score.userId != userId) {
+        continue;
+      }
       logger.debug("score results from Tool Consumer - " + JSON.stringify(score));
       //Grades service call will only return user Id along with the score
       //so for this demo, we are retrieving the user info from the session
@@ -229,5 +234,6 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
   }
   return scoreData;
 };
+
 
 export { getGrades, deleteLineItem, putStudentGrade, postDeepLinkAssignment, forwardDeepLinkAssignmentPost, putStudentGradeView, getAssignedStudents, getUnassignedStudents, getRoster };

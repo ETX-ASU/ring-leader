@@ -57,3 +57,6 @@ export const DEEP_LINK_DISPLAY_BASE_URL = ENV_VARS.DEEP_LINK_DISPLAY_BASE_URL ||
 export const DEEP_LINK_FORM_SUBMIT_SCRIPT = ENV_VARS.DEEP_LINK_FORM_SUBMIT_SCRIPT || "";
 export const SESSION_SECRET = process.env.SESSION_SECRET ? process.env.SESSION_SECRET : "demo-secret";
 export const DEEP_LINK_FORWARD_SERVER_SIDE = process.env.DEEP_LINK_FORWARD_SERVER_SIDE ? process.env.DEEP_LINK_FORWARD_SERVER_SIDE : "FALSE";
+//Only used when key token is cached for AWS amplify or serviceRedirect
+export const JWK_CACHE_TOKEN_EXPIRY = process.env.JWK_CACHE_TOKEN_EXPIRY ? process.env.JWK_CACHE_TOKEN_EXPIRY : "10h";
+export const SESSION_TABLE_NAME = process.env.SESSION_TABLE_NAME ? process.env.SESSION_TABLE_NAME : "Session";

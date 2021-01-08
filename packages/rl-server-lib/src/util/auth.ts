@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
-import got from "got";
+import axios from "axios";
 import { Platform } from "./Platform";
 import { logger } from "@asu-etx/rl-shared";
+import AccessToken from "../models/AccessToken";
+import verifyConsumerJwt from "./verifyConsumerJwt"
 
 const isValidOIDCRequest = (oidcData: any): boolean => {
   if (!oidcData.iss) {
@@ -42,10 +44,8 @@ const validateAud = (token: any, platform: Platform): boolean => {
  * @param {Object} token - Id token you wish to validate.
  */
 
-const validateNonce = (token: any, platform: Platform): boolean => {
-  logger.debug("Validating nonce");
-  logger.debug("Token Nonce: " + token.nonce);
-  if (token.nonce == platform.nonce) return true;
+const validateNonce = (token: any, session: any): boolean => {
+  if (token.nonce == session.nonce || (session.platform && session.platform.nonce == token.nonce) || !session.nonce) return true;
   else return false;
 };
 
@@ -59,9 +59,9 @@ const claimValidation = (token: any): any => {
   //logger.debug("Checking Message type claim");
   if (
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-      "LtiResourceLinkRequest" &&
+    "LtiResourceLinkRequest" &&
     token["https://purl.imsglobal.org/spec/lti/claim/message_type"] !==
-      "LtiDeepLinkingRequest"
+    "LtiDeepLinkingRequest"
   )
     throw new Error("NO_MESSAGE_TYPE_CLAIM");
 
@@ -112,15 +112,18 @@ const oidcValidation = (token: any, platform: Platform): any => {
   return { aud: aud, nonce: nonce, claims: claims };
 };
 
-const rlDecodeIdToken = (idToken: any): any => {
+const rlDecodeIdToken = async (idToken: any): Promise<any> => {
   //logger.debug(`idToken:${idToken}`);
-  const decodedToken = jwt.decode(idToken);
-  //logger.debug(`decodedtoken:${JSON.stringify(decodedToken)}`);
+  const decodedToken: any = jwt.decode(idToken, { complete: true });
+  logger.debug(`decodedtoken:${JSON.stringify(decodedToken)}`);
   if (!decodedToken) throw new Error("INVALID_JWT_RECEIVED");
-  return decodedToken;
+  if (!decodedToken.header.kid && !decodedToken.header.keyid) throw new Error("INVALID_JWT_RECEIVED_NO_KID");
+
+  await verifyConsumerJwt(idToken, decodedToken);
+  return decodedToken.payload;
 };
-const rlValidateToken = (idToken: any, platform: Platform): any => {
-  const decodedToken = rlDecodeIdToken(idToken);
+const rlValidateToken = async (idToken: any, platform: Platform): Promise<any> => {
+  const decodedToken = await rlDecodeIdToken(idToken);
   //logger.debug("platform.nonce-" + platform.nonce);
   //logger.debug("platform.state-" + platform.state);
   //logger.debug("platform.client_id-" + platform.clientId);
@@ -132,12 +135,12 @@ const rlValidateToken = (idToken: any, platform: Platform): any => {
   return idToken;
 };
 
-const rlValidateDecodedToken = (decodedToken: any, platform: Platform): any => {
+const rlValidateDecodedToken = (decodedToken: any, session: any): any => {
   //logger.debug("platform.nonce-" + platform.nonce);
   //logger.debug("platform.state-" + platform.state);
   //logger.debug("platform.client_id-" + platform.clientId);
 
-  const oidcVerified: any = oidcValidation(decodedToken, platform);
+  const oidcVerified: any = oidcValidation(decodedToken, session);
   if (!oidcVerified.aud) throw new Error("AUD_DOES_NOT_MATCH_CLIENTID");
   if (!oidcVerified.nonce) throw new Error("NONCE_DOES_NOT_MATCH");
   if (!oidcVerified.claims) throw new Error("CLAIMS_DOES_NOT_MATCH");
@@ -184,49 +187,158 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
     return response;
   }
 };
+
+const formUrlEncoded = (x: { [x: string]: string | number | boolean; }) =>
+  Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '');
+
+const findAccessToken = (scopes: string, platform: Platform): string | null => {
+  const accessTokens = platform.accessTokens.filter((accessToken: any) => {
+    return accessToken.scopes === scopes;
+  });
+
+  if (accessTokens && accessTokens.length == 1) {
+    const accessToken: AccessToken = new AccessToken(accessTokens[0]);
+    if (!accessToken.isExpired()) {
+      platform.accessTokensUpdated = false;
+      return accessToken.token;
+    }
+    const index = platform.accessTokens.findIndex((accessToken: any) => {
+      return accessToken.scopes === scopes;
+    });
+    if (index >= 0) {
+      platform.accessTokens.splice(index, 1);
+    }
+  } else if (accessTokens.length > 1) {
+    for (let i = 0; i++; i < accessTokens.length) {
+      const index = platform.accessTokens.findIndex((accessToken: any) => {
+        return accessToken.scopes === scopes;
+      });
+      if (index >= 0) {
+        platform.accessTokens.splice(index, 1);
+      }
+    }
+  }
+  return null;
+}
+
+
 const getAccessToken = async (
   platform: Platform,
   scopes: any
 ): Promise<any> => {
-  //logger.debug("Inside getAccessToken-" + platform.platformPrivateKey);
+  //logger.debug("platform to get access token-" + JSON.stringify(platform));
 
+  const accessToken = findAccessToken(JSON.stringify(scopes), platform);
+  if (accessToken) {
+    return JSON.parse(accessToken);
+  }
   const clientId = platform.aud;
-
+  const now = Math.trunc(new Date().getTime() / 1000);
   const confjwt = {
+    iss: clientId,
     sub: clientId,
-    iss: platform.iss,
-    aud: platform.accesstokenEndpoint,
-    iat: platform.iat || Date.now() / 1000,
-    exp: platform.exp || Date.now() / 1000 + 60,
+    aud: [platform.accesstokenEndpoint],
+    iat: now, //platform.iat || 
+    exp: now + 600, // platform.exp || 
     jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
-  //logger.debug("confjwt- " + JSON.stringify(confjwt));
+  logger.debug("confjwt- " + JSON.stringify(confjwt));
 
   const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
     algorithm: platform.alg,
     keyid: platform.kid
   });
 
-  
   const payload = {
     grant_type: "client_credentials",
-    client_assertion_type:
-      "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+    client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: jwtToken,
     scope: scopes
   };
 
-  //logger.debug("payload- " + JSON.stringify(payload));
-  const access = await got
-    .post(platform.accesstokenEndpoint, {
-      form: payload
-    })
-    .json();
-  //logger.debug(`Access token received ${JSON.stringify(access)}`);
-  //logger.debug("Access token for the scopes - " + scopes);
+  logger.info(`platform.accessTokenPostContentType: ${platform.accessTokenPostContentType}`);
 
-  return access;
+  if (platform.accessTokenPostContentType == "application/x-www-form-urlencoded") {
+    return await requestAccessTokenEncodedForm(platform, payload, scopes, false);
+  } else {
+    return await requestAccessTokenJson(platform, payload, scopes, false);
+  }
+  return null;
 };
+
+const requestAccessTokenEncodedForm = async (platform: any, payload: any, scopes: any, previousAttemptFailed: boolean): Promise<any> => {
+  //logger.debug("payload- " + JSON.stringify(payload));
+  logger.info(`getting accesstoken encoded form at  -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
+  const params = new URLSearchParams();
+  params.append("grant_type", payload["grant_type"]);
+  params.append("client_assertion_type", payload["client_assertion_type"]);
+  params.append("client_assertion", payload["client_assertion"]);
+  params.append("scope", payload["scope"]);
+  logger.info(`Params for getting accesstoken encoded form at -${platform.accesstokenEndpoint} : ${JSON.stringify(params.toString())}`);
+  try {
+
+    const str = `grant_type=${encodeURIComponent(payload.grant_type)}&client_assertion_type=${encodeURIComponent(payload.client_assertion_type)}&client_assertion=${encodeURIComponent(payload.client_assertion)}&scope=${encodeURIComponent(payload.scope)}`
+    logger.info(`Params as str -${platform.accesstokenEndpoint} : ${str}`);
+    const response = await axios
+      .post(platform.accesstokenEndpoint, params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        }
+      });
+
+    logger.debug(`Response token response header:X-Request-Cost: ${JSON.stringify(response.headers)}`);
+    logger.debug(`Access Token generated: ${JSON.stringify(response.data)}`);
+
+    platform.accessTokens.push(new AccessToken({ scopes: JSON.stringify(scopes), token: JSON.stringify(response.data) }));
+    platform.accessTokensUpdated = true;
+
+    return response.data;
+  } catch (error) {
+    try {
+      if (!previousAttemptFailed) {
+        logger.error("failed to retrieve accessToken with encoded form will try JSON" + JSON.stringify(error));
+        return await requestAccessTokenJson(platform, payload, scopes, true);
+      }
+      logger.error("Complete failure: failed to retrieve accessToken from encoded form:" + JSON.stringify(error));
+      throw Error("Complete failure: unable to obtain accessToken: " + JSON.stringify(error));
+    } catch (error) {
+
+      logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
+      throw Error("unable to obtain accessToken: " + JSON.stringify(error));
+    }
+  }
+}
+
+const requestAccessTokenJson = async (platform: any, payload: any, scopes: any, previousAttemptFailed: boolean): Promise<any> => {
+  //logger.debug("payload- " + JSON.stringify(payload));
+  logger.debug(` -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
+  try {
+    const response = await axios
+      .post(platform.accesstokenEndpoint, payload);
+    //logger.debug(`Access token received ${JSON.stringify(access)}`);
+    //logger.debug("Access token for theX-Request-Cost  scopes - " + scopes);
+    logger.debug(`Response token response header:X-Request-Cost: ${JSON.stringify(response.headers)}`);
+    logger.debug(`Access Token generated: ${JSON.stringify(response.data)}`);
+
+    platform.accessTokens.push(new AccessToken({ scopes: JSON.stringify(scopes), token: JSON.stringify(response.data) }));
+    platform.accessTokensUpdated = true;
+
+    return response.data;
+  } catch (error) {
+    try {
+      if (!previousAttemptFailed) {
+        logger.error("failed to retrieve accessToken with JSON will try encodedForm:" + JSON.stringify(error));
+        return await requestAccessTokenEncodedForm(platform, payload, scopes, true);
+      }
+      logger.error("Complete failure: failed to retrieve accessToken from JSON:" + JSON.stringify(error));
+      throw Error("Complete failure: unable to obtain accessToken: " + JSON.stringify(error));
+    } catch (error) {
+      logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
+      throw Error("unable to obtain accessToken: " + JSON.stringify(error));
+    }
+  }
+}
 export {
   rlProcessOIDCRequest,
   rlValidateToken,
