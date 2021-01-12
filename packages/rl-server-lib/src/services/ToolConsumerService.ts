@@ -73,12 +73,13 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
   return toolConsumer;
 };
 
-const getJwks = (): any[] => {
+const getJwks = (): any => {
   const jwks: any[] = [];
   getToolConsumers().forEach((tc) => {
     jwks.push(tc.public_key_jwk);
   });
-  return jwks;
+  const keys = { "keys": jwks };
+  return keys;
 }
 
 export { getToolConsumer, getToolConsumerByName, getToolConsumers, getToolConsumerById, getJwks };

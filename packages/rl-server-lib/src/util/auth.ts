@@ -258,16 +258,16 @@ const getAccessToken = async (
 
   logger.info(`platform.accessTokenPostContentType: ${platform.accessTokenPostContentType}`);
 
-  if (platform.accessTokenPostContentType == "application/x-www-form-urlencoded") {
-    return await requestAccessTokenEncodedForm(platform, payload, scopes, false);
-  } else {
+  if (platform.accessTokenPostContentType == "application/json") {
     return await requestAccessTokenJson(platform, payload, scopes, false);
+  } else {
+    return await requestAccessTokenEncodedForm(platform, payload, scopes, false);
+
   }
   return null;
 };
 
 const requestAccessTokenEncodedForm = async (platform: any, payload: any, scopes: any, previousAttemptFailed: boolean): Promise<any> => {
-  //logger.debug("payload- " + JSON.stringify(payload));
   logger.info(`getting accesstoken encoded form at  -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
   const params = new URLSearchParams();
   params.append("grant_type", payload["grant_type"]);
@@ -295,29 +295,15 @@ const requestAccessTokenEncodedForm = async (platform: any, payload: any, scopes
 
     return response.data;
   } catch (error) {
-    try {
-      if (!previousAttemptFailed) {
-        logger.error("failed to retrieve accessToken with encoded form will try JSON" + JSON.stringify(error));
-        return await requestAccessTokenJson(platform, payload, scopes, true);
-      }
-      logger.error("Complete failure: failed to retrieve accessToken from encoded form:" + JSON.stringify(error));
-      throw Error("Complete failure: unable to obtain accessToken: " + JSON.stringify(error));
-    } catch (error) {
-
-      logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
-      throw Error("unable to obtain accessToken: " + JSON.stringify(error));
-    }
+    logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
+    throw Error("unable to obtain accessToken: " + JSON.stringify(error));
   }
 }
 
 const requestAccessTokenJson = async (platform: any, payload: any, scopes: any, previousAttemptFailed: boolean): Promise<any> => {
-  //logger.debug("payload- " + JSON.stringify(payload));
-  logger.debug(` -${platform.accesstokenEndpoint} : ${JSON.stringify(payload)}`);
+  logger.debug(`Posting too -${platform.accesstokenEndpoint} with json : ${JSON.stringify(payload)}`);
   try {
-    const response = await axios
-      .post(platform.accesstokenEndpoint, payload);
-    //logger.debug(`Access token received ${JSON.stringify(access)}`);
-    //logger.debug("Access token for theX-Request-Cost  scopes - " + scopes);
+    const response = await axios.post(platform.accesstokenEndpoint, payload);
     logger.debug(`Response token response header:X-Request-Cost: ${JSON.stringify(response.headers)}`);
     logger.debug(`Access Token generated: ${JSON.stringify(response.data)}`);
 
@@ -326,17 +312,8 @@ const requestAccessTokenJson = async (platform: any, payload: any, scopes: any, 
 
     return response.data;
   } catch (error) {
-    try {
-      if (!previousAttemptFailed) {
-        logger.error("failed to retrieve accessToken with JSON will try encodedForm:" + JSON.stringify(error));
-        return await requestAccessTokenEncodedForm(platform, payload, scopes, true);
-      }
-      logger.error("Complete failure: failed to retrieve accessToken from JSON:" + JSON.stringify(error));
-      throw Error("Complete failure: unable to obtain accessToken: " + JSON.stringify(error));
-    } catch (error) {
-      logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
-      throw Error("unable to obtain accessToken: " + JSON.stringify(error));
-    }
+    logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
+    throw Error("unable to obtain accessToken: " + JSON.stringify(error));
   }
 }
 export {

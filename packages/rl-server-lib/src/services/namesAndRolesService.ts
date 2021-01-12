@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
 import { Platform } from "../util/Platform";
-import { logger, CONTEXT_MEMBERSHIP_READ_CLAIM, NAMES_ROLES_CLAIM } from "@asu-etx/rl-shared";
+import { logger, CONTEXT_MEMBERSHIP_READ_CLAIM, NAMES_ROLES_CLAIM, LTI_MEMBERSHIP_MEDIA_TYPE_NRPS } from "@asu-etx/rl-shared";
 
 class NamesAndRoles {
   /**
@@ -85,22 +85,19 @@ class NamesAndRoles {
       if (query && curPage === 1) {
         logger.debug("starting get call inside if loop");
         response = await got.get(next, {
-          searchParams: query,
+          searchParams: query ? query : "",
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            // Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json",
-            Accept: "application/vnd.ims.lis.v2.membershipcontainer+json",
-            ContentType: "application/vnd.ims.lis.v2.membershipcontainer+json"
+            //Accept: LTI_MEMBERSHIP_MEDIA_TYPE_APPLICATION,
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
           }
         });
       } else {
-        logger.debug("starting get call inside else loop");
+        logger.debug("more loops get call inside else loop");
         response = await got.get(next, {
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            //Accept: "application/vnd.ims.lti-nrps.v2.membershipcontainer+json"
-            Accept: "application/vnd.ims.lis.v2.membershipcontainer+json",
-            ContentType: "application/vnd.ims.lis.v2.membershipcontainer+json"
+            Accept: "application/vnd.ims.lis.v2.membershipcontainer+json"
           }
         });
       }
