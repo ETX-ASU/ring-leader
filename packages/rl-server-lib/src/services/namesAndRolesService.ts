@@ -88,8 +88,8 @@ class NamesAndRoles {
           searchParams: query ? query : "",
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            //Accept: LTI_MEMBERSHIP_MEDIA_TYPE_APPLICATION,
-            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
+            ContentType: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
           }
         });
       } else {
@@ -97,7 +97,8 @@ class NamesAndRoles {
         response = await got.get(next, {
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: "application/vnd.ims.lis.v2.membershipcontainer+json"
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
+            ContentType: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
           }
         });
       }

@@ -1,7 +1,6 @@
 
 // eslint-disable-next-line node/no-extraneous-import
 import { Express, Request, Response } from "express";
-import { getToolConsumerByName } from "../services/ToolConsumerService";
 import requestLogger from "../middleware/requestLogger";
 import {
   getGrades,
@@ -27,6 +26,7 @@ import {
   GET_GRADES,
   LTI_SESSION_VALIDATION_ENDPOINT,
   DEEP_LINK_FORWARD_SERVER_SIDE,
+  SESSION_TTL,
   logger
 } from "@asu-etx/rl-shared";
 
@@ -79,7 +79,8 @@ async function updateSession(req: any, platform: Platform) {
     const storeSession = new Session();
     storeSession.sessionId = key;
     storeSession.session = JSON.stringify(session);
-    storeSession.modifiedOn = Date.now();
+    storeSession.modifiedOn = Math.round(Date.now() / 1000)
+    storeSession.ttl = Math.round(Date.now() / 1000) + Number(SESSION_TTL);
     await Session.writer.put(storeSession);
     await storeSession.save();
   }

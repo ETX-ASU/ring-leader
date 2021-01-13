@@ -60,3 +60,4 @@ export const DEEP_LINK_FORWARD_SERVER_SIDE = process.env.DEEP_LINK_FORWARD_SERVE
 //Only used when key token is cached for AWS amplify or serviceRedirect
 export const JWK_CACHE_TOKEN_EXPIRY = process.env.JWK_CACHE_TOKEN_EXPIRY ? process.env.JWK_CACHE_TOKEN_EXPIRY : "10h";
 export const SESSION_TABLE_NAME = process.env.SESSION_TABLE_NAME ? process.env.SESSION_TABLE_NAME : "Session";
+export const SESSION_TTL = process.env.SESSION_TTL ? process.env.SESSION_TTL : "3600";

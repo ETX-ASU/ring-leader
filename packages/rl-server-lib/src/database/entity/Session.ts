@@ -25,4 +25,7 @@ export class Session extends Table {
   @Decorator.Attribute({ name: "modified_on" })
   public modifiedOn: number;
 
+  @Decorator.Attribute({ name: "ttl" })
+  public ttl: number;
+
 }

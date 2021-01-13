@@ -2,7 +2,7 @@ import { getToolConsumer } from "../services/ToolConsumerService";
 import { getRedirectToken } from "./externalRedirect";
 import { Session } from "../database/entity/Session";
 import crypto from "crypto";
-import { logger } from "@asu-etx/rl-shared";
+import { SESSION_TTL, logger } from "@asu-etx/rl-shared";
 const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> => {
   const platform = req.session.platform;
   const userId = platform.userId;
@@ -63,7 +63,8 @@ const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> =
 
     session.sessionId = sessionId;
     session.session = JSON.stringify(req.session);
-    session.modifiedOn = Date.now();
+    session.modifiedOn = Math.round(Date.now() / 1000);
+    session.ttl = session.modifiedOn + Number(SESSION_TTL);
     await Session.writer.put(session);
     await session.save();
     console.log(`session added : ${JSON.stringify(session)}`);
