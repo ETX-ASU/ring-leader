@@ -21,7 +21,7 @@
         "exec": "yarn run build"
     },
     "dependencies": {
-        "@asu-etx/rl-shared": "^0.7.11",
+        "@asu-etx/rl-shared": "^0.7.12",
         "@aws-amplify/api": "^3.2.11",
         "axios": "^0.21.0",
         "query-string": "^6.13.7",

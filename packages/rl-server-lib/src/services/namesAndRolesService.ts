@@ -25,6 +25,7 @@ class NamesAndRoles {
     }
     const token: any = await jwt.decode(platform.idToken);
     logger.debug("getMembers token- " + JSON.stringify(token));
+
     logger.debug(
       JSON.stringify("getMembers tokenObject- " + JSON.stringify(platform))
     );
@@ -32,12 +33,12 @@ class NamesAndRoles {
       "Attempting to retrieve platform access_token for [" + platform.iss + "]"
     );
     const tokenRes = await getAccessToken(platform, CONTEXT_MEMBERSHIP_READ_CLAIM);
-    logger.debug("getMemebers Access_token retrieved for [" + platform.iss + "]");
-    logger.debug("getMemebers Access token received -" + JSON.stringify(tokenRes));
+    logger.debug("getMembers Access_token retrieved for [" + platform.iss + "]");
+    logger.debug("getMembers Access token received -" + JSON.stringify(tokenRes));
 
-    logger.debug("getMemebers tokenRes.access_token: " + tokenRes.access_token);
-    logger.debug("getMemebers tokenRes.token_type: " + tokenRes.token_type);
-    logger.debug("getMemebers options: " + JSON.stringify(options));
+    logger.debug("getMembers tokenRes.access_token: " + tokenRes.access_token);
+    logger.debug("getMembers tokenRes.token_type: " + tokenRes.token_type);
+    logger.debug("getMembers options: " + JSON.stringify(options));
     let query: any = [];
     if (options && options.role) {
       logger.debug("Adding role parameter with value: " + options.role);
@@ -58,47 +59,60 @@ class NamesAndRoles {
 
     if (options && options.pages)
       logger.debug("Maximum number of pages retrieved: " + options.pages);
-    if (query.length > 0) query = new URLSearchParams(query);
-    else query = false;
-    let next =
-      token[NAMES_ROLES_CLAIM]
-        .context_memberships_url;
-    logger.debug("next");
-    logger.debug(next);
+    if (query.length <= 0) {
+      query = false;
+    }
+    let next = token[NAMES_ROLES_CLAIM].context_memberships_url;
+
     if (options && options.url) {
+      logger.debug("next will be replaced by options url: next - " + JSON.stringify(next) + " options.url: " + options.url);
       next = options.url;
       query = false;
     }
 
+    let params = next.split("?");
+    if (params.length > 1) {
+      if (!query) {
+        query = []
+      }
+      next = params[0];
+      params = params[1].split("=");
+      for (let i = 0; i < params.length; i++) {
+        query.push([params[i], params[++i]]);
+      }
+
+    }
+
+    if (query)
+      query = new URLSearchParams(query);
+
     let differences;
     let result: any;
     let curPage = 1;
-    logger.debug("query value");
-    logger.debug(query);
     do {
       if (options && options.pages && curPage > options.pages) {
         if (next) result.next = next;
         break;
       }
-      logger.debug("query-" + query + "curPage-" + curPage);
+
       let response: any;
       if (query && curPage === 1) {
-        logger.debug("starting get call inside if loop");
+        logger.debug("starting get call inside if loop with query url: " + next + " query: " + query + " curPage: " + curPage);
         response = await got.get(next, {
-          searchParams: query ? query : "",
+          searchParams: query,
+          throwHttpErrors: false,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
-            ContentType: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
           }
         });
+        logger.debug("Response headers for names and role service: " + JSON.stringify(response.headers));
       } else {
         logger.debug("more loops get call inside else loop");
         response = await got.get(next, {
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
-            ContentType: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
           }
         });
       }
@@ -110,8 +124,8 @@ class NamesAndRoles {
       else {
         result.members = [...result.members, ...body.members];
       }
-      logger.debug("headers.link" + headers.link);
-      const parsedLinks = parseLink(headers.link); // Trying to find "rel=differences" header
+      logger.debug("headers.link: " + headers.link);
+      const parsedLinks = headers.link ? parseLink(headers.link) : {}; // Trying to find "rel=differences" header
       next = false;
       if (parsedLinks && parsedLinks.differences)
         differences = parsedLinks.differences.url; // Trying to find "rel=next" header, indicating additional pages

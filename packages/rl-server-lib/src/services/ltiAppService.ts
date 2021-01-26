@@ -26,8 +26,7 @@ const returnUsers = (ltiResult: any): User[] => {
     const roles: string[] = [];
     for (const key in courseMember.roles) {
       const role: string = courseMember.roles[key];
-      role.split("#")
-      roles.push(role.split("#")[1].toLowerCase());
+      roles.push(role.split("#")[1] ? role.split("#")[1].toLowerCase() : role.toLowerCase());
     }
     users.push(new User({
       id: courseMember.user_id,
