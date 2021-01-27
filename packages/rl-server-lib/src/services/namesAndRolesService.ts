@@ -100,7 +100,6 @@ class NamesAndRoles {
         logger.debug("starting get call inside if loop with query url: " + next + " query: " + query + " curPage: " + curPage);
         response = await got.get(next, {
           searchParams: query,
-          throwHttpErrors: false,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
             Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
