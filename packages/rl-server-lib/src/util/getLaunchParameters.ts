@@ -22,13 +22,15 @@ const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> =
     client_id: platform.clientId,
     deployment_id: platform.deploymentId
   };
-  if (!role) {
-    if (platform.isInstructor) {
-      role = "instructor";
-    } else {
-      role = "learner";
-    }
+
+  if (platform.isInstructor) {
+    role = "instructor";
+  } else if (platform.isStudent) {
+    role = "learner";
+  } else {
+    role = "unkown";
   }
+
   let id = userId;
   logger.debug("id with userId: " + JSON.stringify(id));
   id += role;

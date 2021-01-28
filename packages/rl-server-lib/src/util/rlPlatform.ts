@@ -6,6 +6,9 @@ import {
   ROLES_CLAIM,
   INSTRUCTOR_ROLE_CLAIM,
   LEARNER_ROLE_CLAIM,
+  UNKNOWN_HELPER_ROLE_CLAIM,
+  STUDENT_ROLE_CLAIM,
+  MENTOR_ROLE_CLAIM,
   DEPLOYMENT_ID_CLAIM,
   CONTEXT_CLAIM,
   ASSIGNMENT_GRADE_CLAIM,
@@ -20,10 +23,16 @@ const setDefaultValues = (token: any): any => {
   let isStudent = false;
   let isInstructor = false;
   if (token[ROLES_CLAIM]) {
-    if (token[ROLES_CLAIM].includes(LEARNER_ROLE_CLAIM)) {
-      isStudent = true;
-    } else if (token[ROLES_CLAIM].includes(INSTRUCTOR_ROLE_CLAIM)) {
+    if (hasRole(INSTRUCTOR_ROLE_CLAIM, "instructor", token["roles"])) {
       isInstructor = true;
+    } else if (hasRole(UNKNOWN_HELPER_ROLE_CLAIM, "helper", token["roles"])) {
+      isInstructor = true;
+    } else if (hasRole(LEARNER_ROLE_CLAIM, "learner", token["roles"])) {
+      isStudent = true;
+    } else if (hasRole(STUDENT_ROLE_CLAIM, "student", token["roles"])) {
+      isStudent = true;
+    } else if (hasRole(MENTOR_ROLE_CLAIM, "mentor", token["roles"])) {
+      isStudent = true;
     }
   }
 
@@ -77,6 +86,18 @@ const setDefaultValues = (token: any): any => {
   //logger.debug("setDefaultValues - tokenData - " + JSON.stringify(tokenData));
   return tokenData;
 };
+
+const hasRole = (roleClaim: string, role: string, roles: [any]): Boolean => {
+  if (roles.includes(roleClaim)) {
+    return true;
+  }
+  for (let i = 0; i < roles.length; i++) {
+    if (roles[i] && roles[i].toLowerCase() == role) {
+      return true;
+    }
+  }
+  return false;
+}
 const rlPlatform = (
   platformPrivateKey: string,
   authenticationEndpoint: string,

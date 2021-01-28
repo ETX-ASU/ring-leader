@@ -1,7 +1,12 @@
 export const DEEP_LINKING_SETTINGS_CLAIM = "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings";
 export const ROLES_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/roles";
 export const INSTRUCTOR_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor";
+export const UNKNOWN_HELPER_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/unknown/unknown#Helper";
+export const UNKNOWN_UNKONWN_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/uknownrole/unknown#Unknown";
 export const LEARNER_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner";
+export const STUDENT_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Student";
+export const MENTOR_ROLE_CLAIM = "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Mentor";
+
 export const DEPLOYMENT_ID_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/deployment_id";
 export const CONTEXT_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/context";
 export const ASSIGNMENT_GRADE_CLAIM = "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint";
