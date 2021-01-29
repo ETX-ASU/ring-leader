@@ -28,7 +28,7 @@ const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> =
   } else if (platform.isStudent) {
     role = "learner";
   } else {
-    role = "unkown";
+    role = "unknown";
   }
 
   let id = userId;

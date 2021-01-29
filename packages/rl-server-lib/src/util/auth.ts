@@ -238,13 +238,13 @@ const getAccessToken = async (
     iss: clientId,
     sub: clientId,
     aud: [platform.accesstokenEndpoint],
-    iat: now, //platform.iat || 
-    exp: now + 600, // platform.exp || 
+
     jti: platform.jti || "dffdbdce-a9f1-427b-8fca-604182198783"
   };
   logger.debug("confjwt- " + JSON.stringify(confjwt));
 
   const jwtToken = jwt.sign(confjwt, platform.platformPrivateKey, {
+    expiresIn: 60,
     algorithm: platform.alg,
     keyid: platform.kid
   });
@@ -288,11 +288,10 @@ const requestAccessTokenEncodedForm = async (platform: any, payload: any, scopes
       });
 
     logger.debug(`Response token response header:X-Request-Cost: ${JSON.stringify(response.headers)}`);
-    logger.debug(`Access Token generated: ${JSON.stringify(response.data)}`);
-
+    response.data.token_type = response.data.token_type.charAt(0).toUpperCase() + response.data.token_type.slice(1).toLowerCase();
+    logger.debug(`Access Token generated (FORMX): ${JSON.stringify(response.data)}`);
     platform.accessTokens.push(new AccessToken({ scopes: JSON.stringify(scopes), token: JSON.stringify(response.data) }));
     platform.accessTokensUpdated = true;
-
     return response.data;
   } catch (error) {
     logger.error("failed to retrieve accessToken:" + JSON.stringify(error));
@@ -305,11 +304,11 @@ const requestAccessTokenJson = async (platform: any, payload: any, scopes: any, 
   try {
     const response = await axios.post(platform.accesstokenEndpoint, payload);
     logger.debug(`Response token response header:X-Request-Cost: ${JSON.stringify(response.headers)}`);
-    logger.debug(`Access Token generated: ${JSON.stringify(response.data)}`);
+    response.data.token_type = response.data.token_type.charAt(0).toUpperCase() + response.data.token_type.slice(1).toLowerCase();
+    logger.debug(`Access Token generated (JSON): ${JSON.stringify(response.data)}`);
 
     platform.accessTokens.push(new AccessToken({ scopes: JSON.stringify(scopes), token: JSON.stringify(response.data) }));
     platform.accessTokensUpdated = true;
-
     return response.data;
   } catch (error) {
     logger.error("failed to retrieve accessToken:" + JSON.stringify(error));

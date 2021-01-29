@@ -22,16 +22,17 @@ const setDefaultValues = (token: any): any => {
   );*/
   let isStudent = false;
   let isInstructor = false;
+  logger.debug("testing role claims");
   if (token[ROLES_CLAIM]) {
-    if (hasRole(INSTRUCTOR_ROLE_CLAIM, "instructor", token["roles"])) {
+    if (hasRole(INSTRUCTOR_ROLE_CLAIM, "instructor", token[ROLES_CLAIM])) {
       isInstructor = true;
-    } else if (hasRole(UNKNOWN_HELPER_ROLE_CLAIM, "helper", token["roles"])) {
+    } else if (hasRole(UNKNOWN_HELPER_ROLE_CLAIM, "helper", token[ROLES_CLAIM])) {
       isInstructor = true;
-    } else if (hasRole(LEARNER_ROLE_CLAIM, "learner", token["roles"])) {
+    } else if (hasRole(LEARNER_ROLE_CLAIM, "learner", token[ROLES_CLAIM])) {
       isStudent = true;
-    } else if (hasRole(STUDENT_ROLE_CLAIM, "student", token["roles"])) {
+    } else if (hasRole(STUDENT_ROLE_CLAIM, "student", token[ROLES_CLAIM])) {
       isStudent = true;
-    } else if (hasRole(MENTOR_ROLE_CLAIM, "mentor", token["roles"])) {
+    } else if (hasRole(MENTOR_ROLE_CLAIM, "mentor", token[ROLES_CLAIM])) {
       isStudent = true;
     }
   }

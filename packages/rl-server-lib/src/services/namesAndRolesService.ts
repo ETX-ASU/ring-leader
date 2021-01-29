@@ -57,8 +57,12 @@ class NamesAndRoles {
       query.push(["limit", options.limit]);
     }
 
-    if (options && options.pages)
+    query.push(["groups", "true"]);
+
+    if (options && options.pages) {
       logger.debug("Maximum number of pages retrieved: " + options.pages);
+      query.push(["pages", options.pages]);
+    }
     if (query.length <= 0) {
       query = false;
     }
@@ -67,7 +71,6 @@ class NamesAndRoles {
     if (options && options.url) {
       logger.debug("next will be replaced by options url: next - " + JSON.stringify(next) + " options.url: " + options.url);
       next = options.url;
-      query = false;
     }
 
     let params = next.split("?");
@@ -80,11 +83,12 @@ class NamesAndRoles {
       for (let i = 0; i < params.length; i++) {
         query.push([params[i], params[++i]]);
       }
-
     }
 
-    if (query)
+    if (query) {
+      logger.debug(`namesandrolesqueryparams: ${JSON.stringify(query)}`);
       query = new URLSearchParams(query);
+    }
 
     let differences;
     let result: any;
@@ -98,11 +102,13 @@ class NamesAndRoles {
       let response: any;
       if (query && curPage === 1) {
         logger.debug("starting get call inside if loop with query url: " + next + " query: " + query + " curPage: " + curPage);
+        logger.debug(`Authorization: ${tokenRes.token_type + " " + tokenRes.access_token}`)
         response = await got.get(next, {
           searchParams: query,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
+            ContentType: "application/vnd.ims.lti-nprs.v2.membershipcontainer+json"
           }
         });
         logger.debug("Response headers for names and role service: " + JSON.stringify(response.headers));
@@ -110,8 +116,9 @@ class NamesAndRoles {
         logger.debug("more loops get call inside else loop");
         response = await got.get(next, {
           headers: {
-            Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
+            uthorization: tokenRes.token_type + " " + tokenRes.access_token,
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
+            ContentType: "application/vnd.ims.lti-nprs.v2.membershipcontainer+json"
           }
         });
       }

@@ -180,7 +180,7 @@ class DeepLinking {
     logger.debug(JSON.stringify(selectedContentItems));
     jwtBody[CONTENT_ITEMS_CLAIM] = selectedContentItems;
     const message = await jwt.sign(jwtBody, platform.platformPrivateKey, {
-      header: { "keyid": platform.kid },
+      expiresIn: 60,
       algorithm: platform.alg,
       keyid: platform.kid
     });
