@@ -138,8 +138,8 @@ const cacheLtiServiceEndpoints = (app: Express): void => {
   });
 
   app.post(DEEP_LINK_ASSIGNMENT_ENDPOINT, requestLogger, async (req: Request, res: Response) => {
-    logger.debug(`body of deep link: ${JSON.stringify(req.body)}`);
-    logger.debug(`body of deep link: ${req.body}`)
+    logger.debug(`DEEP_LINK_ASSIGNMENT_ENDPOINT: ${JSON.stringify(req.body)}`);
+    logger.debug(`DEEP_LINK_ASSIGNMENT_ENDPOINT: ${req.body}`)
     const key = validateRequest(req);
     const session = await getSessionFromKey(req, key);
     const contentItems = req.body.contentItems;

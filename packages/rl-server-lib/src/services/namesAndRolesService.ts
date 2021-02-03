@@ -102,13 +102,13 @@ class NamesAndRoles {
       let response: any;
       if (query && curPage === 1) {
         logger.debug("starting get call inside if loop with query url: " + next + " query: " + query + " curPage: " + curPage);
-        logger.debug(`Authorization: ${tokenRes.token_type + " " + tokenRes.access_token}`)
+        logger.debug(`Authorization: ${tokenRes.token_type + " " + tokenRes.access_token}`);
+
         response = await got.get(next, {
           searchParams: query,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
-            ContentType: "application/vnd.ims.lti-nprs.v2.membershipcontainer+json"
+            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
           }
         });
         logger.debug("Response headers for names and role service: " + JSON.stringify(response.headers));
@@ -116,9 +116,8 @@ class NamesAndRoles {
         logger.debug("more loops get call inside else loop");
         response = await got.get(next, {
           headers: {
-            uthorization: tokenRes.token_type + " " + tokenRes.access_token,
+            Authorization: tokenRes.token_type + " " + tokenRes.access_token,
             Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
-            ContentType: "application/vnd.ims.lti-nprs.v2.membershipcontainer+json"
           }
         });
       }
@@ -146,4 +145,6 @@ class NamesAndRoles {
     return result;
   }
 }
+
+
 export { NamesAndRoles };

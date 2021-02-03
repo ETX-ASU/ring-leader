@@ -79,7 +79,7 @@ const setDefaultValues = (token: any): any => {
     deepLinkingSettings: deepLinkSettingsClaim
       ? {
         deep_link_return_url: deepLinkSettingsClaim.deep_link_return_url || null,
-        data: token.data || null,
+        data: deepLinkSettingsClaim.data || null,
         accept_types: deepLinkSettingsClaim.accept_types
       }
       : null
@@ -106,7 +106,7 @@ const rlPlatform = (
   accessTokenPostContentType: string,
   kid: string,
   alg: string,
-  idToken: string
+  idToken: string,
 ): Platform => {
   const token = jwt.decode(idToken);
   /*logger.debug(
@@ -143,6 +143,7 @@ const rlPlatform = (
     isStudent: tokenData.isStudent,
     deploymentId: tokenData.deploymentId,
     accessTokenPostContentType: accessTokenPostContentType
+
   };
   //logger.debug("rlPlatformplatform - " + JSON.stringify(platform));
 

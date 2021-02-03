@@ -28,7 +28,7 @@ export interface Platform {
   deploymentId: string;
   nonce: string;
   accessTokens: AccessToken[];
-  accessTokensUpdated: boolean;
+  accessTokensUpdated: boolean
 }
 
 interface DeeplinkSettings {

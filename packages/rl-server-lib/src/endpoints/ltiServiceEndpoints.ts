@@ -82,6 +82,7 @@ const ltiServiceEndpoints = (app: Express): void => {
       );
     }
     const platform: any = req.session.platform;
+    logger.debug(`DEEP_LINK_ASSIGNMENT_ENDPOINT post request body: ${JSON.stringify(req.body)}`);
     const contentItems = req.body.contentItems;
     return res.send(await postDeepLinkAssignment(platform, contentItems));
   });

@@ -131,13 +131,13 @@ class DeepLinking {
     }
 
     logger.debug("Building basic JWT body"); // Builds basic jwt body
+    let now = Math.trunc(new Date().getTime() / 1000);
 
     const jwtBody: any = {
       iss: platform.aud,
       aud: platform.iss,
-      iat: Date.now() / 1000,
-      exp: Date.now() / 1000 + 60,
       nonce: platform.nonce,
+      locale: "en_US",
       "https://purl.imsglobal.org/spec/lti/claim/deployment_id": platform.deploymentId,
       "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiDeepLinkingResponse",
       "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0"
@@ -149,8 +149,7 @@ class DeepLinking {
     if (options.errlog) jwtBody[ERROR_LOG_CLAIM] = options.errlog; // Adding Data claim if it exists in initial request
 
     if (platform.deepLinkingSettings.data)
-      jwtBody[DATA_CLAIM] =
-        platform.deepLinkingSettings.data;
+      jwtBody[DATA_CLAIM] = platform.deepLinkingSettings.data;
     logger.debug(
       "Sanitizing content item array based on the platform's requirements:"
     );

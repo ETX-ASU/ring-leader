@@ -9,6 +9,7 @@ const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> =
   const courseId = platform.context_id;
   const assignmentId = req.query.assignmentId;
   const resourceLinkId = platform.resourceLinkId;
+  platform.version = platform.version ? platform.version + 1 : 0;
   let lineItemId = platform.lineitem;
   if (!lineItemId) {
     if (platform.lineitems) {
