@@ -169,7 +169,12 @@ class DeepLinking {
     for (const contentItem of contentItems) {
       if (!acceptedTypes.includes(contentItem.type)) continue;
       if (!contentItem.url || !contentItem.url.trim().length) {
-        contentItem.url = `${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}${URL_ROOT}${LTI_ASSIGNMENT_REDIRECT}?assignmentId=${contentItem.resourceId}`;
+        //contentItem.url = `${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}${URL_ROOT}${LTI_ASSIGNMENT_REDIRECT}?assignmentId=${contentItem.resourceId}`;
+        contentItem.url = `${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}${URL_ROOT}${LTI_ASSIGNMENT_REDIRECT}`;
+        contentItem.custom = {};
+        contentItem.custom.assignmentId = contentItem.resourceId;
+        contentItem.title = contentItem.label;
+
       }
       selectedContentItems.push(contentItem);
       if (!acceptMultiple) break;

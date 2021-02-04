@@ -27,3 +27,4 @@ export const CONTEXT_MEMBERSHIP_READ_CLAIM = "https://purl.imsglobal.org/spec/lt
 export const NAMES_ROLES_CLAIM = "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice";
 export const LTI_MEMBERSHIP_MEDIA_TYPE_NRPS = "application/vnd.ims.lti-nrps.v2.membershipcontainer+json";
 export const LTI_MEMBERSHIP_MEDIA_TYPE_APPLICATION = "application/vnd.ims.lis.v2.membershipcontainer+json";
+export const CUSTOM_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/custom";

@@ -29,6 +29,7 @@ export interface Platform {
   nonce: string;
   accessTokens: AccessToken[];
   accessTokensUpdated: boolean
+  assignmentId: string;
 }
 
 interface DeeplinkSettings {

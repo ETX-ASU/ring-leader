@@ -12,7 +12,8 @@ import {
   DEPLOYMENT_ID_CLAIM,
   CONTEXT_CLAIM,
   ASSIGNMENT_GRADE_CLAIM,
-  RESOURCE_LINK_CLAIM
+  RESOURCE_LINK_CLAIM,
+  CUSTOM_CLAIM
 } from "@asu-etx/rl-shared";
 
 const setDefaultValues = (token: any): any => {
@@ -37,9 +38,11 @@ const setDefaultValues = (token: any): any => {
     }
   }
 
+
   const assignmentGradeClaim = token[ASSIGNMENT_GRADE_CLAIM];
   const resourceLinkClaim = token[RESOURCE_LINK_CLAIM];
   const deepLinkSettingsClaim = token[DEEP_LINKING_SETTINGS_CLAIM];
+  const customClaim = token[CUSTOM_CLAIM]
 
   const tokenData = {
     jti: encodeURIComponent(
@@ -76,6 +79,7 @@ const setDefaultValues = (token: any): any => {
     resource: resourceLinkClaim,
     accessTokens: [],
     accessTokensUpdated: false,
+    assignmentId: customClaim ? customClaim.assignmentId : null,
     deepLinkingSettings: deepLinkSettingsClaim
       ? {
         deep_link_return_url: deepLinkSettingsClaim.deep_link_return_url || null,
@@ -142,8 +146,8 @@ const rlPlatform = (
     isInstructor: tokenData.isInstructor,
     isStudent: tokenData.isStudent,
     deploymentId: tokenData.deploymentId,
-    accessTokenPostContentType: accessTokenPostContentType
-
+    accessTokenPostContentType: accessTokenPostContentType,
+    assignmentId: tokenData.assignmentId
   };
   //logger.debug("rlPlatformplatform - " + JSON.stringify(platform));
 
