@@ -135,6 +135,7 @@ class DeepLinking {
 
     const jwtBody: any = {
       iss: platform.aud,
+      sub: platform.aud,
       aud: platform.iss,
       nonce: platform.nonce,
       locale: "en_US",
@@ -173,6 +174,7 @@ class DeepLinking {
         contentItem.url = `${DEEP_LINK_DISPLAY_BASE_URL ? DEEP_LINK_DISPLAY_BASE_URL : APPLICATION_URL}${URL_ROOT}${LTI_ASSIGNMENT_REDIRECT}`;
         contentItem.custom = {};
         contentItem.custom.assignmentId = contentItem.resourceId;
+        contentItem.custom.launchUri = platform.launchUri;
         contentItem.title = contentItem.label;
 
       }

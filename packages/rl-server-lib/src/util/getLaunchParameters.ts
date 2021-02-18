@@ -47,6 +47,7 @@ const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> =
   id += platform.deploymentId;
   logger.debug("id with userId + role + courseId + resourceLinkId + iss + clientId + deploymentId: " + JSON.stringify(id));
   id += lineItemId;
+  id += platform.launchUri ? platform.launchUri : "";
   logger.debug("id with userId + role + courseId + resourceLinkId + iss + clientId + deploymentId + lineItemId: " + JSON.stringify(id));
   logger.debug("id used for launch hash: " + JSON.stringify(id))
   const sessionId = crypto.createHash('sha256').update(JSON.stringify(id)).digest('base64');
@@ -78,7 +79,11 @@ const getLaunchParameters = async (req: any, role: any): Promise<LaunchParams> =
 
   const launchInfo: any = {};
 
-  launchInfo.toolApplicationUrl = toolConsumer.toolApplicationUrl;
+  if (platform.launchUri) {
+    launchInfo.toolApplicationUrl = platform.launchUri;
+  } else {
+    launchInfo.toolApplicationUrl = toolConsumer.toolApplicationUrl;
+  }
   //example const params = `userId=user-id-uncle-bob&courseId=the-course-id-123a&assignmentId=4c43a1b5-e5db-4b3e-ae32-a9405927e472`
   if (platform.assignmentId && platform.assignmentId != "undefined") {
     launchInfo.params = `?role=${role}&userId=${userId}&courseId=${courseId}&assignmentId=${platform.assignmentId}&resourceLinkId=${resourceLinkId}&lineItemId=${lineItemId}&hash=${hash}`

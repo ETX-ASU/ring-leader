@@ -30,6 +30,7 @@ export interface Platform {
   accessTokens: AccessToken[];
   accessTokensUpdated: boolean
   assignmentId: string;
+  launchUri: string;
 }
 
 interface DeeplinkSettings {

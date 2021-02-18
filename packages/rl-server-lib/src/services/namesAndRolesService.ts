@@ -108,7 +108,8 @@ class NamesAndRoles {
           searchParams: query,
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
-            Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS
+            Accept: `${LTI_MEMBERSHIP_MEDIA_TYPE_NRPS}, application/vnd.ims.lti-nprs.v2.membershipcontainer+json`,
+            ContentType: `${LTI_MEMBERSHIP_MEDIA_TYPE_NRPS}, application/vnd.ims.lti-nprs.v2.membershipcontainer+json`
           }
         });
         logger.debug("Response headers for names and role service: " + JSON.stringify(response.headers));
@@ -118,6 +119,7 @@ class NamesAndRoles {
           headers: {
             Authorization: tokenRes.token_type + " " + tokenRes.access_token,
             Accept: LTI_MEMBERSHIP_MEDIA_TYPE_NRPS,
+            ContentType: `${LTI_MEMBERSHIP_MEDIA_TYPE_NRPS}, application/vnd.ims.lti-nprs.v2.membershipcontainer+json`
           }
         });
       }

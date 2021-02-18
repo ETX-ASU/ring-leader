@@ -80,6 +80,7 @@ const setDefaultValues = (token: any): any => {
     accessTokens: [],
     accessTokensUpdated: false,
     assignmentId: customClaim ? customClaim.assignmentId : null,
+    launchUri: customClaim ? customClaim.launchUri : null,
     deepLinkingSettings: deepLinkSettingsClaim
       ? {
         deep_link_return_url: deepLinkSettingsClaim.deep_link_return_url || null,
@@ -147,7 +148,8 @@ const rlPlatform = (
     isStudent: tokenData.isStudent,
     deploymentId: tokenData.deploymentId,
     accessTokenPostContentType: accessTokenPostContentType,
-    assignmentId: tokenData.assignmentId
+    assignmentId: tokenData.assignmentId,
+    launchUri: tokenData.launchUri
   };
   //logger.debug("rlPlatformplatform - " + JSON.stringify(platform));
 

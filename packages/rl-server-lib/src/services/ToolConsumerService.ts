@@ -1,6 +1,7 @@
 import ToolConsumer from "../models/ToolConsumer";
 import ToolConsumerRequest from "../models/ToolConsumerRequest";
 import { logger } from "@asu-etx/rl-shared";
+import { HTTPError } from "got/dist/source";
 
 const getToolConsumers = (): ToolConsumer[] => {
   const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS : "[]");
@@ -34,6 +35,10 @@ const getToolConsumerById = (uuid: string): ToolConsumer | undefined => {
 const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined => {
   let toolConsumer: ToolConsumer | undefined = undefined;
   logger.info("Tool Consumer Request: " + JSON.stringify(request));
+  if (!request.iss && !request.client_id && !request.deployment_id) {
+    logger.error(`ToolConsumer not found for ${JSON.stringify(request)}`);
+    return toolConsumer;
+  }
   getToolConsumers().forEach((tc) => {
     if (
       tc.iss == request.iss &&
@@ -43,6 +48,10 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
       return (toolConsumer = tc);
     }
   });
+  if (!toolConsumer && request.iss && request.client_id && request.deployment_id) {
+    logger.error(`ToolConsumer not found for ${JSON.stringify(request)}`);
+    throw new Error(`ToolConsumer not found for ${JSON.stringify(request)}`);
+  }
   if (!toolConsumer) {
     getToolConsumers().forEach((tc) => {
       if (
@@ -53,6 +62,10 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
       }
     });
   }
+  if (!toolConsumer && request.iss && request.deployment_id) {
+    logger.error(`ToolConsumer not found for ${JSON.stringify(request)}`);
+    throw new Error(`ToolConsumer not found for ${JSON.stringify(request)}`);
+  }
   if (!toolConsumer) {
     getToolConsumers().forEach((tc) => {
       if (tc.iss == request.iss && tc.client_id == request.client_id) {
@@ -60,13 +73,9 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
       }
     });
   }
-
   if (!toolConsumer) {
-    getToolConsumers().forEach((tc) => {
-      if (tc.iss == request.iss) {
-        return (toolConsumer = tc);
-      }
-    });
+    logger.error(`ToolConsumer not found for ${JSON.stringify(request)}`);
+    throw new Error(`ToolConsumer not found for ${JSON.stringify(request)}`);
   }
 
   logger.info("Tool Consumer Found from request: " + JSON.stringify(toolConsumer));
