@@ -151,9 +151,14 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
   logger.debug("req.method:" + req.method);
 
   if (req.method == "POST") oidcData = req.body;
-  ///logger.debug(`oidcData ${JSON.stringify(oidcData)}`);
-  //logger.debug(`Get Request query: ${JSON.stringify(req.query)}`);
+  logger.debug(`oidcData ${JSON.stringify(oidcData)}`);
+  logger.debug(`Get Request query: ${JSON.stringify(req.query)}`);
 
+  if (!oidcData.iss && oidcData.id_token) {
+    const state = oidcData.state;
+    oidcData = decodeToken(oidcData.id_token);
+    oidcData.state = state;
+  }
   if (isValidOIDCRequest(oidcData)) {
     let response = {};
     const objResponse = {
@@ -187,6 +192,11 @@ const rlProcessOIDCRequest = (req: any, state: string, nonce: string): any => {
     return response;
   }
 };
+
+const decodeToken = (id_token: string): any => {
+  return jwt.decode(id_token);
+}
+
 
 const formUrlEncoded = (x: { [x: string]: string | number | boolean; }) =>
   Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '');

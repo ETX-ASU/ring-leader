@@ -74,6 +74,13 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
     });
   }
   if (!toolConsumer) {
+    getToolConsumers().forEach((tc) => {
+      if (tc.iss == request.iss) {
+        return (toolConsumer = tc);
+      }
+    });
+  }
+  if (!toolConsumer) {
     logger.error(`ToolConsumer not found for ${JSON.stringify(request)}`);
     throw new Error(`ToolConsumer not found for ${JSON.stringify(request)}`);
   }
