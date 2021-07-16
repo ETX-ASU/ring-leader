@@ -20,7 +20,7 @@ import {
   LTI_DEEPLINK_REDIRECT,
   GET_JWKS_ENDPOINT
 } from "@asu-etx/rl-shared";
-import ToolConsumer from "../models/ToolConsumer";
+import ToolConsumer from "../database/entity/ToolConsumer";
 
 /**
  * @description Creates a set of endpoints to support LTI1.3 launch given an Express application.

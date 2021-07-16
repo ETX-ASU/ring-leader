@@ -9,8 +9,7 @@
     "inlineSourceMap": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false,
-    
+    "strictPropertyInitialization": false
   },
   "noErrorTruncation": true,
   "exclude": ["node_modules", "lib", "tests", "build"]

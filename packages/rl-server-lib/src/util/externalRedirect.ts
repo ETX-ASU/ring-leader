@@ -1,7 +1,7 @@
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { getToolConsumerById } from "../services/ToolConsumerService"
-import ToolConsumer from "../models/ToolConsumer";
+import ToolConsumer from "../database/entity/ToolConsumer";
 import { logger, JWK_CACHE_TOKEN_EXPIRY } from "@asu-etx/rl-shared";
 
 const setResponseAuthorization = (response: Response, toolConsumer: ToolConsumer, key: string): void => {

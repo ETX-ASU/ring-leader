@@ -1,8 +1,9 @@
-import {Session} from "./entity/Session";
-
+import { Session } from "./entity/Session";
+import { ToolConsumer } from "./entity/ToolConsumer";
 
 const initDBTables = (): void => {
-    Session.createTable();
+  Session.createTable();
+  ToolConsumer.createTable();
 }
 
 export default initDBTables;

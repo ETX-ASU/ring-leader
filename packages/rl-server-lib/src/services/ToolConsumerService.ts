@@ -1,18 +1,37 @@
-import ToolConsumer from "../models/ToolConsumer";
+import ToolConsumer from "../database/entity/ToolConsumer";
 import ToolConsumerRequest from "../models/ToolConsumerRequest";
 import { logger } from "@asu-etx/rl-shared";
 import { HTTPError } from "got/dist/source";
 
-const getToolConsumers = (): ToolConsumer[] => {
-  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS : "[]");
+
+
+const getToolConsumers = async (): Promise<(ToolConsumer | undefined)[]> => {
+  let toolConsumers: (ToolConsumer | undefined)[];
+  const value = await ToolConsumer.primaryKey.batchGetFull([]);
+  toolConsumers = await value.records;
+  if (!toolConsumers) {
+
+  }
   //logger.info(`first toolConsumer parsed ${JSON.stringify(toolConsumers[0])}`);
   return toolConsumers;
 };
 
-const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
+const addConsumerToolsFromFile = (): ToolConsumer[] {
+  const toolConsumers = JSON.parse(process.env.TOOL_CONSUMERS ? process.env.TOOL_CONSUMERS : "[]");
+  if (toolConsumers)
+    toolConsumers.forEach((tc: ToolConsumer) => {
+      if (tc) {
+        ToolConsumer.writer.put(tc);
+      }
+    });
+  return toolConsumers;
+}
+
+const getToolConsumerByName = async (name: string): Promise<ToolConsumer | undefined> => {
   let toolConsumer = undefined;
-  getToolConsumers().forEach((tc) => {
-    if (tc.name == name) {
+  let tools = await getToolConsumers();
+  tools.forEach((tc) => {
+    if (tc && tc.name == name) {
       return (toolConsumer = tc);
     }
   });
@@ -20,10 +39,11 @@ const getToolConsumerByName = (name: string): ToolConsumer | undefined => {
   return toolConsumer;
 };
 
-const getToolConsumerById = (uuid: string): ToolConsumer | undefined => {
+const getToolConsumerById = async (uuid: string): Promise<ToolConsumer | undefined> => {
   let toolConsumer = undefined;
-  getToolConsumers().forEach((tc) => {
-    if (tc.uuid == uuid) {
+  let tools = await getToolConsumers();
+  tools.forEach((tc) => {
+    if (tc && tc.uuid == uuid) {
       return (toolConsumer = tc);
     }
   });
@@ -32,15 +52,19 @@ const getToolConsumerById = (uuid: string): ToolConsumer | undefined => {
 };
 
 
-const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined => {
+const getToolConsumer = async (request: ToolConsumerRequest): Promise<ToolConsumer | undefined> => {
   let toolConsumer: ToolConsumer | undefined = undefined;
   logger.info("Tool Consumer Request: " + JSON.stringify(request));
   if (!request.iss && !request.client_id && !request.deployment_id) {
     logger.error(`ToolConsumer not found for ${JSON.stringify(request)}`);
     return toolConsumer;
   }
-  getToolConsumers().forEach((tc) => {
+
+  let tools = await getToolConsumers();
+
+  tools.forEach((tc) => {
     if (
+      tc &&
       tc.iss == request.iss &&
       tc.client_id == request.client_id &&
       tc.deployment_id == request.deployment_id
@@ -53,8 +77,9 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
     throw new Error(`ToolConsumer not found for ${JSON.stringify(request)}`);
   }
   if (!toolConsumer) {
-    getToolConsumers().forEach((tc) => {
+    tools.forEach((tc) => {
       if (
+        tc &&
         tc.iss == request.iss &&
         tc.deployment_id == request.deployment_id
       ) {
@@ -67,15 +92,17 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
     throw new Error(`ToolConsumer not found for ${JSON.stringify(request)}`);
   }
   if (!toolConsumer) {
-    getToolConsumers().forEach((tc) => {
-      if (tc.iss == request.iss && tc.client_id == request.client_id) {
+    tools.forEach((tc) => {
+      if (
+        tc && tc.iss == request.iss && tc.client_id == request.client_id) {
         return (toolConsumer = tc);
       }
     });
   }
   if (!toolConsumer) {
-    getToolConsumers().forEach((tc) => {
-      if (tc.iss == request.iss) {
+    tools.forEach((tc) => {
+      if (
+        tc && tc.iss == request.iss) {
         return (toolConsumer = tc);
       }
     });
@@ -89,10 +116,13 @@ const getToolConsumer = (request: ToolConsumerRequest): ToolConsumer | undefined
   return toolConsumer;
 };
 
-const getJwks = (): any => {
+const getJwks = async (): Promise<any> => {
   const jwks: any[] = [];
-  getToolConsumers().forEach((tc) => {
-    jwks.push(tc.public_key_jwk);
+  const tools = await getToolConsumers();
+  tools.forEach((tc) => {
+    if (tc) {
+      jwks.push(tc.public_key_jwk);
+    }
   });
   const keys = { "keys": jwks };
   return keys;

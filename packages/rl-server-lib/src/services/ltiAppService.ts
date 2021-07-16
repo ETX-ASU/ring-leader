@@ -8,7 +8,7 @@ import {
   SubmitGradeParams,
   User
 } from "@asu-etx/rl-shared";
-import ToolConsumer from "../models/ToolConsumer";
+import ToolConsumer from "../database/entity/ToolConsumer";
 import { getToolConsumerByName, getJwks as getJwksForTools } from "./ToolConsumerService";
 
 // NOTE: If we make calls from the client directly to Canvas with the token

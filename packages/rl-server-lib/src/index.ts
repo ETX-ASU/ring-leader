@@ -8,7 +8,7 @@ import ltiLaunchEndpoints from "./endpoints/ltiLaunchEndpoints";
 import ltiServiceEndpoints from "./endpoints/ltiServiceEndpoints";
 import cacheLtiServiceEndpoints from "./endpoints/cacheLtiServiceEndpoints";
 
-import ToolConsumer from "./models/ToolConsumer";
+import ToolConsumer from "./database/entity/ToolConsumer";
 import { Session } from "./database/entity/Session";
 import initDBTables from "./database/dataconnection";
 import getLaunchParameters from "./util/getLaunchParameters"
