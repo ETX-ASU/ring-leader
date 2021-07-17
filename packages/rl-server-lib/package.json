@@ -1,6 +1,6 @@
 {
   "name": "@asu-etx/rl-server-lib",
-  "version": "0.8.111",
+  "version": "0.9.3",
   "license": "MIT",
   "private": false,
   "public": true,
@@ -27,6 +27,7 @@
     "@types/express": "^4.17.8",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/jwt-decode": "^2.2.1",
+    "@types/parse-link-header": "^1.0.0",
     "axios": "^0.21.0",
     "dynamo-types": "^2.10.1",
     "express": "^4.17.1",
@@ -38,6 +39,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.0.0-beta.2",
     "parse-link": "^1.0.3",
+    "parse-link-header": "^1.0.1",
     "uuid": "^8.3.1"
   },
   "devDependencies": {

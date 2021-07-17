@@ -1,6 +1,7 @@
 // eslint-disable-next-line node/no-extraneous-import
-import axios from "axios";
 import got from "got";
+import axios from "axios";
+import parseLink = require("parse-link-header")
 import { Platform } from "../util/Platform";
 import { getAccessToken } from "../util/auth";
 import { Options } from "../util/Options";
@@ -10,7 +11,8 @@ import {
   LINE_ITEM_CLAIM,
   LINE_ITEM_READ_ONLY_CLAIM,
   RESULT_CLAIM,
-  SubmitGradeParams
+  SubmitGradeParams,
+  ResultScore
 } from "@asu-etx/rl-shared";
 
 class Grade {
@@ -44,36 +46,83 @@ class Grade {
       let query: any = [];
 
       if (lineitemsEndpoint.indexOf("?") !== -1) {
-        query = Array.from(
-          new URLSearchParams(lineitemsEndpoint.split("?")[1])
-        );
         lineitemsEndpoint = lineitemsEndpoint.split("?")[0];
+        let params = lineitemsEndpoint.split("?")[1].split("&");
+        if (params.length > 1) {
+          if (!query) {
+            query = []
+          }
+          lineitemsEndpoint = params[0];
+          params = params[1].split("=");
+          for (let i = 0; i < params.length; i++) {
+            query.push([params[i], params[++i]]);
+          }
+        }
       }
 
-      const queryParams: any = {};
+
       if (options) {
         if (options.resourceLinkId)
-          queryParams.resource_link_id = platform.resourceLinkId;
+          query.push("resource_link_id", platform.resourceLinkId);
         if (options.limit && !options.id && !options.label)
-          queryParams.limit = options.limit;
+          query.push("limit", options.limit);
         if (options.tag)
-          queryParams.tag = options.tag;
+          query.push("tag", options.tag);
         if (options.resourceId)
-          queryParams.resource_id = options.resourceId;
+          query.push("resource_id", options.resourceId);
       }
-      logger.debug("getlines - queryParams-" + JSON.stringify(queryParams));
+      if (query) {
+        logger.debug(`namesandrolesqueryparams: ${JSON.stringify(query)}`);
+        query = new URLSearchParams(query);
+      }
+      logger.debug("getlines - queryParams-" + JSON.stringify(query));
       logger.debug("lineitemsEndpoint - " + lineitemsEndpoint);
+      let lineItems: any;
+      let curPage = 1;
+      let next: any = lineitemsEndpoint;
+      do {
+        let response: any;
+        if (query && curPage === 1) {
+          response = await got
+            .get(lineitemsEndpoint, {
+              searchParams: query,
+              headers: {
+                Authorization:
+                  accessToken.token_type + " " + accessToken.access_token,
+                Accept: "application/vnd.ims.lis.v2.lineitemcontainer+json"
+              }
+            })
+        } else {
+          logger.debug("more loops get call inside else loop");
+          response = await got.get(next, {
+            headers: {
+              Authorization:
+                accessToken.token_type + " " + accessToken.access_token,
+              Accept: "application/vnd.ims.lis.v2.lineitemcontainer+json"
+            }
+          });
+        }
+        logger.debug("LTI advantage call successfull");
+        const headers = response.headers;
+        const body = JSON.parse(response.body);
+        logger.debug("GET lineitems response" + JSON.stringify(body));
+        if (!lineItems) {
+          lineItems = body;
+        } else {
+          lineItems = lineItems.concat(body);
+        }
+        logger.debug("headers.link: " + JSON.stringify(headers.link));
+        const parsedLinks = headers.link ? parseLink(headers.link) : {}; // Trying to find "rel=differences" header
+        logger.debug("parsedLinks " + JSON.stringify(parsedLinks));
+        next = false;
+        if (parsedLinks && parsedLinks.next) {
+          next = parsedLinks.next.url;
+        } else {
+          next = false;
+        }
+        curPage++;
+      } while (next);
 
-      let results: any = await axios
-        .get(lineitemsEndpoint, {
-          params: queryParams,
-          headers: {
-            Authorization:
-              accessToken.token_type + " " + accessToken.access_token,
-            Accept: "application/vnd.ims.lis.v2.lineitemcontainer+json"
-          }
-        })
-      let lineItems: any = results.data;
       logger.debug("lineItems retreived - " + JSON.stringify(lineItems));
 
       if (options && options.id)

@@ -1,5 +1,5 @@
 import { URLSearchParams } from "url";
-import parseLink from "parse-link";
+import parseLink = require("parse-link-header")
 import jwt from "jsonwebtoken";
 import { getAccessToken } from "../util/auth";
 import got from "got";
