@@ -223,7 +223,7 @@ const getGrades = async (platform: any, resourceId: any, userId: any): Promise<a
       scoreData.push({
         id: score.id,
         studentId: score.userId,
-        studentName: tooltipsData[0].name,
+        studentName: tooltipsData ? tooltipsData[0] ? tooltipsData[0].name : "" : "",
         resultScore: score.resultScore,
         resultMaximum: score.resultMaximum,
         comment: score.comment
